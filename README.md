@@ -27,6 +27,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 - [Memory Allocation Strategy](./chapters/memory_allocation.md)
 - [Pipeline Caching/Derivatives](./chapters/pipeline_cache.md)
 - [Threading](./chapters/threading.md)
+- [Common Pitfalls](./common_pitfalls.md)
 
 ----
 
