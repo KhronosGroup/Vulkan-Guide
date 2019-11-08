@@ -7,35 +7,38 @@ The `void* pNext` is used to allow for expanding the Vulkan Spec by creating a L
 An example to help illustrate the use of `pNext`
 
 ```
+// An example with two structures, "a" and "b"
+// These structs have members you'd find in real Vulkan structures
 typedef struct VkA {
-	VkStructureType sType;
-	void* pNext;
-	uint32_t value;
+    VkStructureType sType;
+    void* pNext;
+    uint32_t value;
 } VkA;
 
 typedef struct VkB {
-	VkStructureType sType;
-	void* pNext;
-	uint32_t value;
+    VkStructureType sType;
+    void* pNext;
+    uint32_t value;
 } VkB;
 
-void VkGetValue(
-     VkA* pA);
+// A Vulkan Function that takes struct "a" as an argument
+// This function is in charge of populating the values
+void vkGetValue(VkA* pA);
 
-// Define VkA and VkB and set sType
+// Define "a" and "b" and set their sType
 struct VkB b = {};
 b.sType = VK_STRUCTURE_TYPE_B;
 
 struct VkA a = {};
 a.sType = VK_STRUCTURE_TYPE_A;
 
-// Set the pNext pointer from VkA to VkB
+// Set the pNext pointer from "a" to "b"
 a.pNext = (void*)&b;
 
-// Pass VkA to the function
-VkGetValue(&a);
+// Pass "a" to the function
+vkGetValue(&a);
 
-// Use the values
+// Use the values which were both set from vkGetValue()
 printf("VkA value = %u \n", a.value);
 printf("VkB value = %u \n", b.value);
 ```
