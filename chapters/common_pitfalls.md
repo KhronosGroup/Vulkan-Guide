@@ -1,10 +1,10 @@
 # Common Pitfalls for new Vulkan Developers
 
-This is a short list of commom assumptions and traps developers new to Vulkan can make.  
+This is a short list of common assumptions and traps developers new to Vulkan can make.  
 
 ### Validation Layers
 
-During developement, try to ensure that the Validation Layers are enabled. They are an invaluable tool for catching mistakes while using the Vulkan API. Parameter checking, object lifetimes, and threading violations all are part of the provided error checks. A way to reassure that they are enabled is to verify if the text "Debug Messenger Added" is in the output stream. More info can be found in the [Vulkan SDK](https://vulkan.lunarg.com/doc/sdk) documentation. It is first on the list because it is the first line of defense and should help reduce the time spent discovering where the mistake was made.
+During development, ensure that the Validation Layers are enabled. They are an invaluable tool for catching mistakes while using the Vulkan API. Parameter checking, object lifetimes, and threading violations all are part of the provided error checks. A way to reassure that they are enabled is to verify if the text "Debug Messenger Added" is in the output stream. More info can be found in the [Vulkan SDK](https://vulkan.lunarg.com/doc/sdk/latest/windows/layer_configuration.html) layer documentation. It is first on the list because it is the first line of defense and should help reduce the time spent discovering where the mistake was made.
 
 ### Vulkan is a box of tools
 
@@ -12,7 +12,7 @@ In Vulkan, there are often multiple solutions to a problem. Consider passing dat
 
 ### Recording command buffers  
 
-A common assumption when first learning about command buffers is that reusing them is paramount and that re-recording them every frame is costly. While it appear counterintuitive, there is often a greater cost in reuse than simply recording new command buffers each frame. The main cost is the additional complexity for managing dynamicism, frustum culling, and many other graphical effects. Many of the approaches used to reduce command buffer recording add non trivial state management or undue complexity to the rendering architecture. Therefore, especially in simpler situations, the cost of re-recording every frame is reasonable. Developers still concerned can and should profile command buffer recording to make better informed decisions about the best approach for their application.
+A common assumption when first learning about command buffers is that reusing them is paramount and that re-recording them every frame is costly. While it may appear counterintuitive, there is often a greater cost in reuse than simply recording new command buffers each frame. The main cost is the additional complexity for managing dynamic objects, frustum culling, and many other graphical effects. Many of the approaches used to reduce command buffer recording add non trivial state management or undue complexity to the rendering architecture. Therefore, especially in simpler situations, the cost of re-recording every frame is reasonable. Developers still concerned can and should profile command buffer recording to make better informed decisions about the best approach for their application.
 
 ### Multiple pipelines
 
@@ -24,7 +24,7 @@ A common technique to increase throughput is to make multiple instances of a res
 
 ### Multiple queues per queue family
 
-Several hardware platforms have more than one `VkQueue` per queue family. This can be useful by being able to submit work to the same queue family from seperate queues. While there can be advantages, it isn't necessarily better to create or use the extra queues. For performance recommendations, refer to hardware makers best practices guides.
+Several hardware platforms have more than one `VkQueue` per queue family. This can be useful by being able to submit work to the same queue family from separate queues. While there can be advantages, it isn't necessarily better to create or use the extra queues. For performance recommendations, refer to hardware makers best practices guides.
 
 ### Descriptor Sets
 
@@ -32,13 +32,13 @@ Descriptor Sets are designed to group data together by their usage and update fr
 
 ### Correct API usage practices
 
-While the Validation Layers can catch many types of errors, they are not perfect. Below is a short list of good habits to be in and possible sources of error when encountering odd behaviour.
+While the Validation Layers can catch many types of errors, they are not perfect. Below is a short list of good habits to be in and possible sources of error when encountering odd behavior.
 
 * Initialize all variables and structs.
 * Use the correct `sType` for each structure.
 * Verify correct `pNext` chain usage, nulling it out when not needed.
 * There are no default values in Vulkan.
 * Use correct enum, `VkFlag`, and bitmask values. 
-* Considering using a type-safe Vulkan wrapper, eg [Vulkan.hpp](https://github.com/KhronosGroup/Vulkan-Hpp) for C++
+* Consider using a type-safe Vulkan wrapper, eg [Vulkan.hpp](https://github.com/KhronosGroup/Vulkan-Hpp) for C++
 * Check function return values, eg `VkResult`.
 * Call clean up functions where appropriate.
