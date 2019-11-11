@@ -15,7 +15,7 @@ There are many other components in Vulkan that are labeled as properties. The te
 
 ## Extensions
 
-Extensions may define new Vulkan function to use, some expose optional new features, and some even just expose support for SPIV-V opeartions. There are both instance extensions and device extensions so make sure to check whic type it is (this can be found under "Extension Type" where the extension is defined).
+Extensions may define new Vulkan function to use, some expose optional new features, and some even just expose support for SPIR-V operations. There are both instance extensions and device extensions so make sure to check which type it is (this can be found under "Extension Type" where the extension is defined).
 
 An application can [query the physical device](https://www.khronos.org/registry/vulkan/specs/1.1/html/vkspec.html#extendingvulkan-extensions) first to check if the extension is supported. The application needs to enable the extensions it plans on using by passing a list to either `VkInstance` or `VkDevice`. Once the extension is enabled all the new primitives (enums, structs, functions, etc) now become valid and can be used. If the extension is not enabled, it is undefined behavior to use any of the extension primitives.
 
