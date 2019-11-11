@@ -36,7 +36,7 @@ If you want to view the Vulkan Spec in its entirety as HTML, you just need to vi
 Example: https://www.khronos.org/registry/vulkan/specs/1.1/html/vkspec.html
 
 Prebuilt HTML Full Vulkan Spec
-- The Vulkan SDK comes packaged with Vulkan Spec in its entirety as HTML for the version corresponding to the Vulkan SDK version. See the [HTML version of the Specification](https://vulkan.lunarg.com/doc/sdk/latest/windows/vkspec.html) for the latest Vulkan SDK. (Note: Slow to load. The advantage of the full HTML version is it's searching capability).
+- The Vulkan SDK comes packaged with Vulkan Spec in its entirety as HTML for the version corresponding to the Vulkan SDK version. See the [HTML version of the Specification](https://vulkan.lunarg.com/doc/sdk/latest/windows/vkspec.html) for the latest Vulkan SDK. (Note: Slow to load. The advantage of the full HTML version is its searching capability).
 - [Vulkan 1.0 Specification](https://www.khronos.org/registry/vulkan/specs/1.0/html/vkspec.html)
 - [Vulkan 1.0 Specification with Extensions ](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html)
 - [Vulkan 1.0 Specification with WSI Extensions](https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/html/vkspec.html)

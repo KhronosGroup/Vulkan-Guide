@@ -19,3 +19,4 @@ While Pipeline Barriers might be hard to understand at first, there are many gre
 - [Vulkanised 2018 - Low-level mysteries of pipeline barriers](https://www.khronos.org/assets/uploads/developers/library/2018-vulkanised/05-The%20low-level%20mysteries%20of%20pipeline%20barriers_Vulkanised2018.pdf) ([video](https://www.youtube.com/watch?v=e0ySJ9Qzvrs))
 - [Vulkanised 2019 - Live Long and Optimise](https://www.khronos.org/assets/uploads/developers/library/2019-vulkanised/02_Live%20Long%20And%20Optimise-May19.pdf)  ([video](https://www.youtube.com/watch?v=ch6161wvME8&t=463s)) Pipeline Analysis starting slide 12
 - [Vulkan barriers explained](https://gpuopen.com/vulkan-barriers-explained/) blog post
+- [Yet another blog explaining Vulkan synchronization](http://themaister.net/blog/2019/08/14/yet-another-blog-explaining-vulkan-synchronization/) post
