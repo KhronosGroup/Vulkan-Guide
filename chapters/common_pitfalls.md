@@ -1,22 +1,22 @@
 # Common Pitfalls for new Vulkan Developers
 
-This is a short list of common assumptions and traps developers new to Vulkan can make.  
+This is a short list of common assumptions and traps developers new to Vulkan can make. 
 
 ### Validation Layers
 
-During development, ensure that the Validation Layers are enabled. They are an invaluable tool for catching mistakes while using the Vulkan API. Parameter checking, object lifetimes, and threading violations all are part of the provided error checks. A way to reassure that they are enabled is to verify if the text "Debug Messenger Added" is in the output stream. More info can be found in the [Vulkan SDK](https://vulkan.lunarg.com/doc/sdk/latest/windows/layer_configuration.html) layer documentation. It is first on the list because it is the first line of defense and should help reduce the time spent discovering where the mistake was made.
+During development, ensure that the Validation Layers are enabled. They are an invaluable tool for catching mistakes while using the Vulkan API. Parameter checking, object lifetimes, and threading violations all are part of the provided error checks. A way to reassure that they are enabled is to verify if the text "Debug Messenger Added" is in the output stream. More info can be found in the [Vulkan SDK](https://vulkan.lunarg.com/doc/sdk/latest/windows/layer_configuration.html) layer documentation.
 
 ### Vulkan is a box of tools
 
-In Vulkan, there are often multiple solutions to a problem. Consider passing data to a shader, one can use uniform buffers, storage buffers, vertex attributes, instance buffer, push constants, and more. Are all valid methods each with their own benefits and drawbacks. There is rarely a "perfect" solution to any problem. Therefore, use the tools available and create a good solution instead of trying to find a perfect solution.
+In Vulkan, most problems can be tackled with multiple methods, each with their own benefits and drawbacks. There is rarely a "perfect" solution and obsessing over finding one is often a fruitless effort. When faced with a decision, make an informed choice and create an adequate solution that meets the current needs. To become informed, use this guide, reference a hardware vendors best practices guide, and profile various solutions.  
 
 ### Recording command buffers  
 
-A common assumption when first learning about command buffers is that reusing them is paramount and that re-recording them every frame is costly. While it may appear counterintuitive, there is often a greater cost in reuse than simply recording new command buffers each frame. The main cost is the additional complexity for managing dynamic objects, frustum culling, and many other graphical effects. Many of the approaches used to reduce command buffer recording add non trivial state management or undue complexity to the rendering architecture. Therefore, especially in simpler situations, the cost of re-recording every frame is reasonable. Developers still concerned can and should profile command buffer recording to make better informed decisions about the best approach for their application.
+Many early Vulkan tutorials and documents recommended writing a command buffer once and re-using it wherever possible. However, in practice re-use rarely has a performance benefit and incurs a non-trivial development burden. While it may appear counterintuitive, as re-using computed data is a common optimization, managing a scene with objects being added and removed as well as techniques such as frustum culling which vary draw calls on a per frame basis make reusing command buffers a serious design challenge. Instead prefer to simply re-record fresh command buffers every frame.  
 
 ### Multiple pipelines
 
-A graphics `VkPipeline` contains the combination of state needed to perform a draw call. For every input combination (shaders, vertex layout, primitive assembly, depth testing, blending mode, etc), a new pipeline is needed. This necessitates creating and binding many pipelines for complex rendering situations. While it might appear beneficial to try to create as few pipeline as possible by increasing complexity elsewhere, it is best to profile and determine if this is truly a big performance penalty in the first place.
+A graphics `VkPipeline` contains the combination of state needed to perform a draw call. For every input combination (shaders, vertex layout, primitive assembly, depth testing, blending mode, etc), a new pipeline is needed. This necessitates creating and binding many pipelines for complex rendering situations. While it might appear beneficial to try to create as few pipelines as possible by increasing complexity elsewhere, it is best to profile and determine if this is truly a big performance penalty in the first place.
 
 ### Resource duplication per swapchain image
 
@@ -28,17 +28,17 @@ Several hardware platforms have more than one `VkQueue` per queue family. This c
 
 ### Descriptor Sets
 
-Descriptor Sets are designed to group data together by their usage and update frequency. It is reasonable to have a descriptor set bound for each group of resources needed in a shader, for example object matrices, lights, textures, material information, and per-instance data. Vulkan requires hardware to be able to support at least 4 concurrently bound descriptor sets, as described by the maxBoundDescriptorSets value in `VkPhysicalDeviceLimits`, with many supporting 8 or more. Therefore is safe to use more than 1 descriptor set at a time. While there may be situations that may make a single descriptor set advantageous, refer to a best practices guide for specific details.
+Descriptor Sets are designed to facilitate grouping data used in shaders by usage and update frequency. The Vulkan Spec mandates that hardware supports using at least 4 Descriptor Sets at a time, with most hardware supporting at least 8. Therefore there is very little reason not to use more than one where it is sensible.
 
 ### Correct API usage practices
 
-While the Validation Layers can catch many types of errors, they are not perfect. Below is a short list of good habits to be in and possible sources of error when encountering odd behavior.
+While the Validation Layers can catch many types of errors, they are not perfect. Below is a short list of good habits and possible sources of error when encountering odd behavior.
 
 * Initialize all variables and structs.
 * Use the correct `sType` for each structure.
 * Verify correct `pNext` chain usage, nulling it out when not needed.
 * There are no default values in Vulkan.
 * Use correct enum, `VkFlag`, and bitmask values. 
-* Consider using a type-safe Vulkan wrapper, eg [Vulkan.hpp](https://github.com/KhronosGroup/Vulkan-Hpp) for C++
+* Consider using a type-safe Vulkan wrapper, eg. [Vulkan.hpp](https://github.com/KhronosGroup/Vulkan-Hpp) for C++
 * Check function return values, eg `VkResult`.
-* Call clean up functions where appropriate.
+* Call cleanup functions where appropriate.
