@@ -21,3 +21,7 @@ Discrete graphics cards contain their own dedicated memory on the device. The da
 UMA systems share the memory between the device and host which is advertised with a `VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT` combination. The disadvantage of this is that system memory has to be shared with the GPU which requires being cautious of memory pressure. The main advantage is that there is no need to create a _staging buffer_ and the transfer overhead is greatly reduced.
 
 ![memory_allocation_transfer.png](../images/memory_allocation_transfer.png)
+
+## Lazily Allocated Memory
+
+On tile-based architectures (virtually all mobile GPUs) the `LAZILY_ALLOCATED_BIT` memory type is not backed by actual memory. It is used for attachments that can be held in tile memory, e.g. the G-buffer between subpasses, the depth buffer, multisampled images. This saves some significant bandwidth cost for writing the image back to memory. You can find more information in Khronos' tutorials on [Render Passes](https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/performance/render_passes/render_passes_tutorial.md) and [Subpasses](https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/performance/render_subpasses/render_subpasses_tutorial.md).
