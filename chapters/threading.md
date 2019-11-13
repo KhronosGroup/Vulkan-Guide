@@ -13,6 +13,8 @@ Vulkan implementations are not supposed to be introducing any multi-threading, s
 The idea is command buffers can be recorded on multiple threads while having a relatively light thread handle the submissions.
 ![threading_command_buffers.png](../images/threading_command_buffers.png)
 
+Khronos' [sample](https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/command_buffer_usage) and [tutorial](https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/performance/command_buffer_usage/command_buffer_usage_tutorial.md) show in more detail how to record command buffers in parallel.
+
 ## Descriptor Pools
 
 [Descriptor Pools](https://www.khronos.org/registry/vulkan/specs/1.1/html/vkspec.html#VkDescriptorPool) are used to allocate, free, reset, and update descriptor sets. By creating multiple descriptor pools, each application host thread is able to manage a descriptor set in each descriptor pool at the same time.

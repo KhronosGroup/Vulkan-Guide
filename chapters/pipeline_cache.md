@@ -5,3 +5,5 @@ Pipeline caching is a technique used with [VkPipelineCache](https://www.khronos.
 ![pipeline_cache_cache.png](../images/pipeline_cache_cache.png)
 
 While pipeline caches are an important tool, it is important to create a robust system for them which Arseny Kapoulkine talks about in his [blog post](https://zeux.io/2019/07/17/serializing-pipeline-cache/).
+
+To illustrate the performance gain and see a reference implementation of pipeline caches Khronos offers a [sample](https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/pipeline_cache) and [tutorial](https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/performance/pipeline_cache/pipeline_cache_tutorial.md).

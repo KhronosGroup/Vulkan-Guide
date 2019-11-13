@@ -27,8 +27,8 @@ Once a `VkSurfaceKHR` is created there are various [capabilities](https://www.kh
 
 ## Swapchain
 
-The `VkSwapchainKHR` object provides the ability to present rendering results to a surface through an array of `VkImage` objects. Swapchains various [present modes](https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkPresentModeKHR) determine how the presentation engine is implemented.
+The `VkSwapchainKHR` object provides the ability to present rendering results to a surface through an array of `VkImage` objects. The swapchain's various [present modes](https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkPresentModeKHR) determine how the presentation engine is implemented.
 
 ![wsi_engine](../images/wsi_engine.png)
 
-
+Khronos' [sample](https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/swapchain_images) and [tutorial](https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/performance/swapchain_images/swapchain_images_tutorial.md) explain different considerations to make when creating a swapchain and selecting a presentation mode.

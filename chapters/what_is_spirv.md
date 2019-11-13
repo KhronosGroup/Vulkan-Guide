@@ -9,7 +9,7 @@
 
 Vulkan has an entire section that defines how [Vulkan interfaces with SPIR-V shaders](https://www.khronos.org/registry/vulkan/specs/1.1/html/vkspec.html#interfaces). Most valid usages of interfacing with SPIR-V occur during pipeline creation when shaders are compiled together.
 
-SPIR-V has many capabilities as it has other targets then just Vulkan. To see the supported capabilities Vulkan requires, one can reference the [Appendix](https://www.khronos.org/registry/vulkan/specs/1.1/html/vkspec.html#spirvenv-capabilities). Some extensions and features in Vulkan are just designed to check if some SPIR-V capabilities are supported or not.
+SPIR-V has many capabilities as it has other targets than just Vulkan. To see the supported capabilities Vulkan requires, one can reference the [Appendix](https://www.khronos.org/registry/vulkan/specs/1.1/html/vkspec.html#spirvenv-capabilities). Some extensions and features in Vulkan are just designed to check if some SPIR-V capabilities are supported or not.
 
 ## Compilers
 
@@ -52,7 +52,7 @@ The Khronos [SPIRV-Tools](https://github.com/KhronosGroup/SPIRV-Tools) project p
 
 ### SPIRV-Cross
 
-The Khronos [SPIRV-Cross](https://github.com/KhronosGroup/SPIRV-Cross) project is a practical tool and library for performing reflection on SPIR-V and disassembling SPIR-V back to high level languages. For more details, Hans Kristian, the main developer of SPIR-V Cross, has given two great presentations about what it takes to create a tool such as SPIR-V Cross from [2018 Vulkanise](https://www.khronos.org/assets/uploads/developers/library/2018-vulkanised/04-SPIRVCross_Vulkanised2018.pdf) ([video](https://www.youtube.com/watch?v=T5Va6hSGx44)) and [2019 Vulkanise](https://www.khronos.org/assets/uploads/developers/library/2019-vulkanised/04-SPIRV-Cross-May19.pdf) ([video](https://www.youtube.com/watch?v=lv-fh_oFJUc))
+The Khronos [SPIRV-Cross](https://github.com/KhronosGroup/SPIRV-Cross) project is a practical tool and library for performing reflection on SPIR-V and disassembling SPIR-V back to high level languages. For more details, [Hans Kristian](https://github.com/Themaister), the main developer of SPIR-V Cross, has given two great presentations about what it takes to create a tool such as SPIR-V Cross from [2018 Vulkanised](https://www.khronos.org/assets/uploads/developers/library/2018-vulkanised/04-SPIRVCross_Vulkanised2018.pdf) ([video](https://www.youtube.com/watch?v=T5Va6hSGx44)) and [2019 Vulkanised](https://www.khronos.org/assets/uploads/developers/library/2019-vulkanised/04-SPIRV-Cross-May19.pdf) ([video](https://www.youtube.com/watch?v=lv-fh_oFJUc))
 
 ![what_is_spirv_spriv_cross.png](../images/what_is_spirv_spriv_cross.png)
 
