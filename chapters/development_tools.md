@@ -42,6 +42,7 @@ With anything related to a GPU it is best to not assume and profile when possibl
 
 - [AMD Radeon GPU Profiler](https://gpuopen.com/gaming-product/radeon-gpu-profiler-rgp/) - Low-level performance analysis tool for AMD Radeon GPUs.
 - [Arm Streamline Performance Analyzer](https://developer.arm.com/tools-and-software/graphics-and-gaming/arm-mobile-studio/components/streamline-performance-analyzer) - Visualize the performance of mobile games and applications for a broad range of devices, using Arm Mobile Studio.
+- [Intel(R) GPA](https://software.intel.com/en-us/gpa) - Intel's Graphics Performance Analyzers that supports capturing and analyzing multi-frame streams of Vulkan apps.
 - [OCAT](https://github.com/GPUOpen-Tools/OCAT) - The Open Capture and Analytics Tool (OCAT) provides an FPS overlay and performance measurement for D3D11, D3D12, and Vulkan.
 - [PVRTune](https://www.imgtec.com/developers/)
 - [Qualcomm Snapdragon Profiler](https://developer.qualcomm.com/software/snapdragon-profiler) - Profiling tool targeting Adreno GPU.
