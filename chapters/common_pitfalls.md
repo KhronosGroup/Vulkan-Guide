@@ -1,6 +1,6 @@
 # Common Pitfalls for new Vulkan Developers
 
-This is a short list of common assumptions and traps developers new to Vulkan can make. 
+This is a short list of assumptions, traps, and anti-patterns in the Vulkan API. It is not a list of "best practices", rather it covers the common mistakes that developers new to Vulkan could easily make.
 
 ### Validation Layers
 
@@ -8,23 +8,23 @@ During development, ensure that the Validation Layers are enabled. They are an i
 
 ### Vulkan is a box of tools
 
-In Vulkan, most problems can be tackled with multiple methods, each with their own benefits and drawbacks. There is rarely a "perfect" solution and obsessing over finding one is often a fruitless effort. When faced with a decision, make an informed choice and create an adequate solution that meets the current needs. To become informed, use this guide, reference a hardware vendors best practices guide, and profile various solutions.  
+In Vulkan, most problems can be tackled with multiple methods, each with their own benefits and drawbacks. There is rarely a "perfect" solution and obsessing over finding one is often a fruitless effort. When faced with a problem, try to create an adequate solution that meets the current needs and isn't overly convoluted. While the specification for Vulkan can be useful, it isn't the best source for how to use Vulkan in practice. Instead, reference external sources, like this guide, hardware best practice guides, tutorials, and other articles for more in-depth information. Finally, profiling various solutions is an important part of discovering which solution to use.
 
 ### Recording command buffers  
 
-Many early Vulkan tutorials and documents recommended writing a command buffer once and re-using it wherever possible. However, in practice re-use rarely has a performance benefit and incurs a non-trivial development burden. While it may appear counterintuitive, as re-using computed data is a common optimization, managing a scene with objects being added and removed as well as techniques such as frustum culling which vary draw calls on a per frame basis make reusing command buffers a serious design challenge. Instead prefer to simply re-record fresh command buffers every frame.  
+Many early Vulkan tutorials and documents recommended writing a command buffer once and re-using it wherever possible. In practice however re-use rarely has the advertized performance benefit while incurring a non-trivial development burden due to the complexity of implementation. While it may appear counterintuitive, as re-using computed data is a common optimization, managing a scene with objects being added and removed as well as techniques such as frustum culling which vary the draw calls issued on a per frame basis make reusing command buffers a serious design challenge. It requires a caching scheme to manage command buffers and maintaining state for determining if and when re-recording becomes necessary. Instead, prefer to re-record fresh command buffers every frame. If performance is a problem, recording can be multithreaded as well as using secondary command buffers for non-variable draw calls, like post processing.
 
 ### Multiple pipelines
 
-A graphics `VkPipeline` contains the combination of state needed to perform a draw call. For every input combination (shaders, vertex layout, primitive assembly, depth testing, blending mode, etc), a new pipeline is needed. This necessitates creating and binding many pipelines for complex rendering situations. While it might appear beneficial to try to create as few pipelines as possible by increasing complexity elsewhere, it is best to profile and determine if this is truly a big performance penalty in the first place.
+A graphics `VkPipeline` contains the combination of state needed to perform a draw call. Rendering a scene with different shaders, blending modes, vertex layouts, etc, will require a pipeline for each possibility. Because pipeline creation and swapping them between draw calls have an associated cost, it is a good practice to create and swap pipelines only as needed. However, by using various techniques and features to further reduce creation and swapping beyond the simple cases can be counterproductive, as it adds complexity with no guarantee of benefit. For large engines this may be necessary, but otherwise it is unlikely to be a bottleneck. Using the pipeline cache can further reduce the costs without resorting to more complex schemes.
 
 ### Resource duplication per swapchain image
 
-A common technique to increase throughput is to make multiple instances of a resource, where each instance can be used while rendering a different frame. The swapchain is one such example, as it contains multiple images. This can lead to the assumption that the number of instances each resource has should be the same as the swapchain image count. The issue with this assumption is that very few resources need to be duplicated the same amount as the swapchain image count. While it is useful for some things, for example the number of semaphores used to signal when a swapchain image is available, it is worth understanding which resources have one to one relationships and which don't.
+Pipelining frames is a common way to improve performance. By having multiple frames rendering at the same time, each using their own copy of the required resources, it reduces latency by removing resource contention. A simple implementation of this will duplicate the resources needed by each image in the swapchain. The issue is that this leads to assuming rendering resources must be duplicated once for each swapchain image. While practical for some resources, like the command buffers and semaphores used for each frame, the one to one duplication with swapchain images isn't often necessary. Vulkan offers a large amount of flexibility, letting the developer choose what level of duplication is right for their situation. Many resources may only need two copies, for example uniform buffers or data which is updated once per frame, and others may not need any duplication at all.
 
 ### Multiple queues per queue family
 
-Several hardware platforms have more than one `VkQueue` per queue family. This can be useful by being able to submit work to the same queue family from separate queues. While there can be advantages, it isn't necessarily better to create or use the extra queues. For performance recommendations, refer to hardware makers best practices guides.
+Several hardware platforms have more than one `VkQueue` per queue family. This can be useful by being able to submit work to the same queue family from separate queues. While there can be advantages, it isn't necessarily better to create or use the extra queues. For specific performance recommendations, refer to hardware makers best practices guides.
 
 ### Descriptor Sets
 
