@@ -24,7 +24,7 @@ Pipelining frames is a common way to improve performance. By having multiple fra
 
 ### Multiple queues per queue family
 
-Several hardware platforms have more than one `VkQueue` per queue family. This can be useful by being able to submit work to the same queue family from separate queues. While there can be advantages, it isn't necessarily better to create or use the extra queues. For specific performance recommendations, refer to hardware makers best practices guides.
+Several hardware platforms have more than one `VkQueue` per queue family. This can be useful by being able to submit work to the same queue family from separate queues. While there can be advantages, it isn't necessarily better to create or use the extra queues. For specific performance recommendations, refer to hardware vendors' best practices guides.
 
 ### Descriptor Sets
 
