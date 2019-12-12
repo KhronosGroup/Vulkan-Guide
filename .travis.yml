@@ -4,6 +4,6 @@ rvm:
 before_script:
   - gem install awesome_bot
 script:
-  - awesome_bot --allow-dupe chapters/*
+  - awesome_bot --allow-dupe chapters/* --white-list https://www.youtube.com/
 notifications:
   email: false
