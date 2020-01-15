@@ -8,13 +8,13 @@ It is also worth noting that managing memory is not easy and developers might wa
 
 ## Sub-allocation
 
-Sub-allocation is considered to be a first-class approach when working in Vulkan. It is also important to realize there is a [maxMemoryAllocationCount](https://www.khronos.org/registry/vulkan/specs/1.1/html/vkspec.html#limits-maxMemoryAllocationCount) which creates a limit to the number of simultaneously active allocations an application can use at once. Memory allocation and deallocation at the OS/driver level is likely to be really slow which is another reason for sub-allocation. A Vulkan app should aim to create large allocations and then manage them itself.
+Sub-allocation is considered to be a first-class approach when working in Vulkan. It is also important to realize there is a [maxMemoryAllocationCount](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#limits-maxMemoryAllocationCount) which creates a limit to the number of simultaneously active allocations an application can use at once. Memory allocation and deallocation at the OS/driver level is likely to be really slow which is another reason for sub-allocation. A Vulkan app should aim to create large allocations and then manage them itself.
 
 ![memory_allocation_sub_allocation.png](../images/memory_allocation_sub_allocation.png)
 
 ## Transfer
 
-The [VkPhysicalDeviceType](https://www.khronos.org/registry/vulkan/specs/1.1/html/vkspec.html#VkPhysicalDeviceType) advertises two main different types of GPUs, discrete and integrated (also referred to as UMA (unified memory architecture)). It is important for performance to understand the difference between the two.
+The [VkPhysicalDeviceType](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#VkPhysicalDeviceType) advertises two main different types of GPUs, discrete and integrated (also referred to as UMA (unified memory architecture)). It is important for performance to understand the difference between the two.
 
 Discrete graphics cards contain their own dedicated memory on the device. The data is transferred over a bus (such as PCIe) which is usually a bottleneck due to the physical speed limitation of transferring data. Some physical devices will advertise a queue with a `VK_QUEUE_TRANSFER_BIT` which allows for a dedicated queue for transferring data. The common practice is to create a _staging buffer_ to copy the host data in before sending through a command buffer to copy over to the device local memory.
 

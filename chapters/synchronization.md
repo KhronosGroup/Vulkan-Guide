@@ -1,6 +1,6 @@
 # Synchronization
 
-Synchronization is one of the most powerful but also most complex parts of using Vulkan. The application developer is now responsible for managing synchronization using the various [Vulkan synchronization primitives](https://www.khronos.org/registry/vulkan/specs/1.1/html/vkspec.html#synchronization). Improper use of synchronization can lead to hard-to-find bugs as well as poor performance in cases where the the GPU is unnecessarily idle.
+Synchronization is one of the most powerful but also most complex parts of using Vulkan. The application developer is now responsible for managing synchronization using the various [Vulkan synchronization primitives](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#synchronization). Improper use of synchronization can lead to hard-to-find bugs as well as poor performance in cases where the the GPU is unnecessarily idle.
 
 ![synchronization_overview.png](../images/synchronization_overview.png)
 
@@ -10,7 +10,7 @@ There are a [set of examples](https://github.com/KhronosGroup/Vulkan-Docs/wiki/S
 
 ## Pipeline Barriers
 
-[Pipeline Barriers](https://www.khronos.org/registry/vulkan/specs/1.1/html/vkspec.html#synchronization-pipeline-barriers) give control over which pipeline stages need to wait on previous pipeline stages when a command buffer is executed.
+[Pipeline Barriers](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#synchronization-pipeline-barriers) give control over which pipeline stages need to wait on previous pipeline stages when a command buffer is executed.
 
 ![synchronization_pipeline_barrieres.png](../images/synchronization_pipeline_barrieres.png)
 
