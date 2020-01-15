@@ -20,7 +20,7 @@ Due to the parallel nature of GPUs, a new style of programming referred to as [G
 
 Currently, the Vulkan Working Group is looking into how to make Vulkan a first class API for Ray Tracing rendering. More information was announced at [Siggraph 2019](https://www.youtube.com/watch?v=_57aiwJISCI&feature=youtu.be&t=5220).
 
-> Note: As of now, there is a [NVIDIA vendor extension](https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VK_NV_ray_tracing) exposing an implementation of ray tracing on Vulkan.
+> Note: As of now, there is a [NVIDIA vendor extension](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing) exposing an implementation of ray tracing on Vulkan.
 
 ## Video
 

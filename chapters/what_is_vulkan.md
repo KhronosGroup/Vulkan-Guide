@@ -6,7 +6,7 @@ Vulkan is not a company, nor language, but rather a way for developers to progra
 
 ## Vulkan at its core
 
-At the core, Vulkan is an [API Specification](https://www.khronos.org/registry/vulkan/#apispecs) that conformant hardware implementations follow. The public specification is generated from the [./xml/vk.xml](https://github.com/KhronosGroup/Vulkan-Docs/blob/master/xml/vk.xml) Vulkan Registry file in the official public copy of the Vulkan Specification repo found at [Vulkan-Doc](https://github.com/KhronosGroup/Vulkan-Docs). Documentation of the [XML schema](https://www.khronos.org/registry/vulkan/specs/1.1/registry.html) is also available.
+At the core, Vulkan is an [API Specification](https://www.khronos.org/registry/vulkan/#apispecs) that conformant hardware implementations follow. The public specification is generated from the [./xml/vk.xml](https://github.com/KhronosGroup/Vulkan-Docs/blob/master/xml/vk.xml) Vulkan Registry file in the official public copy of the Vulkan Specification repo found at [Vulkan-Doc](https://github.com/KhronosGroup/Vulkan-Docs). Documentation of the [XML schema](https://www.khronos.org/registry/vulkan/specs/1.2/registry.html) is also available.
 
 The Khronos Group, along with the Vulkan Specification, releases [C99](http://www.open-std.org/jtc1/sc22/wg14/www/standards) [header files](https://github.com/KhronosGroup/Vulkan-Headers/tree/master/include/vulkan) generated from the [API Registry](https://www.khronos.org/registry/vulkan/#apiregistry) that developers can use to interface with the Vulkan API.
 
