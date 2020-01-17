@@ -22,12 +22,18 @@ Example: [https://www.khronos.org/registry/vulkan/specs/1.2/html/](https://www.k
 
 Prebuilt HTML Chunked Vulkan Spec
 - The Vulkan SDK comes packaged with the chunked version of the spec. Each Vulkan SDK version includes the corresponding spec version. See the [Chunked Specification](https://vulkan.lunarg.com/doc/sdk/latest/windows/chunked_spec/index.html) for the latest Vulkan SDK.
-- [Vulkan 1.0 Specification](https://www.khronos.org/registry/vulkan/specs/1.0/html/)
-- [Vulkan 1.0 Specification with Extensions ](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/)
-- [Vulkan 1.0 Specification with WSI Extensions](https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/html/)
-- [Vulkan 1.1 Specification](https://www.khronos.org/registry/vulkan/specs/1.2/html/)
-- [Vulkan 1.1 Specification with Extensions ](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/)
-- [Vulkan 1.1 Specification with KHR Extensions](https://www.khronos.org/registry/vulkan/specs/1.2-khr-extensions/html/)
+- Vulkan 1.0 Specification
+    - [Core](https://www.khronos.org/registry/vulkan/specs/1.0/html/)
+    - [Core with Extensions](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/)
+    - [Core with WSI Extensions](https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/html/)
+- Vulkan 1.1 Specification
+    - [Core](https://www.khronos.org/registry/vulkan/specs/1.1/html/)
+    - [Core with Extensions](https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/)
+    - [Core with KHR Extensions](https://www.khronos.org/registry/vulkan/specs/1.1-khr-extensions/html/)
+- Vulkan 1.2 Specification
+    - [Core](https://www.khronos.org/registry/vulkan/specs/1.2/html/)
+    - [Core with Extensions](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/)
+    - [Core with KHR Extensions](https://www.khronos.org/registry/vulkan/specs/1.2-khr-extensions/html/)
 
 ### HTML Full
 
@@ -37,12 +43,18 @@ Example: https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html
 
 Prebuilt HTML Full Vulkan Spec
 - The Vulkan SDK comes packaged with Vulkan Spec in its entirety as HTML for the version corresponding to the Vulkan SDK version. See the [HTML version of the Specification](https://vulkan.lunarg.com/doc/sdk/latest/windows/vkspec.html) for the latest Vulkan SDK. (Note: Slow to load. The advantage of the full HTML version is its searching capability).
-- [Vulkan 1.0 Specification](https://www.khronos.org/registry/vulkan/specs/1.0/html/vkspec.html)
-- [Vulkan 1.0 Specification with Extensions ](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html)
-- [Vulkan 1.0 Specification with WSI Extensions](https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/html/vkspec.html)
-- [Vulkan 1.1 Specification](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html)
-- [Vulkan 1.1 Specification with Extensions ](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html)
-- [Vulkan 1.1 Specification with KHR Extensions](https://www.khronos.org/registry/vulkan/specs/1.2-khr-extensions/html/vkspec.html)
+- Vulkan 1.0 Specification
+    - [Core](https://www.khronos.org/registry/vulkan/specs/1.0/html/vkspec.html)
+    - [Core with Extensions ](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html)
+    - [Core with WSI Extensions](https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/html/vkspec.html)
+- Vulkan 1.1 Specification
+    - [Core](https://www.khronos.org/registry/vulkan/specs/1.1/html/vkspec.html)
+    - [Core with Extensions](https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html)
+    - [Core with KHR Extensions](https://www.khronos.org/registry/vulkan/specs/1.1-khr-extensions/html/vkspec.html)
+- Vulkan 1.2 Specification
+    - [Core](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html)
+    - [Core with Extensions](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html)
+    - [Core with KHR Extensions](https://www.khronos.org/registry/vulkan/specs/1.2-khr-extensions/html/vkspec.html)
 
 ### PDF
 
@@ -51,12 +63,18 @@ To view the PDF format, visit the `pdf/vkspec.pdf` file.
 Example: https://www.khronos.org/registry/vulkan/specs/1.2/pdf/vkspec.pdf
 
 Prebuilt PDF Vulkan Spec
-- [Vulkan 1.0 Specification](https://www.khronos.org/registry/vulkan/specs/1.0/pdf/vkspec.pdf)
-- [Vulkan 1.0 Specification with Extensions ](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/pdf/vkspec.pdf)
-- [Vulkan 1.0 Specification with WSI Extensions](https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/pdf/vkspec.pdf)
-- [Vulkan 1.1 Specification](https://www.khronos.org/registry/vulkan/specs/1.2/pdf/vkspec.pdf)
-- [Vulkan 1.1 Specification with Extensions ](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/pdf/vkspec.pdf)
-- [Vulkan 1.1 Specification with KHR Extensions](https://www.khronos.org/registry/vulkan/specs/1.2-khr-extensions/pdf/vkspec.pdf)
+- Vulkan 1.0 Specification
+    - [Core](https://www.khronos.org/registry/vulkan/specs/1.0/pdf/vkspec.pdf)
+    - [Core with Extensions ](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/pdf/vkspec.pdf)
+    - [Core with WSI Extensions](https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/pdf/vkspec.pdf)
+- Vulkan 1.1 Specification
+    - [Core](https://www.khronos.org/registry/vulkan/specs/1.1/pdf/vkspec.pdf)
+    - [Core with Extensions](https://www.khronos.org/registry/vulkan/specs/1.1-extensions/pdf/vkspec.pdf)
+    - [Core with KHR Extensions](https://www.khronos.org/registry/vulkan/specs/1.1-khr-extensions/pdf/vkspec.pdf)
+- Vulkan 1.2 Specification
+    - [Core](https://www.khronos.org/registry/vulkan/specs/1.2/pdf/vkspec.pdf)
+    - [Core with Extensions](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/pdf/vkspec.pdf)
+    - [Core with KHR Extensions](https://www.khronos.org/registry/vulkan/specs/1.2-khr-extensions/pdf/vkspec.pdf)
 
 ### Man pages
 
