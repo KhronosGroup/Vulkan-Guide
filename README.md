@@ -29,6 +29,17 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 - [Threading](./chapters/threading.md)
 - [Common Pitfalls](./chapters/common_pitfalls.md)
 
+## When and Why to use Extensions
+- [VK_EXT_inline_uniform_block](./chapters/extensions/VK_EXT_inline_uniform_block.md)
+- [VK_EXT_memory_budget](./chapters/extensions/VK_EXT_memory_budget.md)
+- [VK_EXT_memory_priority](./chapters/extensions/VK_EXT_memory_priority.md)
+- [VK_EXT_shader_subgroup_ballot and VK_EXT_shader_subgroup_vote](./chapters/extensions/VK_EXT_shader_subgroup_xxx.md)
+- [VK_EXT_transform_feedback](./chapters/extensions/VK_EXT_transform_feedback.md)
+- [External Memory and Sychronization](./chapters/extensions/VK_KHR_external_xxx.md)
+    - `VK_KHR_external_fence`, `VK_KHR_external_memory`, `VK_KHR_external_semaphore`, etc
+- [Cleanup Extensions](./chapters/extensions/VK_KHR_xxx2.md)
+    - `VK_KHR_get_memory_requirements2`, `VK_KHR_get_physical_device_properties2`, `VK_KHR_bind_memory2`, `VK_KHR_create_renderpass2`
+
 ----
 
 #### [Contributing](./CONTRIBUTING.md)
