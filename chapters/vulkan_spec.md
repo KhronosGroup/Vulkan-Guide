@@ -78,6 +78,6 @@ Prebuilt PDF Vulkan Spec
 
 ### Man pages
 
-The Khronos Group currently only host the Vulkan Man Pages for the latest version of the 1.1 spec, with all extensions, on the [online registry](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/).
+The Khronos Group currently only host the Vulkan Man Pages for the latest version of the 1.2 spec, with all extensions, on the [online registry](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/).
 
 The Vulkan Man Pages can also be found in the VulkanSDK for each SDK version. See the [Man Pages](https://vulkan.lunarg.com/doc/sdk/latest/windows/apispec.html) for the latest Vulkan SDK.
