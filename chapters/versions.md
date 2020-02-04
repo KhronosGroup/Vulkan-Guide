@@ -36,7 +36,7 @@ typedef void (VKAPI_PTR *PFN_vkGetPhysicalDeviceFeatures2KHR)(VkPhysicalDevice p
 
 The main difference is when calling `vkGetInstanceProcAddr(instance, "vkGetPhysicalDeviceFeatures2");` a Vulkan 1.0 implementation may not be aware of `vkGetPhysicalDeviceFeatures2` existence and `vkGetInstanceProcAddr` will return `NULL`. To be backward compatible with Vulkan 1.0 in this situation, the application should query for `vkGetPhysicalDeviceFeatures2KHR` as a 1.1 Vulkan implementation will likely have the function directly pointed to the `vkGetPhysicalDeviceFeatures2` function pointer internally.
 
-> Note that the `vkGetPhysicalDeviceFeatures2KHR` function will only exists in a Vulkan 1.0 implementation if it is supported as an extension.
+> Note that the `vkGetPhysicalDeviceFeatures2KHR` function will only exist in a Vulkan 1.0 implementation if it is supported as an extension.
 
 ## Features
 
