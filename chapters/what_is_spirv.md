@@ -46,7 +46,7 @@ The Khronos [SPIRV-Tools](https://github.com/KhronosGroup/SPIRV-Tools) project p
 - Validator (`spirv-val`)
 - Linker (`spirv-link`)
 - Optimizer (`spirv-opt`)
-    - LunarG wrote a [white paper](https://www.lunarg.com/wp-content/uploads/2018/06/SPIR-V-Shader-Legalization-and-Size-Reduction-Using-spirv-opt_v1.2.pdf) about `spriv-opt`
+    - LunarG wrote a [white paper](https://www.lunarg.com/wp-content/uploads/2018/06/SPIR-V-Shader-Legalization-and-Size-Reduction-Using-spirv-opt_v1.2.pdf) about `spirv-opt`
 - Reducer (`spirv-reduce`)
 - Control flow dumper (`spirv-cfg`)
 
