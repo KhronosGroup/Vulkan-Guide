@@ -8,7 +8,7 @@ Anyone can create their own Vulkan Loader, as long as they follow the [Loader In
 
 ## Linking Against the Loader
 
-The [Vulkan headers](https://github.com/KhronosGroup/Vulkan-Headers) only provide the Vulkan function prototypes. When building a Vulkan application you have to link it to the loader or you will get errors about undefined references to the Vulkan functions. There are two ways of linking the loader, [directly](https://github.com/KhronosGroup/Vulkan-Loader/blob/master/loader/LoaderAndLayerInterface.md#directly-linking-to-the-loader) and [indirectly](https://github.com/KhronosGroup/Vulkan-Loader/blob/master/loader/LoaderAndLayerInterface.md#indirectly-linking-to-the-loader) linking, which should not be confused with "static and dynamic linking".
+The [Vulkan headers](https://github.com/KhronosGroup/Vulkan-Headers) only provide the Vulkan function prototypes. When building a Vulkan application you have to link it to the loader or you will get errors about undefined references to the Vulkan functions. There are two ways of linking the loader, [directly](https://github.com/KhronosGroup/Vulkan-Loader/blob/master/loader/LoaderAndLayerInterface.md#directly-linking-to-the-loader) and [indirectly](https://github.com/KhronosGroup/Vulkan-Loader/blob/master/loader/LoaderAndLayerInterface.md#indirectly-linking-to-the-loader), which should not be confused with "static and dynamic linking".
 
 - [Directly linking](https://github.com/KhronosGroup/Vulkan-Loader/blob/master/loader/LoaderAndLayerInterface.md#directly-linking-to-the-loader) at compile time
     - This requires having a built Vulkan Loader (either as a static or dynamic library) that your build system can find.
@@ -23,9 +23,9 @@ Each platform can set its own rules on how to enforce the Vulkan Loader.
 
 ### Android
 
-Android devices supporting Vulkan have a [Vulkan Loader provided](https://source.android.com/devices/graphics/implement-vulkan#vulkan_loader) already built into the OS.
+Android devices supporting Vulkan provide a [Vulkan loader](https://source.android.com/devices/graphics/implement-vulkan#vulkan_loader) already built into the OS.
 
-A [vulkan_wrapper.c/h](https://developer.android.com/ndk/guides/graphics/getting-started#using) file is provided in the Android NDK for use of indirectly linking. This is needed partially since the Vulkan Loader can be different across different vendors and OEM devices.
+A [vulkan_wrapper.c/h](https://developer.android.com/ndk/guides/graphics/getting-started#using) file is provided in the Android NDK for indirectly linking. This is needed, in part, because the Vulkan Loader can be different across different vendors and OEM devices.
 
 ### Linux
 
