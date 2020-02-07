@@ -2,7 +2,7 @@
 
 The Vulkan ecosystem consists of many tools for development. This is **not** a full list and this is offered as a good starting point for many developers. Please continue to do your own research and searching for other tools as the development ecosystem is much larger than what can reasonably fit on a single markdown page.
 
-Khronos hosts [Vulkan Samples](https://github.com/KhronosGroup/Vulkan-Samples), a collection of code and tutorials that demonstrate API usage and explain the implementation of performance best-practices.
+Khronos hosts [Vulkan Samples](https://github.com/KhronosGroup/Vulkan-Samples), a collection of code and tutorials that demonstrates API usage and explains the implementation of performance best-practices.
 
 ## Khronos Validation Layer
 Since Vulkan doesn't do any error checking, it is very important when developing to enable the [Validation Layers](https://github.com/KhronosGroup/Vulkan-ValidationLayers) right away to help to catch invalid behavior. While invalid behavior might seem to work on one implementation, there is a good chance it will fail on another. Applications should also never ship the Validation Layers with their application as they noticeably reduce performance and are designed for the development phase.
@@ -28,7 +28,7 @@ Besides the Validation Layers, there are also other publicly available layers th
 
 ## Debugging
 
-Debugging something running on a GPU can be incredibly hard, luckly there are tools out there to help.
+Debugging something running on a GPU can be incredibly hard, luckily there are tools out there to help.
 
 - [Arm Graphics Analyzer](https://developer.arm.com/tools-and-software/graphics-and-gaming/arm-mobile-studio/components/graphics-analyzer)
 - [GAPID](https://github.com/google/gapid)
