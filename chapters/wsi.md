@@ -8,7 +8,7 @@ Since the Vulkan API can be used without displaying results, WSI is provided thr
 
 The `VkSurfaceKHR` object is platform agnostic and designed so the rest of the Vulkan API can use it for all WSI operations. It is enabled using the `VK_KHR_surface` extension.
 
-Each platform that supports a Vulkan Surface has its own way to create a `VkSurfaceKHR` object from its respectable platform-specific API.
+Each platform that supports a Vulkan Surface has its own way to create a `VkSurfaceKHR` object from its respective platform-specific API.
 
 - Android - [vkCreateAndroidSurfaceKHR](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCreateAndroidSurfaceKHR)
 - Fuchsia - [vkCreateImagePipeSurfaceFUCHSIA](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCreateImagePipeSurfaceFUCHSIA)
