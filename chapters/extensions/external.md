@@ -75,4 +75,4 @@ There is a `VkImport*` function for importing and a `VkGet*` function for export
 
 Here is a simple diagram showing the timeline of events between Vulkan and some other API talking to the GPU. This is used to represent a common use case for these external memory and synchronization extensions.
 
-![VK_KHR_external_xxx_example.png](images/VK_KHR_external_xxx_example.png)
+![external_example.png](images/external_example.png)

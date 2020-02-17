@@ -2,13 +2,13 @@
 
 Memory management is an important part of Vulkan. The `VK_EXT_memory_priority` extension was designed to allow an application to prevent important allocations from being moved to slower memory.
 
-This extension can be explained with an example of two applications (yours and another process on the host machine). Over time the applications both attempt to consume the limited device heap memory.
+This extension can be explained with an example of two applications (the main application and another process on the host machine). Over time the applications both attempt to consume the limited device heap memory.
 
 ![VK_EXT_memory_priority_overview](images/VK_EXT_memory_priority_overview.png)
 
-In this situation, the allocation from your application is still present, just possibly on slower memory (implementation might have moved it to host visible memory until it is needed again).
+In this situation, the allocation from the main application is still present, just possibly on slower memory (implementation might have moved it to host visible memory until it is needed again).
 
-The decision of **what** memory will get moved is implementation defined. Let's now imagine this is your application's memory usage
+The decision of **what** memory will get moved is implementation defined. Let's now imagine this is the main application's memory usage
 
 ![VK_EXT_memory_priority_app](images/VK_EXT_memory_priority_app.png)
 

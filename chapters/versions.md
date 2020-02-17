@@ -18,6 +18,8 @@ It is highly recommended that developers try to keep up to date with the latest 
 
 Between minor versions of Vulkan, [some extensions](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#versions-1.1) get [promoted](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#extendingvulkan-compatibility-promotions) to the [core version](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#extendingvulkan-coreversions). When targeting a newer minor version of Vulkan, an application will not need to enable the newly promoted extensions at the instance and device creation. However, if an application wants to keep backward compatibility, it will need to enable the extensions.
 
+For a summary of what is new in each version, check out the [Vulkan Release Summary](./vulkan_release_summary.md)
+
 ## Structs and enums
 
 Structs and enums are dependent on the header file being used and not the version of the instance or device queried. For example, the struct `VkPhysicalDeviceFeatures2` used to be `VkPhysicalDeviceFeatures2KHR` before Vulkan 1.1 was released. Regardless of the 1.x version of Vulkan being used, an application should use `VkPhysicalDeviceFeatures2` in its code as it matches the newest header version. For applications that did have `VkPhysicalDeviceFeatures2KHR` in the code, there is no need to worry as the Vulkan header also aliases any promoted structs and enums (`typedef VkPhysicalDeviceFeatures2 VkPhysicalDeviceFeatures2KHR;`).

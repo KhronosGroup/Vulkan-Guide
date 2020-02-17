@@ -7,3 +7,5 @@ Any company with a conformant implementation may freely use the publicly release
 The [Vulkan CTS source code](https://github.com/KhronosGroup/VK-GL-CTS/tree/master/external/vulkancts) is freely available and anyone is free to create and add a new test to the Vulkan CTS as long as they follow the [Contributing Wiki](https://github.com/KhronosGroup/VK-GL-CTS/wiki/Contributing).
 
 ![vulkan_cts_overview.png](../images/vulkan_cts_overview.png)
+
+An application can query the version of CTS passed for an implementation using the [VkConformanceVersion](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkConformanceVersion) property via the `VK_KHR_driver_properties` extension (this was promoted to core in Vulkan 1.2).
