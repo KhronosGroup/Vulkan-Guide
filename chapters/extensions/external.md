@@ -1,4 +1,4 @@
-# VK_KHR_external_***
+# External Memory and Synchronization
 
 Sometimes not everything an application does related to the GPU is done in Vulkan. There are various situations where memory is written or read outside the scope of Vulkan. To support these use cases a set of external memory and synchronization functions was created
 

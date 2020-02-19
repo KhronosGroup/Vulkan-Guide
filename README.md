@@ -31,14 +31,13 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 - [Common Pitfalls](./chapters/common_pitfalls.md)
 
 ## When and Why to use Extensions
+> These are supplemental references for the various Vulkan Extensions. Please consult the Vulkan Spec for further details on any extension
 - [Cleanup Extensions](./chapters/extensions/cleanup.md)
-    - `VK_KHR_bind_memory2`, `VK_KHR_create_renderpass2`, `VK_KHR_dedicated_allocation`, `VK_KHR_driver_properties`, `VK_KHR_get_memory_requirements2`, `VK_KHR_get_physical_device_properties2`, `VK_EXT_host_query_reset`, `VK_KHR_maintenance1`, `VK_KHR_maintenance2`, `VK_KHR_maintenance3`, `VK_KHR_separate_depth_stencil_layouts`, `VK_EXT_sampler_filter_minmax`, `VK_KHR_sampler_mirror_clamp_to_edge`
+    - `VK_KHR_bind_memory2`, `VK_KHR_create_renderpass2`, `VK_KHR_dedicated_allocation`, `VK_KHR_driver_properties`, `VK_KHR_get_memory_requirements2`, `VK_KHR_get_physical_device_properties2`, `VK_EXT_host_query_reset`, `VK_KHR_maintenance1`, `VK_KHR_maintenance2`, `VK_KHR_maintenance3`, `VK_KHR_separate_depth_stencil_layouts`, `VK_EXT_separate_stencil_usage`, `VK_EXT_sampler_filter_minmax`, `VK_KHR_sampler_mirror_clamp_to_edge`
 - [Device Groups](./chapters/extensions/device_groups.md)
     - `VK_KHR_device_group`, `VK_KHR_device_group_creation`
 - [External Memory and Sychronization](./chapters/extensions/external.md)
     - `VK_KHR_external_fence`, `VK_KHR_external_memory`, `VK_KHR_external_semaphore`
-- [Image Creation](./chapters/extensions/image_creation.md)
-    - `VK_KHR_image_format_list`, `VK_EXT_separate_stencil_usage`
 - [Shader Features](./chapters/extensions/shader_features.md)
     - `VK_KHR_8bit_storage`, `VK_KHR_16bit_storage`, `VK_KHR_relaxed_block_layout`, `VK_KHR_shader_atomic_int64`, `VK_EXT_scalar_block_layout`, `VK_KHR_shader_clock`, `VK_EXT_shader_demote_to_helper_invocation`, `VK_KHR_shader_draw_parameters`, `VK_KHR_shader_float16_int8`, `VK_KHR_shader_float_controls`, `VK_EXT_shader_stencil_export`, `VK_EXT_shader_subgroup_ballot`, `VK_KHR_shader_subgroup_extended_types`, `VK_EXT_shader_subgroup_vote`, `VK_EXT_shader_viewport_index_layer`, `VK_KHR_spirv_1_4`, `VK_KHR_storage_buffer_storage_class`, `VK_EXT_subgroup_size_control`, `VK_KHR_uniform_buffer_standard_layout`, `VK_KHR_variable_pointers`, `VK_KHR_vulkan_memory_model`
 - [Translation Layer Extensions](./chapters/extensions/translation_layer_extensions.md)
@@ -51,11 +50,11 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 - [VK_KHR_depth_stencil_resolve](./chapters/extensions/VK_KHR_depth_stencil_resolve.md)
 - [VK_KHR_descriptor_update_template](./chapters/extensions/VK_KHR_descriptor_update_template.md)
 - [VK_KHR_draw_indirect_count](./chapters/extensions/VK_KHR_draw_indirect_count.md)
+- [VK_KHR_image_format_list](./chapters/extensions/VK_KHR_image_format_list.md)
 - [VK_KHR_imageless_framebuffer](./chapters/extensions/VK_KHR_imageless_framebuffer.md)
 - [VK_KHR_multiview](./chapters/extensions/VK_KHR_multiview.md)
 - [VK_KHR_sampler_ycbcr_conversion](./chapters/extensions/VK_KHR_sampler_ycbcr_conversion.md)
 - [VK_KHR_timeline_semaphore](https://www.khronos.org/blog/vulkan-timeline-semaphores)
-
 ----
 
 #### [Contributing](./CONTRIBUTING.md)

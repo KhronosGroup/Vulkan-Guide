@@ -1,6 +1,6 @@
 # VK_EXT_descriptor_indexing
 
-> Promoted in Vulkan 1.2
+> Promoted to core in Vulkan 1.2
 >
 > [SPV_EXT_descriptor_indexing](https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_descriptor_indexing.html)
 >
@@ -8,7 +8,7 @@
 >
 > Presentation from Montreal Developer Day ([video](https://www.youtube.com/watch?v=tXipcoeuNh4) and [slides](https://www.khronos.org/assets/uploads/developers/library/2018-vulkan-devday/11-DescriptorUpdateTemplates.pdf))
 
-The main goals of this extension are to add larger descriptor sets or "bindless" descriptors and allow for dynamic non-uniform resource indexing. This was also designed to be broken down into a few different smaller features to allow implementations to add support where they can.
+The main goals of this extension are to add larger descriptor sets ("bindless" descriptors) and allow for dynamic non-uniform resource indexing. This was also designed to be broken down into a few different, smaller features to allow implementations to add support for what they can.
 
 ## Bind after update
 
@@ -53,13 +53,18 @@ void main() {
 }
 ```
 
+This example is "dynamic" as it is will not be known until runtime what the value of `ubo.textureId` is. This is also "uniform" as all threads will use `ubo.textureId` in this shader.
+
 ## Dynamic Non-Uniform Indexing
 
-To be dynamic non-uniform means that it is possible that invocations might index differently into an array of descriptors, but it won't be known until runtime. This extension exposes in `VkPhysicalDeviceDescriptorIndexingFeatures` a set of `shader*ArrayNonUniformIndexing` feature bits to show which descriptor types an implementation supports dynamic non-uniform indexing for. The SPIR-V extension adds a `NonUniform` decoration which can be set in GLSL with the help of the `nonuniformEXT` keyword added.
+To be dynamic **non-uniform** means that it is possible that invocations might index differently into an array of descriptors, but it won't be known until runtime. This extension exposes in `VkPhysicalDeviceDescriptorIndexingFeatures` a set of `shader*ArrayNonUniformIndexing` feature bits to show which descriptor types an implementation supports dynamic non-uniform indexing for. The SPIR-V extension adds a `NonUniform` decoration which can be set in GLSL with the help of the `nonuniformEXT` keyword added.
 
 An example of dynamic non-uniform indexing in GLSL
 
 ```
+#version450
+#extension GL_EXT_nonuniform_qualifier : enable
+
 layout(set = 0, binding = 0) uniform sampler2D mySampler[64];
 layout(set = 0, binding = 1) uniform UniformBufferObject {
     int textureId;
@@ -78,3 +83,5 @@ void main() {
     // ...
 }
 ```
+
+This example is non-uniform as some threads index a `mySampler[0]` and some at `mySampler[1]`. The `nonuniformEXT()` is needed in this case.

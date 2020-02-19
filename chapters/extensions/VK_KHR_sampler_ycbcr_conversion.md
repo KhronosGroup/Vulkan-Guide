@@ -17,15 +17,18 @@ While this section will go over more of this extension in details, **disclaimer*
 ## Multi-planar Formats
 
 To represent a layout like YUV420p where all the `Y` data is in plane 0, `U` data is in plane 1, and `V` data is in plane 2 an application would use the `VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM` format. The Vulkan spec explicitly describes each multi-planar format layout and how it maps to each component. The big thing to note is all the Vulkan formats will use the `RGBA` letter notations to map to the components. For this example with YUV420p and `VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM`:
+
 - `G` == `Y`
 - `B` == `U`
 - `R` == `V`
+
+This may require some extra focus when mapping the swizzle components between `RGBA` and the YCbCr format.
 
 ## Disjoint
 
 Normally when an application creates a `VkImage` it only binds it to a single `VkDeviceMemory` object. If the implementation supports `VK_FORMAT_FEATURE_DISJOINT_BIT` for a given format then an application can bind multiple disjoint `VkDeviceMemory` to a single `VkImage` where each `VkDeviceMemory` represents a single plane.
 
-Doing this follows the same pattern as the normal binding of memory to an image with the use of a few new functions. Here is some pseudo-code to represent the new workflow
+Doing this follows the same pattern as the normal binding of memory to an image with the use of a few new functions. Here is some pseudo code to represent the new workflow
 
 ```
 VkImagePlaneMemoryRequirementsInfo imagePlaneMemoryRequirementsInfo = {};
@@ -97,7 +100,9 @@ The big thing to note here is that the `imageOffset` is zero because its base is
 
 ## VkSamplerYcbcrConversion
 
-The `VkSamplerYcbcrConversion` describes all the "read on your own outside the Vulkan Guide" aspects of YCbCr conversion. Here is some pseudo code to help give an idea of how to use it from the API point of view:
+The `VkSamplerYcbcrConversion` describes all the "read on your own outside the Vulkan Guide" aspects of YCbCr conversion. The values set here are dependent on the input YCbCr data being obtained and how to do the conversion to RGB color spacce.
+
+Here is some pseudo code to help give an idea of how to use it from the API point of view:
 
 ```
 // Create conversion object that describes how to have the implementation do the YCbCr conversion

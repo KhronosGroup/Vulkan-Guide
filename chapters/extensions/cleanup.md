@@ -4,40 +4,47 @@
 
 # VK_KHR_driver_properties
 
-> Promoted in Vulkan 1.2
+> Promoted to core in Vulkan 1.2
 
 This extension adds more information to query about each implementation. The [VkDriverId](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkDriverId) will be a registered vendor's ID for the implementation. The [VkConformanceVersion](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkConformanceVersion) displays which version of [the Vulkan Conformance Test Suite](../chapters/vulkan_cts.md) the implementation passed.
 
 # VK_EXT_host_query_reset
 
-> Promoted in Vulkan 1.2
+> Promoted to core in Vulkan 1.2
 
 This extension allows an application to call `vkResetQueryPool` from the host instead of needing to setup logic to submit `vkCmdResetQueryPool` since this is mainly just a quick write to memory for most implementations and little overhead to calling.
 
 # VK_KHR_separate_depth_stencil_layouts
 
-> Promoted in Vulkan 1.2
+> Promoted to core in Vulkan 1.2
 
 This extension allows an application when using a depth/stencil format to do an image translation on each the depth and stencil separately. Starting in Vulkan 1.2 this functionality is required for all implementations.
 
+# VK_EXT_separate_stencil_usage
+
+> Promoted to core in Vulkan 1.2
+
+There are formats that express both the usage of depth and stencil, but there was no way to list a different usage for them. The `VkImageStencilUsageCreateInfo` now lets an application pass in a separate `VkImageUsageFlags` for the stencil usage of an image. The depth usage is the original usage passed into `VkImageCreateInfo::usage` and without using `VkImageStencilUsageCreateInfo` the stencil usage will be the same as well.
+
+A good use case of this is when using the [VK_KHR_image_format_list](./VK_KHR_image_format_list.md) extension. This provides a way for the application to more explicitly describe the possible image views of their `VkImage` at creation time. This allows some implementations to possibly do implementation dependent optimization depending on the usages set.
+
 # VK_KHR_dedicated_allocation
 
-> Promoted in Vulkan 1.1
+> Promoted to core in Vulkan 1.1
 
-Normally applications allocate large chunks for `VkDeviceMemory` and then suballocate to various buffers and images. There are times where it might be better to have a dedicated allocation for `VkImage` or `VkBuffer`. An application can pass `VkMemoryDedicatedRequirements` into `vkGetBufferMemoryRequirements2` or `vkGetImageMemoryRequirements2` to fine out if a dedicated allocation is preferred or required. The requiring of a dedicated allocation occurs when dealing with external memory.
+Normally applications allocate large chunks for `VkDeviceMemory` and then suballocate to various buffers and images. There are times where it might be better to have a dedicated allocation for `VkImage` or `VkBuffer`. An application can pass `VkMemoryDedicatedRequirements` into `vkGetBufferMemoryRequirements2` or `vkGetImageMemoryRequirements2` to fine out if a dedicated allocation is preferred or required. When dealing with external memory it will often require a dedicated allocation.
 
 # VK_EXT_sampler_filter_minmax
 
-> Promoted in Vulkan 1.2
+> Promoted to core in Vulkan 1.2
 
 By default in Vulkan sampler filters to an image lookup to return a filtered texel value produced by computing a weighted average of a collection of texels in the neighborhood of the texture coordinate provided. This extension provides a new sampler parameter which allows applications to produce a filtered texel value by computing a component-wise minimum (`VK_SAMPLER_REDUCTION_MODE_MIN`) or maximum (`VK_SAMPLER_REDUCTION_MODE_MAX`) of the texels that would normally be averaged. This is similar to [GL EXT_texture_filter_minmax](https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_filter_minmax.txt).
 
 # VK_KHR_sampler_mirror_clamp_to_edge
 
-> Promoted in Vulkan 1.2
+> Promoted to core in Vulkan 1.2
 
 This extension adds a new sampler address mode (`VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE`) that effectively uses a texture map twice as large as the original image in which the additional half of the new image is a mirror image of the original image. This new mode relaxes the need to generate images whose opposite edges match by using the original image to generate a matching “mirror image”. This mode allows the texture to be mirrored only once in the negative `s`, `t`, and `r` directions.
-
 
 # Maintenance Extensions
 
@@ -48,7 +55,7 @@ Currently, there are 3 maintenance extensions, all of which were bundled in Vulk
 - [VK_KHR_maintenance2](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance2)
 - [VK_KHR_maintenance3](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance3)
 
-# pNext Expansion
+# pNext Expansions
 
 There have been a few times where the Vulkan Working Group realized that some structs in the original 1.0 Vulkan spec were missing the ability to be extended properly due to missing `sType`/`pNext`.
 

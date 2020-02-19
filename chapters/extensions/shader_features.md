@@ -8,7 +8,7 @@ Some of the following extensions were added alongside a SPIR-V extension. For ex
 
 # Example Workflow
 
-This example is to illustrate the pieces of using shader features extension. What this example is doing is not the point, this is for understanding the logistics involved. This example will be using `VK_KHR_8bit_storage` as an example, but details about the extension can be found below in its [own section below](#vk-khr-8bit-storage-and-vk-khr-16bit-storage).
+This example is to illustrate the pieces of using shader features extension. What this example is doing is not the point, this is for understanding the logistics involved. This example will be using `VK_KHR_8bit_storage` as an example, but details about the extension can be found below in its [own section below](#vk_khr_8bit_storage-and-vk_khr_16bit_storage).
 
 1. Check if the Vulkan extension is supported or if has been promoted in the Vulkan version being used
     - For this case, an application would query `VK_KHR_8bit_storage` or check if Vulkan 1.2 is supported
@@ -38,7 +38,7 @@ This example is to illustrate the pieces of using shader features extension. Wha
 
     // With 8bit storage
     layout (set = 0, binding = 0) readonly buffer StorageBuffer {
-        uint8_t dataA; // 00AA
+        uint8_t dataA; // 0xAA
         uint8_t dataB; // 0xBB
     } ssbo;
 
@@ -55,7 +55,7 @@ This example is to illustrate the pieces of using shader features extension. Wha
     OpExtension  "SPV_KHR_8bit_storage"
     ```
 6. Alter any Vulkan code needed to match with the SPIR-V interface changes
-    - In this example, the only change is the descriptor is only 2 bytes large instead of 4 bytes, but the data would remain the same.
+    - In this example, the only change is the stroage buffer descriptor only is 2 bytes large now instead of originally 4 bytes, but the content of the 2 bytes of data would remain the same.
 
 # VK_KHR_spirv_1_4
 
@@ -198,6 +198,8 @@ OpMemberDecorate 11(StorageBuffer) 3 Offset 28
 # VK_KHR_vulkan_memory_model
 
 > Promoted to core in Vulkan 1.2
+>
+> [Comparing the Vulkan SPIR-V memory model to C++‘s](https://www.khronos.org/blog/comparing-the-vulkan-spir-v-memory-model-to-cs)
 
 The [Vulkan Memory Model](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-model) formally defines how to synchronize memory accesses to the same memory locations performed by multiple shader invocations and this extension exposes a boolean to let implementations to indicate support for it. This is important because with many things targeting Vulkan/SPIR-V it is important that any memory transfer operations an application might attempt to optimize doesn't break across implementations.
 
