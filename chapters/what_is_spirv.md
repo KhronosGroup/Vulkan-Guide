@@ -15,7 +15,7 @@ SPIR-V has many capabilities as it has other targets than just Vulkan. To see th
 
 ### glslang
 
-[glslang](https://github.com/KhronosGroup/glslang) is the Khronos reference front-end for GLSL and ESSL, and sample SPIR-V generator. There is a standalone `glslangValidator` tool that is included that can be used to create SPIR-V from GLSL and ESSL.
+[glslang](https://github.com/KhronosGroup/glslang) is the Khronos reference front-end for GLSL, HLSL and ESSL, and sample SPIR-V generator. There is a standalone `glslangValidator` tool that is included that can be used to create SPIR-V from GLSL, HLSL and ESSL.
 
 ### Shaderc
 
