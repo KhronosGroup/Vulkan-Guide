@@ -1,4 +1,4 @@
-# VK_KHR_external_***
+# External Memory and Synchronization
 
 Sometimes not everything an application does related to the GPU is done in Vulkan. There are various situations where memory is written or read outside the scope of Vulkan. To support these use cases a set of external memory and synchronization functions was created
 
@@ -75,4 +75,4 @@ There is a `VkImport*` function for importing and a `VkGet*` function for export
 
 Here is a simple diagram showing the timeline of events between Vulkan and some other API talking to the GPU. This is used to represent a common use case for these external memory and synchronization extensions.
 
-![VK_KHR_external_xxx_example.png](images/VK_KHR_external_xxx_example.png)
+![external_example.png](images/external_example.png)

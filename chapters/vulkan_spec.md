@@ -12,7 +12,7 @@ When building the Vulkan Spec, you pass in what version of Vulkan to build for a
 
 ## Vulkan Spec Format
 
-The Vulkan Spec can be built in different formats.
+The Vulkan Spec can be built into different formats.
 
 ### HTML Chunked
 
