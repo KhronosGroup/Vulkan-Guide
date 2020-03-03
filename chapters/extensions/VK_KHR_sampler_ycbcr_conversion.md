@@ -6,7 +6,7 @@ This extension, in short, adds support to do texture sampling on YCbCr color spa
 
 While this section will go over more of this extension in details, **disclaimer**:
 
-> The use of YCbCr sampler conversion is a niche area in computer graphics and mainly stems from the fact analog inputs (for example cameras) can read in data better this way and also it can be better for compression (example JPEG). This means it is not important for the common Vulkan developer to need to understand the additions of this extension.
+> The use of YCbCr sampler conversion is a niche area in 3D graphics and say it's mainly used for processing inputs from video decoders and cameras. This means it is not important for the common Vulkan developer to need to understand the additions of this extension.
 >
 > This guide will not even attempt to teach you about YCbCr and expects you have some basic knowledge of this domain already
 >
@@ -129,7 +129,7 @@ vkCreateSampler(device, &samplerInfo, nullptr, &mySampler));
 
 ## combinedImageSamplerDescriptorCount
 
-An important value to montior is the `combinedImageSamplerDescriptorCount` which describes how many descriptor an implementation uses for each multi-planar format. This means for `VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM` an implementation can use 1, 2, or 3 descriptors for each combined image sampler used.
+An important value to monitor is the `combinedImageSamplerDescriptorCount` which describes how many descriptor an implementation uses for each multi-planar format. This means for `VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM` an implementation can use 1, 2, or 3 descriptors for each combined image sampler used.
 
 All descriptors in a binding use the same maximum `combinedImageSamplerDescriptorCount` descriptors to allow implementations to use a uniform stride for dynamic indexing of the descriptors in the binding.
 

@@ -55,7 +55,7 @@ This example is to illustrate the pieces of using shader features extension. Wha
     OpExtension  "SPV_KHR_8bit_storage"
     ```
 6. Alter any Vulkan code needed to match with the SPIR-V interface changes
-    - In this example, the only change is the stroage buffer descriptor only is 2 bytes large now instead of originally 4 bytes, but the content of the 2 bytes of data would remain the same.
+    - In this example, the only change is that the storage buffer descriptor only is 2 bytes large now instead of originally 4 bytes, but the content of the 2 bytes of data would remain the same.
 
 # VK_KHR_spirv_1_4
 

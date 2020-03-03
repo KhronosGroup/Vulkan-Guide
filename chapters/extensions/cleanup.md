@@ -12,7 +12,7 @@ This extension adds more information to query about each implementation. The [Vk
 
 > Promoted to core in Vulkan 1.2
 
-This extension allows an application to call `vkResetQueryPool` from the host instead of needing to setup logic to submit `vkCmdResetQueryPool` since this is mainly just a quick write to memory for most implementations and little overhead to calling.
+This extension allows an application to call `vkResetQueryPool` from the host instead of needing to setup logic to submit `vkCmdResetQueryPool` since this is mainly just a quick write to memory for most implementations.
 
 # VK_KHR_separate_depth_stencil_layouts
 
@@ -32,13 +32,13 @@ A good use case of this is when using the [VK_KHR_image_format_list](./VK_KHR_im
 
 > Promoted to core in Vulkan 1.1
 
-Normally applications allocate large chunks for `VkDeviceMemory` and then suballocate to various buffers and images. There are times where it might be better to have a dedicated allocation for `VkImage` or `VkBuffer`. An application can pass `VkMemoryDedicatedRequirements` into `vkGetBufferMemoryRequirements2` or `vkGetImageMemoryRequirements2` to fine out if a dedicated allocation is preferred or required. When dealing with external memory it will often require a dedicated allocation.
+Normally applications allocate large chunks for `VkDeviceMemory` and then suballocate to various buffers and images. There are times where it might be better to have a dedicated allocation for `VkImage` or `VkBuffer`. An application can pass `VkMemoryDedicatedRequirements` into `vkGetBufferMemoryRequirements2` or `vkGetImageMemoryRequirements2` to find out if a dedicated allocation is preferred or required. When dealing with external memory it will often require a dedicated allocation.
 
 # VK_EXT_sampler_filter_minmax
 
 > Promoted to core in Vulkan 1.2
 
-By default in Vulkan sampler filters to an image lookup to return a filtered texel value produced by computing a weighted average of a collection of texels in the neighborhood of the texture coordinate provided. This extension provides a new sampler parameter which allows applications to produce a filtered texel value by computing a component-wise minimum (`VK_SAMPLER_REDUCTION_MODE_MIN`) or maximum (`VK_SAMPLER_REDUCTION_MODE_MAX`) of the texels that would normally be averaged. This is similar to [GL EXT_texture_filter_minmax](https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_filter_minmax.txt).
+By default, Vulkan samplers using linear filtering return a filtered texel value produced by computing a weighted average of a collection of texels in the neighborhood of the texture coordinate provided. This extension provides a new sampler parameter which allows applications to produce a filtered texel value by computing a component-wise minimum (`VK_SAMPLER_REDUCTION_MODE_MIN`) or maximum (`VK_SAMPLER_REDUCTION_MODE_MAX`) of the texels that would normally be averaged. This is similar to [GL EXT_texture_filter_minmax](https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_filter_minmax.txt).
 
 # VK_KHR_sampler_mirror_clamp_to_edge
 
