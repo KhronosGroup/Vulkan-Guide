@@ -32,3 +32,9 @@ The `VkSwapchainKHR` object provides the ability to present rendering results to
 ![wsi_engine](../images/wsi_engine.png)
 
 Khronos' [sample](https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/swapchain_images) and [tutorial](https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/performance/swapchain_images/swapchain_images_tutorial.md) explain different considerations to make when creating a swapchain and selecting a presentation mode.
+
+## Pre-Rotation
+
+Mobile devices can be rotated, therefore the logical orientation of the application window and the physical orientation of the display may not match. Applications then need to be able to operate in two modes: `portrait` and `landscape`. The difference between these two modes can be simplified to just a change in resolution. However, some display subsystems always work on the "native" (or "physical") orientation of the display panel. Since the device has been rotated, to achieve the desired effect the application output must also rotate.
+
+In order for your application to get the most out of Vulkan on mobile platforms, such as Android, implementing pre-rotation is a must. There is a [detailed blog from Google](https://android-developers.googleblog.com/2020/02/handling-device-orientation-efficiently.html?m=1) that goes over how to handle the surface rotation by specifying the orientation during swapchain creation and also comes with a [standalone example](https://github.com/google/vulkan-pre-rotation-demo). The [Vulkan-Samples](https://github.com/KhronosGroup/Vulkan-Samples) also has both a [great write up](https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/performance/surface_rotation/surface_rotation_tutorial.md) of why pre-rotation is a problem as well as [a sample to run](https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/surface_rotation) that shows a way to solve it in the shader.
