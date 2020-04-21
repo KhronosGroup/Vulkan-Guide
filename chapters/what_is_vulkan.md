@@ -29,3 +29,7 @@ Vulkan puts more work and responsibility into the application. Not every develop
 While some developers may want to try using Vulkan with no help, it is common to use some lighter libraries in your development flow to help abstract some of the more tedious aspect of Vulkan. Here are some [libraries](https://github.com/KhronosGroup/Khronosdotorg/blob/master/api/vulkan/resources.md#libraries) to [help with development](https://github.com/vinjn/awesome-vulkan#libraries)
 
 ![what_is_vulkan_layer](../images/what_is_vulkan_layer.png)
+
+## Learning to use Vulkan
+
+Vulkan is a tool for developers to create hardware accelerated applications. The Vulkan Guide tries to cover the more logistical material such as extensions, versions, spec, etc. For more information how to "use" Vulkan to create something such as the Hello World Triangle, please take a look at resources such as those found in the [Khronos's Vulkan educational resources](https://www.khronos.org/vulkan/educational-resources). If you want to get more hands-on help and knowledge, feel free to join the [Khronos Developer Slack](https://www.khronos.org/news/permalink/khronos-developer-slack-5bfc62eb261764.20435008) or the [Khronos Community Forums](https://community.khronos.org/) as well!
