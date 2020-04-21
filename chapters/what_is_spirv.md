@@ -28,6 +28,8 @@ Shaderc builds both tools as a standalone command line tool ([glslc](https://git
 [DirectXShaderCompiler](https://github.com/microsoft/DirectXShaderCompiler) also supports [translating HLSL into the SPIR-V](https://github.com/Microsoft/DirectXShaderCompiler/wiki/SPIR%E2%80%90V-CodeGen
 ).
 
+![what_is_spirv_dxc.png](../images/what_is_spirv_dxc.png)
+
 ### Clspv
 
 [Clspv](https://github.com/google/clspv) is a prototype compiler for a subset of OpenCL C to SPIR-V to be used as Vulkan compute shaders.

@@ -23,3 +23,6 @@ There are projects with the goal of taking another API and mapping it to Vulkan.
 
 - The [ANGLE](https://github.com/google/angle) project is an example of a translation layer for OpenGL to Vulkan. [SIGGRAPH 2019 Presentation](https://www.youtube.com/watch?v=1fU4w2ZGxH4&feature=youtu.be&t=10822)
 - The [DXVK](https://github.com/doitsujin/dxvk) project is an example of a translation layer for Direct3D 10/11 to Vulkan.
+- There are many more layering projects as shown in chart below
+
+![portability_initiative_table.png](../images/portability_initiative_table.png)
