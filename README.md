@@ -17,6 +17,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 - [Portability Initiative](./chapters/portability_initiative.md)
 - [Vulkan CTS](./chapters/vulkan_cts.md)
 - [Vulkan Development Tools](./chapters/development_tools.md)
+- [Vulkan Validation Overview](./chapters/validation_overview.md)
 
 ## Using Vulkan
 - [Loader](./chapters/loader.md)
