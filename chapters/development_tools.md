@@ -5,14 +5,8 @@ The Vulkan ecosystem consists of many tools for development. This is **not** a f
 Khronos hosts [Vulkan Samples](https://github.com/KhronosGroup/Vulkan-Samples), a collection of code and tutorials that demonstrates API usage and explains the implementation of performance best-practices.
 
 ## Khronos Validation Layer
-Since Vulkan doesn't do any error checking, it is very important when developing to enable the [Validation Layers](https://github.com/KhronosGroup/Vulkan-ValidationLayers) right away to help to catch invalid behavior. While invalid behavior might seem to work on one implementation, there is a good chance it will fail on another. Applications should also never ship the Validation Layers with their application as they noticeably reduce performance and are designed for the development phase.
 
-> The Khronos Validation Layer used to consist of multiple layers but now has been unified for [details explained in LunarG's whitepaper](https://www.lunarg.com/wp-content/uploads/2019/04/UberLayer_V3.pdf).
-
-- **Android** - The NDK comes with the Validation Layers built and [information on how to use them](https://developer.android.com/ndk/guides/graphics/validation-layer).
-- **Linux** - The [Vulkan SDK](https://vulkan.lunarg.com/sdk/home) comes with the Validation Layers built and instructions on how to use them on [Linux](https://vulkan.lunarg.com/doc/sdk/latest/linux/validation_layers.html).
-- **MacOS** - The [Vulkan SDK](https://vulkan.lunarg.com/sdk/home) comes with the Validation Layers built and instructions on how to use them on [MacOS](https://vulkan.lunarg.com/doc/sdk/latest/mac/validation_layers.html).
-- **Windows** - The [Vulkan SDK](https://vulkan.lunarg.com/sdk/home) comes with the Validation Layers built and instructions on how to use them on [Windows](https://vulkan.lunarg.com/doc/sdk/latest/windows/validation_layers.html).
+The [Khronos Validation Layers](./validation_overview.md#khronos-validation-layer) is every developer's first layer of defense when debugging their Vulkan applicaition and is the reason it is on top of this list. Read the [Validation Overview chapter](./validation_overview.md) for more details.
 
 ## Vulkan Layers
 
