@@ -23,6 +23,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 - [Loader](./chapters/loader.md)
 - [Layers](./chapters/layers.md)
 - [Querying, Extensions, and Features](./chapters/querying_extensions_features.md)
+    - [Enabling Features](./chapters/enabling_features.md)
 - [WSI](./chapters/wsi.md)
 - [pNext and sType](./chapters/pnext_and_stype.md)
 - [Synchronization](./chapters/synchronization.md)

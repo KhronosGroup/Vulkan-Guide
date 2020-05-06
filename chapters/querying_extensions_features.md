@@ -21,6 +21,8 @@ An application can [query the physical device](https://www.khronos.org/registry/
 
 ## Features
 
+> Checkout the [Enabling Feature](./enabling_features.md) chapter for more information.
+
 Features describe functionality which is not supported on all implementations. Features can be [queried](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#vkGetPhysicalDeviceFeatures) and then enabled when creating the `VkDevice`. Besides the [list of all features](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#features), some [features are mandatory](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-requirements) due to newer Vulkan versions or use of extensions.
 
 A common technique is for an extension to expose a new struct that can be passed through `pNext` that adds more features to be queried.
