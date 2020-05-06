@@ -34,7 +34,7 @@ Debugging something running on a GPU can be incredibly hard, luckily there are t
 
 With anything related to a GPU it is best to not assume and profile when possible. Here is a list of known profilers to aid in your development.
 
-- [AMD Radeon GPU Profiler](https://gpuopen.com/radeon-gpu-profiler-rgp/) - Low-level performance analysis tool for AMD Radeon GPUs.
+- [AMD Radeon GPU Profiler](https://gpuopen.com/rgp/) - Low-level performance analysis tool for AMD Radeon GPUs.
 - [Arm Streamline Performance Analyzer](https://developer.arm.com/tools-and-software/graphics-and-gaming/arm-mobile-studio/components/streamline-performance-analyzer) - Visualize the performance of mobile games and applications for a broad range of devices, using Arm Mobile Studio.
 - [Intel(R) GPA](https://software.intel.com/en-us/gpa) - Intel's Graphics Performance Analyzers that supports capturing and analyzing multi-frame streams of Vulkan apps.
 - [OCAT](https://github.com/GPUOpen-Tools/OCAT) - The Open Capture and Analytics Tool (OCAT) provides an FPS overlay and performance measurement for D3D11, D3D12, and Vulkan.
