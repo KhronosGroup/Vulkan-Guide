@@ -73,7 +73,7 @@ The Validation Layers attempt to supply as much useful information as possible w
     html/vkspec.html#VUID-vkBindImageMemory-image-01044)
     ```
 
-    - Example 2 is about the same as Example 1 with the exception that the `name` that was attached to the object (`name = myTextureMemory`). This was done using the [Debug Marker](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-debug-markers) feature exposed by the `VK_EXT_debug_marker` extension. ([For more details about using the extension](https://www.saschawillems.de/blog/2016/05/28/tutorial-on-using-vulkans-vk_ext_debug_marker-with-renderdoc/))
+    - Example 2 is about the same as Example 1 with the exception that the `name` that was attached to the object (`name = myTextureMemory`). This was done using the [VK_EXT_debug_util](https://www.lunarg.com/new-tutorial-for-vulkan-debug-utilities-extension/) extension ([Example of to use extension to label objects](https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/extensions/debug_utils/debug_utils_tutorial.md)). Note that the old way of using [VK_EXT_debug_report](https://www.saschawillems.de/blog/2016/05/28/tutorial-on-using-vulkans-vk_ext_debug_marker-with-renderdoc/) might be needed on legacy devices that don't support `VK_EXT_debug_util`.
     - There were 3 objects involved in causing this error.
         - Object 0 is a `VkDeviceMemory` named `myTextureMemory`
         - Object 1 is a `VkImage` with no name
