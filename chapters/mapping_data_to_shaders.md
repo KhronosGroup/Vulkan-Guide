@@ -140,6 +140,8 @@ The following results would look as followed
 
 A push constant is a small bank of values accessible in shaders. Push constants allow the application to set values used in shaders without creating buffers or modifying and binding descriptor sets for each update.
 
+These are designed for small amount (a few dwords) of high frequency data to be updated per-recording of the command buffer.
+
 From a shader perspective, it is similar to a uniform buffer.
 ```
 #version 450
@@ -251,28 +253,10 @@ The typical use cases of specialization constant can be best grouped into three 
 
 1. Toggling features
     - The support a feature in Vulkan isn't known until runtime. This usage of specialization constant is to prevent writing two separate shaders, but instead embedded a constant runtime decision.
-    -
-    ```
-    #version 450
-    #extension GL_KHR_shader_subgroup_vote : enable
-    layout (constant_id = 0) const bool voteEnabled = true;
-
-    void main() {
-        // ...
-        if (voteEnabled == true) {
-            // Only valid if Vulkan exposes vote subgroup operations
-            myResults = subgroupAll(true);
-        } else {
-            myResults = false;
-        }
-        // ...
-    }
-    ```
 2. Improving backend optimizations
     - The "backend" here refers the the implementation's compiler that takes the resulting SPIR-V and lowers it down to some ISA to run on the device.
     - Constant values allow a set of optimizations such as [constant folding](https://en.wikipedia.org/wiki/Constant_folding), [dead code elimination](https://en.wikipedia.org/wiki/Dead_code_elimination), etc. to occur.
-    - While divergence gives poor performance in shader code, if the compiler knows from the SPIR-V specialization constant that only one branch is possible, it can easily eliminate the branch for you.
-3. Effecting types and memory sizes
+3. Affecting types and memory sizes
     - It is possible to set the length of an array or a variable type used through a specialization constant.
     - It is important to note that a compiler will need to allocate registers depending on these types and sizes. This means it is likely that a pipeline cache will fail if the difference is significant in registers allocated.
 
