@@ -4,15 +4,16 @@
 
 This chapter goes over how to [interface Vulkan with SPIR-V](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces) in order to map data. Using the `VkDeviceMemory` objects allocated from `vkAllocateMemory`, it is up to the application to properly map the data from Vulkan in a way that the SPIR-V shader understands how to consume it correctly.
 
-In core Vulkan, there are 4 fundamental ways to map data from your Vulkan application to interface with SPIR-V:
+In core Vulkan, there are 5 fundamental ways to map data from your Vulkan application to interface with SPIR-V:
   - [Input Attributes](#input-attributes)
   - [Descriptors](#descriptors)
   - [Push Constants](#push-constants)
   - [Specialization Constants](#specialization-constants)
+  - [Physical Storage Buffer](#physical-storage-buffer)
 
 ## Input Attributes
 
-The only shader stage in core Vulkan that has an input attribute is the vertex shader stage (`VK_SHADER_STAGE_VERTEX_BIT`). This involves declaring the interface slots when creating the `VkPipeline` and then binding the `VkBuffer` before draw time.
+The only shader stage in core Vulkan that has an input attribute controlled by Vulkan is the vertex shader stage (`VK_SHADER_STAGE_VERTEX_BIT`). This involves declaring the interface slots when creating the `VkPipeline` and then binding the `VkBuffer` before draw time with the data to map. Other shaders stages, such as a fragmen shader stage, has input attributes, but the values are determined from the output of the previous stages ran before it.
 
 Before calling `vkCreateGraphicsPipelines` a `VkPipelineVertexInputStateCreateInfo` struct will need to be filled out with a list of `VkVertexInputAttributeDescription` mappings to the shader
 
@@ -259,6 +260,12 @@ The typical use cases of specialization constant can be best grouped into three 
 3. Affecting types and memory sizes
     - It is possible to set the length of an array or a variable type used through a specialization constant.
     - It is important to note that a compiler will need to allocate registers depending on these types and sizes. This means it is likely that a pipeline cache will fail if the difference is significant in registers allocated.
+
+## Physical Storage Buffer
+
+The [VK_KHR_buffer_device_address](extensions/VK_KHR_buffer_device_address.md) extension promoted to Vulkan 1.2 adds the ability to have "pointers in the shader". Using the `PhysicalStorageBuffer` storage class in SPIR-V an application can call `vkGetBufferDeviceAddress` which will return the `VkDeviceAddress` to the memory.
+
+While this is a way to map data to the shader, it is not a way to interface with the shader. For example, if an application wants to use this with a uniform buffer it would have to create a `VkBuffer` with both `VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT` and `VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT`. From here in this example, Vulkan would use a descriptor to interface with the shader, but could then use the physical storage buffer to update the value after.
 
 ## Limits
 
