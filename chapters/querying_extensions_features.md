@@ -41,6 +41,10 @@ Each format has a set of `VkFormatFeatureFlagBits` for how the format is support
 >
 > To do this, query the `linearTilingFeatures` flags for `VK_FORMAT_R8_UNORM` to see if the `VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT` is set for the implementation.
 
+### External Formats
+
+Currently only supported with the `VK_ANDROID_external_memory_android_hardware_buffer` extension. This extension allows Android applications to import implementation-defined external formats. There are many restrictions what are allowed with these external formats which are [documented in the spec.](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats)
+
 ## Tools
 
 There are a few tools to help with getting all the information in a quick and in a human readable format.
