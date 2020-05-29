@@ -36,7 +36,9 @@ Drivers, like any software, are updated and this means there can be many variati
 
 ### Null Driver
 
-The term "null driver" is given to any driver that accepts Vulkan API calls, but does not do anything with them. This is common for testing interactions with the driver without needing any working implementation backing it. This is also used for creating [CTS tests](./vulkan_cts.md) for new features that would not have a working implementation yet.
+The term "null driver" is given to any driver that accepts Vulkan API calls, but does not do anything with them. This is common for testing interactions with the driver without needing any working implementation backing it. Many uses cases such as creating [CTS tests](./vulkan_cts.md) for new features, [testing the Validaiton Layers](https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/master/docs/creating_tests.md#running-tests-on-devsim-and-mockicd), and more rely on the idea of a null driver.
+
+Khronos provides the [Mock ICD](https://github.com/KhronosGroup/Vulkan-Tools/tree/master/icd) as one implementation of a null driver that works on various platforms.
 
 ### Software implementation
 
