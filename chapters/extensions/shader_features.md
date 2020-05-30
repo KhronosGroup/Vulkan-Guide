@@ -10,10 +10,9 @@ Some of the following extensions were added alongside a SPIR-V extension. For ex
 
 This example is to illustrate the pieces of using shader features extension. What this example is doing is not the point, this is for understanding the logistics involved. This example will be using `VK_KHR_8bit_storage` as an example, but details about the extension can be found below in its [own section below](#vk_khr_8bit_storage-and-vk_khr_16bit_storage).
 
-1. Check if the Vulkan extension is supported or if has been promoted in the Vulkan version being used
-    - For this case, an application would query `VK_KHR_8bit_storage` or check if Vulkan 1.2 is supported
-2. Enable the extension when creating the `VkDevice` unless it is the case where the extension is in core and the implementation doesn't expose the extension.
-    - If the implementation exposes the extension as well as being in core, it is still suggested to enable it at device creation.
+1. Check if the Vulkan extension is supported or if has been promoted in the Vulkan version being used.
+    - For this case, an application would query `VK_KHR_8bit_storage` or check if Vulkan 1.2 is supported.
+2. [Enable the extension](../enabling_extensions.md).
 3. Query the Physical Device feature struct exposed by the Vulkan extension.
     - `VkPhysicalDevice8BitStorageFeatures::uniformAndStorageBuffer8BitAccess` or `VkPhysicalDeviceVulkan12Features::uniformAndStorageBuffer8BitAccess` in this case.
 4. If using a high-level shading language, such as GLSL, make any changes needed.

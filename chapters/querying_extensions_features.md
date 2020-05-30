@@ -1,4 +1,4 @@
-# Querying, Extensions, and Features
+# Querying Properties, Extensions, Features, Limits, and Formats
 
 One of Vulkan's main features is that is can be used to develop on multiple platforms and devices. To make this possible, an application is responsible for querying the information from each physical device and then basing decisions on this information.
 
@@ -15,13 +15,15 @@ There are many other components in Vulkan that are labeled as properties. The te
 
 ## Extensions
 
-Extensions may define new Vulkan function to use, some expose optional new features, and some even just expose support for SPIR-V operations. There are both instance extensions and device extensions so make sure to check which type it is (this can be found under "Extension Type" where the extension is defined).
+> Checkout the [Enabling Extensions](./enabling_features.md) chapter for more information.
+>
+> [Registry](https://www.khronos.org/registry/vulkan/#repo-docs) with all available extensions
 
-An application can [query the physical device](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#extendingvulkan-extensions) first to check if the extension is supported. The application needs to enable the extensions it plans on using by passing a list to either `VkInstance` or `VkDevice`. Once the extension is enabled all the new primitives (enums, structs, functions, etc) now become valid and can be used. If the extension is not enabled, it is undefined behavior to use any of the extension primitives.
+There are many times where a set of new functionality is desired in Vulkan that doesn't currently exist and extensions allow the ability to add new functionality. Extensions may define new Vulkan functions, enums, structs, or feature bits. While all of these extended items are found by default in the Vulkan Headers, it is **undefined behavior** to use extended Vulkan if the [extensions are enabled](./enabling_features.md).
 
 ## Features
 
-> Checkout the [Enabling Feature](./enabling_features.md) chapter for more information.
+> Checkout the [Enabling Features](./enabling_features.md) chapter for more information.
 
 Features describe functionality which is not supported on all implementations. Features can be [queried](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#vkGetPhysicalDeviceFeatures) and then enabled when creating the `VkDevice`. Besides the [list of all features](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#features), some [features are mandatory](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-requirements) due to newer Vulkan versions or use of extensions.
 
