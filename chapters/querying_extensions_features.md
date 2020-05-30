@@ -21,8 +21,6 @@ There are many other components in Vulkan that are labeled as properties. The te
 
 There are many times where a set of new functionality is desired in Vulkan that doesn't currently exist and extensions allow the ability to add new functionality. Extensions may define new Vulkan functions, enums, structs, or feature bits. While all of these extended items are found by default in the Vulkan Headers, it is **undefined behavior** to use extended Vulkan if the [extensions are enabled](./enabling_features.md).
 
-There are two groups of extensions, **instance extensions** and **device extensions**, which is documented under the "Extension Type" section of each extension reference page. Simply put, **instance extensions** are tied to the entire `VkInstance` while **device extensions** are tied to a single `VkDevice` instance.
-
 ## Features
 
 > Checkout the [Enabling Features](./enabling_features.md) chapter for more information.

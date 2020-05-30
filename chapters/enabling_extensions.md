@@ -2,6 +2,14 @@
 
 This section goes over the logistics for enabling extensions.
 
+## Two types of extensions
+
+There are two groups of extensions, **instance extensions** and **device extensions**. Simply put, **instance extensions** are tied to the entire `VkInstance` while **device extensions** are tied to only a single `VkDevice` instance.
+
+This information is documented under the "Extension Type" section of each extension reference page. Example below:
+
+![enabling_extensions_instance_extension.png](../images/enabling_extensions_instance_extension.png)
+
 ## Check for support
 
 An application can [query the physical device](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-extensions) first to check if the extension is **supported** with `vkEnumerateInstanceExtensionProperties` or `vkEnumerateDeviceExtensionProperties`.
@@ -23,10 +31,15 @@ for (uint32_t i = 0; i < count; i++) {
 
 ## Enable the Extension
 
-Even if the extension is **supported** by the implementation, it is **undefined behavior** to use the functionality of the extension unless it is **enabled** at `VkInstance` or `VkDevice` creation time. Here is an example of what is needed to enable an extension such as `VK_KHR_driver_properties`:
+Even if the extension is **supported** by the implementation, it is **undefined behavior** to use the functionality of the extension unless it is **enabled** at `VkInstance` or `VkDevice` creation time.
+
+Here is an example of what is needed to enable an extension such as `VK_KHR_driver_properties`.
+
+![enabling_extensions_driver_properties.png](../images/enabling_extensions_driver_properties.png)
 
 ```
-// VK_KHR_get_physical_device_properties2 is a required instance extension for VK_KHR_driver_properties
+// VK_KHR_get_physical_device_properties2 is required to use VK_KHR_driver_properties
+// since it's an instance extension it needs to be enabled before at VkInstance creation time
 std::vector<const char*> instance_extensions;
 instance_extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
 
@@ -46,11 +59,21 @@ device_create_info.ppEnabledExtensionNames = device_extensions.data();
 vkCreateDevice(physicalDevice, &device_create_info, nullptr, &myDevice);
 ```
 
+## Check for feature bits
+
+It is important to remember that extensions add the existence of functionality to the Vulkan spec, but doesn't mean all features of an extension are available if the extension is **supported**. An example is an extension such as `VK_KHR_8bit_storage` has 3 features it exposes in `VkPhysicalDevice8BitStorageFeatures`.
+
+![enabling_extensions_8bit.png](../images/enabling_extensions_8bit.png)
+
+This means after enabling the extension, an applicaiton will still need to [query and enable the features](./enabling_features.md) needed from an extension.
+
 ## Promotion Process
 
-When minor versions of [Vulkan are released](./vulkan_release_summary.md), some extensions are [promoted as defined in the spec](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-promotion). The goal of promotion is to have applications not need to query for **support** and **enable** extended functionality that the Vulkan Working Group has decided is important enough to be in the core Vulkan spec.
+When minor versions of [Vulkan are released](./vulkan_release_summary.md), some extensions are [promoted as defined in the spec](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-promotion). The goal of promotion is to have extended functionality, that the Vulkan Working Group has decided is widely supported, to be in the core Vulkan spec. More details about Vulkan versions can be found in the [version chapter](./versions.md).
 
 An example would be something such as `VK_KHR_get_physical_device_properties2` which is used for most other extensions. In Vulkan 1.0, an application has to query for support of `VK_KHR_get_physical_device_properties2` before being able to call a function such as `vkGetPhysicalDeviceFeatures2KHR`. Starting in Vulkan 1.1, the `vkGetPhysicalDeviceFeatures2` function is guaranteed to be supported.
+
+Another way to look at promotion is with the `VK_KHR_8bit_storage` as an example again. Since Vulkan 1.0 some features, such as `textureCompressionASTC_LDR`, are not required to be supported, but are available to query without needing to enable any extensions. Starting in Vulkan 1.2 when `VK_KHR_8bit_storage` was promoted to core, all the features in `VkPhysicalDevice8BitStorageFeatures` can now be found in `VkPhysicalDeviceVulkan12Features`.
 
 ### Promotion Change of Behavior
 
