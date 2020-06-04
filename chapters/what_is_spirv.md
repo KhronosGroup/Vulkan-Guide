@@ -1,9 +1,9 @@
 # What is SPIR-V
 
+> Please read the [SPIRV-Guide](https://github.com/KhronosGroup/SPIRV-Guide) for more in detail information about SPIR-V
+
 [SPIR-V](https://www.khronos.org/registry/spir-v/) is a binary intermediate representation for graphical-shader stages and compute kernels. With Vulkan, an application can still write their shaders in a high-level shading language such as GLSL or HLSL, but a SPIR-V binary is needed when using [vkCreateShaderModule](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#vkCreateShaderModule). The Vulkan SDK has a very nice [white paper](https://www.khronos.org/registry/spir-v/papers/WhitePaper.pdf) about SPIR-V and its advantages, and a high-level description of the representation. There are also two great Khronos presentations from Vulkan DevDay 2016 [here](https://www.khronos.org/assets/uploads/developers/library/2016-vulkan-devday-uk/3-Intro-to-spir-v-shaders.pdf) and [here](https://www.khronos.org/assets/uploads/developers/library/2016-vulkan-devday-uk/4-Using-spir-v-with-spirv-cross.pdf)
 ([video of both](https://www.youtube.com/watch?v=XRpVwdduzgU)).
-
-![what_is_spirv_overview.png](../images/what_is_spirv_overview.png)
 
 ## SPIR-V Interface and Capabilities
 
@@ -34,23 +34,13 @@ Shaderc builds both tools as a standalone command line tool ([glslc](https://git
 
 [Clspv](https://github.com/google/clspv) is a prototype compiler for a subset of OpenCL C to SPIR-V to be used as Vulkan compute shaders.
 
-
 ## Tools and Ecosystem
 
 There is a rich ecosystem of tools to take advantage of SPIR-V. The [Vulkan SDK gives an overview](https://vulkan.lunarg.com/doc/sdk/latest/windows/spirv_toolchain.html) of all the SPIR-V tools that are built and packaged for developers.
 
 ### SPIRV-Tools
 
-The Khronos [SPIRV-Tools](https://github.com/KhronosGroup/SPIRV-Tools) project provides C and C++ APIs and a command line interface to work with SPIR-V modules. The set of tools contains
-
-- Assembler (`spirv-as`)
-- Disassembler (`spirv-dis`)
-- Validator (`spirv-val`)
-- Linker (`spirv-link`)
-- Optimizer (`spirv-opt`)
-    - LunarG wrote a [white paper](https://www.lunarg.com/wp-content/uploads/2018/06/SPIR-V-Shader-Legalization-and-Size-Reduction-Using-spirv-opt_v1.2.pdf) about `spirv-opt`
-- Reducer (`spirv-reduce`)
-- Control flow dumper (`spirv-cfg`)
+The Khronos [SPIRV-Tools](https://github.com/KhronosGroup/SPIRV-Tools) project provides C and C++ APIs and a command line interface to work with SPIR-V modules. More information in the [SPIRV-Guide](https://github.com/KhronosGroup/SPIRV-Guide/blob/master/chapters/khronos_tooling.md#spir-v-tools).
 
 ### SPIRV-Cross
 
