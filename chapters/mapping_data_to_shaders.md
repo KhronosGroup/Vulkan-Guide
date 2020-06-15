@@ -219,7 +219,7 @@ Resulting SPIR-V assembly:
 ```
 
 With specialization constants, the value is still a constant inside the shader, but for example, if another `VkPipeline` uses the same shader, but wants to set the `myColor` value to `0.5f`, it is possible to do so at runtime.
-```
+```cpp
 struct myData {
     float myColor = 1.0f;
 } myData;

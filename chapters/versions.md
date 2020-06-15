@@ -30,7 +30,7 @@ The reason for using the newer naming is that the Vulkan Spec itself will only r
 
 Since functions are used to interact with the loader and implementations, there needs to be a little more care when working between minor versions. As an example, let's look at `vkGetPhysicalDeviceFeatures2KHR` which was promoted to core as `vkGetPhysicalDeviceFeatures2` from Vulkan 1.0 to Vulkan 1.1. Looking at the Vulkan header both are declared.
 
-```
+```cpp
 typedef void (VKAPI_PTR *PFN_vkGetPhysicalDeviceFeatures2)(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures2* pFeatures);
 // ...
 typedef void (VKAPI_PTR *PFN_vkGetPhysicalDeviceFeatures2KHR)(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures2* pFeatures);

@@ -6,7 +6,7 @@ The `void* pNext` is used to allow for expanding the Vulkan Spec by creating a L
 
 An example to help illustrate the use of `pNext` from an application's point of view
 
-```
+```cpp
 // An example with two structures, "a" and "b"
 // These structs have members you'd find in real Vulkan structures
 typedef struct VkA {
@@ -45,7 +45,7 @@ printf("VkB value = %u \n", b.value);
 
 Underneath the loader, layers, and driver are now able to find the chained `pNext` structures. Here is an example to help illustrate how one **could** implement `pNext` from the loader, layer, or driver point of view.
 
-```
+```cpp
 void vkGetValue(VkA* pA) {
 
     VkA* next = reinterpret_cast<VkA*>(pA->pNext);

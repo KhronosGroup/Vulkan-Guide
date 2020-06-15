@@ -14,7 +14,7 @@ This information is documented under the "Extension Type" section of each extens
 
 An application can [query the physical device](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-extensions) first to check if the extension is **supported** with `vkEnumerateInstanceExtensionProperties` or `vkEnumerateDeviceExtensionProperties`.
 
-```
+```cpp
 // Simple example
 uint32_t count = 0;
 vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &count, nullptr);
@@ -37,7 +37,7 @@ Here is an example of what is needed to enable an extension such as `VK_KHR_driv
 
 ![enabling_extensions_driver_properties.png](../images/enabling_extensions_driver_properties.png)
 
-```
+```cpp
 // VK_KHR_get_physical_device_properties2 is required to use VK_KHR_driver_properties
 // since it's an instance extension it needs to be enabled before at VkInstance creation time
 std::vector<const char*> instance_extensions;

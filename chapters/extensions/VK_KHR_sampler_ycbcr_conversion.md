@@ -30,7 +30,7 @@ Normally when an application creates a `VkImage` it only binds it to a single `V
 
 Doing this follows the same pattern as the normal binding of memory to an image with the use of a few new functions. Here is some pseudo code to represent the new workflow
 
-```
+```cpp
 VkImagePlaneMemoryRequirementsInfo imagePlaneMemoryRequirementsInfo = {};
 imagePlaneMemoryRequirementsInfo.planeAspect                        = VK_IMAGE_ASPECT_PLANE_0_BIT;
 
@@ -69,7 +69,7 @@ Even if an application is not using disjoint memory, it still needs to use the `
 
 For example, if an application plans to do a `vkCmdCopyBufferToImage` to copy over a single `VkBuffer` to a single non-disjoint `VkImage` the data, the logic for a YUV420p layout will look partially like
 
-```
+```cpp
 VkBufferImageCopy bufferCopyRegions[3];
 bufferCopyRegions[0].imageSubresource.aspectMask = VK_IMAGE_ASPECT_PLANE_0_BIT;
 bufferCopyRegions[0].imageOffset                 = {0, 0, 0};
@@ -104,7 +104,7 @@ The `VkSamplerYcbcrConversion` describes all the "read on your own outside the V
 
 Here is some pseudo code to help give an idea of how to use it from the API point of view:
 
-```
+```cpp
 // Create conversion object that describes how to have the implementation do the YCbCr conversion
 VkSamplerYcbcrConversion samplerYcbcrConversion;
 VkSamplerYcbcrConversionCreateInfo samplerYcbcrConversionCreateInfo = {};
@@ -137,7 +137,7 @@ For example, consider a descriptor set layout binding with two descriptors and i
 
 Some pseudo code how to query for the `combinedImageSamplerDescriptorCount`
 
-```
+```cpp
 VkSamplerYcbcrConversionImageFormatProperties samplerYcbcrConversionImageFormatProperties = {};
 
 VkImageFormatProperties imageFormatProperties   = {};

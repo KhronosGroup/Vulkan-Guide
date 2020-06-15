@@ -81,7 +81,7 @@ Unless an application need to make use of one of the extensions that rely on the
 
 One possible way to handle this is as followed:
 
-```
+```cpp
 void HandleVkBindImageMemoryInfo(const VkBindImageMemoryInfo* info) {
     // ...
 }
