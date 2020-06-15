@@ -23,7 +23,7 @@ All features must be enabled at `VkDevice` creation time inside the [VkDeviceCre
 
 For the Core 1.0 Features, this is as simple as setting `VkDeviceCreateInfo::pEnabledFeatures` with the feature desired to be turned on.
 
-```
+```cpp
 VkPhysicalDeviceFeatures features = {};
 vkGetPhysicalDeviceFeatures(physical_device, &features);
 
@@ -37,7 +37,7 @@ info.pEnabledFeatures = &features;
 
 For **all features**, including the Core 1.0 Features, use `VkPhysicalDeviceFeatures2` to pass into `VkDeviceCreatInfo.pNext`
 
-```
+```cpp
 VkPhysicalDeviceShaderDrawParametersFeatures ext_feature = {};
 
 VkPhysicalDeviceFeatures2 physical_features2 = {};
@@ -55,7 +55,7 @@ info.pNext = &physical_features2;
 
 The same works for the "Future Core Version Features" too.
 
-```
+```cpp
 VkPhysicalDeviceVulkan11Features features11 = {};
 
 VkPhysicalDeviceFeatures2 physical_features2 = {};
