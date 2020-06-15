@@ -29,6 +29,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 - [pNext and sType](./chapters/pnext_and_stype.md)
 - [Synchronization](./chapters/synchronization.md)
 - [Memory Allocation Strategy](./chapters/memory_allocation.md)
+    - [Sparse Resources](./chapters/sparse_resources.md)
 - [Pipeline Caching/Derivatives](./chapters/pipeline_cache.md)
 - [Threading](./chapters/threading.md)
 - [Mapping Data to Shaders](./chapters/mapping_data_to_shaders.md)
