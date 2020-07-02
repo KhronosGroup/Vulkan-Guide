@@ -16,7 +16,6 @@ Mozilla is currently helping drive [gfx-rs portability](https://github.com/gfx-r
 
 ![portability_initiative_gfxrs.png](../images/portability_initiative_gfxrs.png)
 
-
 ## Translation Layer
 
 There are projects with the goal of taking another API and mapping it to Vulkan. The translation layer is in charge of taking in another API (for example OpenGL) and mapping it to equivalent Vulkan calls. It is important to realize that a translation layer is just translating and is not necessarily implementing Vulkan.

@@ -3,6 +3,7 @@
 One of Vulkan's main features is that is can be used to develop on multiple platforms and devices. To make this possible, an application is responsible for querying the information from each physical device and then basing decisions on this information.
 
 The items that can be queried from a physical device
+
 - Properties
 - Features
 - Extensions
@@ -15,11 +16,11 @@ There are many other components in Vulkan that are labeled as properties. The te
 
 ## Extensions
 
-> Checkout the [Enabling Extensions](./enabling_features.md) chapter for more information.
+> Check out the [Enabling Extensions](./enabling_extensions.md) chapter for more information.
 >
-> [Registry](https://www.khronos.org/registry/vulkan/#repo-docs) with all available extensions
+> There is a [Registry](https://www.khronos.org/registry/vulkan/#repo-docs) with all available extensions.
 
-There are many times where a set of new functionality is desired in Vulkan that doesn't currently exist and extensions allow the ability to add new functionality. Extensions may define new Vulkan functions, enums, structs, or feature bits. While all of these extended items are found by default in the Vulkan Headers, it is **undefined behavior** to use extended Vulkan if the [extensions are enabled](./enabling_features.md).
+There are many times when a set of new functionality is desired in Vulkan that doesn't currently exist. Extensions have the ability to add new functionality. Extensions may define new Vulkan functions, enums, structs, or feature bits. While all of these extended items are found by default in the Vulkan Headers, it is **undefined behavior** to use extended Vulkan if the [extensions are not enabled](./enabling_extensions.md).
 
 ## Features
 
@@ -51,6 +52,6 @@ Currently only supported with the `VK_ANDROID_external_memory_android_hardware_b
 
 There are a few tools to help with getting all the information in a quick and in a human readable format.
 
-`vulkaninfo` is a command line utility for Windows, Linux, and the macOS that enables you to see all the available items listed above about your GPU. Refer to the [Vulkaninfo documentation](https://vulkan.lunarg.com/doc/sdk/latest/windows/vulkaninfo.html) in the Vulkan SDK.
+`vulkaninfo` is a command line utility for Windows, Linux, and macOS that enables you to see all the available items listed above about your GPU. Refer to the [Vulkaninfo documentation](https://vulkan.lunarg.com/doc/sdk/latest/windows/vulkaninfo.html) in the Vulkan SDK.
 
 The [Vulkan Hardware Capability Viewer](https://play.google.com/store/apps/details?id=de.saschawillems.vulkancapsviewer&hl=en_US) app developed by Sascha Willems, is an Android app to display all details for devices that support Vulkan.

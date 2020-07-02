@@ -14,7 +14,7 @@ All 64-bit devices that launch with API level 29 (Android Q) or later must inclu
 
 ## iOS
 
-Vulkan is not natively supported for iOS, but can still be targeted with [Vulkan Portability Tools](./portability_initiative.md).
+Vulkan is not natively supported on iOS, but can still be targeted with [Vulkan Portability Tools](./portability_initiative.md).
 
 ## Linux
 
@@ -22,7 +22,7 @@ Vulkan is supported on many Linux distributions.
 
 ## MacOS
 
-Vulkan is not natively supported for MacOS, but can still be targeted with [Vulkan Portability Tools](./portability_initiative.md).
+Vulkan is not natively supported on MacOS, but can still be targeted with [Vulkan Portability Tools](./portability_initiative.md).
 
 ## Nintendo Switch
 

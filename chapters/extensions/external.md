@@ -5,17 +5,17 @@ Sometimes not everything an application does related to the GPU is done in Vulka
 The list of extensions involved are:
 
 - `VK_KHR_external_fence`
-    - Promoted to core in 1.1
+  - Promoted to core in 1.1
 - `VK_KHR_external_fence_capabilities`
-    - Promoted to core in 1.1
+  - Promoted to core in 1.1
 - `VK_KHR_external_memory`
-    - Promoted to core in 1.1
+  - Promoted to core in 1.1
 - `VK_KHR_external_memory_capabilities`
-    - Promoted to core in 1.1
+  - Promoted to core in 1.1
 - `VK_KHR_external_semaphore`
-    - Promoted to core in 1.1
+  - Promoted to core in 1.1
 - `VK_KHR_external_semaphore_capabilities`
-    - Promoted to core in 1.1
+  - Promoted to core in 1.1
 - `VK_KHR_external_fence_fd`
 - `VK_KHR_external_fence_win32`
 - `VK_KHR_external_memory_fd`
@@ -24,7 +24,7 @@ The list of extensions involved are:
 - `VK_KHR_external_semaphore_win32`
 - `VK_ANDROID_external_memory_android_hardware_buffer`
 
-This seems like a lot so let's break it down little by little
+This seems like a lot so let's break it down little by little.
 
 # Capabilities
 
@@ -32,7 +32,7 @@ The `VK_KHR_external_fence_capabilities`, `VK_KHR_external_semaphore_capabilitie
 
 # Memory vs Synchronization
 
-There is a set of extension to handle the importing/exporting of just the memory itself. The other set extensions are for the synchronization primitives (`VkFence` and `VkSemaphore`) used to control internal Vulkan commands. It is common practice that for each piece of memory imported/exported there is also a matching fence/semaphore to manage the memory access.
+There is a set of extensions to handle the importing/exporting of just the memory itself. The other set extensions are for the synchronization primitives (`VkFence` and `VkSemaphore`) used to control internal Vulkan commands. It is common practice that for each piece of memory imported/exported there is also a matching fence/semaphore to manage the memory access.
 
 ## Memory
 
@@ -48,11 +48,11 @@ Each of these methods has their own detailed descriptions about limitations, req
 
 ### Importing Memory
 
-The import memory, there is a `VkImport*Info` struct provided by the given external memory extension. This is passed into `vkAllocateMemory` where Vulkan will now have a `VkDeviceMemory` handle that maps to the imported memory.
+To import memory, there is a `VkImport*Info` struct provided by the given external memory extension. This is passed into `vkAllocateMemory` where Vulkan will now have a `VkDeviceMemory` handle that maps to the imported memory.
 
 ### Exporting Memory
 
-The export memory, there is a `VkGetMemory*` function provided by the given external memory extension. This function will take in a `VkDeviceMemory` handle and then map that to the extension exposed object.
+To export memory, there is a `VkGetMemory*` function provided by the given external memory extension. This function will take in a `VkDeviceMemory` handle and then map that to the extension exposed object.
 
 ## Synchronization
 

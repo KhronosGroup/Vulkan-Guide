@@ -10,7 +10,7 @@
 
 The main goals of this extension are to add larger descriptor sets ("bindless" descriptors) and allow for dynamic non-uniform resource indexing. This was also designed to be broken down into a few different, smaller features to allow implementations to add support for what they can.
 
-## Bind after update
+## Bind after Update
 
 The current restriction with descriptors is that an application is not allowed to update between recording the command buffer and the execution of these command buffers. By querying for `descriptorBinding*UpdateAfterBind` support for the type of descriptor being used, an application can now update in between recording and execution.
 
@@ -24,7 +24,7 @@ With the `descriptorBindingPartiallyBound` feature and using `VK_DESCRIPTOR_BIND
 
 An example would be if an application's GLSL has
 
-```
+```glsl
 layout(set = 0, binding = 0) uniform sampler2D textureSampler[64];
 ```
 
@@ -32,13 +32,13 @@ but only binds the first 32 slots in the array. This also relies on the the appl
 
 ## Dynamic Indexing
 
-Normally when an application indexes into an array of bound descriptors the index needs to be known at compile time. With the `shader*ArrayDynamicIndexing` feature, a certain type of descriptor can be indexed by "dynamically uniform" integers. This was already supported as a `VkPhysicalDeviceFeatures` for most descriptors, but this extension adds `VkPhysicalDeviceDescriptorIndexingFeatures` struct that lets implementations to expose support dynamic uniform indexing for input attachments, uniform texel buffers, and storage texel buffers as well now too.
+Normally when an application indexes into an array of bound descriptors the index needs to be known at compile time. With the `shader*ArrayDynamicIndexing` feature, a certain type of descriptor can be indexed by "dynamically uniform" integers. This was already supported as a `VkPhysicalDeviceFeatures` for most descriptors, but this extension adds `VkPhysicalDeviceDescriptorIndexingFeatures` struct that lets implementations expose support for dynamic uniform indexing for input attachments, uniform texel buffers, and storage texel buffers as well.
 
 The keyword here is "uniform" which means that all invocations in a SPIR-V Invocation Group need to all use the same dynamic indexing. This translates to either all invocations in a single `vkCmdDraw*` call or a single workgroup of a `vkCmdDispatch*` call.
 
 An example of dynamic uniform indexing in GLSL
 
-```
+```glsl
 layout(set = 0, binding = 0) uniform sampler2D mySampler[64];
 layout(set = 0, binding = 1) uniform UniformBufferObject {
     int textureId;
@@ -61,7 +61,7 @@ To be dynamic **non-uniform** means that it is possible that invocations might i
 
 An example of dynamic non-uniform indexing in GLSL
 
-```
+```glsl
 #version450
 #extension GL_EXT_nonuniform_qualifier : enable
 

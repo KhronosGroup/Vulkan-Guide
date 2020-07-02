@@ -2,9 +2,9 @@
 
 People new to Vulkan will start to notice the `pNext` and `sType` variables all around the Vulkan Spec.
 
-The `void* pNext` is used to allow for expanding the Vulkan Spec by creating a Linked List between structures. The [pNext valid usage](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#fundamentals-validusage-pNext) section of the Vulkan Spec goes into details explaining the two different variations of `pNext` structures. The `VkStructureType sType` is used by the loader, layers, and implementations to know what type of struct was passed in by `pNext`. The use of `pNext` is mostly used when dealing with extensions that expose new structures.
+The `void* pNext` is used to allow for expanding the Vulkan Spec by creating a Linked List between structures. The [pNext valid usage](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#fundamentals-validusage-pNext) section of the Vulkan Spec goes into detail explaining the two different variations of `pNext` structures. The `VkStructureType sType` is used by the loader, layers, and implementations to know what type of struct was passed in by `pNext`. `pNext` is mostly used when dealing with extensions that expose new structures.
 
-An example to help illustrate the use of `pNext` from an application's point of view
+An example to help illustrate the use of `pNext` from an application's point of view:
 
 ```cpp
 // An example with two structures, "a" and "b"
@@ -43,7 +43,7 @@ printf("VkA value = %u \n", a.value);
 printf("VkB value = %u \n", b.value);
 ```
 
-Underneath the loader, layers, and driver are now able to find the chained `pNext` structures. Here is an example to help illustrate how one **could** implement `pNext` from the loader, layer, or driver point of view.
+Underneath, the loader, layers, and driver are now able to find the chained `pNext` structures. Here is an example to help illustrate how one **could** implement `pNext` from the loader, layer, or driver point of view.
 
 ```cpp
 void vkGetValue(VkA* pA) {
@@ -65,7 +65,7 @@ void vkGetValue(VkA* pA) {
                 break;
 
             default:
-                LOG("Unsupported sType %d", next-sType);
+                LOG("Unsupported sType %d", next->sType);
         }
 
         // This works because the first two values of all chainable Vulkan structs

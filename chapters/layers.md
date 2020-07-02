@@ -1,6 +1,6 @@
 # Layers
 
-Layers are optional components that augment the Vulkan system. They can intercept, evaluate, and modify existing Vulkan functions on their way from the application down to the hardware. Layer's properties can be queried from an application with [vkEnumerateInstanceLayerProperties](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#vkEnumerateInstanceLayerProperties).
+Layers are optional components that augment the Vulkan system. They can intercept, evaluate, and modify existing Vulkan functions on their way from the application down to the hardware. Layer properties can be queried from an application with [vkEnumerateInstanceLayerProperties](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#vkEnumerateInstanceLayerProperties).
 
 ## Using Layers
 
@@ -9,6 +9,7 @@ Layers are packaged as shared libraries that get dynamically loaded in by the lo
 The [Vulkan SDK](https://vulkan.lunarg.com/sdk/home) contains a [layer configuration document](https://vulkan.lunarg.com/doc/sdk/latest/windows/layer_configuration.html) that is very specific to how to discover and configure layers on each of the platforms.
 
 ## Vulkan Configurator Tool
+
 Developers on Windows, Linux, and macOS can use the Vulkan Configurator, vkconfig, to enable explicit layers and disable implicit layers as well as change layer settings from a graphical user interface.
 Please see the [Vulkan Configurator documentation](https://vulkan.lunarg.com/doc/sdk/latest/windows/vkconfig.html) in the Vulkan SDK for more information on using the Vulkan Configurator.
 

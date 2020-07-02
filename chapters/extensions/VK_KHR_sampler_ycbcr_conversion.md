@@ -4,11 +4,11 @@
 
 This extension, in short, adds support to do texture sampling on YCbCr color space natively. The Vulkan spec was originally designed only for RGB color space and therefore multiple additions to the spec were added with this extension including many new formats, the concept of multi-planar formats, image aspect plane, disjoint memory, and the `VkSamplerYcbcrConversion` object.
 
-While this section will go over more of this extension in details, **disclaimer**:
+While this section will go over more of this extension in detail, **disclaimer**:
 
-> The use of YCbCr sampler conversion is a niche area in 3D graphics and say it's mainly used for processing inputs from video decoders and cameras. This means it is not important for the common Vulkan developer to need to understand the additions of this extension.
+> The use of YCbCr sampler conversion is a niche area in 3D graphics and mainly used for processing inputs from video decoders and cameras. This means it is not important for the common Vulkan developer to need to understand the additions of this extension.
 >
-> This guide will not even attempt to teach you about YCbCr and expects you have some basic knowledge of this domain already
+> This guide will not even attempt to teach you about YCbCr and expects you have some basic knowledge of this domain already.
 >
 > The naming conventions and naming overload of YCbCr related concepts are quite vast. This guide will stick to `YCbCr` to mean the digital data being used as an input.
 >
@@ -135,7 +135,7 @@ All descriptors in a binding use the same maximum `combinedImageSamplerDescripto
 
 For example, consider a descriptor set layout binding with two descriptors and immutable samplers for multi-planar formats that have `VkSamplerYcbcrConversionImageFormatProperties::combinedImageSamplerDescriptorCount` values of `2` and `3` respectively. There are two descriptors in the binding and the maximum `combinedImageSamplerDescriptorCount` is `3`, so descriptor sets with this layout consume `6` descriptors from the descriptor pool. To create a descriptor pool that allows allocating `four` descriptor sets with this layout, `descriptorCount` must be at least `24`.
 
-Some pseudo code how to query for the `combinedImageSamplerDescriptorCount`
+Some pseudo code for how to query for the `combinedImageSamplerDescriptorCount`
 
 ```cpp
 VkSamplerYcbcrConversionImageFormatProperties samplerYcbcrConversionImageFormatProperties = {};

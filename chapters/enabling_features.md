@@ -13,7 +13,7 @@ All features in Vulkan can be categorized/found in 3 sections
     - [VkPhysicalDeviceVulkan11Features](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceVulkan11Features)
     - [VkPhysicalDeviceVulkan12Features](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkPhysicalDeviceVulkan12Features)
 3. Extension Features
-    - Sometimes extensions contain afeatures in order to enable certain aspects of the extension. These are easily found as they are all labeled as `VkPhysicalDevice[[ExtensionName]]Features`
+    - Sometimes extensions contain features in order to enable certain aspects of the extension. These are easily found as they are all labeled as `VkPhysicalDevice[[ExtensionName]]Features`
 
 ## How to Enable the Features
 
@@ -21,7 +21,7 @@ All features must be enabled at `VkDevice` creation time inside the [VkDeviceCre
 
 > Don't forget to query first with `vkGetPhysicalDeviceFeatures` or `vkGetPhysicalDeviceFeatures2`
 
-For the Core 1.0 Features, this is as simple as setting `VkDeviceCreateInfo::pEnabledFeatures` with the feature desired to be turned on.
+For the Core 1.0 Features, this is as simple as setting `VkDeviceCreateInfo::pEnabledFeatures` with the features desired to be turned on.
 
 ```cpp
 VkPhysicalDeviceFeatures features = {};
@@ -35,7 +35,7 @@ VkDeviceCreateInfo info = {};
 info.pEnabledFeatures = &features;
 ```
 
-For **all features**, including the Core 1.0 Features, use `VkPhysicalDeviceFeatures2` to pass into `VkDeviceCreatInfo.pNext`
+For **all features**, including the Core 1.0 Features, use `VkPhysicalDeviceFeatures2` to pass into `VkDeviceCreateInfo.pNext`
 
 ```cpp
 VkPhysicalDeviceShaderDrawParametersFeatures ext_feature = {};

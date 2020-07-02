@@ -4,7 +4,7 @@ One of the big differences between Vulkan and OpenGL is that Vulkan is not limit
 
 The Vulkan Spec [Threading Behavior section](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#fundamentals-threadingbehavior) explains in detail how applications are in charge of managing all _externally synchronized_ elements of Vulkan. It is important to realize that multithreading in Vulkan only provides host-side scaling, as anything interacting with the device still needs to be [synchronized correctly](./sychronization.md)
 
-Vulkan implementations are not supposed to be introducing any multi-threading, so if an app wants multi-CPU performance, the app is in charge of managing the threading.
+Vulkan implementations are not supposed to introduce any multi-threading, so if an app wants multi-CPU performance, the app is in charge of managing the threading.
 
 ## Command Pools
 

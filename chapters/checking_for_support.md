@@ -28,7 +28,7 @@ Grab the [Vulkan SDK](https://vulkan.lunarg.com/sdk/home#windows) and run the [v
 
 Just because the platform supports Vulkan does not mean there is device support. For device support, one will need to make sure a Vulkan Driver is available that fully implements Vulkan. There are a few different variations of a Vulkan Driver.
 
-### Hardware implementation
+### Hardware Implementation
 
 A driver targeting a physical piece of GPU hardware is the most common case for a Vulkan implementation. It is important to understand that while a certain GPU might have the physical capabilities of running Vulkan, it still requires a driver to control it. The driver is in charge of getting the Vulkan calls mapped to the hardware in the most efficient way possible.
 
@@ -36,11 +36,11 @@ Drivers, like any software, are updated and this means there can be many variati
 
 ### Null Driver
 
-The term "null driver" is given to any driver that accepts Vulkan API calls, but does not do anything with them. This is common for testing interactions with the driver without needing any working implementation backing it. Many uses cases such as creating [CTS tests](./vulkan_cts.md) for new features, [testing the Validaiton Layers](https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/master/docs/creating_tests.md#running-tests-on-devsim-and-mockicd), and more rely on the idea of a null driver.
+The term "null driver" is given to any driver that accepts Vulkan API calls, but does not do anything with them. This is common for testing interactions with the driver without needing any working implementation backing it. Many uses cases such as creating [CTS tests](./vulkan_cts.md) for new features, [testing the Validation Layers](https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/master/docs/creating_tests.md#running-tests-on-devsim-and-mockicd), and more rely on the idea of a null driver.
 
 Khronos provides the [Mock ICD](https://github.com/KhronosGroup/Vulkan-Tools/tree/master/icd) as one implementation of a null driver that works on various platforms.
 
-### Software implementation
+### Software Implementation
 
 It is possible to create a Vulkan implementation that only runs on the CPU. This is useful if there is a need to test Vulkan that is hardware independent, but unlike the null driver, also outputs a valid result.
 
@@ -50,7 +50,7 @@ It is possible to create a Vulkan implementation that only runs on the CPU. This
 
 ### VIA (Vulkan Installation Analyzer)
 
-Included in the [Vulkan SDK](https://vulkan.lunarg.com/sdk/home) is a utility to check the Vulkan installation on your computer. It is supported on Windows, Linux, and the macOS. VIA can:
+Included in the [Vulkan SDK](https://vulkan.lunarg.com/sdk/home) is a utility to check the Vulkan installation on your computer. It is supported on Windows, Linux, and macOS. VIA can:
  - Determine the state of Vulkan components on your system
  - Validate that your Vulkan Loader and drivers are installed properly
  - Capture your system state in a form that can be used as an attachment when submitting bugs

@@ -10,7 +10,7 @@ It is important to note that this requires some extra consideration from the app
 
 ## Sparse Buffers
 
-The following example is used to help visually showcase how a sparse `VkBuffer` looks in memory. Note, it is not required, but most implementations will have block sparse sizes in 64 KB chunks for `VkBuffer` (actual size is returned in `VkMemoryRequirements::alignment`).
+The following example is used to help visually showcase how a sparse `VkBuffer` looks in memory. Note, it is not required, but most implementations will use sparse block sizes of 64 KB for `VkBuffer` (actual size is returned in `VkMemoryRequirements::alignment`).
 
 Imagine a 256 KB `VkBuffer` where there are 3 parts that an application wants to update separately.
 
@@ -86,7 +86,7 @@ while (memoryRequirements.size && bindCount < MAX_CHUNKS)
     bindCount++;
 }
 
-// Ensure all image has backing
+// Ensure entire image has backing
 if (memoryRequirements.size)
 {
     // Error condition - too many chunks
@@ -120,7 +120,7 @@ ReleaseQueueOwnership(queue);
 
 #### Advanced Sparse Resources
 
-This more advanced example creates an arrayed color attachment / texture image and binds only LOD zero and the required: metadata to physical memory.
+This more advanced example creates an arrayed color attachment / texture image and binds only LOD zero and the required metadata to physical memory.
 
 ```cpp
 VkDevice                            device;

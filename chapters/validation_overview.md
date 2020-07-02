@@ -8,7 +8,7 @@ A **VU** is explicitly [defined in the Vulkan Spec](https://www.khronos.org/regi
 
 > set of conditions that **must** be met in order to achieve well-defined run-time behavior in an application.
 
-One of the main advantages of Vulkan, as an explicit API, is the implementation (driver) doesn't waste time checking for valid input. In OpenGL, the implementation would have to always check for valid usage which added noticeable overhead. With this, there is no such [glGetError](https://www.khronos.org/opengl/wiki/OpenGL_Error) equivalent in Vulkan.
+One of the main advantages of Vulkan, as an explicit API, is that the implementation (driver) doesn't waste time checking for valid input. In OpenGL, the implementation would have to always check for valid usage which added noticeable overhead. There is no [glGetError](https://www.khronos.org/opengl/wiki/OpenGL_Error) equivalent in Vulkan.
 
 The valid usages will be listed in the spec after every function and structure. For example, if a VUID checks for an invalid `VkImage` at `VkBindImageMemory` then the valid usage in the spec is found under `VkBindImageMemory`. This is because the Validation Layers will only know about all the information at `VkBindImageMemory` during the execution of the application.
 
@@ -26,7 +26,7 @@ Using `VUID-vkBindImageMemory-memoryOffset-01046` as an example, it is as simple
 
 ## Khronos Validation Layer
 
-Since Vulkan doesn't do any error checking, it is **very important** when developing, to enable the [Validation Layers](https://github.com/KhronosGroup/Vulkan-ValidationLayers) right away to help to catch invalid behavior. Applications should also never ship the Validation Layers with their application as they noticeably reduce performance and are designed for the development phase.
+Since Vulkan doesn't do any error checking, it is **very important**, when developing, to enable the [Validation Layers](https://github.com/KhronosGroup/Vulkan-ValidationLayers) right away to help catch invalid behavior. Applications should also never ship the Validation Layers with their application as they noticeably reduce performance and are designed for the development phase.
 
 > The Khronos Validation Layer used to consist of multiple layers but now has been unified to a single `VK_LAYER_KHRONOS_validition` layer. [More details explained in LunarG's whitepaper](https://www.lunarg.com/wp-content/uploads/2019/04/UberLayer_V3.pdf).
 
@@ -80,7 +80,7 @@ The Validation Layers attempt to supply as much useful information as possible w
         - Object 2 is a `VkDeviceMemory` named `myIconMemory`
     - With the names it is easy to see "In `vkBindImageMemory()`, the `myTextureMemory` memory was attempting to bind to an image already been bound to the `myIconMemory` memory".
 
-Each error message contains an uniform logging pattern. This allows information to be easily found in any error. The pattern is as followed:
+Each error message contains a uniform logging pattern. This allows information to be easily found in any error. The pattern is as followed:
 - Log status (ex. `Error:`, `Warning:`, etc)
 - The VUID
 - Array of objects involved
