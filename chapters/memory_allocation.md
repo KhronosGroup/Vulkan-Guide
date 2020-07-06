@@ -14,9 +14,9 @@ Sub-allocation is considered to be a first-class approach when working in Vulkan
 
 ## Transfer
 
-The [VkPhysicalDeviceType](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#VkPhysicalDeviceType) advertises two main different types of GPUs, discrete and integrated (also referred to as UMA (unified memory architecture)). It is important for performance to understand the difference between the two.
+The [VkPhysicalDeviceType](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#VkPhysicalDeviceType) advertises two main different types of GPUs, discrete and integrated (also referred to as UMA (unified memory architecture). It is important for performance to understand the difference between the two.
 
-Discrete graphics cards contain their own dedicated memory on the device. The data is transferred over a bus (such as PCIe) which is usually a bottleneck due to the physical speed limitation of transferring data. Some physical devices will advertise a queue with a `VK_QUEUE_TRANSFER_BIT` which allows for a dedicated queue for transferring data. The common practice is to create a _staging buffer_ to copy the host data in before sending through a command buffer to copy over to the device local memory.
+Discrete graphics cards contain their own dedicated memory on the device. The data is transferred over a bus (such as PCIe) which is usually a bottleneck due to the physical speed limitation of transferring data. Some physical devices will advertise a queue with a `VK_QUEUE_TRANSFER_BIT` which allows for a dedicated queue for transferring data. The common practice is to create a _staging buffer_ to copy the host data into before sending through a command buffer to copy over to the device local memory.
 
 UMA systems share the memory between the device and host which is advertised with a `VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT` combination. The disadvantage of this is that system memory has to be shared with the GPU which requires being cautious of memory pressure. The main advantage is that there is no need to create a _staging buffer_ and the transfer overhead is greatly reduced.
 

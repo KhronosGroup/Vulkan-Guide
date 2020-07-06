@@ -61,11 +61,11 @@ vkCreateDevice(physicalDevice, &device_create_info, nullptr, &myDevice);
 
 ## Check for feature bits
 
-It is important to remember that extensions add the existence of functionality to the Vulkan spec, but doesn't mean all features of an extension are available if the extension is **supported**. An example is an extension such as `VK_KHR_8bit_storage` has 3 features it exposes in `VkPhysicalDevice8BitStorageFeatures`.
+It is important to remember that extensions add the existence of functionality to the Vulkan spec, but this doesn't mean that all features of an extension are available if the extension is **supported**. An example is an extension such as `VK_KHR_8bit_storage`, which has 3 features it exposes in `VkPhysicalDevice8BitStorageFeatures`.
 
 ![enabling_extensions_8bit.png](../images/enabling_extensions_8bit.png)
 
-This means after enabling the extension, an applicaiton will still need to [query and enable the features](./enabling_features.md) needed from an extension.
+This means after enabling the extension, an application will still need to [query and enable the features](./enabling_features.md) needed from an extension.
 
 ## Promotion Process
 
@@ -83,7 +83,7 @@ The [Vulkan spec describes the change](https://www.khronos.org/registry/vulkan/s
 
 > If the VK_KHR_8bit_storage extension is not supported, support for the SPIR-V StorageBuffer8BitAccess capability in shader modules is optional.
 
-"not supported" here refers to the fact an implementation might support Vulkan 1.2, but if an application queries `vkEnumerateDeviceExtensionProperties` it is possible that `VK_KHR_8bit_storage` will not be in the result.
+"not supported" here refers to the fact that an implementation might support Vulkan 1.2, but if an application queries `vkEnumerateDeviceExtensionProperties` it is possible that `VK_KHR_8bit_storage` will not be in the result.
 - If `VK_KHR_8bit_storage` is found in `vkEnumerateDeviceExtensionProperties` then the `storageBuffer8BitAccess` feature is **guaranteed** to be supported.
 - If `VK_KHR_8bit_storage` is **not** found in `vkEnumerateDeviceExtensionProperties` then the `storageBuffer8BitAccess` feature **might** be supported and can be checked by querying `VkPhysicalDeviceVulkan12Features::storageBuffer8BitAccess`.
 

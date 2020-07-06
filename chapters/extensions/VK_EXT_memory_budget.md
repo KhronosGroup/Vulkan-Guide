@@ -1,6 +1,6 @@
 # VK_EXT_memory_budget
 
-Memory management is an important part of Vulkan. The `VK_EXT_memory_budget` extension was designed to allow some implementations to advertise even more fine grained details about the device memory heaps.
+Memory management is an important part of Vulkan. The `VK_EXT_memory_budget` extension was designed to allow some implementations to advertise even more fine-grained details about the device memory heaps.
 
 There are two important concepts this extension tries to help with
 

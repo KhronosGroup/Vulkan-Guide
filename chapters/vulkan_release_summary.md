@@ -2,7 +2,7 @@
 
 Each minor release of version of Vulkan has added many extensions. The Vulkan Guide has added a summary of why each extension was added and some details about the use cases. This list is taken from the Vulkan spec, but links jump to the various spots in the Vulkan Guide
 
-# Vulkan 1.1
+## Vulkan 1.1
 
 > [Vulkan Spec Section](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1)
 
@@ -34,7 +34,7 @@ Besides the listed extensions below, Vulkan 1.1 introduced the [subgroups](./ext
 - [VK_KHR_storage_buffer_storage_class](./extensions/shader_features.md#vk_khr_storage_buffer_storage_class)
 - [VK_KHR_variable_pointers](./extensions/shader_features.md#vk_khr_variable_pointers)
 
-# Vulkan 1.2
+## Vulkan 1.2
 
 > [Vulkan Spec Section](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2)
 
