@@ -77,6 +77,49 @@ All of these are very simple extensions and were promoted to core in their respe
 
 > `VK_KHR_get_physical_device_properties2` has additional functionality as it adds the ability to query feature support for extensions and newer Vulkan versions. It has become a requirement for most other Vulkan extensions because of this.
 
+## Example
+
+Using `VK_KHR_bind_memory2` as an example, instead of using the standard `vkBindImageMemory`
+
+```cpp
+// VkImage images[3]
+// VkDeviceMemory memories[2];
+
+vkBindImageMemory(myDevice, images[0], memories[0], 0);
+vkBindImageMemory(myDevice, images[1], memories[0], 64);
+vkBindImageMemory(myDevice, images[2], memories[1], 0);
+```
+
+They can now be batched together
+
+[source,c++]
+```cpp
+// VkImage images[3];
+// VkDeviceMemory memories[2];
+
+VkBindImageMemoryInfo infos[3];
+infos[0] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, NULL, images[0], memories[0], 0};
+infos[1] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, NULL, images[1], memories[0], 64};
+infos[2] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, NULL, images[2], memories[1], 0};
+
+vkBindImageMemory2(myDevice, 3, infos);
+```
+
+Some extensions such as `VK_KHR_sampler_ycbcr_conversion` expose structs that can be passed into the `pNext`
+
+```cpp
+VkBindImagePlaneMemoryInfo plane_info[2];
+plane_info[0] = {VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO, NULL, VK_IMAGE_ASPECT_PLANE_0_BIT};
+plane_info[1] = {VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO, NULL, VK_IMAGE_ASPECT_PLANE_1_BIT};
+
+// Can now pass other extensions structs into the pNext missing from vkBindImagemMemory()
+VkBindImageMemoryInfo infos[2];
+infos[0] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, &plane_info[0], image, memories[0], 0};
+infos[1] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, &plane_info[1], image, memories[1], 0};
+
+vkBindImageMemory2(myDevice, 2, infos);
+```
+
 ## It is fine to not use these
 
 Unless an application need to make use of one of the extensions that rely on the above extensions, it is normally ok to use the original function/structs still.
