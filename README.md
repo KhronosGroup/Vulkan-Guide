@@ -33,6 +33,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 - [Pipeline Caching/Derivatives](./chapters/pipeline_cache.md)
 - [Threading](./chapters/threading.md)
 - [Mapping Data to Shaders](./chapters/mapping_data_to_shaders.md)
+- [Robustness](./chapters/robustness.md)
 - [Common Pitfalls](./chapters/common_pitfalls.md)
 
 ## When and Why to use Extensions
