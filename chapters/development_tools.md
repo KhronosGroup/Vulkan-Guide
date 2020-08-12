@@ -16,7 +16,7 @@ Besides the Validation Layers, there are also other publicly available layers th
 - [Arm PerfDoc layer](https://github.com/ARM-software/perfdoc) - Checks Vulkan applications for best practices on Arm Mali devices.
 - [LunarG Best Practices layer](https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html) - Highlights potential performance issues, questionable usage patterns, common mistakes.
 - [GPU-Assisted Validation](https://vulkan.lunarg.com/doc/sdk/latest/windows/gpu_validation.html) - Instrument shader code to perform run-time checks for error conditions produced during shader execution.
-- [Shader printf](https://vulkan.lunarg.com/doc/sdk/latest/windows/debug_printf.html) - debug shader code by "printing" any values of interest to the debug callback or stdout.
+- [Shader printf](https://vulkan.lunarg.com/doc/sdk/latest/windows/debug_printf.html) - Debug shader code by "printing" any values of interest to the debug callback or stdout.
 - [Synchronization Validation](https://vulkan.lunarg.com/doc/sdk/latest/windows/synchronization_usage.html) - Identify resource access conflicts due to missing or incorrect synchronization operations between actions (Draw, Copy, Dispatch, Blit) reading or writing the same regions of memory.
 - [Simulate device properties](https://vulkan.lunarg.com/doc/sdk/latest/windows/device_simulation_layer.html) - Vulkan SDK layer for testing device properties on any device.
 - [Capture and Replay](https://vulkan.lunarg.com/doc/sdk/latest/windows/capture_tools.html) - GFXReconstruct software for capturing and replaying Vulkan API calls. Note: this link takes you to the desktop version of the documentation. Full Android support is also available at <https://github.com/LunarG/gfxreconstruct>
