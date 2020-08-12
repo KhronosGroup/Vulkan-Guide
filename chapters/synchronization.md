@@ -2,6 +2,8 @@
 
 Synchronization is one of the most powerful but also most complex parts of using Vulkan. The application developer is now responsible for managing synchronization using the various [Vulkan synchronization primitives](https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#synchronization). Improper use of synchronization can lead to hard-to-find bugs as well as poor performance in cases where the the GPU is unnecessarily idle.
 
+The Khronos Validation Layer has implemented some [validation for synchronization](https://vulkan.lunarg.com/doc/sdk/latest/windows/synchronization_usage.html). It can easily be enabled by the [Vulkan Configurator](https://vulkan.lunarg.com/doc/sdk/latest/windows/vkconfig.html) included with the [Vulkan SDK](https://vulkan.lunarg.com/sdk/home).
+
 ![synchronization_overview.png](../images/synchronization_overview.png)
 
 ## Overall strategies
