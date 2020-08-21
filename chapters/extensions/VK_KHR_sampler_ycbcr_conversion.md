@@ -2,41 +2,37 @@
 
 > Promoted to core in Vulkan 1.1
 
-This extension, in short, adds support to do texture sampling on YCbCr color space natively. The Vulkan spec was originally designed only for RGB color space and therefore multiple additions to the spec were added with this extension including many new formats, the concept of multi-planar formats, image aspect plane, disjoint memory, and the `VkSamplerYcbcrConversion` object.
-
-While this section will go over more of this extension in detail, **disclaimer**:
-
-> The use of YCbCr sampler conversion is a niche area in 3D graphics and mainly used for processing inputs from video decoders and cameras. This means it is not important for the common Vulkan developer to need to understand the additions of this extension.
->
-> This guide will not even attempt to teach you about YCbCr and expects you have some basic knowledge of this domain already.
->
-> The naming conventions and naming overload of YCbCr related concepts are quite vast. This guide will stick to `YCbCr` to mean the digital data being used as an input.
->
-> For the rest of this section, the YUV420p layout will be used as an example.
+All the examples below use a `4:2:0` multi-planar Y′C<sub>B</sub>C<sub>R</sub> format for illustration purposes.
 
 ## Multi-planar Formats
 
-To represent a layout like YUV420p where all the `Y` data is in plane 0, `U` data is in plane 1, and `V` data is in plane 2 an application would use the `VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM` format. The Vulkan spec explicitly describes each multi-planar format layout and how it maps to each component. The big thing to note is all the Vulkan formats will use the `RGBA` letter notations to map to the components. For this example with YUV420p and `VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM`:
+To represent a Y′C<sub>B</sub>C<sub>R</sub> image for which the Y′ (luma) data is stored in plane 0, the C<sub>B</sub> blue chroma difference value ("U") data is stored in plane 1, and the C<sub>R</sub> red chroma difference value ("V") data is stored in plane 2, an application would use the `VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM format`.
 
-- `G` == `Y`
-- `B` == `U`
-- `R` == `V`
+The Vulkan specification separately describes each multi-planar format representation and its mapping to each color component. Because the mapping and color conversion is separated from the format, Vulkan uses "RGB" color channel notations in the formats, and the conversion then describes the mapping from these channels to the input to the color conversion.
 
-This may require some extra focus when mapping the swizzle components between `RGBA` and the YCbCr format.
+This allows, for example, `VK_FORMAT_B8G8R8_UNORM` images to represent Y′C<sub>B</sub>C<sub>R</sub> texels.
+
+* `G` == `Y`
+* `B` == `Cb`
+* `R` == `Cr`
+
+This may require some extra focus when mapping the swizzle components between `RGBA` and the Y′C<sub>B</sub>C<sub>R</sub> format.
 
 ## Disjoint
 
 Normally when an application creates a `VkImage` it only binds it to a single `VkDeviceMemory` object. If the implementation supports `VK_FORMAT_FEATURE_DISJOINT_BIT` for a given format then an application can bind multiple disjoint `VkDeviceMemory` to a single `VkImage` where each `VkDeviceMemory` represents a single plane.
 
-Doing this follows the same pattern as the normal binding of memory to an image with the use of a few new functions. Here is some pseudo code to represent the new workflow
+Image processing operations on Y′C<sub>B</sub>C<sub>R</sub> images often treat channels separately. For example, applying a sharpening operation to the luma channel or selectively denoising luma. Separating the planes allows them to be processed separately or to reuse unchanged plane data for different final images.
+
+Using disjoint images follows the same pattern as the normal binding of memory to an image with the use of a few new functions. Here is some pseudo code to represent the new workflow:
 
 ```cpp
 VkImagePlaneMemoryRequirementsInfo imagePlaneMemoryRequirementsInfo = {};
-imagePlaneMemoryRequirementsInfo.planeAspect                        = VK_IMAGE_ASPECT_PLANE_0_BIT;
+imagePlaneMemoryRequirementsInfo.planeAspect = VK_IMAGE_ASPECT_PLANE_0_BIT;
 
 VkImageMemoryRequirementsInfo2 imageMemoryRequirementsInfo2 = {};
-imageMemoryRequirementsInfo2.pNext                          = &imagePlaneMemoryRequirementsInfo;
-imageMemoryRequirementsInfo2.image                          = myImage;
+imageMemoryRequirementsInfo2.pNext = &imagePlaneMemoryRequirementsInfo;
+imageMemoryRequirementsInfo2.image = myImage;
 
 // Get memory requirement for each plane
 VkMemoryRequirements2 memoryRequirements2 = {};
@@ -63,11 +59,11 @@ bindImageMemoryInfo.memory       = disjointMemoryPlane0;
 vkBindImageMemory2(device, bindImageMemoryInfoSize, bindImageMemoryInfoArray));
 ```
 
-## Copying memory to each plane
+==== Copying memory to each plane
 
 Even if an application is not using disjoint memory, it still needs to use the `VK_IMAGE_ASPECT_PLANE_0_BIT` when copying over data to each plane.
 
-For example, if an application plans to do a `vkCmdCopyBufferToImage` to copy over a single `VkBuffer` to a single non-disjoint `VkImage` the data, the logic for a YUV420p layout will look partially like
+For example, if an application plans to do a `vkCmdCopyBufferToImage` to copy over a single `VkBuffer` to a single non-disjoint `VkImage` the data, the logic for a `YUV420p` layout will look partially like:
 
 ```cpp
 VkBufferImageCopy bufferCopyRegions[3];
@@ -79,7 +75,7 @@ bufferCopyRegions[0].imageExtent.depth           = 1;
 
 /// ...
 
-// the U component is half the height and width
+// the Cb component is half the height and width
 bufferCopyRegions[1].imageOffset                  = {0, 0, 0};
 bufferCopyRegions[1].imageExtent.width            = myImage.width / 2;
 bufferCopyRegions[1].imageExtent.height           = myImage.height / 2;
@@ -87,7 +83,7 @@ bufferCopyRegions[1].imageSubresource.aspectMask  = VK_IMAGE_ASPECT_PLANE_1_BIT;
 
 /// ...
 
-// the V component is half the height and width
+// the Cr component is half the height and width
 bufferCopyRegions[2].imageOffset                  = {0, 0, 0};
 bufferCopyRegions[2].imageExtent.width            = myImage.width / 2;
 bufferCopyRegions[2].imageExtent.height           = myImage.height / 2;
@@ -96,33 +92,33 @@ bufferCopyRegions[2].imageSubresource.aspectMask  = VK_IMAGE_ASPECT_PLANE_2_BIT;
 vkCmdCopyBufferToImage(...)
 ```
 
-The big thing to note here is that the `imageOffset` is zero because its base is the plane, not the entire `VkImage`
+It is worth noting here is that the `imageOffset` is zero because its base is the plane, not the entire sname:VkImage. So when using the `imageOffset` make sure to start from base of the plane and not always plane 0.
 
 ## VkSamplerYcbcrConversion
 
-The `VkSamplerYcbcrConversion` describes all the "read on your own outside the Vulkan Guide" aspects of YCbCr conversion. The values set here are dependent on the input YCbCr data being obtained and how to do the conversion to RGB color spacce.
+The `VkSamplerYcbcrConversion` describes all the "out of scope explaining here" aspects of Y′C<sub>B</sub>C<sub>R</sub> conversion which are described in the https://www.khronos.org/registry/DataFormat/specs/1.3/dataformat.1.3.html#_introduction_to_color_conversions[`Khronos Data Format Specification`]. The values set here are dependent on the input Y′C<sub>B</sub>C<sub>R</sub> data being obtained and how to do the conversion to RGB color spacce.
 
 Here is some pseudo code to help give an idea of how to use it from the API point of view:
 
 ```cpp
-// Create conversion object that describes how to have the implementation do the YCbCr conversion
+// Create conversion object that describes how to have the implementation do the Y′C<sub>B</sub>C<sub>R</sub> conversion
 VkSamplerYcbcrConversion samplerYcbcrConversion;
 VkSamplerYcbcrConversionCreateInfo samplerYcbcrConversionCreateInfo = {};
 // ...
 vkCreateSamplerYcbcrConversion(device, &samplerYcbcrConversionCreateInfo, nullptr, &samplerYcbcrConversion));
 
 VkSamplerYcbcrConversionInfo samplerYcbcrConversionInfo = {};
-samplerYcbcrConversionInfo.conversion                   = samplerYcbcrConversion;
+samplerYcbcrConversionInfo.conversion = samplerYcbcrConversion;
 
 // Create an ImageView with conversion
 VkImageViewCreateInfo imageViewInfo = {};
-imageViewInfo.pNext                 = &samplerYcbcrConversionInfo;
+imageViewInfo.pNext = &samplerYcbcrConversionInfo;
 // ...
 vkCreateImageView(device, &imageViewInfo, nullptr, &myImageView));
 
 // Create a sampler with conversion
 VkSamplerCreateInfo samplerInfo = {};
-samplerInfo.pNext               = &samplerYcbcrConversionInfo;
+samplerInfo.pNext = &samplerYcbcrConversionInfo;
 // ...
 vkCreateSampler(device, &samplerInfo, nullptr, &mySampler));
 ```
@@ -133,9 +129,9 @@ An important value to monitor is the `combinedImageSamplerDescriptorCount` which
 
 All descriptors in a binding use the same maximum `combinedImageSamplerDescriptorCount` descriptors to allow implementations to use a uniform stride for dynamic indexing of the descriptors in the binding.
 
-For example, consider a descriptor set layout binding with two descriptors and immutable samplers for multi-planar formats that have `VkSamplerYcbcrConversionImageFormatProperties::combinedImageSamplerDescriptorCount` values of `2` and `3` respectively. There are two descriptors in the binding and the maximum `combinedImageSamplerDescriptorCount` is `3`, so descriptor sets with this layout consume `6` descriptors from the descriptor pool. To create a descriptor pool that allows allocating `four` descriptor sets with this layout, `descriptorCount` must be at least `24`.
+For example, consider a descriptor set layout binding with two descriptors and immutable samplers for multi-planar formats that have `VkSamplerYcbcrConversionImageFormatProperties::combinedImageSamplerDescriptorCount` values of `2` and `3` respectively. There are two descriptors in the binding and the maximum `combinedImageSamplerDescriptorCount` is `3`, so descriptor sets with this layout consume `6` descriptors from the descriptor pool. To create a descriptor pool that allows allocating `4` descriptor sets with this layout, `descriptorCount` must be at least `24`.
 
-Some pseudo code for how to query for the `combinedImageSamplerDescriptorCount`
+Some pseudo code how to query for the `combinedImageSamplerDescriptorCount`:
 
 ```cpp
 VkSamplerYcbcrConversionImageFormatProperties samplerYcbcrConversionImageFormatProperties = {};
@@ -143,8 +139,8 @@ VkSamplerYcbcrConversionImageFormatProperties samplerYcbcrConversionImageFormatP
 VkImageFormatProperties imageFormatProperties   = {};
 VkImageFormatProperties2 imageFormatProperties2 = {};
 // ...
-imageFormatProperties2.pNext                    = &samplerYcbcrConversionImageFormatProperties;
-imageFormatProperties2.imageFormatProperties    = imageFormatProperties;
+imageFormatProperties2.pNext                 = &samplerYcbcrConversionImageFormatProperties;
+imageFormatProperties2.imageFormatProperties = imageFormatProperties;
 
 VkPhysicalDeviceImageFormatInfo2 imageFormatInfo = {};
 // ...
