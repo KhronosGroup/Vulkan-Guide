@@ -21,7 +21,7 @@ SPIR-V has many capabilities as it has other targets than just Vulkan. To see th
 
 A collection of tools, libraries, and tests for Vulkan shader compilation hosted by Google. It contains `glslc` which wraps around core functionality in [glslang](https://github.com/KhronosGroup/glslang) and [SPIRV-Tools](https://github.com/KhronosGroup/SPIRV-Tools). Shaderc also contains `spvc` which wraps around core functionality in [SPIRV-Cross](https://github.com/KhronosGroup/SPIRV-Cross) and [SPIRV-Tools](https://github.com/KhronosGroup/SPIRV-Tools).
 
-Shaderc builds both tools as a standalone command line tool ([glslc](https://github.com/google/shaderc/tree/main/glslc) and [spvc](https://github.com/google/shaderc/tree/main/spvc)) as well as a library to link to ([libshaderc](https://github.com/google/shaderc/tree/main/libshaderc) and [libshaderc_spvc](https://github.com/google/shaderc/tree/main/libshaderc_spvc)).
+Shaderc builds both tools as a standalone command line tool ([glslc](https://github.com/google/shaderc/tree/main/glslc)) as well as a library to link to ([libshaderc](https://github.com/google/shaderc/tree/main/libshaderc)).
 
 ### DXC
 
