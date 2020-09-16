@@ -27,7 +27,7 @@ Besides the listed extensions below, Vulkan 1.1 introduced the [subgroups](./ext
 - [VK_KHR_maintenance1](./extensions/cleanup.md#maintenance-extensions)
 - [VK_KHR_maintenance2](./extensions/cleanup.md#maintenance-extensions)
 - [VK_KHR_maintenance3](./extensions/cleanup.md#maintenance-extensions)
-- [VK_KHR_multiview](./extensions/VK_KHR_multiview.md)
+- [VK_KHR_multiview](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_KHR_multiview.html#_description)
 - [VK_KHR_relaxed_block_layout](./extensions/shader_features.md#vk_khr_relaxed_block_layout)
 - [VK_KHR_sampler_ycbcr_conversion](./extensions/VK_KHR_sampler_ycbcr_conversion.md)
 - [VK_KHR_shader_draw_parameters](./extensions/shader_features.md#vk_khr_shader_draw_parameters)
@@ -41,9 +41,9 @@ Besides the listed extensions below, Vulkan 1.1 introduced the [subgroups](./ext
 Vulkan 1.2 was released on January 15, 2020
 
 - [VK_KHR_8bit_storage](./extensions/shader_features.md#vk_khr_8bit_storage-and-vk_khr_16bit_storage)
-- [VK_KHR_buffer_device_address](./extensions/VK_KHR_buffer_device_address.md)
+- [VK_KHR_buffer_device_address](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_KHR_buffer_device_address.html#_description)
 - [VK_KHR_create_renderpass2](./extensions/cleanup.md#pnext-expansions)
-- [VK_KHR_depth_stencil_resolve](./extensions/VK_KHR_depth_stencil_resolve.md)
+- [VK_KHR_depth_stencil_resolve](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_KHR_depth_stencil_resolve.html#_description)
 - [VK_KHR_draw_indirect_count](./extensions/VK_KHR_draw_indirect_count.md)
 - [VK_KHR_driver_properties](./extensions/cleanup.md#vk_khr_driver_properties)
 - [VK_KHR_image_format_list](./extensions/VK_KHR_image_format_list.md)
