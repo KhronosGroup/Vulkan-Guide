@@ -277,7 +277,7 @@ The typical use cases for specialization constants can be best grouped into thre
 
 ## Physical Storage Buffer
 
-The [VK_KHR_buffer_device_address](extensions/VK_KHR_buffer_device_address.md) extension promoted to Vulkan 1.2 adds the ability to have "pointers in the shader". Using the `PhysicalStorageBuffer` storage class in SPIR-V an application can call `vkGetBufferDeviceAddress` which will return the `VkDeviceAddress` to the memory.
+The [VK_KHR_buffer_device_address](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_KHR_buffer_device_address.html#_description) extension promoted to Vulkan 1.2 adds the ability to have "pointers in the shader". Using the `PhysicalStorageBuffer` storage class in SPIR-V an application can call `vkGetBufferDeviceAddress` which will return the `VkDeviceAddress` to the memory.
 
 While this is a way to map data to the shader, it is not a way to interface with the shader. For example, if an application wants to use this with a uniform buffer it would have to create a `VkBuffer` with both `VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT` and `VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT`. From here in this example, Vulkan would use a descriptor to interface with the shader, but could then use the physical storage buffer to update the value after.
 
