@@ -10,7 +10,7 @@ At the core, Vulkan is an [API Specification](https://www.khronos.org/registry/v
 
 The Khronos Group, along with the Vulkan Specification, releases [C99](http://www.open-std.org/jtc1/sc22/wg14/www/standards) [header files](https://github.com/KhronosGroup/Vulkan-Headers/tree/master/include/vulkan) generated from the [API Registry](https://www.khronos.org/registry/vulkan/#apiregistry) that developers can use to interface with the Vulkan API.
 
-For those who might not work with C code, there are various [language](https://github.com/KhronosGroup/Khronosdotorg/blob/master/api/vulkan/resources.md#language-bindings) [bindings](https://github.com/vinjn/awesome-vulkan#bindings) out there.
+For those who might not work with C code, there are various [language](https://github.com/KhronosGroup/Khronosdotorg/blob/main/api/vulkan/resources.md#language-bindings) [bindings](https://github.com/vinjn/awesome-vulkan#bindings) out there.
 
 ## Vulkan and OpenGL
 
@@ -26,7 +26,7 @@ Vulkan puts more work and responsibility into the application. Not every develop
 
 ## Using helping libraries
 
-While some developers may want to try using Vulkan with no help, it is common to use some lighter libraries in your development flow to help abstract some of the more tedious aspect of Vulkan. Here are some [libraries](https://github.com/KhronosGroup/Khronosdotorg/blob/master/api/vulkan/resources.md#libraries) to [help with development](https://github.com/vinjn/awesome-vulkan#libraries)
+While some developers may want to try using Vulkan with no help, it is common to use some lighter libraries in your development flow to help abstract some of the more tedious aspect of Vulkan. Here are some [libraries](https://github.com/KhronosGroup/Khronosdotorg/blob/main/api/vulkan/resources.md#libraries) to [help with development](https://github.com/vinjn/awesome-vulkan#libraries)
 
 ![what_is_vulkan_layer](../images/what_is_vulkan_layer.png)
 
