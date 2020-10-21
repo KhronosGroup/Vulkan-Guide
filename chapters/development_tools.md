@@ -4,6 +4,8 @@ The Vulkan ecosystem consists of many tools for development. This is **not** a f
 
 Khronos hosts [Vulkan Samples](https://github.com/KhronosGroup/Vulkan-Samples), a collection of code and tutorials that demonstrates API usage and explains the implementation of performance best practices.
 
+LunarG is privately sponsored to develop and maintain Vulkan ecosystem components and is currently the curator for the [Vulkan Loader](https://github.com/KhronosGroup/Vulkan-Loader) and [Vulkan Validation Layers](https://github.com/KhronosGroup/Vulkan-ValidationLayers) Khronos Group repositores. In addition, LunarG delivers the [Vulkan SDK](https://vulkan.lunarg.com/) and develops other key tools such as the [Vulkan Configurator](https://vulkan.lunarg.com/doc/sdk/latest/windows/vkconfig.html) and [GFXReconstruct](https://vulkan.lunarg.com/doc/sdk/1.2.154.1/windows/capture_tools.html).
+
 ## Khronos Validation Layer
 
 The [Khronos Validation Layers](./validation_overview.md#khronos-validation-layer) is every developer's first layer of defense when debugging their Vulkan application and this is the reason it is at the top of this list. Read the [Validation Overview chapter](./validation_overview.md) for more details.
