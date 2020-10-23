@@ -11,6 +11,7 @@ The `VkSurfaceKHR` object is platform agnostic and designed so the rest of the V
 Each platform that supports a Vulkan Surface has its own way to create a `VkSurfaceKHR` object from its respective platform-specific API.
 
 - Android - [vkCreateAndroidSurfaceKHR](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCreateAndroidSurfaceKHR)
+- DirectFB - [vkCreateDirectFBSurfaceEXT](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCreateDirectFBSurfaceEXT)
 - Fuchsia - [vkCreateImagePipeSurfaceFUCHSIA](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCreateImagePipeSurfaceFUCHSIA)
 - Google Games - [vkCreateStreamDescriptorSurfaceGGP](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCreateStreamDescriptorSurfaceGGP)
 - iOS - [vkCreateIOSSurfaceMVK](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCreateIOSSurfaceMVK)
