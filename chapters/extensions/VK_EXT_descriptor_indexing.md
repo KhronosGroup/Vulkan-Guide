@@ -70,10 +70,6 @@ To be dynamically **non-uniform** means that it is possible that invocations mig
 
 An example of dynamic non-uniform indexing in GLSL
 
-<<<<<<< HEAD
-=======
-
->>>>>>> Add developer documentation for VK_EXT_descriptor_indexing
 ```glsl
 #version450
 #extension GL_EXT_nonuniform_qualifier : enable
@@ -97,8 +93,4 @@ void main() {
 }
 ```
 
-<<<<<<< HEAD
-This example is non-uniform as some threads index a `mySampler[0]` and some at `mySampler[1]`. The `nonuniformEXT()` is needed in this case.
-=======
 This example is non-uniform as some invocations index a `mySampler[0]` and some at `mySampler[1]`. The `nonuniformEXT()` is needed in this case.
->>>>>>> Add developer documentation for VK_EXT_descriptor_indexing
