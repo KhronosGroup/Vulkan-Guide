@@ -130,7 +130,7 @@ Note, this does **not** require an update to the shader from a `vec3` to a `vec4
 
 ### Example C - non-interleaved
 
-Sometimes data is not interleaved, in this case, there might have the following
+Sometimes data is not interleaved, in this case, you might have the following
 
 ```c
 float position_data[] = { /*....*/ };
