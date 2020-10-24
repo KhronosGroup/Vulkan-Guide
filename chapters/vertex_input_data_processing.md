@@ -2,7 +2,7 @@
 
 This chapter is an overview of the [Fixed-Function Vertex Processing chapter in the spec](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex) to help give a high level understanding of how an application can map data to the vertex shader when using a graphics pipeline.
 
-It is also important to remember that Vulkan is a tool with many possible ways to use. The following are examples for educational purposes of how vertex data **can** be laid out.
+It is also important to remember that Vulkan is a tool that can be used in different ways. The following are examples for educational purposes of how vertex data **can** be laid out.
 
 ## Binding and Locations
 
