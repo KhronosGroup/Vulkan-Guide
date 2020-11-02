@@ -67,6 +67,8 @@ vkCmdDrawIndexed();
 vkEndCommandBuffer();
 ```
 
+> More information can be found in the [Vertex Input Data Processing](vertex_input_data_processing.md) chapter
+
 ## Descriptors
 
 A [resource descriptor](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets) is the core way to map data such as uniform buffers, storage buffers, samplers, etc. to any shader stage in Vulkan. One way to conceptualize a descriptor is by thinking of it as a pointer to memory that the shader can use.
