@@ -18,9 +18,12 @@ Due to the parallel nature of GPUs, a new style of programming referred to as [G
 
 ## Ray Tracing
 
-Currently, the Vulkan Working Group is looking into how to make Vulkan a first class API for Ray Tracing rendering. More information was announced at [Siggraph 2019](https://www.youtube.com/watch?v=_57aiwJISCI&feature=youtu.be&t=5220).
+Ray tracing is an alternative rendering technique, based around the concept of simulating the physical behavior of light.
 
-> Note: As of now, there is an [NVIDIA vendor extension](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing) exposing an implementation of ray tracing on Vulkan.
+Cross-vendor API support for ray tracing was added to Vulkan as a set of extensions in the 1.2.162 specification.
+These are primarily [`VK_KHR_ray_tracing_pipeline`](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline), [`VK_KHR_ray_query`](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_query), and [`VK_KHR_acceleration_structure`](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure).
+
+> Note: There is also an older [NVIDIA vendor extension](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing) exposing an implementation of ray tracing on Vulkan. This extension preceded the cross-vendor extensions. For new development, applications are recommended to prefer the more recent KHR extensions.
 
 ## Video
 
