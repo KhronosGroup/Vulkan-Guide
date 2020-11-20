@@ -122,3 +122,29 @@ This means the 2 valid [html links to the spec](./vulkan_spec.md#html-full) woul
 - `1.2/html/vkspec.html#VUID-VkPipelineLayoutCreateInfo-descriptorType-03016`
 
 The Validation Layer uses the device properties of the application in order to decide which one to display. So in this case, if you are running on a Vulkan 1.2 implementation or a device that supports `VK_EXT_descriptor_indexing` it will display the VUID `03016`.
+
+## Special Usage Tags
+
+When using the [Best Practices layer](https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html) it will produce warnings if the application tries using any extension with [special usage tags](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse). An example is an extension such as [VK_EXT_transform_feedback](extensions/translation_layer_extensions.md#vk_ext_transform_feedback) which is only designed for emulations layers. If an application does fit into the speical use case, the following is the designed way to ignore the warnings.
+
+Ignoring Special Usage Warnings with `VK_EXT_debug_report`
+
+```cpp
+VkBool32 DebugReportCallbackEXT(/* ... */ const char* pMessage /* ... */)
+{
+    if(strstr(pMessage, "specialuse-extension") != NULL) {
+        // ignore
+    };
+}
+```
+
+Ignoring Special Usage Warnings with `VK_EXT_debug_utils`
+
+```cpp
+VkBool32 DebugUtilsMessengerCallbackEXT(/* ... */ const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData /* ... */)
+{
+    if(strstr(pCallbackData->pMessageIdName, "specialuse-extension") != NULL) {
+        // ignore
+    };
+}
+```
