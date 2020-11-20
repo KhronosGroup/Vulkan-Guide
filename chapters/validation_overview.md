@@ -125,16 +125,19 @@ The Validation Layer uses the device properties of the application in order to d
 
 ## Special Usage Tags
 
-When using the [Best Practices layer](https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html) it will produce warnings if the application tries using any extension with [special usage tags](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse). An example is an extension such as [VK_EXT_transform_feedback](extensions/translation_layer_extensions.md#vk_ext_transform_feedback) which is only designed for emulations layers. If an application does fit into the speical use case, the following is the designed way to ignore the warnings.
+The [Best Practices layer](https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html) will produce warnings when an application tries to use any extension with [special usage tags](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse). An example of such an extension is [VK_EXT_transform_feedback](extensions/translation_layer_extensions.md#vk_ext_transform_feedback) which is only designed for emulation layers. If an application's intended usage corresponds to one of the special use cases, the following approach will allow you to ignore the warnings.
 
 Ignoring Special Usage Warnings with `VK_EXT_debug_report`
 
 ```cpp
 VkBool32 DebugReportCallbackEXT(/* ... */ const char* pMessage /* ... */)
 {
+    // If pMessage contains "specialuse-extension", then exit
     if(strstr(pMessage, "specialuse-extension") != NULL) {
-        // ignore
+        return VK_FALSE;
     };
+
+    // Handle remaining validation messages
 }
 ```
 
@@ -143,8 +146,11 @@ Ignoring Special Usage Warnings with `VK_EXT_debug_utils`
 ```cpp
 VkBool32 DebugUtilsMessengerCallbackEXT(/* ... */ const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData /* ... */)
 {
+    // If pMessageIdName contains "specialuse-extension", then exit
     if(strstr(pCallbackData->pMessageIdName, "specialuse-extension") != NULL) {
-        // ignore
+        return VK_FALSE;
     };
+
+    // Handle remaining validation messages
 }
 ```
