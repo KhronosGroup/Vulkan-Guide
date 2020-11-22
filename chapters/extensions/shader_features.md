@@ -112,6 +112,32 @@ This extension allows the ability to set how rounding of floats are handled. The
 
 Originally SPIR-V combined both UBO and SSBO into the 'Uniform' storage classes and differentiated them only through extra decorations. Because some hardware treats UBO an SSBO as two different storage objects, the SPIR-V wanted to reflect that. This extension serves the purpose of extending SPIR-V to have a new `StorageBuffer` class.
 
+An example of this can be seen if you take the following GLSL shader snippet:
+
+```glsl
+layout(set = 0, binding = 0) buffer ssbo {
+    int x;
+};
+```
+
+If you target Vulkan 1.0 (which requires SPIR-V 1.0), using glslang `--target-env vulkan1.0`, you will get something like:
+
+```
+    Decorate 7(ssbo) BufferBlock
+8:  TypePointer Uniform 7(ssbo)
+9:  8(ptr) Variable Uniform
+12: TypePointer Uniform 6(int)
+```
+
+Since `SPV_KHR_storage_buffer_storage_class` was added to SPIR-V 1.3, if you target Vulkan 1.1 (which requires SPIR-V 1.3) ,using glslang `--target-env vulkan1.1`, it will make use of the new `StorageBuffer` class.
+
+```
+    Decorate 7(ssbo) Block
+8:  TypePointer StorageBuffer 7(ssbo)
+9:  8(ptr) Variable StorageBuffer
+12: TypePointer StorageBuffer 6(int)
+```
+
 # VK_KHR_variable_pointers
 
 > Promoted to core in Vulkan 1.1
