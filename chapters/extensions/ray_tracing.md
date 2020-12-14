@@ -58,14 +58,6 @@ pipelines also utilize dedicated commands to submit rendering work
 regarded as somewhat analagous to the drawing commands in traditional 
 rasterization pipelines (`vkCmdDraw` and `vkCmdDrawIndirect`).
 
-`VK_KHR_ray_tracing_pipeline` introduces several new pieces of functionality:
-
-  * Trace ray commands (`vkCmdTraceRaysKHR` and `vkCmdTraceRaysIndirectKHR`)
-    which initiate the ray pipeline traversal. 
-  * A new ray tracing pipeline type with new shader domains: ray generation,
-    intersection, any-hit, closest hit, miss, and callable
-  * A shader binding table to link shader groups with acceleration structures
-
 To trace rays:
 
 * Bind a ray tracing pipeline using `vkCmdBindPipeline` with
