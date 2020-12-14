@@ -45,6 +45,8 @@ The Vulkan Guide is designed to help developers get up and going with the world 
     - `VK_KHR_device_group`, `VK_KHR_device_group_creation`
 - [External Memory and Sychronization](./chapters/extensions/external.md)
     - `VK_KHR_external_fence`, `VK_KHR_external_memory`, `VK_KHR_external_semaphore`
+- [Ray Tracing](./chapters/extensions/ray_tracing.md)
+    - `VK_KHR_acceleration_structure`, `VK_KHR_ray_tracing_pipeline`, `VK_KHR_ray_query`, `VK_KHR_pipeline_library`, `VK_KHR_deferred_host_operations`
 - [Shader Features](./chapters/extensions/shader_features.md)
     - `VK_KHR_8bit_storage`, `VK_KHR_16bit_storage`, `VK_KHR_relaxed_block_layout`, `VK_KHR_shader_atomic_int64`, `VK_EXT_scalar_block_layout`, `VK_KHR_shader_clock`, `VK_EXT_shader_demote_to_helper_invocation`, `VK_KHR_shader_draw_parameters`, `VK_KHR_shader_float16_int8`, `VK_KHR_shader_float_controls`, `VK_EXT_shader_stencil_export`, `VK_EXT_shader_subgroup_ballot`, `VK_KHR_shader_subgroup_extended_types`, `VK_EXT_shader_subgroup_vote`, `VK_EXT_shader_viewport_index_layer`, `VK_KHR_spirv_1_4`, `VK_KHR_storage_buffer_storage_class`, `VK_EXT_subgroup_size_control`, `VK_KHR_uniform_buffer_standard_layout`, `VK_KHR_variable_pointers`, `VK_KHR_vulkan_memory_model`
 - [Translation Layer Extensions](./chapters/extensions/translation_layer_extensions.md)
