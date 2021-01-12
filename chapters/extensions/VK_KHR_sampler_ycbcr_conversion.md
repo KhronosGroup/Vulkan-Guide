@@ -96,7 +96,7 @@ It is worth noting here is that the `imageOffset` is zero because its base is th
 
 ## VkSamplerYcbcrConversion
 
-The `VkSamplerYcbcrConversion` describes all the "out of scope explaining here" aspects of Y′C<sub>B</sub>C<sub>R</sub> conversion which are described in the https://www.khronos.org/registry/DataFormat/specs/1.3/dataformat.1.3.html#_introduction_to_color_conversions[`Khronos Data Format Specification`]. The values set here are dependent on the input Y′C<sub>B</sub>C<sub>R</sub> data being obtained and how to do the conversion to RGB color spacce.
+The `VkSamplerYcbcrConversion` describes all the "out of scope explaining here" aspects of Y′C<sub>B</sub>C<sub>R</sub> conversion which are described in the [Khronos Data Format Specification](https://www.khronos.org/registry/DataFormat/specs/1.3/dataformat.1.3.html#_introduction_to_color_conversions). The values set here are dependent on the input Y′C<sub>B</sub>C<sub>R</sub> data being obtained and how to do the conversion to RGB color spacce.
 
 Here is some pseudo code to help give an idea of how to use it from the API point of view:
 
