@@ -59,7 +59,7 @@ bindImageMemoryInfo.memory       = disjointMemoryPlane0;
 vkBindImageMemory2(device, bindImageMemoryInfoSize, bindImageMemoryInfoArray));
 ```
 
-==== Copying memory to each plane
+## Copying memory to each plane
 
 Even if an application is not using disjoint memory, it still needs to use the `VK_IMAGE_ASPECT_PLANE_0_BIT` when copying over data to each plane.
 
