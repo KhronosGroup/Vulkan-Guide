@@ -18,6 +18,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 - [Vulkan CTS](./chapters/vulkan_cts.md)
 - [Vulkan Development Tools](./chapters/development_tools.md)
 - [Vulkan Validation Overview](./chapters/validation_overview.md)
+- [Vulkan Decoder Ring](./chapters/decoder_ring.md) (GL, GLES, DirectX, and Metal)
 
 ## Using Vulkan
 - [Loader](./chapters/loader.md)
