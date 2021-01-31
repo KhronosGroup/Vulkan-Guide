@@ -163,7 +163,7 @@ This extension allows the use of std430 memory layout in UBOs. More information 
 
 This extension allows implementations to indicate they can support more variation in block `Offset` decorations. This comes up when using std430 memory layout where a `vec3` (which is 12 bytes) is still defined as a 16 byte alignment. With relaxed block layout an application can fit a `float` on either side of the `vec3` and maintain the 16 byte alignment between them. For more information see [Offset and Stride Assignment](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-layout) for details.
 
-```
+```glsl
 // SPIR-V offsets WITHOUT relaxed block layout
 layout (set = 0, binding = 0) buffer StorageBuffer {
     vec3 a;  // Offset: 0
