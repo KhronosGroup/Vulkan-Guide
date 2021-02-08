@@ -16,16 +16,16 @@ Besides the Validation Layers, there are also other publicly available layers th
 
 - [API Logging](https://vulkan.lunarg.com/doc/sdk/latest/windows/api_dump_layer.html) - Vulkan SDK layer for logging API calls.
 - [Arm PerfDoc layer](https://github.com/ARM-software/perfdoc) - Checks Vulkan applications for best practices on Arm Mali devices.
-- [PowerVR PerfDoc layer](https://github.com/powervr-graphics/perfdoc) - Checks Vulkan applications for best practices on Imagination Technologies PowerVR devices.
-- [Vulkan Adreno Layer](https://developer.qualcomm.com/software/adreno-gpu-sdk/tools) - Checks Vulkan applications for best practices on Qualcomm Adreno devices.
-- [LunarG Best Practices layer](https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html) - Highlights potential performance issues, questionable usage patterns, common mistakes.
+- [Capture and Replay](https://vulkan.lunarg.com/doc/sdk/latest/windows/capture_tools.html) - GFXReconstruct software for capturing and replaying Vulkan API calls. Note: this link takes you to the desktop version of the documentation. Full Android support is also available at <https://github.com/LunarG/gfxreconstruct>
 - [GPU-Assisted Validation](https://vulkan.lunarg.com/doc/sdk/latest/windows/gpu_validation.html) - Instrument shader code to perform run-time checks for error conditions produced during shader execution.
+- [LunarG Best Practices layer](https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html) - Highlights potential performance issues, questionable usage patterns, common mistakes.
+- [PowerVR PerfDoc layer](https://github.com/powervr-graphics/perfdoc) - Checks Vulkan applications for best practices on Imagination Technologies PowerVR devices.
 - [Shader printf](https://vulkan.lunarg.com/doc/sdk/latest/windows/debug_printf.html) - Debug shader code by "printing" any values of interest to the debug callback or stdout.
 - [Synchronization Validation](https://vulkan.lunarg.com/doc/sdk/latest/windows/synchronization_usage.html) - Identify resource access conflicts due to missing or incorrect synchronization operations between actions (Draw, Copy, Dispatch, Blit) reading or writing the same regions of memory.
 - [Simulate device properties](https://vulkan.lunarg.com/doc/sdk/latest/windows/device_simulation_layer.html) - Vulkan SDK layer for testing device properties on any device.
-- [Capture and Replay](https://vulkan.lunarg.com/doc/sdk/latest/windows/capture_tools.html) - GFXReconstruct software for capturing and replaying Vulkan API calls. Note: this link takes you to the desktop version of the documentation. Full Android support is also available at <https://github.com/LunarG/gfxreconstruct>
 - [Take screenshots](https://vulkan.lunarg.com/doc/sdk/latest/windows/screenshot_layer.html) - Captures the rendered image to a viewable image.
 - [Track FPS](https://vulkan.lunarg.com/doc/sdk/latest/windows/monitor_layer.html) - Logs FPS information.
+- [Vulkan Adreno Layer](https://developer.qualcomm.com/software/adreno-gpu-sdk/tools) - Checks Vulkan applications for best practices on Qualcomm Adreno devices.
 
 All of these layers can be discovered, enabled, ordered, and configured using the [Vulkan Configurator](https://vulkan.lunarg.com/doc/sdk/latest/windows/vkconfig.html).
 
