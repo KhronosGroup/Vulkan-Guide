@@ -16,6 +16,8 @@ Besides the Validation Layers, there are also other publicly available layers th
 
 - [API Logging](https://vulkan.lunarg.com/doc/sdk/latest/windows/api_dump_layer.html) - Vulkan SDK layer for logging API calls.
 - [Arm PerfDoc layer](https://github.com/ARM-software/perfdoc) - Checks Vulkan applications for best practices on Arm Mali devices.
+- [PowerVR PerfDoc layer](https://github.com/powervr-graphics/perfdoc) - Checks Vulkan applications for best practices on Imagination Technologies PowerVR devices.
+- [Vulkan Adreno Layer](https://developer.qualcomm.com/downloads/vulkan-adreno-layer-v10?referrer=node/6114) - Checks Vulkan applications for best practices on Qualcomm Adreno devices.
 - [LunarG Best Practices layer](https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html) - Highlights potential performance issues, questionable usage patterns, common mistakes.
 - [GPU-Assisted Validation](https://vulkan.lunarg.com/doc/sdk/latest/windows/gpu_validation.html) - Instrument shader code to perform run-time checks for error conditions produced during shader execution.
 - [Shader printf](https://vulkan.lunarg.com/doc/sdk/latest/windows/debug_printf.html) - Debug shader code by "printing" any values of interest to the debug callback or stdout.
