@@ -47,7 +47,7 @@ The pipeline create info code will look roughly like:
 const VkVertexInputBindingDescription binding = {
     0,                         // binding
     sizeof(Vertex),            // stride
-    VK_VERTEX_INPUT_RATE_VERTE // inputRate
+    VK_VERTEX_INPUT_RATE_VERTEX // inputRate
 };
 
 const VkVertexInputAttributeDescription attributes[] = {
@@ -146,12 +146,12 @@ const VkVertexInputBindingDescription bindings[] = {
     {
         0,                         // binding
         3 * sizeof(float),         // stride
-        VK_VERTEX_INPUT_RATE_VERTE // inputRate
+        VK_VERTEX_INPUT_RATE_VERTEX // inputRate
     },
     {
         1,                         // binding
         2 * sizeof(uint8_t),       // stride
-        VK_VERTEX_INPUT_RATE_VERTE // inputRate
+        VK_VERTEX_INPUT_RATE_VERTEX // inputRate
     }
 };
 
@@ -222,12 +222,12 @@ const VkVertexInputBindingDescription bindings[] = {
     {
         0,                         // binding
         sizeof(typeA),             // stride
-        VK_VERTEX_INPUT_RATE_VERTE // inputRate
+        VK_VERTEX_INPUT_RATE_VERTEX // inputRate
     },
     {
         1,                         // binding
         sizeof(typeB),             // stride
-        VK_VERTEX_INPUT_RATE_VERTE // inputRate
+        VK_VERTEX_INPUT_RATE_VERTEX // inputRate
     }
 };
 
