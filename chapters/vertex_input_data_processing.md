@@ -91,14 +91,7 @@ struct Vertex {
 };
 ```
 
-There are 2 ways to go about this by either:
-
-- Adjusting the location **offset**
-- Adjusting the location **format**
-
-#### Adjusting offset
-
-For the first case of changing the offset, the only change to your pipeline creation becomes
+In this case you would need to adjust the offset to point at the right attribute. The only change to your pipeline creation becomes
 
 ```patch
         1,                          // location
@@ -110,23 +103,9 @@ For the first case of changing the offset, the only change to your pipeline crea
 
 ![vertex_input_data_processing_example_b_offset](../images/vertex_input_data_processing_example_b_offset.png)
 
-#### Adjusting format
-
-For the second case changing the format, you keep the `3 * sizeof(float)` offset and adjust the format to change the size of each location element
-
-```patch
-        0,                          // location
-        binding.binding,            // binding
--        VK_FORMAT_R32G32B32_SFLOAT, // format
-+        VK_FORMAT_R32G32B32A32_SFLOAT, // format
-        0                           // offset
-```
-
 Note, this does **not** require an update to the shader from a `vec3` to a `vec4` as the spec states
 
 > If the vertex shader has fewer components, the extra components are discarded.
-
-![vertex_input_data_processing_example_b_format](../images/vertex_input_data_processing_example_b_format.png)
 
 ### Example C - non-interleaved
 
