@@ -29,6 +29,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 - [WSI](./chapters/wsi.md)
 - [pNext and sType](./chapters/pnext_and_stype.md)
 - [Synchronization](./chapters/synchronization.md)
+    - [Porting to VK_KHR_synchronization2](./chapters/extensions/VK_KHR_synchronization2.md)
 - [Memory Allocation Strategy](./chapters/memory_allocation.md)
     - [Sparse Resources](./chapters/sparse_resources.md)
 - [Pipeline Caching/Derivatives](./chapters/pipeline_cache.md)
