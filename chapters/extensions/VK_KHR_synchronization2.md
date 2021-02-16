@@ -1,6 +1,6 @@
 # VK_KHR_synchronization2
 
-The following information was written with the goal of helpping guide developers wanting to update to using `VK_KHR_synchronization2` where possible. It will also give some examples of how the original Vulkan synchronization is different.
+The following information was written with the goal of helping guide developers wanting to update to using `VK_KHR_synchronization2` where possible. It will also give some examples of how the original Vulkan synchronization is different.
 
 # Rethinking Pipeline Stages and Access Flags
 
