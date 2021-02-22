@@ -259,7 +259,7 @@ const VkVertexInputAttributeDescription attributes[] = {
     {
         0,                          // location
         binding.binding,            // binding
-        VK_FORMAT_R32G32_SFLOAT,    // format - Reads in two 32-bit signed floats
+        VK_FORMAT_R32G32_SFLOAT,    // format - Reads in two 32-bit signed floats ('a' and 'b')
         0                           // offset
     },
     {
