@@ -45,8 +45,8 @@ The pipeline create info code will look roughly like:
 
 ```c
 const VkVertexInputBindingDescription binding = {
-    0,                         // binding
-    sizeof(Vertex),            // stride
+    0,                          // binding
+    sizeof(Vertex),             // stride
     VK_VERTEX_INPUT_RATE_VERTEX // inputRate
 };
 
@@ -80,7 +80,7 @@ layout(location = 0) in vec3 inPos;
 layout(location = 1) in uvec2 inUV;
 ```
 
-### Example B - padding
+### Example B - padding and adjusting offset
 
 This example examines a case where the vertex data is not tightly packed and has extra padding.
 
@@ -91,14 +91,7 @@ struct Vertex {
 };
 ```
 
-There are 2 ways to go about this by either:
-
-- Adjusting the location **offset**
-- Adjusting the location **format**
-
-#### Adjusting offset
-
-For the first case of changing the offset, the only change to your pipeline creation becomes
+The only change needed is to adjust the offset at pipeline creation
 
 ```patch
         1,                          // location
@@ -108,25 +101,9 @@ For the first case of changing the offset, the only change to your pipeline crea
 +        4 * sizeof(float)           // offset
 ```
 
+As this will now set the correct offset for where `u` and `v` are read in from.
+
 ![vertex_input_data_processing_example_b_offset](../images/vertex_input_data_processing_example_b_offset.png)
-
-#### Adjusting format
-
-For the second case changing the format, you keep the `3 * sizeof(float)` offset and adjust the format to change the size of each location element
-
-```patch
-        0,                          // location
-        binding.binding,            // binding
--        VK_FORMAT_R32G32B32_SFLOAT, // format
-+        VK_FORMAT_R32G32B32A32_SFLOAT, // format
-        0                           // offset
-```
-
-Note, this does **not** require an update to the shader from a `vec3` to a `vec4` as the spec states
-
-> If the vertex shader has fewer components, the extra components are discarded.
-
-![vertex_input_data_processing_example_b_format](../images/vertex_input_data_processing_example_b_format.png)
 
 ### Example C - non-interleaved
 
@@ -144,13 +121,13 @@ In this case, there will be 2 bindings, but still 2 locations
 ```c
 const VkVertexInputBindingDescription bindings[] = {
     {
-        0,                         // binding
-        3 * sizeof(float),         // stride
+        0,                          // binding
+        3 * sizeof(float),          // stride
         VK_VERTEX_INPUT_RATE_VERTEX // inputRate
     },
     {
-        1,                         // binding
-        2 * sizeof(uint8_t),       // stride
+        1,                          // binding
+        2 * sizeof(uint8_t),        // stride
         VK_VERTEX_INPUT_RATE_VERTEX // inputRate
     }
 };
@@ -220,13 +197,13 @@ The following can still be mapped properly by setting the `VkVertexInputBindingD
 ```c
 const VkVertexInputBindingDescription bindings[] = {
     {
-        0,                         // binding
-        sizeof(typeA),             // stride
+        0,                          // binding
+        sizeof(typeA),              // stride
         VK_VERTEX_INPUT_RATE_VERTEX // inputRate
     },
     {
-        1,                         // binding
-        sizeof(typeB),             // stride
+        1,                          // binding
+        sizeof(typeB),              // stride
         VK_VERTEX_INPUT_RATE_VERTEX // inputRate
     }
 };
@@ -254,6 +231,62 @@ const VkVertexInputAttributeDescription attributes[] = {
 ```
 
 ![vertex_input_data_processing_example_d_vertex](../images/vertex_input_data_processing_example_d_vertex.png)
+
+## Example E - understanding input attribute format
+
+The `VkVertexInputAttributeDescription::format` can be the cause of confusion. The `format` field just describes the **size** and **type** of the data the shader should read in.
+
+The reason for using the `VkFormat` values is they are well defined and match the input layouts of the vertex shader.
+
+For this example the vertex data is just four floats:
+
+```c
+struct Vertex {
+    float a, b, c, d;
+};
+```
+
+The data being read will be overlapped from how the `format` and `offset` is set
+
+```c
+const VkVertexInputBindingDescription binding = {
+    0,                          // binding
+    sizeof(Vertex),             // stride
+    VK_VERTEX_INPUT_RATE_VERTEX // inputRate
+};
+
+const VkVertexInputAttributeDescription attributes[] = {
+    {
+        0,                          // location
+        binding.binding,            // binding
+        VK_FORMAT_R32G32_SFLOAT,    // format - Reads in two 32-bit signed floats ('a' and 'b')
+        0                           // offset
+    },
+    {
+        1,                          // location
+        binding.binding,            // binding
+        VK_FORMAT_R32G32B32_SFLOAT, // format - Reads in three 32-bit signed floats ('b', 'c', and 'd')
+        1 * sizeof(float)           // offset
+    }
+};
+```
+
+When reading in the data in the shader the value will be the same where it overlaps
+
+```glsl
+layout(location = 0) in vec2 in0;
+layout(location = 1) in vec2 in1;
+
+// in0.y == in1.x
+```
+
+![vertex_input_data_processing_understanding_format](../images/vertex_input_data_processing_understanding_format.png)
+
+It is important to note that `in1` is a `vec2` while the input attribute is `VK_FORMAT_R32G32B32_SFLOAT` which doesn't fully match. According to the spec:
+
+> If the vertex shader has fewer components, the extra components are discarded.
+
+So in this case, the last component of location 1 (`d`) is discarded and would not be read in by the shader.
 
 ## Components Assignment
 
