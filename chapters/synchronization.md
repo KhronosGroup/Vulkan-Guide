@@ -22,3 +22,9 @@ While Pipeline Barriers might be hard to understand at first, there are many gre
 - [Vulkanised 2019 - Live Long and Optimise](https://www.khronos.org/assets/uploads/developers/library/2019-vulkanised/02_Live%20Long%20And%20Optimise-May19.pdf)  ([video](https://www.youtube.com/watch?v=ch6161wvME8&t=463s)) Pipeline Analysis starting slide 12
 - [Vulkan barriers explained](https://gpuopen.com/learn/vulkan-barriers-explained/) blog post
 - [Yet another blog post explaining Vulkan synchronization](http://themaister.net/blog/2019/08/14/yet-another-blog-explaining-vulkan-synchronization/)
+
+## VK_KHR_synchronization2
+
+The `VK_KHR_synchronization2` extension overhauls the original core synchronization APIs to reduce complexity for application developers, as well as adding a few additional features not present in the original APIs.
+
+Read the [VK_KHR_synchronization2](./extensions/VK_KHR_synchronization2.md) chapter for more info about the difference in the synchronization APIs and how to port over to using the new extension
