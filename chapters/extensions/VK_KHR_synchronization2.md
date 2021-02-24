@@ -1,22 +1,24 @@
 # VK_KHR_synchronization2
 
-The following information was written with the goal of helping guide developers wanting to update to using `VK_KHR_synchronization2` where possible. It will also give some examples of how the original Vulkan synchronization is different.
+The `VK_KHR_synchronization2` extension provides improvements to pipeline barriers, events, image layout transitions and queue submission. This document shows the difference between the original Vulkan synchronization operations and those provided by the extension. There are also examples of how to update application code to make use of the extension.
 
 # Rethinking Pipeline Stages and Access Flags
 
 One main change with the extension is to have pipeline stages and access flags now specified together in memory barrier structures. This makes the connection between the two more obvious.
 
-The only new type of structure needed is the `VkDependencyInfoKHR` struct which wraps all the barriers into a single location.
+The only new type of structure needed is `VkDependencyInfoKHR`, which wraps all the barriers into a single location.
 
 ![VK_KHR_synchronization2_stage_access](images/VK_KHR_synchronization2_stage_access.png)
 
 ## Adding barriers for setting events
 
-Note that with the introduction of `VkDependencyInfoKHR` that `vkCmdSetEvent2KHR`, unlike `vkCmdSetEvent`, has the ability to add barriers. This was added to allow the `VkEvent` to be more useful.
+Note that with the introduction of `VkDependencyInfoKHR` that `vkCmdSetEvent2KHR`, unlike `vkCmdSetEvent`, has the ability to add barriers. This was added to allow the `VkEvent` to be more useful. Because the implementation of a synchronization2 `VkEvent` is likely to be substantially different from a Vulkan 1.2 `VkEvent`, you must not mix extension and core api calls for a single VkEvent. For example, you must not call `vkCmdSetEvent2KHR()` and then `vkCmdWaitEvents()`.
 
 # Reusing the same pipeline stage and access flag names
 
-Due to running out of the 32 bits for `VkAccessFlags` the `VkAccessFlags2KHR` struct was created with a 64-bit range. To prevent the same issue for `VkPipelineStageFlags` the `VkPipelineStageFlags2KHR` struct was also created with a 64-bit range.
+Due to running out of the 32 bits for `VkAccessFlag` the `VkAccessFlags2KHR` type was created with a 64-bit range. To prevent the same issue for `VkPipelineStageFlags`, the `VkPipelineStageFlags2KHR` type was also created with a 64-bit range.
+
+64-bit enumeration types are not available in all C/C++ compilers, so the code for the new fields uses `static const` values instead of an enum. As a result of this, there are no equivalent types to `VkPipelineStageFlagBits` and `VkAccessFlagBits`. Some code, including Vulkan functions such as `vkCmdWriteTimestamp()`, used the ‘Bits’ type to indicate that the caller could only pass in a single bit value, rather than a mask of multiple bits. These calls need to be converted to take the “Flags” type and enforce the “only 1-bit” limitation via Valid Usage or the appropriate coding convention for your own code, as was done for `vkCmdWriteTimestamp2KHR()`.
 
 The new flags include identical bits to the original synchronization flags, with the same base name and identical values.
 Old flags can be used directly in the new APIs, subject to any typecasting constraints of the coding environment.
@@ -190,6 +192,16 @@ VkImageMemoryBarrier depthStencilImageMemoryBarrier = {
 
 In the new case `VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR` works by contextually appling itself based on the image format used. So as long as `colorImageMemoryBarrier` is used on a color format, `VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR` maps to `VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL`
 
+Additionally, with `VK_KHR_synchronization2`, if `oldLayout` is equal to `newLayout`, no layout transition is performed and the image contents are preserved.  The layout used does not even need to match the layout of an image, so the following barrier is valid:
+
+```cpp
+VkImageMemoryBarrier depthStencilImageMemoryBarrier = {
+  // other fields omitted
+  .oldLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+  .newLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+};
+```
+
 # New submission flow
 
 `VK_KHR_synchronization2` adds the `vkQueueSubmit2KHR` command which main goal is to clean up the syntax for the function to wrap command buffers and semaphores in extensible structures, which incorporate changes from Vulkan 1.1, `VK_KHR_device_group`, and `VK_KHR_timeline_semaphore`.
@@ -281,7 +293,7 @@ vkQueueSubmit2KHR(queue, 1, submitInfo, fence);
 
 The difference between the two examples code snippets above is that the `vkQueueSubmit2KHR` will signal `VkSemaphore signalSemaphore` when the vertex shader stage is complete compared to the `vkQueueSubmit` call which will wait until the end of the submission.
 
-To emulate the same behavior of sempahore signaling from `vkQueueSubmit` in `vkQueueSubmit2KHR` the `stageMask` can be set to `VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT`
+To emulate the same behavior of semaphore signaling from `vkQueueSubmit` in `vkQueueSubmit2KHR` the `stageMask` can be set to `VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT`
 
 ```cpp
 // Waits until everything is done
