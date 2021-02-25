@@ -8,7 +8,7 @@ The [Vulkan Portability Initiative](https://www.khronos.org/vulkan/portability-i
 
 ## MacOS and iOS Tools
 
-Press release for more [information about macOS and iOS support](https://www.khronos.org/news/press/vulkan-applications-enabled-on-apple-platforms)
+Khronos Blog for [information about macOS and iOS support](https://www.khronos.org/blog/new-release-of-vulkan-sdk)
 
 ![portability_initiative_macos.png](../images/portability_initiative_macos.png)
 
