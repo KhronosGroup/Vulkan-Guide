@@ -12,7 +12,7 @@ The only new type of structure needed is `VkDependencyInfoKHR`, which wraps all 
 
 ## Adding barriers for setting events
 
-Note that with the introduction of `VkDependencyInfoKHR` that `vkCmdSetEvent2KHR`, unlike `vkCmdSetEvent`, has the ability to add barriers. This was added to allow the `VkEvent` to be more useful. Because the implementation of a synchronization2 `VkEvent` is likely to be substantially different from a Vulkan 1.2 `VkEvent`, you must not mix extension and core api calls for a single VkEvent. For example, you must not call `vkCmdSetEvent2KHR()` and then `vkCmdWaitEvents()`.
+Note that with the introduction of `VkDependencyInfoKHR` that `vkCmdSetEvent2KHR`, unlike `vkCmdSetEvent`, has the ability to add barriers. This was added to allow the `VkEvent` to be more useful. Because the implementation of a synchronization2 `VkEvent` is likely to be substantially different from a Vulkan 1.2 `VkEvent`, you must not mix extension and core api calls for a single `VkEvent`. For example, you must not call `vkCmdSetEvent2KHR()` and then `vkCmdWaitEvents()`.
 
 # Reusing the same pipeline stage and access flag names
 
