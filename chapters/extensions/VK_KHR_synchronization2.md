@@ -303,3 +303,10 @@ VkSemaphoreSubmitInfoKHR signalSemaphoreSubmitInfo = {
     // ...
 };
 ```
+
+## Emulation Layer
+
+For devices that do not natively support this extension, there is a portable implementation in the [Vulkan-Extensionlayer](https://github.com/KhronosGroup/Vulkan-ExtensionLayer) repository.   This layer should work with any Vulkan device. For more information see the [layer documentation](https://github.com/KhronosGroup/Vulkan-ExtensionLayer/blob/master/docs/synchronization2_layer.md) and the [Sync2Compat.Vulkan10](https://github.com/KhronosGroup/Vulkan-ExtensionLayer/blob/bd8a72b14c67d011561cd795d777fb838c926e0f/tests/synchronization2_tests.cpp#L1243) test case.
+
+Note: The `VK_KHR_synchronization2` specification lists `VK_KHR_create_renderpass2` and `VK_KHR_get_phyiscal_device_properties2` as requirements. As a result, using synchronization2 without these extensions may result in validation errors. The extension requirements are being reevaluated and validation will be adjusted once this is complete.
+
