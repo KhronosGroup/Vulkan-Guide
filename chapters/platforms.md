@@ -12,6 +12,14 @@ Android uses its [Hardware Abstraction Layer (HAL)](https://source.android.com/d
 
 All 64-bit devices that launch with API level 29 (Android Q) or later must include a Vulkan 1.1 driver.
 
+## BSD Unix
+
+Vulkan is supported on many BSD Unix distributions.
+
+## Fuchsia
+
+Vulkan is supported on the [Fuchsia operation system](https://fuchsia.dev/fuchsia-src/concepts/graphics/magma/vulkan).
+
 ## iOS
 
 Vulkan is not natively supported on iOS, but can still be targeted with [Vulkan Portability Tools](./portability_initiative.md).
@@ -27,6 +35,10 @@ Vulkan is not natively supported on MacOS, but can still be targeted with [Vulka
 ## Nintendo Switch
 
 The Nintendo Switch runs an NVIDIA Tegra chipset that supports native Vulkan.
+
+## QNX
+
+Vulkan is supported on QNX operation system.
 
 ## Stadia
 
