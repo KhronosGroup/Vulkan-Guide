@@ -30,7 +30,7 @@ Vulkan is supported on QNX operation system, using [VK_QNX_screen_surface](https
 
 ## Fuchsia
 
-Vulkan is supported on Fuchsia operation system.
+Vulkan is supported on the [Fuchsia operation system](https://fuchsia.dev/fuchsia-src/concepts/graphics/magma/vulkan).
 
 ## MacOS
 
