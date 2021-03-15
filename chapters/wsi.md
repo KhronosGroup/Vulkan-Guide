@@ -19,6 +19,7 @@ Each platform that supports a Vulkan Surface has its own way to create a `VkSurf
 - Metal - [vkCreateMetalSurfaceEXT](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCreateMetalSurfaceEXT)
 - VI - [vkCreateViSurfaceNN](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCreateViSurfaceNN)
 - Wayland - [vkWaylandSurfaceCreateInfoKHR](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkWaylandSurfaceCreateInfoKHR)
+- QNX - [vkCreateScreenSurfaceQNX](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkCreateScreenSurfaceQNX.html)
 - Windows - [vkCreateWin32SurfaceKHR](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCreateWin32SurfaceKHR)
 - XCB - [vkCreateXcbSurfaceKHR](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCreateXcbSurfaceKHR)
 - Xlib - [vkCreateXlibSurfaceKHR](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCreateXlibSurfaceKHR)
