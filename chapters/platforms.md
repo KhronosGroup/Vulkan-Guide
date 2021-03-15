@@ -20,6 +20,18 @@ Vulkan is not natively supported on iOS, but can still be targeted with [Vulkan 
 
 Vulkan is supported on many Linux distributions.
 
+## BSD Unix
+
+Vulkan is supported on many BSD Unix distributions.
+
+## QNX
+
+Vulkan is supported on QNX operation system, using [VK_QNX_screen_surface](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkCreateScreenSurfaceQNX.html)
+
+## Fuchsia
+
+Vulkan is supported on Fuchsia operation system.
+
 ## MacOS
 
 Vulkan is not natively supported on MacOS, but can still be targeted with [Vulkan Portability Tools](./portability_initiative.md).
