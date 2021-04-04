@@ -37,7 +37,6 @@ layout(set = 0, binding = 0) uniform sampler2D textureSampler[64];
 ```
 
 but only binds the first 32 slots in the array. This also relies on the the application knowing that it will not index into the unbound slots in the array.
-application knowing that it will not index into the unbound slots in the array.
 
 ## Dynamic Indexing
 
