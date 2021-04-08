@@ -20,6 +20,12 @@ This extension allows an application to call `vkResetQueryPool` from the host in
 
 This extension allows an application when using a depth/stencil format to do an image translation on each the depth and stencil separately. Starting in Vulkan 1.2 this functionality is required for all implementations.
 
+## VK_KHR_depth_stencil_resolve
+
+> Promoted to core in Vulkan 1.2
+
+This extension adds support for automatically resolving multisampled depth/stencil attachments in a subpass in a similar manner as for color attachments.
+
 ## VK_EXT_separate_stencil_usage
 
 > Promoted to core in Vulkan 1.2
