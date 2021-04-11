@@ -33,6 +33,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 - [Memory Allocation Strategy](./chapters/memory_allocation.md)
     - [Sparse Resources](./chapters/sparse_resources.md)
 - [Pipeline Caching/Derivatives](./chapters/pipeline_cache.md)
+- [Push Constants](./chapters/push_constants.md)
 - [Threading](./chapters/threading.md)
 - [Mapping Data to Shaders](./chapters/mapping_data_to_shaders.md)
     - [Vertex Input Data Processing](./chapters/vertex_input_data_processing.md)
