@@ -27,9 +27,11 @@ These are primarily [`VK_KHR_ray_tracing_pipeline`](https://www.khronos.org/regi
 
 ## Video
 
-Currently, the Vulkan Working Group is looking into how to make Vulkan a first class API for exposing onboard GPUs video encode/decode support. More information was announced at [Siggraph 2019](https://www.youtube.com/watch?v=_57aiwJISCI&feature=youtu.be&t=4948).
+[Vulkan Video](https://www.khronos.org/blog/an-introduction-to-vulkan-video?mc_cid=8052312abe&mc_eid=64241dfcfa) has release a provisional specification as of the 1.2.175 spec release.
 
-> Note: As of now, there exists no public Vulkan API for video.
+Vulkan Video adheres to the Vulkan philosophy of providing flexible, fine-grained control over video processing scheduling, synchronization, and memory utilization to the application.
+
+> [feedback](https://github.com/KhronosGroup/Vulkan-Docs/issues/1497) for the provisional specification is welcomed
 
 ## Machine Learning
 
