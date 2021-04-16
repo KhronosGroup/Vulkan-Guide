@@ -1,6 +1,8 @@
 # Vulkan Release Summary
 
-Each minor release of version of Vulkan has added many extensions. The Vulkan Guide has added a summary of why each extension was added and some details about the use cases. This list is taken from the Vulkan spec, but links jump to the various spots in the Vulkan Guide
+Each minor release version of Vulkan [promoted](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-promotion) a different set of extension to core. This means that it's no longer necessary to enable an extensions to use it's functionality if the application requests at least that Vulkan version (given that the version is supported by the implementation).
+
+The following summary contains a list of the extensions added to the respective core versions and why they were added. This list is taken from the Vulkan spec, but links jump to the various spots in the Vulkan Guide
 
 ## Vulkan 1.1
 
