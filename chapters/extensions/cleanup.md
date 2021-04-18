@@ -6,7 +6,7 @@
 
 > Promoted to core in Vulkan 1.2
 
-This extension adds more information to query about each implementation. The [VkDriverId](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkDriverId) will be a registered vendor's ID for the implementation. The [VkConformanceVersion](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkConformanceVersion) displays which version of [the Vulkan Conformance Test Suite](../chapters/vulkan_cts.md) the implementation passed.
+This extension adds more information to query about each implementation. The [VkDriverId](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkDriverId) will be a registered vendor's ID for the implementation. The [VkConformanceVersion](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkConformanceVersion) displays which version of [the Vulkan Conformance Test Suite](../vulkan_cts.md) the implementation passed.
 
 ## VK_EXT_host_query_reset
 
