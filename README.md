@@ -32,6 +32,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
     - [Porting to VK_KHR_synchronization2](./chapters/extensions/VK_KHR_synchronization2.md)
 - [Memory Allocation Strategy](./chapters/memory_allocation.md)
     - [Sparse Resources](./chapters/sparse_resources.md)
+    - [Protected Memory](./chapters/protected.md)
 - [Pipeline Caching/Derivatives](./chapters/pipeline_cache.md)
 - [Threading](./chapters/threading.md)
 - [Mapping Data to Shaders](./chapters/mapping_data_to_shaders.md)
