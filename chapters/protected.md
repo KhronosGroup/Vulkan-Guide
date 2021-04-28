@@ -14,7 +14,7 @@ Using `vkGetPhysicalDeviceQueueFamilyProperties` to get the `VkQueueFlags` of ea
 
 To tell the driver to make the `VkQueue` protected, the `VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT` is needed in `VkDeviceQueueCreateInfo` during `vkCreateDevice`.
 
-The following pseudo code of how an application could request for 2 protected `VkQueue` objects to be created from the same queue family:
+The following pseudo code is how an application could request for 2 protected `VkQueue` objects to be created from the same queue family:
 
 ```cpp
 VkDeviceQueueCreateInfo queueCreateInfo[1];
@@ -28,7 +28,7 @@ deviceCreateInfo.queueCreateInfoCount = 1;
 vkCreateDevice(physicalDevice, &deviceCreateInfo, nullptr, &deviceHandle);
 ```
 
-It is possible to also split the queues in a queue family so some are protected and some are not. The following pseudo code of how an application could request for 1 protected `VkQueue` and 1 unprotected `VkQueue` objects to be created from the same queue family:
+It is also possible to split the queues in a queue family so some are protected and some are not. The following pseudo code is how an application could request for 1 protected `VkQueue` and 1 unprotected `VkQueue` objects to be created from the same queue family:
 
 ```cpp
 VkDeviceQueueCreateInfo queueCreateInfo[2];
@@ -46,7 +46,7 @@ deviceCreateInfo.queueCreateInfoCount = 2;
 vkCreateDevice(physicalDevice, &deviceCreateInfo, nullptr, &deviceHandle);
 ```
 
-From here instead of using `vkGetDeviceQueue` an application has to use `vkGetDeviceQueue2` in order to pass the `VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT` flag when getting the `VkQueue` handle.
+Now instead of using `vkGetDeviceQueue` an application has to use `vkGetDeviceQueue2` in order to pass the `VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT` flag when getting the `VkQueue` handle.
 
 ```cpp
 VkDeviceQueueInfo2 info = {};
@@ -58,7 +58,7 @@ vkGetDeviceQueue2(deviceHandle, &info, &protectedQueue);
 
 ## Protected resources
 
-When creating a `VkImage` or `VkBuffer` to make them protected is a simple as setting `VK_IMAGE_CREATE_PROTECTED_BIT` and `VK_BUFFER_CREATE_PROTECTED_BIT` respectfully.
+When creating a `VkImage` or `VkBuffer` to make them protected is as simple as setting `VK_IMAGE_CREATE_PROTECTED_BIT` and `VK_BUFFER_CREATE_PROTECTED_BIT` respectively.
 
 When binding memory to the protected resource, the `VkDeviceMemory` must have been allocated from a `VkMemoryType` with the `VK_MEMORY_PROPERTY_PROTECTED_BIT` bit.
 
@@ -66,7 +66,7 @@ When binding memory to the protected resource, the `VkDeviceMemory` must have be
 
 When creating a swapchain the `VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR` bit is used to make a protected swapchain.
 
-All `VkImage` from `vkGetSwapchainImagesKHR` from a protected swapchain are the same as if the image was created with `VK_IMAGE_CREATE_PROTECTED_BIT`.
+All `VkImage` from `vkGetSwapchainImagesKHR` using a protected swapchain are the same as if the image was created with `VK_IMAGE_CREATE_PROTECTED_BIT`.
 
 Sometimes it is unknown whether swapchains can be created with the `VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR` flag set. The [VK_KHR_surface_protected_capabilities](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_KHR_surface_protected_capabilities.html) extension is exposed on platforms where this might be unknown.
 
@@ -81,7 +81,7 @@ info.queueFamilyIndex = queueFamilyFound; // protected queue
 vkCreateCommandPool(deviceHandle, &info, nullptr, &protectedCommandPool));
 ```
 
-From here all command buffers allocated from the protected command pool become "protected command buffers"
+All command buffers allocated from the protected command pool become "protected command buffers"
 
 ```
 VkCommandBufferAllocateInfo info = {};
