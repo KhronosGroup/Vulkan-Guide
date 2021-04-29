@@ -10,7 +10,7 @@ The following summary contains a list of the extensions added to the respective 
 
 Vulkan 1.1 was released on March 7, 2018
 
-Besides the listed extensions below, Vulkan 1.1 introduced the [subgroups](./extensions/shader_features.md#vk_ext_shader_subgroup_ballot-and-vk_ext_shader_subgroup_vote), [protected memory](./protected.md), and the ability to query the instance version.
+Besides the listed extensions below, Vulkan 1.1 introduced the [subgroups](./subgroups.md), [protected memory](./protected.md), and the ability to query the instance version.
 
 - [VK_KHR_16bit_storage](./extensions/shader_features.md#vk_khr_8bit_storage-and-vk_khr_16bit_storage)
 - [VK_KHR_bind_memory2](./extensions/cleanup.md#pnext-expansions)
