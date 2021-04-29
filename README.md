@@ -38,6 +38,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 - [Mapping Data to Shaders](./chapters/mapping_data_to_shaders.md)
     - [Vertex Input Data Processing](./chapters/vertex_input_data_processing.md)
 - [Robustness](./chapters/robustness.md)
+- [Subgroups](./chapters/subgroups.md)
 - [Common Pitfalls](./chapters/common_pitfalls.md)
 
 ## When and Why to use Extensions

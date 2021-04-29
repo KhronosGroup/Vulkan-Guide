@@ -242,7 +242,7 @@ The [Vulkan Memory Model](https://www.khronos.org/registry/vulkan/specs/1.2-exte
 >
 > [GLSL_EXT_shader_subgroup_extended_types](https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_shader_subgroup_extended_types.txt)
 
-This extension allows subgroup operations to use 8-bit integer, 16-bit integer, 64-bit integer, 16-bit floating-point, and vectors of these types in group operations with subgroup scope if the implementation supports the types already.
+This extension allows [subgroup operations](../subgroups.md) to use 8-bit integer, 16-bit integer, 64-bit integer, 16-bit floating-point, and vectors of these types in group operations with subgroup scope if the implementation supports the types already.
 
 For example, if an implementation supports 8-bit integers an application can now use the GLSL `genI8Type subgroupAdd(genI8Type value);` call which will get mapped to `OpGroupNonUniformFAdd` in SPIR-V.
 
@@ -300,10 +300,10 @@ This extension allows the shader to read the value of a monotonically incrementi
 
 This extension was created due to some implementation having more than one subgroup size and Vulkan originally only exposing a single subgroup size.
 
-For example, if an implementation only has support for subgroups of size `4` and `16` before they would have had to expose only one size, but now can expose both. This allows applications to potentially control the hardware at a finer granularity for implementations that expose multiple subgroup sizes.
+For example, if an implementation only has support for [subgroups](../subgroups.md) of size `4` and `16` before they would have had to expose only one size, but now can expose both. This allows applications to potentially control the hardware at a finer granularity for implementations that expose multiple subgroup sizes.
 
 # VK_EXT_shader_subgroup_ballot and VK_EXT_shader_subgroup_vote
 
 `VK_EXT_shader_subgroup_ballot` and `VK_EXT_shader_subgroup_vote` were the original efforts to expose subgroups in Vulkan. If an application is using Vulkan 1.1 or greater, there is no need to use these extensions and should instead use the core API to query for subgroup support.
 
-For more information about the current subgroup support, there is a great [Khronos blog post](https://www.khronos.org/blog/vulkan-subgroup-tutorial) as well as a presentation from Vulkan Developer Day 2018 ([slides](https://www.khronos.org/assets/uploads/developers/library/2018-vulkan-devday/06-subgroups.pdf) and [video](https://www.youtube.com/watch?v=8MyqQLu_tW0)). GLSL support can be found in the [GL_KHR_shader_subgroup](https://github.com/KhronosGroup/GLSL/blob/master/extensions/khr/GL_KHR_shader_subgroup.txt) extension.
+For more information about [subgroups](../subgroups.md)
