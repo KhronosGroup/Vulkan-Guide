@@ -38,6 +38,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 - [Mapping Data to Shaders](./chapters/mapping_data_to_shaders.md)
     - [Vertex Input Data Processing](./chapters/vertex_input_data_processing.md)
 - [Robustness](./chapters/robustness.md)
+    - `VK_EXT_image_robustness`, `VK_EXT_robustness2`
 - [Subgroups](./chapters/subgroups.md)
 - [Common Pitfalls](./chapters/common_pitfalls.md)
 
@@ -54,7 +55,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 - [Shader Features](./chapters/extensions/shader_features.md)
     - `VK_KHR_8bit_storage`, `VK_KHR_16bit_storage`, `VK_KHR_relaxed_block_layout`, `VK_KHR_shader_atomic_int64`, `VK_EXT_scalar_block_layout`, `VK_KHR_shader_clock`, `VK_EXT_shader_demote_to_helper_invocation`, `VK_KHR_shader_draw_parameters`, `VK_KHR_shader_float16_int8`, `VK_KHR_shader_float_controls`, `VK_EXT_shader_stencil_export`, `VK_EXT_shader_subgroup_ballot`, `VK_KHR_shader_subgroup_extended_types`, `VK_EXT_shader_subgroup_vote`, `VK_EXT_shader_viewport_index_layer`, `VK_KHR_spirv_1_4`, `VK_KHR_storage_buffer_storage_class`, `VK_EXT_subgroup_size_control`, `VK_KHR_uniform_buffer_standard_layout`, `VK_KHR_variable_pointers`, `VK_KHR_vulkan_memory_model`
 - [Translation Layer Extensions](./chapters/extensions/translation_layer_extensions.md)
-    - `VK_EXT_transform_feedback`
+    - `VK_EXT_depth_clip_enable`, `VK_EXT_provoking_vertex`, `VK_EXT_transform_feedback`
 - [VK_EXT_descriptor_indexing](./chapters/extensions/VK_EXT_descriptor_indexing.md)
 - [VK_EXT_inline_uniform_block](./chapters/extensions/VK_EXT_inline_uniform_block.md)
 - [VK_EXT_memory_priority](./chapters/extensions/VK_EXT_memory_priority.md)
