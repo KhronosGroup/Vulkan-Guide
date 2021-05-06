@@ -52,6 +52,10 @@ By default, Vulkan samplers using linear filtering return a filtered texel value
 
 This extension adds a new sampler address mode (`VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE`) that effectively uses a texture map twice as large as the original image in which the additional half of the new image is a mirror image of the original image. This new mode relaxes the need to generate images whose opposite edges match by using the original image to generate a matching “mirror image”. This mode allows the texture to be mirrored only once in the negative `s`, `t`, and `r` directions.
 
+## VK_EXT_4444_formats and VK_EXT_ycbcr_2plane_444_formats
+
+These extensions add new `VkFormat` that were not originally in the spec
+
 # Maintenance Extensions
 
 The maintenance extensions add a collection of minor features that were intentionally left out or overlooked from the original Vulkan 1.0 release.
