@@ -45,7 +45,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 ## When and Why to use Extensions
 > These are supplemental references for the various Vulkan Extensions. Please consult the Vulkan Spec for further details on any extension
 - [Cleanup Extensions](./chapters/extensions/cleanup.md)
-    - `VK_KHR_bind_memory2`, `VK_KHR_create_renderpass2`, `VK_KHR_dedicated_allocation`, `VK_KHR_driver_properties`, `VK_KHR_get_memory_requirements2`, `VK_KHR_get_physical_device_properties2`, `VK_EXT_host_query_reset`, `VK_KHR_maintenance1`, `VK_KHR_maintenance2`, `VK_KHR_maintenance3`, `VK_KHR_separate_depth_stencil_layouts`, `VK_KHR_depth_stencil_resolve`, `VK_EXT_separate_stencil_usage`, `VK_EXT_sampler_filter_minmax`, `VK_KHR_sampler_mirror_clamp_to_edge`
+    - `VK_EXT_4444_formats`, `VK_KHR_bind_memory2`, `VK_KHR_create_renderpass2`, `VK_KHR_dedicated_allocation`, `VK_KHR_driver_properties`, `VK_KHR_get_memory_requirements2`, `VK_KHR_get_physical_device_properties2`, `VK_EXT_host_query_reset`, `VK_KHR_maintenance1`, `VK_KHR_maintenance2`, `VK_KHR_maintenance3`, `VK_KHR_separate_depth_stencil_layouts`, `VK_KHR_depth_stencil_resolve`, `VK_EXT_separate_stencil_usage`, `VK_EXT_sampler_filter_minmax`, `VK_KHR_sampler_mirror_clamp_to_edge`, `VK_EXT_ycbcr_2plane_444_formats`
 - [Device Groups](./chapters/extensions/device_groups.md)
     - `VK_KHR_device_group`, `VK_KHR_device_group_creation`
 - [External Memory and Sychronization](./chapters/extensions/external.md)
