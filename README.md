@@ -39,6 +39,8 @@ The Vulkan Guide is designed to help developers get up and going with the world 
     - [Vertex Input Data Processing](./chapters/vertex_input_data_processing.md)
 - [Robustness](./chapters/robustness.md)
     - `VK_EXT_image_robustness`, `VK_EXT_robustness2`
+- [Dynamic State](./chapters/dynamic_state.md)
+    - `VK_EXT_extended_dynamic_state`, `VK_EXT_extended_dynamic_state2`, `VK_EXT_vertex_input_dynamic_state`
 - [Subgroups](./chapters/subgroups.md)
 - [Common Pitfalls](./chapters/common_pitfalls.md)
 
