@@ -16,6 +16,14 @@ Additional SPIR-V and GLSL extensions also expose the necessary programmable fun
 * [GLSL_EXT_ray_query](https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_query.txt)
 * [GLSL_EXT_ray_flags_primitive_culling](https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_flags_primitive_culling.txt)
 
+> Note: Many ray tracing applications require large contiguous memory
+allocations. Due to the limited size of the address space, this can prove
+challenging on 32-bit systems. Whilst implementations are free to expose ray
+tracing extensions on 32-bit systems, applications may encounter intermittent
+memory-related issues such as allocation failures due to fragmentation.
+Additionally, some implementations may opt not to expose ray tracing
+extensions on 32-bit drivers.
+
 ## VK_KHR_acceleration_structure
 
 Acceleration structures are an implementation-dependent opaque representation
