@@ -2,7 +2,7 @@
 
 > **NOTICE:** Currently a provisional [VK_KHR_portability_subset](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_KHR_portability_subset.html) extension specification is available with the [vulkan_beta.h](https://github.com/KhronosGroup/Vulkan-Headers/blob/master/include/vulkan/vulkan_beta.h) headers. More information can found in the [press release](https://www.khronos.org/blog/fighting-fragmentation-vulkan-portability-extension-released-implementations-shipping).
 
-The [Vulkan Portability Initiative](https://www.khronos.org/vulkan/portability-initiative) is an effort inside the Khronos Group to develop resources to define and evolve the [subset](https://github.com/KhronosGroup/Vulkan-Portability) of Vulkan capabilities that can be made universally available at native performance levels across all major platforms, including those not currently served by Vulkan native drivers. In a nutshell, this initiative is about making Vulkan viable on platforms that do not natively support the API (e.g MacOS and iOS).
+The [Vulkan Portability Initiative](https://www.vulkan.org/portability) is an effort inside the Khronos Group to develop resources to define and evolve the [subset](https://github.com/KhronosGroup/Vulkan-Portability) of Vulkan capabilities that can be made universally available at native performance levels across all major platforms, including those not currently served by Vulkan native drivers. In a nutshell, this initiative is about making Vulkan viable on platforms that do not natively support the API (e.g MacOS and iOS).
 
 ![portability_initiative_overview.png](../images/portability_initiative_overview.png)
 
