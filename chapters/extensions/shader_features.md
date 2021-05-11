@@ -302,6 +302,32 @@ This extension was created due to some implementation having more than one subgr
 
 For example, if an implementation only has support for [subgroups](../subgroups.md) of size `4` and `16` before they would have had to expose only one size, but now can expose both. This allows applications to potentially control the hardware at a finer granularity for implementations that expose multiple subgroup sizes.
 
+# VK_KHR_shader_non_semantic_info
+
+> [SPV_KHR_non_semantic_info](http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_clock.html)
+
+This extension exposes [SPV_KHR_non_semantic_info](https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_non_semantic_info.html) which [adds the ability](https://github.com/KhronosGroup/SPIRV-Guide/blob/master/chapters/nonsemantic.md) to declare extended instruction sets that have no semantic impact and can be safely removed from a module.
+
+# VK_KHR_shader_terminate_invocation
+
+> [SPV_KHR_terminate_invocation](https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_terminate_invocation.html)
+
+This extension adds the new instruction `OpTerminateInvocation` to provide a disambiguated functionality compared to the `OpKill` instruction.
+
+# VK_KHR_workgroup_memory_explicit_layout
+
+> [SPV_KHR_workgroup_memory_explicit_layout](https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_workgroup_memory_explicit_layout.html)
+
+This extension provides a way for the shader to define the layout of `Workgroup` `Storage Class` memory. `Workgroup` variables can be declared in blocks, and then use the same explicit layout decorations (e.g. `Offset`, `ArrayStride`) as other storage classes.
+
+The explicit layout support and some form of aliasing is also required for layering OpenCL on top of Vulkan.
+
+# VK_KHR_zero_initialize_workgroup_memory
+
+This extension allows `OpVariable` with a `Workgroup` `Storage Class` to use the `Initializer` operand.
+
+For security reasons, applications running untrusted content (e.g. web browsers) need to be able to zero-initialize workgroup memory at the start of workgroup execution. Adding instructions to set all workgroup variables to zero would be less efficient than what some hardware is capable of, due to poor access patterns.
+
 # VK_EXT_shader_subgroup_ballot and VK_EXT_shader_subgroup_vote
 
 `VK_EXT_shader_subgroup_ballot` and `VK_EXT_shader_subgroup_vote` were the original efforts to expose subgroups in Vulkan. If an application is using Vulkan 1.1 or greater, there is no need to use these extensions and should instead use the core API to query for subgroup support.
