@@ -178,7 +178,7 @@ OpDecorate %storageImage Binding 0
 
 #### Sampler and Sampled Image
 
-> VK_DESCRIPTOR_TYPE_SAMPLER and Sampled Image VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE
+> VK_DESCRIPTOR_TYPE_SAMPLER and VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE
 
 ```glsl
 layout(set = 0, binding = 0) uniform sampler samplerDescriptor;
