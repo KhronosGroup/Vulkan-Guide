@@ -12,7 +12,7 @@ Layers are optional components that augment the Vulkan system. They can intercep
 
 ### Khronos Layers
 
-- [`VK_LAYER_KHRONOS_validation`](./validation_overview.md#khronos-validation-layer), the Khronos Validation Layer. 
+- [`VK_LAYER_KHRONOS_validation`](./validation_overview.md#khronos-validation-layer), the Khronos Validation Layer.
 It is every developer's first layer of defense when debugging their Vulkan application and this is the reason it is at the top of this list. Read the [Validation Overview chapter](./validation_overview.md) for more details.
 The validation layer included multiple features:
   - [Synchronization Validation](https://vulkan.lunarg.com/doc/sdk/latest/windows/synchronization_usage.html): Identify resource access conflicts due to missing or incorrect synchronization operations between actions (Draw, Copy, Dispatch, Blit) reading or writing the same regions of memory.
@@ -21,14 +21,14 @@ The validation layer included multiple features:
   - [Best Practices Warnings](https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html): Highlights potential performance issues, questionable usage patterns, common mistakes.
 
 - [`VK_LAYER_KHRONOS_synchronization2`](https://vulkan.lunarg.com/doc/view/latest/windows/synchronization2_layer.html), the Khronos Synchronization2 layer.
-The `VK_LAYER_KHRONOS_synchronization2` layer implements the `VK_KHR_synchronization2` extension. By default, it will disable itself if the underlying driver provides the extension. 
+The `VK_LAYER_KHRONOS_synchronization2` layer implements the `VK_KHR_synchronization2` extension. By default, it will disable itself if the underlying driver provides the extension.
 
 ### Vulkan SDK layers
 
-Besides the Khronos Layers, the Vulkan SDK included additional useful platform independent layers. 
+Besides the Khronos Layers, the Vulkan SDK included additional useful platform independent layers.
 
 - [`VK_LAYER_LUNARG_api_dump`](https://vulkan.lunarg.com/doc/sdk/latest/windows/api_dump_layer.html), a layer to log Vulkan API calls.
-The API dump layer prints API calls, parameters, and values to the identified output stream. 
+The API dump layer prints API calls, parameters, and values to the identified output stream.
 
 - [`VK_LAYER_LUNARG_gfxreconstruct`](https://vulkan.lunarg.com/doc/sdk/latest/windows/capture_tools.html), a layer for capturing frames created with Vulkan.
 This layer is a part of GFXReconstruct, a software for capturing and replaying Vulkan API calls. Full Android support is also available at <https://github.com/LunarG/gfxreconstruct>
@@ -62,7 +62,7 @@ Debugging something running on a GPU can be incredibly hard, luckily there are t
 - [Arm Graphics Analyzer](https://developer.arm.com/tools-and-software/graphics-and-gaming/arm-mobile-studio/components/graphics-analyzer)
 - [GAPID](https://github.com/google/gapid)
 - [NVIDIA Nsight](https://developer.nvidia.com/nsight-graphics)
-- [PVRCarbon](https://www.imaginationtech.com/developers/)
+- [PVRCarbon](https://developer.imaginationtech.com)
 - [RenderDoc](https://renderdoc.org/)
 - [GFXReconstruct](https://vulkan.lunarg.com/doc/sdk/latest/windows/capture_tools.html)
 
@@ -74,5 +74,5 @@ With anything related to a GPU it is best to not assume and profile when possibl
 - [Arm Streamline Performance Analyzer](https://developer.arm.com/tools-and-software/graphics-and-gaming/arm-mobile-studio/components/streamline-performance-analyzer) - Visualize the performance of mobile games and applications for a broad range of devices, using Arm Mobile Studio.
 - [Intel(R) GPA](https://software.intel.com/content/www/us/en/develop/tools/graphics-performance-analyzers.html) - Intel's Graphics Performance Analyzers that supports capturing and analyzing multi-frame streams of Vulkan apps.
 - [OCAT](https://github.com/GPUOpen-Tools/OCAT) - The Open Capture and Analytics Tool (OCAT) provides an FPS overlay and performance measurement for D3D11, D3D12, and Vulkan.
-- [PVRTune](https://www.imaginationtech.com/developers/)
+- [PVRTune](https://developer.imaginationtech.com)
 - [Qualcomm Snapdragon Profiler](https://developer.qualcomm.com/software/snapdragon-profiler) - Profiling tool targeting Adreno GPU.
