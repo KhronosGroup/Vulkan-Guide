@@ -8,6 +8,7 @@ In core Vulkan, there are 5 fundamental ways to map data from your Vulkan applic
 
 - [Input Attributes](#input-attributes)
 - [Descriptors](#descriptors)
+  - [Descriptor types](#descriptor-types)
 - [Push Constants](#push-constants)
 - [Specialization Constants](#specialization-constants)
 - [Physical Storage Buffer](#physical-storage-buffer)
@@ -86,7 +87,7 @@ In this example, there are the following 3 descriptor sets:
 The GLSL of the shader:
 
 ```glsl
-#version 450
+// Note - only set 0 and 2 are used in this shader
 
 layout(set = 0, binding = 0) uniform sampler2D myTextureSampler;
 
@@ -105,7 +106,7 @@ layout(set = 2, binding = 0) buffer storageBuffer {
 
 The corresponding SPIR-V assembly:
 
-```
+```swift
 Decorate 19(myTextureSampler) DescriptorSet 0
 Decorate 19(myTextureSampler) Binding 0
 
@@ -144,6 +145,218 @@ vkEndCommandBuffer();
 The following results would look as followed
 
 ![mapping_data_to_shaders_descriptor_2.png](../images/mapping_data_to_shaders_descriptor_2.png)
+
+### Descriptor types
+
+The Vulkan Spec has a [Shader Resource and Storage Class Correspondence](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-storage-class-correspondence) table that describes how each descriptor type needs to be mapped to in SPIR-V.
+
+The following shows an example of what GLSL and SPIR-V mapping to each of the [descriptor types](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-types) looks like.
+
+For GLSL, more information can be found in the [GLSL Spec - 12.2.4. Vulkan Only: Samplers, Images, Textures, and Buffers](https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf)
+
+#### Storage Image
+
+> VK_DESCRIPTOR_TYPE_STORAGE_IMAGE
+
+```glsl
+// VK_FORMAT_R32_UINT
+layout(set = 0, binding = 0, r32ui) uniform uimage2D storageImage;
+
+// example usage for reading and writing in GLSL
+const uvec4 texel = imageLoad(storageImage, ivec2(0, 0));
+imageStore(storageImage, ivec2(1, 1), texel);
+```
+
+```swift
+OpDecorate %storageImage DescriptorSet 0
+OpDecorate %storageImage Binding 0
+
+%r32ui        = OpTypeImage %uint 2D 0 0 0 2 R32ui
+%ptr          = OpTypePointer UniformConstant %r32ui
+%storageImage = OpVariable %ptr UniformConstant
+```
+
+#### Sampler and Sampled Image
+
+> VK_DESCRIPTOR_TYPE_SAMPLER and VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE
+
+```glsl
+layout(set = 0, binding = 0) uniform sampler samplerDescriptor;
+layout(set = 0, binding = 1) uniform texture2D sampledImage;
+
+// example usage of using texture() in GLSL
+vec4 data = texture(sampler2D(sampledImage,  samplerDescriptor), vec2(0.0, 0.0));
+```
+
+```swift
+OpDecorate %sampledImage DescriptorSet 0
+OpDecorate %sampledImage Binding 1
+OpDecorate %samplerDescriptor DescriptorSet 0
+OpDecorate %samplerDescriptor Binding 0
+
+%image        = OpTypeImage %float 2D 0 0 0 1 Unknown
+%imagePtr     = OpTypePointer UniformConstant %image
+%sampledImage = OpVariable %imagePtr UniformConstant
+
+%sampler           = OpTypeSampler
+%samplerPtr        = OpTypePointer UniformConstant %sampler
+%samplerDescriptor = OpVariable %samplerPtr UniformConstant
+
+%imageLoad       = OpLoad %image %sampledImage
+%samplerLoad     = OpLoad %sampler %samplerDescriptor
+
+%sampleImageType = OpTypeSampledImage %image
+%1               = OpSampledImage %sampleImageType %imageLoad %samplerLoad
+
+%textureSampled = OpImageSampleExplicitLod %v4float %1 %coordinate Lod %float_0
+```
+
+#### Combined Image Sampler
+
+> VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
+
+> On some implementations, it **may** be more efficient to sample from an image using a combination of sampler and sampled image that are stored together in the descriptor set in a combined descriptor.
+
+```glsl
+layout(set = 0, binding = 0) uniform sampler2D combinedImageSampler;
+
+// example usage of using texture() in GLSL
+vec4 data = texture(combinedImageSampler, vec2(0.0, 0.0));
+```
+
+```swift
+OpDecorate %combinedImageSampler DescriptorSet 0
+OpDecorate %combinedImageSampler Binding 0
+
+%imageType            = OpTypeImage %float 2D 0 0 0 1 Unknown
+%sampleImageType      = OpTypeSampledImage imageType
+%ptr                  = OpTypePointer UniformConstant %sampleImageType
+%combinedImageSampler = OpVariable %ptr UniformConstant
+
+%load           = OpLoad %sampleImageType %combinedImageSampler
+%textureSampled = OpImageSampleExplicitLod %v4float %load %coordinate Lod %float_0
+```
+
+#### Uniform Buffer
+
+> VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
+
+```glsl
+layout(set = 0, binding = 0) uniform uniformBuffer {
+    float a;
+    int b;
+} ubo;
+
+// example of reading from UBO in GLSL
+int x = ubo.b + 1;
+vec3 y = vec3(ubo.a);
+```
+
+```swift
+OpMemberDecorate %uniformBuffer 0 Offset 0
+OpMemberDecorate %uniformBuffer 1 Offset 4
+OpDecorate %uniformBuffer Block
+OpDecorate %ubo DescriptorSet 0
+OpDecorate %ubo Binding 0
+
+%uniformBuffer = OpTypeStruct %float %int
+%ptr           = OpTypePointer Uniform %uniformBuffer
+%ubo           = OpVariable %ptr Uniform
+```
+
+#### Storage Buffer
+
+> VK_DESCRIPTOR_TYPE_STORAGE_BUFFER
+
+```glsl
+layout(set = 0, binding = 0) buffer storageBuffer {
+    float a;
+    int b;
+} ssbo;
+
+// example of reading and writing SSBO in GLSL
+ssbo.a = ssbo.a + 1.0;
+ssbo.b = ssbo.b + 1;
+```
+
+**Note:** `BufferBlock` and `Uniform` would have been seen prior to [Vulkan 1.1 or VK_KHR_storage_buffer_storage_class](https://github.com/KhronosGroup/Vulkan-Guide/blob/master/chapters/extensions/shader_features.md#vk_khr_storage_buffer_storage_class)
+
+```swift
+OpMemberDecorate %storageBuffer 0 Offset 0
+OpMemberDecorate %storageBuffer 1 Offset 4
+OpDecorate %storageBuffer Block
+OpDecorate %ssbo DescriptorSet 0
+OpDecorate %ssbo Binding 0
+
+%storageBuffer = OpTypeStruct %float %int
+%ptr           = OpTypePointer StorageBuffer %storageBuffer
+%ssbo          = OpVariable %ptr StorageBuffer
+```
+
+#### Uniform Texel Buffer
+
+> VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER
+
+```glsl
+layout(set = 0, binding = 0) uniform textureBuffer uniformTexelBuffer;
+
+// example of reading texel buffer in GLSL
+vec4 data = texelFetch(uniformTexelBuffer, 0);
+```
+
+```swift
+OpDecorate %uniformTexelBuffer DescriptorSet 0
+OpDecorate %uniformTexelBuffer Binding 0
+
+%texelBuffer        = OpTypeImage %float Buffer 0 0 0 1 Unknown
+%ptr                = OpTypePointer UniformConstant %texelBuffer
+%uniformTexelBuffer = OpVariable %ptr UniformConstant
+
+```
+
+#### Storage Texel Buffer
+
+> VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER
+
+```glsl
+// VK_FORMAT_R8G8B8A8_UINT
+layout(set = 0, binding = 0, rgba8ui) uniform uimageBuffer storageTexelBuffer;
+
+// example of reading and writing texel buffer in GLSL
+int offset = int(gl_GlobalInvocationID.x);
+vec4 data = imageLoad(storageTexelBuffer, offset);
+imageStore(storageTexelBuffer, offset, uvec4(0));
+```
+
+```swift
+OpDecorate %storageTexelBuffer DescriptorSet 0
+OpDecorate %storageTexelBuffer Binding 0
+
+%rgba8ui            = OpTypeImage %uint Buffer 0 0 0 2 Rgba8ui
+%ptr                = OpTypePointer UniformConstant %rgba8ui
+%storageTexelBuffer = OpVariable %ptr UniformConstant
+```
+
+#### Input Attachment
+
+> VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT
+
+```glsl
+layout (input_attachment_index = 0, set = 0, binding = 0) uniform subpassInput inputAttachment;
+
+// example loading the attachment data in GLSL
+vec4 data = subpassLoad(inputAttachment);
+```
+
+```swift
+OpDecorate %inputAttachment DescriptorSet 0
+OpDecorate %inputAttachment Binding 0
+OpDecorate %inputAttachment InputAttachmentIndex 0
+
+%subpass         = OpTypeImage %float SubpassData 0 0 0 2 Unknown
+%ptr             = OpTypePointer UniformConstant %subpass
+%inputAttachment = OpVariable %ptr UniformConstant
+```
 
 ## Push Constants
 
