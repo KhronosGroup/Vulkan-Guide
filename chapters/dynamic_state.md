@@ -23,7 +23,7 @@ vkCmdDraw();
 vkEndCommandBuffer();
 ```
 
-When the `VkPipeline` uses [dynamic state](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-dynamic-state), some pipeline information can be emitted at creation time and instead set during recording of the command buffer. The new logical flow is:
+When the `VkPipeline` uses [dynamic state](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-dynamic-state), some pipeline information can be omitted at creation time and instead set during recording of the command buffer. The new logical flow is:
 
 ```cpp
 // Using viewport state as an example
