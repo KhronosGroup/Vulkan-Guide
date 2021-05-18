@@ -26,6 +26,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 - [Querying Properties, Extensions, Features, Limits, and Formats](./chapters/querying_extensions_features.md)
     - [Enabling Extensions](./chapters/enabling_extensions.md)
     - [Enabling Features](./chapters/enabling_features.md)
+- [Queues and Queue Family](./chapters/queues.md)
 - [WSI](./chapters/wsi.md)
 - [pNext and sType](./chapters/pnext_and_stype.md)
 - [Synchronization](./chapters/synchronization.md)
