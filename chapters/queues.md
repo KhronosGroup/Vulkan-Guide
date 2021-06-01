@@ -2,7 +2,7 @@
 
 > Further resources for queues from [AMD](https://gpuopen.com/learn/concurrent-execution-asynchronous-queues/) and [NVIDIA](https://www.khronos.org/assets/uploads/developers/library/2016-vulkan-devday-uk/9-Asynchonous-compute.pdf)
 
-A `VkQueue` is what an application submits work to, normally in the form of `VkCommandBuffer` objects or [sparse bindings](./sparse_resources.md).
+An application submits work to a `VkQueue`, normally in the form of `VkCommandBuffer` objects or [sparse bindings](./sparse_resources.md).
 
 Command buffers submitted to a `VkQueue` start in order, but are allowed to proceed independently after that and complete out of order.
 
@@ -10,7 +10,7 @@ Command buffers submitted to different queues are unordered relative to each oth
 
 You can only submit work to a `VkQueue` from one thread at a time, but different threads can submit work to different a `VkQueue` simultaneously.
 
-The concept of a `vkQueue` is implementationed defined. Some hardware have multiple hardware queues and submitting work to multiple `vkQueue` will proceed independently and concurrently in the hardware. Some implementation will do some scheduling at a kernel driver level before being submitted to the hardware. There is no current way in Vulkan to expose the exact details how each `vkQueue` is mapped to the implementation.
+The concept of a `vkQueue` is implementation-defined. Some hardware have multiple hardware queues and submitting work to multiple `vkQueue` will proceed independently and concurrently in the hardware. Some implementation will do some scheduling at a kernel driver level before being submitted to the hardware. There is no current way in Vulkan to expose the exact details how each `vkQueue` is mapped to the implementation.
 
 > Not all applications will require or benefit from mulitple queues. It is reasonable for an application to have a single "universal" graphics supported queue to submit all the work to the GPU.
 
