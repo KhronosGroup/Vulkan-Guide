@@ -10,13 +10,13 @@ Command buffers submitted to different queues are unordered relative to each oth
 
 You can only submit work to a `VkQueue` from one thread at a time, but different threads can submit work to different a `VkQueue` simultaneously.
 
-The concept of a `vkQueue` is implementation-defined. Some hardware have multiple hardware queues and submitting work to multiple `vkQueue` will proceed independently and concurrently in the hardware. Some implementation will do some scheduling at a kernel driver level before being submitted to the hardware. There is no current way in Vulkan to expose the exact details how each `vkQueue` is mapped to the implementation.
+How a `vkQueue` is mapped to the underlying hardware is implementation-defined. Some implementations will have multiple hardware queues and submitting work to multiple `vkQueue`s will proceed independently and concurrently. Some implementations will do scheduling at a kernel driver level before submitting work to the hardware. There is no current way in Vulkan to expose the exact details how each `vkQueue` is mapped.
 
-> Not all applications will require or benefit from mulitple queues. It is reasonable for an application to have a single "universal" graphics supported queue to submit all the work to the GPU.
+> Not all applications will require or benefit from multiple queues. It is reasonable for an application to have a single "universal" graphics supported queue to submit all the work to the GPU.
 
 # Queue Family
 
-There are various types of operations a `VkQueue` can support. A "Queue Family" just describes a set of `VkQueue` that have common properties and support the same functionality, as advertised in `VkQueueFamilyProperties`.
+There are various types of operations a `VkQueue` can support. A "Queue Family" just describes a set of `VkQueue`s that have common properties and support the same functionality, as advertised in `VkQueueFamilyProperties`.
 
 The following are the queue operations found in [VkQueueFlagBits](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkQueueFlagBits.html):
 
@@ -66,11 +66,11 @@ for (uint32_t i = 0; i < count; i++) {
 
 Unlike other handles such as `VkDevice`, `VkBuffer`, `VkDeviceMemory`, there is **no** `vkCreateQueue` or `vkAllocateQueue`. Instead, the driver is in charge of creating and destroying the `VkQueue` handles during `vkCreateDevice`/`vkDestroyDevice` time.
 
-The following examples will use the hypothetical implementation which support 3 `VkQueue` from 2 Queue Families:
+The following examples will use the hypothetical implementation which support 3 `VkQueue`s from 2 Queue Families:
 
 ![queues_hypothetical.png](../images/queues_hypothetical.png)
 
-The following is an example how to create all 3 `VkQueue` with the logical device:
+The following is an example how to create all 3 `VkQueue`s with the logical device:
 
 ```cpp
 VkDeviceQueueCreateInfo queueCreateInfo[2];
