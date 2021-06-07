@@ -102,7 +102,7 @@ void main() [[subroup_uniform_control_flow]] {
 ```
 
 The differences from the original shader are relatively minor. First, the
-addition of the subgroup_uniform_control_flow attribute informs the
+addition of the `subgroup_uniform_control_flow` attribute informs the
 implementation that stronger guarantees are required by this shader. Second,
 the first if statement no longer tests needs_space. Instead, all invocations in
 the subgroup enter the if statement if any invocation in the subgroup needs to
