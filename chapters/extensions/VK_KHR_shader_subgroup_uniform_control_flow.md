@@ -61,7 +61,7 @@ that if statement. If the invocations don’t reconverge then the broadcast and
 offset calculations will be incorrect. Not all invocations would write their
 results to the correct index.
 
-VK_KHR_shader_subgroup_uniform_control flow can be utilized to make the shader
+`VK_KHR_shader_subgroup_uniform_control_flow` can be utilized to make the shader
 behave as expected in most cases. Consider the following rewritten version of
 the example:
 
