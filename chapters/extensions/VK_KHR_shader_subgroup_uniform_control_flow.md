@@ -7,7 +7,7 @@ reconvergence of invocations in a shader. If the extension is supported,
 shaders can be modified to include a new attribute that provides the stronger
 guarantees (see [GL_EXT_subgroup_uniform_control_flow](https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_subgroup_uniform_control_flow.txt)). This attribute can only
 be applied to shader stages that support subgroup operations (check the
-subgroupSupportedStages feature in the VkPhysicalDeviceVulkan11Properties
+`subgroupSupportedStages` feature in the `VkPhysicalDeviceVulkan11Properties`
 struct).
 
 The stronger guarantees cause the uniform control flow rules in the SPIR-V
