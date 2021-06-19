@@ -6,6 +6,10 @@ This includes replicating legacy behavior that is challenging for drivers to imp
 
 Unless this is needed for translation, it is **highly recommended** that developers use alternative techniques of using the GPU to achieve the same functionality.
 
+## VK_EXT_custom_border_color
+
+Vulkan provides a transparent black, opaque black, and opaque white `VkBorderColor` for `VkSampler` objects in the core spec. Both OpenGL and D3D have the option to set the sampler border to be a custom color.
+
 ## VK_EXT_depth_clip_enable
 
 The depth clip enable functionality is specified differently from D3D11 and Vulkan. Instead of `VkPipelineRasterizationStateCreateInfo::depthClampEnable`, D3D11 has [DepthClipEnable (D3D12_RASTERIZER_DESC)](https://docs.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_rasterizer_desc), which only affects the viewport clip of depth values before rasterization and does not affect the depth clamp that always occurs in the output merger stage of the D3D11 graphics pipeline.
