@@ -76,3 +76,4 @@ With anything related to a GPU it is best to not assume and profile when possibl
 - [OCAT](https://github.com/GPUOpen-Tools/OCAT) - The Open Capture and Analytics Tool (OCAT) provides an FPS overlay and performance measurement for D3D11, D3D12, and Vulkan.
 - [PVRTune](https://developer.imaginationtech.com)
 - [Qualcomm Snapdragon Profiler](https://developer.qualcomm.com/software/snapdragon-profiler) - Profiling tool targeting Adreno GPU.
+- [VKtracer](https://www.vktracer.com) - Cross-vendor and cross-platform profiler.
