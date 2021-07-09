@@ -68,6 +68,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 - [VK_KHR_imageless_framebuffer](./chapters/extensions/VK_KHR_imageless_framebuffer.md)
 - [VK_KHR_sampler_ycbcr_conversion](./chapters/extensions/VK_KHR_sampler_ycbcr_conversion.md)
 - [VK_KHR_timeline_semaphore](https://www.khronos.org/blog/vulkan-timeline-semaphores)
+- [VK_KHR_shader_subgroup_uniform_control_flow](./chapters/extensions/VK_KHR_shader_subgroup_uniform_control_flow.md)
 ----
 
 #### [Contributing](./CONTRIBUTING.md)
