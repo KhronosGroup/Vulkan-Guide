@@ -43,6 +43,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 - [Dynamic State](./chapters/dynamic_state.md)
     - `VK_EXT_extended_dynamic_state`, `VK_EXT_extended_dynamic_state2`, `VK_EXT_vertex_input_dynamic_state`, `VK_EXT_color_write_enable`
 - [Subgroups](./chapters/subgroups.md)
+- [Atomics](./chapters/atomics.md)
 - [Common Pitfalls](./chapters/common_pitfalls.md)
 
 ## When and Why to use Extensions
