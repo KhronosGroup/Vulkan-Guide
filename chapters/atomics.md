@@ -96,7 +96,7 @@ and `64-bit float` support:
 - `shaderBufferFloat64*` - buffers
 - `shaderSharedFloat64*` - shared memory
 
-> Note: OpenGLES [OES_shader_image_atomic](https://www.khronos.org/registry/OpenGL/extensions/OES/OES_shader_image_atomic.txt) allowed the use of atomics on `r32f` for `imageAtomicExchange`. For porting, an application will want to check for `shaderBufferFloat32Atomics` support to be able to do the same in Vulkan.
+> Note: OpenGLES [OES_shader_image_atomic](https://www.khronos.org/registry/OpenGL/extensions/OES/OES_shader_image_atomic.txt) allowed the use of atomics on `r32f` for `imageAtomicExchange`. For porting, an application will want to check for `shaderImageFloat32Atomics` support to be able to do the same in Vulkan.
 
 # VK_EXT_shader_atomic_float2
 
