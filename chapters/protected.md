@@ -2,6 +2,8 @@
 
 Protected memory divides device memory into "protected device memory" and "unprotected device memory".
 
+In general, most OS don't allow one application to access another application’s GPU memory unless explicitly shared (e.g. via [external memory](extensions/external.md)). A common example of protected memory is for containing DRM content, which a process might be allowed to modify (e.g. for image filtering, or compositing playback controls and closed captions) but shouldn’t be able to extract into unprotected memory. The data comes in encrypted and remains encrypted until it reaches the pixels on the display.
+
 The Vulkan Spec [explains in detail](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-memory) what "protected device memory" enforces. The following is a breakdown of what is required in order to properly enable a protected submission using protected memory.
 
 ## Checking for support
@@ -9,6 +11,10 @@ The Vulkan Spec [explains in detail](https://www.khronos.org/registry/vulkan/spe
 Protected memory was added in Vulkan 1.1 and there was no extension prior. This means any Vulkan 1.0 device will not be capable of supporting protected memory. To check for support, an application must [query and enable](./enabling_features.md) the `VkPhysicalDeviceProtectedMemoryFeatures::protectedMemory` field.
 
 ## Protected queues
+
+A protected queue can read both protected and unprotected memory, but can only write to protected memory. If a queue can write to unprotected memory, then it can't also read from protected memory.
+
+> Often performance counters and other timing measurement systems are disabled or less accurate for protected queues to prevent side-channel attacks.
 
 Using `vkGetPhysicalDeviceQueueFamilyProperties` to get the `VkQueueFlags` of each queue, an application can find a queue family with `VK_QUEUE_PROTECTED_BIT` flag exposed. This does **not** mean the queues from the family are always protected, but rather the queues **can be** a protected queue.
 
