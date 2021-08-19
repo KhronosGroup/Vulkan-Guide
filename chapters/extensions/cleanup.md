@@ -26,7 +26,7 @@ This extension allows an application when using a depth/stencil format to do an 
 
 This extension adds support for automatically resolving multisampled depth/stencil attachments in a subpass in a similar manner as for color attachments.
 
-For more information please check out the GDC presentation. ([slides](https://www.khronos.org/assets/uploads/developers/presentations/Vulkan-Depth-Stencil-Resolve-GDC-Mar19.pdf) and [video](https://youtu.be/GnnEmJFFC7Q?t=1980))
+For more information please check out the GDC presentation. ([slides](https://www.khronos.org/assets/uploads/developers/presentations/Vulkan-Depth-Stencil-Resolve-GDC-Mar19.pdf) and [video](https://www.youtube.com/watch?v=GnnEmJFFC7Q&t=1980s))
 
 ## VK_EXT_separate_stencil_usage
 
