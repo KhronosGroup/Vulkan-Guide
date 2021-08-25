@@ -14,7 +14,7 @@ A simple way of grabbing info on Vulkan is to run the [Vulkan Hardware Capabilit
 
 ### BSD Unix
 
-Grab the [Vulkan SDK](https://vulkan.lunarg.com/sdk/home#linux). Build Vulkan SDK using command ./vulkansdk.sh and run the [vulkaninfo](https://vulkan.lunarg.com/doc/sdk/latest/linux/vulkaninfo.html) executable to easily check for Vulkan support as well as all the capabilities the device offers.
+Grab the [Vulkan SDK](https://vulkan.lunarg.com/sdk/home#linux). Build Vulkan SDK using the command `./vulkansdk.sh` and then run the [vulkaninfo](https://vulkan.lunarg.com/doc/sdk/latest/linux/vulkaninfo.html) executable to easily check for Vulkan support as well as all the capabilities the device offers.
 
 ### iOS
 
