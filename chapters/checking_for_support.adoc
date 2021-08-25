@@ -18,6 +18,10 @@ The first thing to check is if your xref:{chapters}platforms.adoc#platforms[plat
 
 A simple way of grabbing info on Vulkan is to run the link:https://play.google.com/store/apps/details?id=de.saschawillems.vulkancapsviewer&hl=en_US[Vulkan Hardware Capability Viewer] app developed by Sascha Willems. This app will not only show if Vulkan is supported, but also all the capabilities the device offers.
 
+=== BSD Unix
+
+Grab the link:https://vulkan.lunarg.com/sdk/home#linux[Vulkan SDK]. Build Vulkan SDK using the command `./vulkansdk.sh` and then run the link:https://vulkan.lunarg.com/doc/sdk/latest/linux/vulkaninfo.html[vulkaninfo] executable to easily check for Vulkan support as well as all the capabilities the device offers.
+
 === iOS
 
 A simple way of grabbing info on Vulkan is to run the iOS port of the link:https://apps.apple.com/us/app/vulkan-capabilities-viewer/id1552796816[Vulkan Hardware Capability Viewer] provided by LunarG. This app will not only show if Vulkan is supported, but also all the capabilities the device offers.
