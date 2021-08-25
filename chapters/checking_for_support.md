@@ -12,6 +12,10 @@ The first thing to check is if your [platform](./platforms.md) even supports Vul
 
 A simple way of grabbing info on Vulkan is to run the [Vulkan Hardware Capability Viewer](https://play.google.com/store/apps/details?id=de.saschawillems.vulkancapsviewer&hl=en_US) app developed by Sascha Willems. This app will not only show if Vulkan is supported, but also all the capabilities the device offers.
 
+### BSD Unix
+
+Grab the [Vulkan SDK](https://vulkan.lunarg.com/sdk/home#linux). Build Vulkan SDK using command ./vulkansdk.sh and run the [vulkaninfo](https://vulkan.lunarg.com/doc/sdk/latest/linux/vulkaninfo.html) executable to easily check for Vulkan support as well as all the capabilities the device offers.
+
 ### iOS
 
 A simple way of grabbing info on Vulkan is to run the iOS port of the [Vulkan Hardware Capability Viewer](https://apps.apple.com/us/app/vulkan-capabilities-viewer/id1552796816) provided by LunarG. This app will not only show if Vulkan is supported, but also all the capabilities the device offers.
