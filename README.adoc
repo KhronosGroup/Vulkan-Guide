@@ -1,77 +1,265 @@
-# Vulkan Guide
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
 
-![Vulkan logo](./images/vulkan_logo.png)
-![Khronos logo](./images/khronos_logo.png)
+= Vulkan^®^ Guide
+:regtitle: pass:q,r[^®^]
+The Khronos{regtitle} Vulkan Working Group
+:data-uri:
+:icons: font
+:toc2:
+:toclevels: 2
+:max-width: 100%
+:numbered:
+:source-highlighter: rouge
+:rouge-style: github
+
+image::images/vulkan_logo.png[Vulkan Logo]
+image::images/khronos_logo.png[Khronos logo]
+
+// Use {chapters} as base path for individual chapters, to allow single
+// pages to work properly as well. Must have trailing slash.
+// Implicit {relfileprefix} does not work due to file hierarchy
+:chapters: chapters/
 
 The Vulkan Guide is designed to help developers get up and going with the world of Vulkan. It is aimed to be a light read that leads to many other useful links depending on what a developer is looking for. All information is intended to help better fill the gaps about the many nuances of Vulkan.
 
-## Logistics Overview
-- [What is Vulkan?](./chapters/what_is_vulkan.md)
-- [What you can do with Vulkan](./chapters/what_vulkan_can_do.md)
-- [Vulkan Spec](./chapters/vulkan_spec.md)
-- [Platforms](./chapters/platforms.md)
-- [Checking for Support](./chapters/checking_for_support.md)
-- [Versions](./chapters/versions.md)
-    - [Vulkan Release Summary](./chapters/vulkan_release_summary.md)
-- [What is SPIR-V?](./chapters/what_is_spirv.md)
-- [Portability Initiative](./chapters/portability_initiative.md)
-- [Vulkan CTS](./chapters/vulkan_cts.md)
-- [Vulkan Development Tools](./chapters/development_tools.md)
-- [Vulkan Validation Overview](./chapters/validation_overview.md)
-- [Vulkan Decoder Ring](./chapters/decoder_ring.md) (GL, GLES, DirectX, and Metal)
+:leveloffset: 1
 
-## Using Vulkan
-- [Loader](./chapters/loader.md)
-- [Layers](./chapters/layers.md)
-- [Querying Properties, Extensions, Features, Limits, and Formats](./chapters/querying_extensions_features.md)
-    - [Enabling Extensions](./chapters/enabling_extensions.md)
-    - [Enabling Features](./chapters/enabling_features.md)
-- [Queues and Queue Family](./chapters/queues.md)
-- [WSI](./chapters/wsi.md)
-- [pNext and sType](./chapters/pnext_and_stype.md)
-- [Synchronization](./chapters/synchronization.md)
-    - [Porting to VK_KHR_synchronization2](./chapters/extensions/VK_KHR_synchronization2.md)
-- [Memory Allocation Strategy](./chapters/memory_allocation.md)
-    - [Sparse Resources](./chapters/sparse_resources.md)
-    - [Protected Memory](./chapters/protected.md)
-- [Pipeline Caching/Derivatives](./chapters/pipeline_cache.md)
-- [Threading](./chapters/threading.md)
-- [Mapping Data to Shaders](./chapters/mapping_data_to_shaders.md)
-    - [Vertex Input Data Processing](./chapters/vertex_input_data_processing.md)
-- [Robustness](./chapters/robustness.md)
-    - `VK_EXT_image_robustness`, `VK_EXT_robustness2`
-- [Dynamic State](./chapters/dynamic_state.md)
-    - `VK_EXT_extended_dynamic_state`, `VK_EXT_extended_dynamic_state2`, `VK_EXT_vertex_input_dynamic_state`, `VK_EXT_color_write_enable`
-- [Subgroups](./chapters/subgroups.md)
-- [Atomics](./chapters/atomics.md)
-- [Common Pitfalls](./chapters/common_pitfalls.md)
+= Logistics Overview
 
-## When and Why to use Extensions
-> These are supplemental references for the various Vulkan Extensions. Please consult the Vulkan Spec for further details on any extension
-- [Cleanup Extensions](./chapters/extensions/cleanup.md)
-    - `VK_EXT_4444_formats`, `VK_KHR_bind_memory2`, `VK_KHR_create_renderpass2`, `VK_KHR_dedicated_allocation`, `VK_KHR_driver_properties`, `VK_KHR_get_memory_requirements2`, `VK_KHR_get_physical_device_properties2`, `VK_EXT_host_query_reset`, `VK_KHR_maintenance1`, `VK_KHR_maintenance2`, `VK_KHR_maintenance3`, `VK_KHR_separate_depth_stencil_layouts`, `VK_KHR_depth_stencil_resolve`, `VK_EXT_separate_stencil_usage`, `VK_EXT_sampler_filter_minmax`, `VK_KHR_sampler_mirror_clamp_to_edge`, `VK_EXT_ycbcr_2plane_444_formats`
-- [Device Groups](./chapters/extensions/device_groups.md)
-    - `VK_KHR_device_group`, `VK_KHR_device_group_creation`
-- [External Memory and Sychronization](./chapters/extensions/external.md)
-    - `VK_KHR_external_fence`, `VK_KHR_external_memory`, `VK_KHR_external_semaphore`
-- [Ray Tracing](./chapters/extensions/ray_tracing.md)
-    - `VK_KHR_acceleration_structure`, `VK_KHR_ray_tracing_pipeline`, `VK_KHR_ray_query`, `VK_KHR_pipeline_library`, `VK_KHR_deferred_host_operations`
-- [Shader Features](./chapters/extensions/shader_features.md)
-    - `VK_KHR_8bit_storage`, `VK_KHR_16bit_storage`, `VK_KHR_relaxed_block_layout`, `VK_KHR_shader_atomic_int64`, `VK_EXT_scalar_block_layout`, `VK_KHR_shader_clock`, `VK_EXT_shader_demote_to_helper_invocation`, `VK_KHR_shader_draw_parameters`, `VK_KHR_shader_float16_int8`, `VK_KHR_shader_float_controls`, `VK_KHR_shader_non_semantic_info`, `VK_EXT_shader_stencil_export`, `VK_EXT_shader_subgroup_ballot`, `VK_KHR_shader_subgroup_extended_types`, `VK_EXT_shader_subgroup_vote`, `VK_KHR_shader_terminate_invocation`, `VK_EXT_shader_viewport_index_layer`, `VK_KHR_spirv_1_4`, `VK_KHR_storage_buffer_storage_class`, `VK_EXT_subgroup_size_control`, `VK_KHR_uniform_buffer_standard_layout`, `VK_KHR_variable_pointers`, `VK_KHR_vulkan_memory_model`, `VK_KHR_workgroup_memory_explicit_layout`, `VK_KHR_zero_initialize_workgroup_memory`
-- [Translation Layer Extensions](./chapters/extensions/translation_layer_extensions.md)
-    - `VK_EXT_custom_border_color`, `VK_EXT_depth_clip_enable`, `VK_EXT_provoking_vertex`, `VK_EXT_transform_feedback`
-- [VK_EXT_descriptor_indexing](./chapters/extensions/VK_EXT_descriptor_indexing.md)
-- [VK_EXT_inline_uniform_block](./chapters/extensions/VK_EXT_inline_uniform_block.md)
-- [VK_EXT_memory_priority](./chapters/extensions/VK_EXT_memory_priority.md)
-- [VK_KHR_descriptor_update_template](./chapters/extensions/VK_KHR_descriptor_update_template.md)
-- [VK_KHR_draw_indirect_count](./chapters/extensions/VK_KHR_draw_indirect_count.md)
-- [VK_KHR_image_format_list](./chapters/extensions/VK_KHR_image_format_list.md)
-- [VK_KHR_imageless_framebuffer](./chapters/extensions/VK_KHR_imageless_framebuffer.md)
-- [VK_KHR_sampler_ycbcr_conversion](./chapters/extensions/VK_KHR_sampler_ycbcr_conversion.md)
-- [VK_KHR_timeline_semaphore](https://www.khronos.org/blog/vulkan-timeline-semaphores)
-- [VK_KHR_shader_subgroup_uniform_control_flow](./chapters/extensions/VK_KHR_shader_subgroup_uniform_control_flow.md)
-----
+== xref:{chapters}what_is_vulkan.adoc[What is Vulkan?]
 
-#### [Contributing](./CONTRIBUTING.md)
-#### [License](./LICENSE)
-#### [Code of conduct](./CODE_OF_CONDUCT.md)
+// include::{chapters}what_is_vulkan.adoc[]
+
+== xref:{chapters}what_vulkan_can_do.adoc[What you can do with Vulkan]
+
+// include::{chapters}what_vulkan_can_do.adoc[]
+
+== xref:{chapters}vulkan_spec.adoc[Vulkan Spec]
+
+// include::{chapters}vulkan_spec.adoc[]
+
+== xref:{chapters}platforms.adoc[Platforms]
+
+// include::{chapters}platforms.adoc[]
+
+== xref:{chapters}checking_for_support.adoc[Checking for Support]
+
+// include::{chapters}checking_for_support.adoc[]
+
+== xref:{chapters}versions.adoc[Versions]
+
+// include::{chapters}versions.adoc[]
+
+== xref:{chapters}vulkan_release_summary.adoc[Vulkan Release Summary]
+
+// include::{chapters}vulkan_release_summary.adoc[]
+
+== xref:{chapters}what_is_spirv.adoc[What is SPIR-V?]
+
+// include::{chapters}what_is_spirv.adoc[]
+
+== xref:{chapters}portability_initiative.adoc[Portability Initiative]
+
+// include::{chapters}portability_initiative.adoc[]
+
+== xref:{chapters}vulkan_cts.adoc[Vulkan CTS]
+
+// include::{chapters}vulkan_cts.adoc[]
+
+== xref:{chapters}development_tools.adoc[Vulkan Development Tools]
+
+// include::{chapters}development_tools.adoc[]
+
+== xref:{chapters}validation_overview.adoc[Vulkan Validation Overview]
+
+// include::{chapters}validation_overview.adoc[]
+
+== xref:{chapters}decoder_ring.adoc[Vulkan Decoder Ring (GL, GLES, DirectX, and Metal)]
+
+// include::{chapters}decoder_ring.adoc[]
+
+= Using Vulkan
+
+== xref:{chapters}loader.adoc[Loader]
+
+// include::{chapters}loader.adoc[]
+
+== xref:{chapters}layers.adoc[Layers]
+
+// include::{chapters}layers.adoc[]
+
+== xref:{chapters}querying_extensions_features.adoc[Querying Properties, Extensions, Features, Limits, and Formats]
+
+// include::{chapters}querying_extensions_features.adoc[]
+
+=== xref:{chapters}enabling_extensions.adoc[Enabling Extensions]
+
+// include::{chapters}enabling_extensions.adoc[]
+
+=== xref:{chapters}enabling_features.adoc[Enabling Features]
+
+// include::{chapters}enabling_features.adoc[]
+
+== xref:{chapters}queues.adoc[Queues and Queue Family]
+
+// include::{chapters}queues.adoc[]
+
+== xref:{chapters}wsi.adoc[WSI]
+
+// include::{chapters}wsi.adoc[]
+
+== xref:{chapters}pnext_and_stype.adoc[pNext and sType]
+
+// include::{chapters}pnext_and_stype.adoc[]
+
+== xref:{chapters}synchronization.adoc[Synchronization]
+
+// include::{chapters}synchronization.adoc[]
+
+=== xref:{chapters}extensions/VK_KHR_synchronization2.adoc[Porting to VK_KHR_synchronization2]
+
+// include::{chapters}extensions/VK_KHR_synchronization2.adoc[]
+
+== xref:{chapters}memory_allocation.adoc[Memory Allocation Strategy]
+
+// include::{chapters}memory_allocation.adoc[]
+
+=== xref:{chapters}sparse_resources.adoc[Sparse Resources]
+
+// include::{chapters}sparse_resources.adoc[]
+
+=== xref:{chapters}protected.adoc[Protected Memory]
+
+// include::{chapters}protected.adoc[]
+
+== xref:{chapters}pipeline_cache.adoc[Pipeline Caching/Derivatives]
+
+// include::{chapters}pipeline_cache.adoc[]
+
+== xref:{chapters}threading.adoc[Threading]
+
+// include::{chapters}threading.adoc[]
+
+== xref:{chapters}mapping_data_to_shaders.adoc[Mapping Data to Shaders]
+
+// include::{chapters}mapping_data_to_shaders.adoc[]
+
+=== xref:{chapters}vertex_input_data_processing.adoc[Vertex Input Data Processing]
+
+// include::{chapters}vertex_input_data_processing.adoc[]
+
+== xref:{chapters}robustness.adoc[Robustness]
+
+// include::{chapters}robustness.adoc[]
+
+  * `VK_EXT_image_robustness`, `VK_EXT_robustness2`
+
+== xref:{chapters}dynamic_state.adoc[Dynamic State]
+
+// include::{chapters}dynamic_state.adoc[]
+
+  * `VK_EXT_extended_dynamic_state`, `VK_EXT_extended_dynamic_state2`, `VK_EXT_vertex_input_dynamic_state`, `VK_EXT_color_write_enable`
+
+== xref:{chapters}subgroups.adoc[Subgroups]
+
+// include::{chapters}subgroups.adoc[]
+
+== xref:{chapters}atomics.adoc[Atomics]
+
+// include::{chapters}atomics.adoc[]
+
+== xref:{chapters}common_pitfalls.adoc[Common Pitfalls]
+
+// include::{chapters}common_pitfalls.adoc[]
+
+
+= When and Why to use Extensions
+
+[NOTE]
+.Note
+====
+These are supplemental references for the various Vulkan Extensions. Please consult the Vulkan Spec for further details on any extension
+====
+
+== xref:{chapters}extensions/cleanup.adoc[Cleanup Extensions]
+
+  * `VK_EXT_4444_formats`, `VK_KHR_bind_memory2`, `VK_KHR_create_renderpass2`, `VK_KHR_dedicated_allocation`, `VK_KHR_driver_properties`, `VK_KHR_get_memory_requirements2`, `VK_KHR_get_physical_device_properties2`, `VK_EXT_host_query_reset`, `VK_KHR_maintenance1`, `VK_KHR_maintenance2`, `VK_KHR_maintenance3`, `VK_KHR_separate_depth_stencil_layouts`, `VK_KHR_depth_stencil_resolve`, `VK_EXT_separate_stencil_usage`, `VK_EXT_sampler_filter_minmax`, `VK_KHR_sampler_mirror_clamp_to_edge`, `VK_EXT_ycbcr_2plane_444_formats`
+
+// include::{chapters}extensions/cleanup.adoc[]
+
+== xref:{chapters}extensions/device_groups.adoc[Device Groups]
+
+  * `VK_KHR_device_group`, `VK_KHR_device_group_creation`
+
+// include::{chapters}extensions/device_groups.adoc[]
+
+== xref:{chapters}extensions/external.adoc[External Memory and Sychronization]
+
+  * `VK_KHR_external_fence`, `VK_KHR_external_memory`, `VK_KHR_external_semaphore`
+
+// include::{chapters}extensions/external.adoc[]
+
+== xref:{chapters}extensions/ray_tracing.adoc[Ray Tracing]
+
+  * `VK_KHR_acceleration_structure`, `VK_KHR_ray_tracing_pipeline`, `VK_KHR_ray_query`, `VK_KHR_pipeline_library`, `VK_KHR_deferred_host_operations`
+
+// include::{chapters}extensions/ray_tracing.adoc[]
+
+== xref:{chapters}extensions/shader_features.adoc[Shader Features]
+
+  * `VK_KHR_8bit_storage`, `VK_KHR_16bit_storage`, `VK_KHR_relaxed_block_layout`, `VK_KHR_shader_atomic_int64`, `VK_EXT_scalar_block_layout`, `VK_KHR_shader_clock`, `VK_EXT_shader_demote_to_helper_invocation`, `VK_KHR_shader_draw_parameters`, `VK_KHR_shader_float16_int8`, `VK_KHR_shader_float_controls`, `VK_KHR_shader_non_semantic_info`, `VK_EXT_shader_stencil_export`, `VK_EXT_shader_subgroup_ballot`, `VK_KHR_shader_subgroup_extended_types`, `VK_EXT_shader_subgroup_vote`, `VK_KHR_shader_terminate_invocation`, `VK_EXT_shader_viewport_index_layer`, `VK_KHR_spirv_1_4`, `VK_KHR_storage_buffer_storage_class`, `VK_EXT_subgroup_size_control`, `VK_KHR_uniform_buffer_standard_layout`, `VK_KHR_variable_pointers`, `VK_KHR_vulkan_memory_model`, `VK_KHR_workgroup_memory_explicit_layout`, `VK_KHR_zero_initialize_workgroup_memory`
+
+// include::{chapters}extensions/shader_features.adoc[]
+
+== xref:{chapters}extensions/translation_layer_extensions.adoc[Translation Layer Extensions]
+
+  * `VK_EXT_custom_border_color`, `VK_EXT_depth_clip_enable`, `VK_EXT_provoking_vertex`, `VK_EXT_transform_feedback`
+
+// include::{chapters}extensions/translation_layer_extensions.adoc[]
+
+== xref:{chapters}extensions/VK_EXT_descriptor_indexing.adoc[VK_EXT_descriptor_indexing]
+
+// include::{chapters}extensions/VK_EXT_descriptor_indexing.adoc[]
+
+== xref:{chapters}extensions/VK_EXT_inline_uniform_block.adoc[VK_EXT_inline_uniform_block]
+
+// include::{chapters}extensions/VK_EXT_inline_uniform_block.adoc[]
+
+== xref:{chapters}extensions/VK_EXT_memory_priority.adoc[VK_EXT_memory_priority]
+
+// include::{chapters}extensions/VK_EXT_memory_priority.adoc[]
+
+== xref:{chapters}extensions/VK_KHR_descriptor_update_template.adoc[VK_KHR_descriptor_update_template]
+
+// include::{chapters}extensions/VK_KHR_descriptor_update_template.adoc[]
+
+== xref:{chapters}extensions/VK_KHR_draw_indirect_count.adoc[VK_KHR_draw_indirect_count]
+
+// include::{chapters}extensions/VK_KHR_draw_indirect_count.adoc[]
+
+== xref:{chapters}extensions/VK_KHR_image_format_list.adoc[VK_KHR_image_format_list]
+
+// include::{chapters}extensions/VK_KHR_image_format_list.adoc[]
+
+== xref:{chapters}extensions/VK_KHR_imageless_framebuffer.adoc[VK_KHR_imageless_framebuffer]
+
+// include::{chapters}extensions/VK_KHR_imageless_framebuffer.adoc[]
+
+== xref:{chapters}extensions/VK_KHR_sampler_ycbcr_conversion.adoc[VK_KHR_sampler_ycbcr_conversion]
+
+// include::{chapters}extensions/VK_KHR_sampler_ycbcr_conversion.adoc[]
+
+== link:https://www.khronos.org/blog/vulkan-timeline-semaphores[VK_KHR_timeline_semaphore]
+
+// (https://www.khronos.org/blog/vulkan-timeline-semaphores)
+
+== xref:{chapters}extensions/VK_KHR_shader_subgroup_uniform_control_flow.adoc[VK_KHR_shader_subgroup_uniform_control_flow]
+
+// include::{chapters}extensions/VK_KHR_shader_subgroup_uniform_control_flow.adoc[]
+
+= link:CONTRIBUTING.adoc[Contributing]
+
+= link:LICENSE[License]
+
+= link:CODE_OF_CONDUCT.adoc[Code of conduct]

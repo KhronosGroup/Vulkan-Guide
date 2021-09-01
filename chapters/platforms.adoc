@@ -1,53 +1,56 @@
-# Platforms
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Platforms
 
 While Vulkan runs on many platforms, each has small variations on how Vulkan is managed.
 
-![platforms_overview.png](../images/platforms_overview.png)
+image::images/platforms_overview.png[platforms_overview.png]
 
-## Android
+== Android
 
-The Vulkan API is [available](https://developer.android.com/ndk/guides/graphics/getting-started) on any Android device starting with API level 24 (Android Nougat), however not all devices will have a Vulkan driver.
+The Vulkan API is link:https://developer.android.com/ndk/guides/graphics/getting-started[available] on any Android device starting with API level 24 (Android Nougat), however not all devices will have a Vulkan driver.
 
-Android uses its [Hardware Abstraction Layer (HAL)](https://source.android.com/devices/architecture/hal) to find the Vulkan Driver in a [predefined path](https://source.android.com/devices/graphics/implement-vulkan#driver_emun).
+Android uses its link:https://source.android.com/devices/architecture/hal[Hardware Abstraction Layer (HAL)] to find the Vulkan Driver in a link:https://source.android.com/devices/graphics/implement-vulkan#driver_emun[predefined path].
 
 All 64-bit devices that launch with API level 29 (Android Q) or later must include a Vulkan 1.1 driver.
 
-## BSD Unix
+== BSD Unix
 
 Vulkan is supported on many BSD Unix distributions.
 
-## Fuchsia
+== Fuchsia
 
-Vulkan is supported on the [Fuchsia operation system](https://fuchsia.dev/fuchsia-src/concepts/graphics/magma/vulkan).
+Vulkan is supported on the link:https://fuchsia.dev/fuchsia-src/concepts/graphics/magma/vulkan[Fuchsia operation system].
 
-## iOS
+== iOS
 
-Vulkan is not natively supported on iOS, but can still be targeted with [Vulkan Portability Tools](./portability_initiative.md).
+Vulkan is not natively supported on iOS, but can still be targeted with xref:./portability_initiative.adoc[Vulkan Portability Tools].
 
-## Linux
+== Linux
 
 Vulkan is supported on many Linux distributions.
 
-## MacOS
+== MacOS
 
-Vulkan is not natively supported on MacOS, but can still be targeted with [Vulkan Portability Tools](./portability_initiative.md).
+Vulkan is not natively supported on MacOS, but can still be targeted with xref:./portability_initiative.adoc[Vulkan Portability Tools].
 
-## Nintendo Switch
+== Nintendo Switch
 
 The Nintendo Switch runs an NVIDIA Tegra chipset that supports native Vulkan.
 
-## QNX
+== QNX
 
 Vulkan is supported on QNX operation system.
 
-## Stadia
+== Stadia
 
 Google's Stadia runs on AMD based Linux machines and Vulkan is the required graphics API.
 
-## Windows
+== Windows
 
 Vulkan is supported on Windows 7, Windows 8, and Windows 10.
 
-## Others
+== Others
 
-Some embedded systems support Vulkan by allowing presentation [directly-to-display](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#display).
+Some embedded systems support Vulkan by allowing presentation link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#display[directly-to-display].

@@ -1,32 +1,42 @@
-# VK_KHR_sampler_ycbcr_conversion
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
 
-> Promoted to core in Vulkan 1.1
+:YCbCr: pass:q[Y′C~B~C~R~]
 
-All the examples below use a `4:2:0` multi-planar Y′C<sub>B</sub>C<sub>R</sub> format for illustration purposes.
+= VK_KHR_sampler_ycbcr_conversion
 
-## Multi-planar Formats
+[NOTE]
+.Note
+====
+Promoted to core in Vulkan 1.1
+====
 
-To represent a Y′C<sub>B</sub>C<sub>R</sub> image for which the Y′ (luma) data is stored in plane 0, the C<sub>B</sub> blue chroma difference value ("U") data is stored in plane 1, and the C<sub>R</sub> red chroma difference value ("V") data is stored in plane 2, an application would use the `VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM format`.
+All the examples below use a `4:2:0` multi-planar {YCbCr} format for illustration purposes.
 
-The Vulkan specification separately describes each multi-planar format representation and its mapping to each color component. Because the mapping and color conversion is separated from the format, Vulkan uses "RGB" color channel notations in the formats, and the conversion then describes the mapping from these channels to the input to the color conversion.
+== Multi-planar Formats
 
-This allows, for example, `VK_FORMAT_B8G8R8_UNORM` images to represent Y′C<sub>B</sub>C<sub>R</sub> texels.
+To represent a {YCbCr} image for which the Y' (luma) data is stored in plane 0, the C~B~ blue chroma difference value ("U") data is stored in plane 1, and the C~R~ red chroma difference value ("V") data is stored in plane 2, an application would use the `VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM format`.
 
-* `G` == `Y`
-* `B` == `Cb`
-* `R` == `Cr`
+The Vulkan specification separately describes each multi-planar format representation and its mapping to each color component. Because the mapping and color conversion is separated from the format, Vulkan uses "`RGB`" color channel notations in the formats, and the conversion then describes the mapping from these channels to the input to the color conversion.
 
-This may require some extra focus when mapping the swizzle components between `RGBA` and the Y′C<sub>B</sub>C<sub>R</sub> format.
+This allows, for example, `VK_FORMAT_B8G8R8_UNORM` images to represent {YCbCr} texels.
 
-## Disjoint
+  * `G` == `Y`
+  * `B` == `Cb`
+  * `R` == `Cr`
+
+This may require some extra focus when mapping the swizzle components between `RGBA` and the {YCbCr} format.
+
+== Disjoint
 
 Normally when an application creates a `VkImage` it only binds it to a single `VkDeviceMemory` object. If the implementation supports `VK_FORMAT_FEATURE_DISJOINT_BIT` for a given format then an application can bind multiple disjoint `VkDeviceMemory` to a single `VkImage` where each `VkDeviceMemory` represents a single plane.
 
-Image processing operations on Y′C<sub>B</sub>C<sub>R</sub> images often treat channels separately. For example, applying a sharpening operation to the luma channel or selectively denoising luma. Separating the planes allows them to be processed separately or to reuse unchanged plane data for different final images.
+Image processing operations on {YCbCr} images often treat channels separately. For example, applying a sharpening operation to the luma channel or selectively denoising luma. Separating the planes allows them to be processed separately or to reuse unchanged plane data for different final images.
 
 Using disjoint images follows the same pattern as the normal binding of memory to an image with the use of a few new functions. Here is some pseudo code to represent the new workflow:
 
-```cpp
+[source,cpp]
+----
 VkImagePlaneMemoryRequirementsInfo imagePlaneMemoryRequirementsInfo = {};
 imagePlaneMemoryRequirementsInfo.planeAspect = VK_IMAGE_ASPECT_PLANE_0_BIT;
 
@@ -57,15 +67,16 @@ bindImageMemoryInfo.memory       = disjointMemoryPlane0;
 // Bind the same for each plane
 
 vkBindImageMemory2(device, bindImageMemoryInfoSize, bindImageMemoryInfoArray));
-```
+----
 
-## Copying memory to each plane
+== Copying memory to each plane
 
 Even if an application is not using disjoint memory, it still needs to use the `VK_IMAGE_ASPECT_PLANE_0_BIT` when copying over data to each plane.
 
 For example, if an application plans to do a `vkCmdCopyBufferToImage` to copy over a single `VkBuffer` to a single non-disjoint `VkImage` the data, the logic for a `YUV420p` layout will look partially like:
 
-```cpp
+[source,cpp]
+----
 VkBufferImageCopy bufferCopyRegions[3];
 bufferCopyRegions[0].imageSubresource.aspectMask = VK_IMAGE_ASPECT_PLANE_0_BIT;
 bufferCopyRegions[0].imageOffset                 = {0, 0, 0};
@@ -90,18 +101,19 @@ bufferCopyRegions[2].imageExtent.height           = myImage.height / 2;
 bufferCopyRegions[2].imageSubresource.aspectMask  = VK_IMAGE_ASPECT_PLANE_2_BIT;
 
 vkCmdCopyBufferToImage(...)
-```
+----
 
 It is worth noting here is that the `imageOffset` is zero because its base is the plane, not the entire sname:VkImage. So when using the `imageOffset` make sure to start from base of the plane and not always plane 0.
 
-## VkSamplerYcbcrConversion
+== VkSamplerYcbcrConversion
 
-The `VkSamplerYcbcrConversion` describes all the "out of scope explaining here" aspects of Y′C<sub>B</sub>C<sub>R</sub> conversion which are described in the [Khronos Data Format Specification](https://www.khronos.org/registry/DataFormat/specs/1.3/dataformat.1.3.html#_introduction_to_color_conversions). The values set here are dependent on the input Y′C<sub>B</sub>C<sub>R</sub> data being obtained and how to do the conversion to RGB color spacce.
+The `VkSamplerYcbcrConversion` describes all the "`out of scope explaining here`" aspects of {YCbCr} conversion which are described in the link:https://www.khronos.org/registry/DataFormat/specs/1.3/dataformat.1.3.html#_introduction_to_color_conversions[Khronos Data Format Specification]. The values set here are dependent on the input {YCbCr} data being obtained and how to do the conversion to RGB color spacce.
 
 Here is some pseudo code to help give an idea of how to use it from the API point of view:
 
-```cpp
-// Create conversion object that describes how to have the implementation do the Y′C<sub>B</sub>C<sub>R</sub> conversion
+[source,cpp]
+----
+// Create conversion object that describes how to have the implementation do the {YCbCr} conversion
 VkSamplerYcbcrConversion samplerYcbcrConversion;
 VkSamplerYcbcrConversionCreateInfo samplerYcbcrConversionCreateInfo = {};
 // ...
@@ -121,9 +133,9 @@ VkSamplerCreateInfo samplerInfo = {};
 samplerInfo.pNext = &samplerYcbcrConversionInfo;
 // ...
 vkCreateSampler(device, &samplerInfo, nullptr, &mySampler));
-```
+----
 
-## combinedImageSamplerDescriptorCount
+== combinedImageSamplerDescriptorCount
 
 An important value to monitor is the `combinedImageSamplerDescriptorCount` which describes how many descriptor an implementation uses for each multi-planar format. This means for `VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM` an implementation can use 1, 2, or 3 descriptors for each combined image sampler used.
 
@@ -133,7 +145,8 @@ For example, consider a descriptor set layout binding with two descriptors and i
 
 Some pseudo code how to query for the `combinedImageSamplerDescriptorCount`:
 
-```cpp
+[source,cpp]
+----
 VkSamplerYcbcrConversionImageFormatProperties samplerYcbcrConversionImageFormatProperties = {};
 
 VkImageFormatProperties imageFormatProperties   = {};
@@ -148,4 +161,4 @@ imageFormatInfo.format = formatToQuery;
 vkGetPhysicalDeviceImageFormatProperties2(physicalDevice, &imageFormatInfo, &imageFormatProperties2));
 
 printf("combinedImageSamplerDescriptorCount = %u\n", samplerYcbcrConversionImageFormatProperties.combinedImageSamplerDescriptorCount);
-```
+----
