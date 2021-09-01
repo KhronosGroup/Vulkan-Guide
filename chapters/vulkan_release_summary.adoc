@@ -1,6 +1,10 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[vulkan-release-summary]]
 = Vulkan Release Summary
 
 Each minor release version of Vulkan link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-promotion[promoted] a different set of extension to core. This means that it's no longer necessary to enable an extensions to use it's functionality if the application requests at least that Vulkan version (given that the version is supported by the implementation).
@@ -17,31 +21,31 @@ link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.ht
 
 Vulkan 1.1 was released on March 7, 2018
 
-Besides the listed extensions below, Vulkan 1.1 introduced the xref:./subgroups.adoc[subgroups], xref:./protected.adoc[protected memory], and the ability to query the instance version.
+Besides the listed extensions below, Vulkan 1.1 introduced the xref:{chapters}subgroups.adoc#subgroups[subgroups], xref:{chapters}protected.adoc#protected[protected memory], and the ability to query the instance version.
 
-  * xref:./{chapters}extensions/shader_features.adoc#vk_khr_8bit_storage_and_vk_khr_16bit_storage[VK_KHR_16bit_storage]
-  * xref:./{chapters}extensions/cleanup.adoc#pnext_expansions[VK_KHR_bind_memory2]
-  * xref:./{chapters}extensions/cleanup.adoc#vk_khr_dedicated_allocation[VK_KHR_dedicated_allocation]
-  * xref:./{chapters}extensions/VK_KHR_descriptor_update_template.adoc[VK_KHR_descriptor_update_template]
-  * xref:./{chapters}extensions/device_groups.adoc[VK_KHR_device_group]
-  * xref:./{chapters}extensions/device_groups.adoc[VK_KHR_device_group_creation]
-  * xref:./{chapters}extensions/external.adoc[VK_KHR_external_fence]
-  * xref:./{chapters}extensions/external.adoc[VK_KHR_external_fence_capabilities]
-  * xref:./{chapters}extensions/external.adoc[VK_KHR_external_memory]
-  * xref:./{chapters}extensions/external.adoc[VK_KHR_external_memory_capabilities]
-  * xref:./{chapters}extensions/external.adoc[VK_KHR_external_semaphore]
-  * xref:./{chapters}extensions/external.adoc[VK_KHR_external_semaphore_capabilities]
-  * xref:./{chapters}extensions/cleanup.adoc#pnext_expansions[VK_KHR_get_memory_requirements2]
-  * xref:./{chapters}extensions/cleanup.adoc#pnext_expansions[VK_KHR_get_physical_device_properties2]
-  * xref:./{chapters}extensions/cleanup.adoc#maintenance_extensions[VK_KHR_maintenance1]
-  * xref:./{chapters}extensions/cleanup.adoc#maintenance_extensions[VK_KHR_maintenance2]
-  * xref:./{chapters}extensions/cleanup.adoc#maintenance_extensions[VK_KHR_maintenance3]
+  * xref:{chapters}extensions/shader_features.adoc#VK_KHR_16bit_storage[VK_KHR_16bit_storage]
+  * xref:{chapters}extensions/cleanup.adoc#pnext-expansions[VK_KHR_bind_memory2]
+  * xref:{chapters}extensions/cleanup.adoc#VK_KHR_dedicated_allocation[VK_KHR_dedicated_allocation]
+  * xref:{chapters}extensions/VK_KHR_descriptor_update_template.adoc#VK_KHR_descriptor_update_template[VK_KHR_descriptor_update_template]
+  * xref:{chapters}extensions/device_groups.adoc#device-groups[VK_KHR_device_group]
+  * xref:{chapters}extensions/device_groups.adoc#device-groups[VK_KHR_device_group_creation]
+  * xref:{chapters}extensions/external.adoc#external-memory[VK_KHR_external_fence]
+  * xref:{chapters}extensions/external.adoc#external-memory[VK_KHR_external_fence_capabilities]
+  * xref:{chapters}extensions/external.adoc#external-memory[VK_KHR_external_memory]
+  * xref:{chapters}extensions/external.adoc#external-memory[VK_KHR_external_memory_capabilities]
+  * xref:{chapters}extensions/external.adoc#external-memory[VK_KHR_external_semaphore]
+  * xref:{chapters}extensions/external.adoc#external-memory[VK_KHR_external_semaphore_capabilities]
+  * xref:{chapters}extensions/cleanup.adoc#pnext-expansions[VK_KHR_get_memory_requirements2]
+  * xref:{chapters}extensions/cleanup.adoc#pnext-expansions[VK_KHR_get_physical_device_properties2]
+  * xref:{chapters}extensions/cleanup.adoc#maintenance-extensions[VK_KHR_maintenance1]
+  * xref:{chapters}extensions/cleanup.adoc#maintenance-extensions[VK_KHR_maintenance2]
+  * xref:{chapters}extensions/cleanup.adoc#maintenance-extensions[VK_KHR_maintenance3]
   * link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_KHR_multiview.html#_description[VK_KHR_multiview]
-  * xref:./{chapters}extensions/shader_features.adoc#vk_khr_relaxed_block_layout[VK_KHR_relaxed_block_layout]
-  * xref:./{chapters}extensions/VK_KHR_sampler_ycbcr_conversion.adoc[VK_KHR_sampler_ycbcr_conversion]
-  * xref:./{chapters}extensions/shader_features.adoc#vk_khr_shader_draw_parameters[VK_KHR_shader_draw_parameters]
-  * xref:./{chapters}extensions/shader_features.adoc#vk_khr_storage_buffer_storage_class[VK_KHR_storage_buffer_storage_class]
-  * xref:./{chapters}extensions/shader_features.adoc#vk_khr_variable_pointers[VK_KHR_variable_pointers]
+  * xref:{chapters}extensions/shader_features.adoc#VK_KHR_relaxed_block_layout[VK_KHR_relaxed_block_layout]
+  * xref:{chapters}extensions/VK_KHR_sampler_ycbcr_conversion.adoc#VK_KHR_sampler_ycbcr_conversion[VK_KHR_sampler_ycbcr_conversion]
+  * xref:{chapters}extensions/shader_features.adoc#VK_KHR_shader_draw_parameters[VK_KHR_shader_draw_parameters]
+  * xref:{chapters}extensions/shader_features.adoc#VK_KHR_storage_buffer_storage_class[VK_KHR_storage_buffer_storage_class]
+  * xref:{chapters}extensions/shader_features.adoc#VK_KHR_variable_pointers[VK_KHR_variable_pointers]
 
 == Vulkan 1.2
 
@@ -53,27 +57,27 @@ link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.ht
 
 Vulkan 1.2 was released on January 15, 2020
 
-  * xref:./{chapters}extensions/shader_features.adoc#vk_khr_8bit_storage_and_vk_khr_16bit_storage[VK_KHR_8bit_storage]
+  * xref:{chapters}extensions/shader_features.adoc#VK_KHR_8bit_storage[VK_KHR_8bit_storage]
   * link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_KHR_buffer_device_address.html#_description[VK_KHR_buffer_device_address]
-  * xref:./{chapters}extensions/cleanup.adoc#pnext_expansions[VK_KHR_create_renderpass2]
+  * xref:{chapters}extensions/cleanup.adoc#pnext-expansions[VK_KHR_create_renderpass2]
   * link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_KHR_depth_stencil_resolve.html#_description[VK_KHR_depth_stencil_resolve]
-  * xref:./{chapters}extensions/VK_KHR_draw_indirect_count.adoc[VK_KHR_draw_indirect_count]
-  * xref:./{chapters}extensions/cleanup.adoc#vk_khr_driver_properties[VK_KHR_driver_properties]
-  * xref:./{chapters}extensions/VK_KHR_image_format_list.adoc[VK_KHR_image_format_list]
-  * xref:./{chapters}extensions/VK_KHR_imageless_framebuffer.adoc[VK_KHR_imageless_framebuffer]
-  * xref:./{chapters}extensions/cleanup.adoc#vk_khr_sampler_mirror_clamp_to_edge[VK_KHR_sampler_mirror_clamp_to_edge]
-  * xref:./{chapters}extensions/cleanup.adoc#vk_khr_separate_depth_stencil_layouts[VK_KHR_separate_depth_stencil_layouts]
-  * xref:./{chapters}extensions/shader_features.adoc#vk_khr_shader_atomic_int64[VK_KHR_shader_atomic_int64]
-  * xref:./{chapters}extensions/shader_features.adoc#vk_khr_shader_float16_int8[VK_KHR_shader_float16_int8]
-  * xref:./{chapters}extensions/shader_features.adoc#vk_khr_shader_float_controls[VK_KHR_shader_float_controls]
-  * xref:./{chapters}extensions/shader_features.adoc#vk_khr_shader_subgroup_extended_types[VK_KHR_shader_subgroup_extended_types]
-  * xref:./{chapters}extensions/shader_features.adoc#vk_khr_spirv_1_4[VK_KHR_spirv_1_4]
+  * xref:{chapters}extensions/VK_KHR_draw_indirect_count.adoc#VK_KHR_draw_indirect_count[VK_KHR_draw_indirect_count]
+  * xref:{chapters}extensions/cleanup.adoc#VK_KHR_driver_properties[VK_KHR_driver_properties]
+  * xref:{chapters}extensions/VK_KHR_image_format_list.adoc#VK_KHR_image_format_list[VK_KHR_image_format_list]
+  * xref:{chapters}extensions/VK_KHR_imageless_framebuffer.adoc#VK_KHR_imageless_framebuffer[VK_KHR_imageless_framebuffer]
+  * xref:{chapters}extensions/cleanup.adoc#VK_KHR_sampler_mirror_clamp_to_edge[VK_KHR_sampler_mirror_clamp_to_edge]
+  * xref:{chapters}extensions/cleanup.adoc#VK_KHR_separate_depth_stencil_layouts[VK_KHR_separate_depth_stencil_layouts]
+  * xref:{chapters}extensions/shader_features.adoc#VK_KHR_shader_atomic_int64[VK_KHR_shader_atomic_int64]
+  * xref:{chapters}extensions/shader_features.adoc#VK_KHR_shader_float16_int8[VK_KHR_shader_float16_int8]
+  * xref:{chapters}extensions/shader_features.adoc#VK_KHR_shader_float_controls[VK_KHR_shader_float_controls]
+  * xref:{chapters}extensions/shader_features.adoc#VK_KHR_shader_subgroup_extended_types[VK_KHR_shader_subgroup_extended_types]
+  * xref:{chapters}extensions/shader_features.adoc#VK_KHR_spirv_1_4[VK_KHR_spirv_1_4]
   * link:https://www.khronos.org/blog/vulkan-timeline-semaphores[VK_KHR_timeline_semaphore]
-  * xref:./{chapters}extensions/shader_features.adoc#vk_khr_uniform_buffer_standard_layout[VK_KHR_uniform_buffer_standard_layout]
-  * xref:./{chapters}extensions/shader_features.adoc#vk_khr_vulkan_memory_model[VK_KHR_vulkan_memory_model]
-  * xref:./{chapters}extensions/VK_EXT_descriptor_indexing.adoc[VK_EXT_descriptor_indexing]
-  * xref:./{chapters}extensions/cleanup.adoc#vk_ext_host_query_reset[VK_EXT_host_query_reset]
-  * xref:./{chapters}extensions/cleanup.adoc#vk_ext_sampler_filter_minmax[VK_EXT_sampler_filter_minmax]
-  * xref:./{chapters}extensions/shader_features.adoc#vk_ext_scalar_block_layout[VK_EXT_scalar_block_layout]
-  * xref:./{chapters}extensions/cleanup.adoc#vk_ext_separate_stencil_usage[VK_EXT_separate_stencil_usage]
-  * xref:./{chapters}extensions/shader_features.adoc#vk_ext_shader_viewport_index_layer[VK_EXT_shader_viewport_index_layer]
+  * xref:{chapters}extensions/shader_features.adoc#VK_KHR_uniform_buffer_standard_layout[VK_KHR_uniform_buffer_standard_layout]
+  * xref:{chapters}extensions/shader_features.adoc#VK_KHR_vulkan_memory_model[VK_KHR_vulkan_memory_model]
+  * xref:{chapters}extensions/VK_EXT_descriptor_indexing.adoc#VK_EXT_descriptor_indexing[VK_EXT_descriptor_indexing]
+  * xref:{chapters}extensions/cleanup.adoc#VK_EXT_host_query_reset[VK_EXT_host_query_reset]
+  * xref:{chapters}extensions/cleanup.adoc#VK_EXT_sampler_filter_minmax[VK_EXT_sampler_filter_minmax]
+  * xref:{chapters}extensions/shader_features.adoc#VK_EXT_scalar_block_layout[VK_EXT_scalar_block_layout]
+  * xref:{chapters}extensions/cleanup.adoc#VK_EXT_separate_stencil_usage[VK_EXT_separate_stencil_usage]
+  * xref:{chapters}extensions/shader_features.adoc#VK_EXT_shader_viewport_index_layer[VK_EXT_shader_viewport_index_layer]

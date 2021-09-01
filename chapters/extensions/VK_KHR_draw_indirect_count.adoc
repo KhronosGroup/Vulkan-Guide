@@ -1,6 +1,7 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+[[VK_KHR_draw_indirect_count]]
 = VK_KHR_draw_indirect_count
 
 [NOTE]

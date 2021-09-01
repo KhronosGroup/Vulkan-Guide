@@ -1,9 +1,12 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+ifndef::chapters[:chapters:]
+
+[[decoder-ring]]
 = Vulkan Decoder Ring
 
-This section provides a mapping between the Vulkan term for a concept and the terminology used in other APIs. It is organized in alphabetical order by Vulkan term. If you are searching for the Vulkan equivalent of a concept used in an API you know, you can find the term you know in this list and then search the xref:./vulkan_spec.adoc[Vulkan specification] for the corresponding Vulkan term.
+This section provides a mapping between the Vulkan term for a concept and the terminology used in other APIs. It is organized in alphabetical order by Vulkan term. If you are searching for the Vulkan equivalent of a concept used in an API you know, you can find the term you know in this list and then search the xref:{chapters}vulkan_spec.adoc#vulkan-spec[Vulkan specification] for the corresponding Vulkan term.
 
 [NOTE]
 .Note

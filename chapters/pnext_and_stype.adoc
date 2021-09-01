@@ -1,6 +1,7 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+[[pnext-and-stype]]
 = pNext and sType
 
 People new to Vulkan will start to notice the `pNext` and `sType` variables all around the Vulkan Spec.

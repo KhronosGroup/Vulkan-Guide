@@ -1,15 +1,18 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+ifndef::chapters[:chapters:]
+
+[[checking-for-support]]
 = Checking For Vulkan Support
 
-Vulkan requires both a xref:./loader.adoc[Vulkan Loader] and a Vulkan Driver (also referred to as a _Vulkan Implementation_). The driver is in charge of translating Vulkan API calls into a valid implementation of Vulkan. The most common case is a GPU hardware vendor releasing a driver that is used to run Vulkan on a physical GPU. It should be noted that it is possible to have an entire implementation of Vulkan software based, though the performance impact would be very noticeable.
+Vulkan requires both a xref:{chapters}loader.adoc#loader[Vulkan Loader] and a Vulkan Driver (also referred to as a _Vulkan Implementation_). The driver is in charge of translating Vulkan API calls into a valid implementation of Vulkan. The most common case is a GPU hardware vendor releasing a driver that is used to run Vulkan on a physical GPU. It should be noted that it is possible to have an entire implementation of Vulkan software based, though the performance impact would be very noticeable.
 
 When checking for Vulkan Support it is important to distinguish the difference between _platform support_ and _device support_.
 
 == Platform Support
 
-The first thing to check is if your xref:./platforms.adoc[platform] even supports Vulkan. Each platform uses a different mechanism to manage how the xref:./loader.adoc[Vulkan Loader] is implemented. The loader is then in charge of determining if a Vulkan Driver is exposed correctly.
+The first thing to check is if your xref:{chapters}platforms.adoc#platforms[platform] even supports Vulkan. Each platform uses a different mechanism to manage how the xref:{chapters}loader.adoc#loader[Vulkan Loader] is implemented. The loader is then in charge of determining if a Vulkan Driver is exposed correctly.
 
 === Android
 
@@ -43,7 +46,7 @@ Drivers, like any software, are updated and this means there can be many variati
 
 === Null Driver
 
-The term "`null driver`" is given to any driver that accepts Vulkan API calls, but does not do anything with them. This is common for testing interactions with the driver without needing any working implementation backing it. Many uses cases such as creating xref:./vulkan_cts.adoc[CTS tests] for new features, link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/master/docs/creating_tests.adoc#running-tests-on-devsim-and-mockicd[testing the Validation Layers], and more rely on the idea of a null driver.
+The term "`null driver`" is given to any driver that accepts Vulkan API calls, but does not do anything with them. This is common for testing interactions with the driver without needing any working implementation backing it. Many uses cases such as creating xref:{chapters}vulkan_cts.adoc#vulkan-cts[CTS tests] for new features, link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/master/docs/creating_tests.adoc#running-tests-on-devsim-and-mockicd[testing the Validation Layers], and more rely on the idea of a null driver.
 
 Khronos provides the link:https://github.com/KhronosGroup/Vulkan-Tools/tree/master/icd[Mock ICD] as one implementation of a null driver that works on various platforms.
 

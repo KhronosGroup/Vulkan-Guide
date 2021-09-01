@@ -1,6 +1,7 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+[[sparse-resources]]
 = Sparse Resources
 
 Vulkan link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#sparsememory[sparse resources] are a way to create `VkBuffer` and `VkImage` objects which can be bound non-contiguously to one or more `VkDeviceMemory` allocations. There are many aspects and features of sparse resources which the link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures[spec] does a good job explaining. As the link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_sparse_resource_implementation_guidelines[implementation guidelines] point out, most implementations use sparse resources to expose a linear virtual address range of memory to the application while mapping each sparse block to physical pages when bound.

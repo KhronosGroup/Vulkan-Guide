@@ -1,6 +1,10 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[platforms]]
 = Platforms
 
 While Vulkan runs on many platforms, each has small variations on how Vulkan is managed.
@@ -25,7 +29,7 @@ Vulkan is supported on the link:https://fuchsia.dev/fuchsia-src/concepts/graphic
 
 == iOS
 
-Vulkan is not natively supported on iOS, but can still be targeted with xref:./portability_initiative.adoc[Vulkan Portability Tools].
+Vulkan is not natively supported on iOS, but can still be targeted with xref:{chapters}portability_initiative.adoc#portability-initiative[Vulkan Portability Tools].
 
 == Linux
 
@@ -33,7 +37,7 @@ Vulkan is supported on many Linux distributions.
 
 == MacOS
 
-Vulkan is not natively supported on MacOS, but can still be targeted with xref:./portability_initiative.adoc[Vulkan Portability Tools].
+Vulkan is not natively supported on MacOS, but can still be targeted with xref:{chapters}portability_initiative.adoc#portability-initiative[Vulkan Portability Tools].
 
 == Nintendo Switch
 

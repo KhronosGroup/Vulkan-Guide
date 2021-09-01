@@ -1,6 +1,10 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[queues]]
 = Queues
 
 [NOTE]
@@ -9,7 +13,7 @@
 Further resources for queues from link:https://gpuopen.com/learn/concurrent-execution-asynchronous-queues/[AMD] and link:https://www.khronos.org/assets/uploads/developers/library/2016-vulkan-devday-uk/9-Asynchonous-compute.pdf[NVIDIA]
 ====
 
-An application submits work to a `VkQueue`, normally in the form of `VkCommandBuffer` objects or xref:./sparse_resources.adoc[sparse bindings].
+An application submits work to a `VkQueue`, normally in the form of `VkCommandBuffer` objects or xref:{chapters}sparse_resources.adoc#sparse-resources[sparse bindings].
 
 Command buffers submitted to a `VkQueue` start in order, but are allowed to proceed independently after that and complete out of order.
 
@@ -37,8 +41,8 @@ The following are the queue operations found in link:https://www.khronos.org/reg
   ** link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkPipelineStageFlagBits.html[VK_PIPELINE_STAGE_TRANSFER_BIT] in the Spec describes "`transfer commands`".
   ** Queue Families with only `VK_QUEUE_TRANSFER_BIT` are usually for using link:https://en.wikipedia.org/wiki/Direct_memory_access[DMA] to asynchronously transfer data between host and device memory on discrete GPUs, so transfers can be done concurrently with independent graphics/compute operations.
   ** `VK_QUEUE_GRAPHICS_BIT` and `VK_QUEUE_COMPUTE_BIT` can always implicitly accept `VK_QUEUE_TRANSFER_BIT` commands.
-  * `VK_QUEUE_SPARSE_BINDING_BIT` used for binding xref:./sparse_resources.adoc[sparse resources] to memory with `vkQueueBindSparse`.
-  * `VK_QUEUE_PROTECTED_BIT` used for xref:./protected.adoc[protected memory].
+  * `VK_QUEUE_SPARSE_BINDING_BIT` used for binding xref:{chapters}sparse_resources.adoc#sparse-resources[sparse resources] to memory with `vkQueueBindSparse`.
+  * `VK_QUEUE_PROTECTED_BIT` used for xref:{chapters}protected.adoc#protected[protected memory].
   * `VK_QUEUE_VIDEO_DECODE_BIT_KHR` and `VK_QUEUE_VIDEO_ENCODE_BIT_KHR` used with link:https://www.khronos.org/blog/an-introduction-to-vulkan-video?mc_cid=8052312abe&mc_eid=64241dfcfa[Vulkan Video].
 
 == Knowing which Queue Family is needed

@@ -260,6 +260,51 @@ These are supplemental references for the various Vulkan Extensions. Please cons
 
 = link:CONTRIBUTING.adoc[Contributing]
 
+The Guide has been converted from Markdown to Asciidoc format. It is
+possible to view the individual chapters (pages) as before, starting with
+this README, or to generate a single document containing each chapter using
+'make guide.html' with the 'asciidoctor' command-line tool installed.
+
+When adding new chapters, or adding cross-references to existing chapters,
+it's necessary to take these steps:
+
+  . For each chapter `chapters/page.adoc` which contains internal
+    cross-references, add this boilerplate at the top of the document:
++
+--
+[source,asciidoc]
+----
+\ifndef::chapters[:chapters:]
+----
+
+or, for chapters `chapters/extensions/page.adoc`, add this boilerplate:
+
+[source,asciidoc]
+----
+\ifndef::chapters[:chapters: ../]
+----
+--
+  . When creating an internal cross-reference link to `chapters/page.adoc`,
+    mark it up as follows:
++
+--
+[source,asciidoc]
+----
+This is a xref:{chapters}page.adoc#anchor[cross-reference]
+----
+
+The `anchor` is not optional. If cross-referencing
+`chapters/extensions/page.adoc`, mark it up as follows:
+
+[source,asciidoc]
+----
+This is a xref:{chapters}/extensions/page.adoc#anchor[cross-reference]
+----
+--
+
+Together, these steps allow cross-references to resolve correctly whether
+viewing the Guide as a single document, or a set of related pages.
+
 = link:LICENSE[License]
 
 = link:CODE_OF_CONDUCT.adoc[Code of conduct]

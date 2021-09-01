@@ -1,6 +1,10 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[versions]]
 = Versions
 
 Vulkan works on a link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#extendingvulkan-coreversions-versionnumbers[major, minor, patch] versioning system. Currently, there are 3 minor version releases of Vulkan (1.0, 1.1 and 1.2) which are backward compatible with each other. An application can use link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#vkEnumerateInstanceVersion[vkEnumerateInstanceVersion] to check what version of a Vulkan instance is supported. There is also a link:https://www.lunarg.com/wp-content/uploads/2019/02/Vulkan-1.1-Compatibility-Statement_01_19.pdf[white paper] by LunarG on how to query and check for the supported version. While working across minor versions, there are some subtle things to be aware of.
@@ -13,7 +17,7 @@ The link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#exte
 
 == Header
 
-There is only one supported header for all major releases of Vulkan. This means that there is no such thing as "`Vulkan 1.0 headers`" as all headers for a minor and patch version are unified. This should not be confused with the ability to generate a 1.0 version of the xref:./vulkan_spec.adoc[Vulkan Spec], as the Vulkan Spec and header of the same patch version will match. An example would be that the generated 1.0.42 Vulkan Spec will match the 1.x.42 header.
+There is only one supported header for all major releases of Vulkan. This means that there is no such thing as "`Vulkan 1.0 headers`" as all headers for a minor and patch version are unified. This should not be confused with the ability to generate a 1.0 version of the xref:{chapters}vulkan_spec.adoc#vulkan-spec[Vulkan Spec], as the Vulkan Spec and header of the same patch version will match. An example would be that the generated 1.0.42 Vulkan Spec will match the 1.x.42 header.
 
 It is highly recommended that developers try to keep up to date with the latest header files released. The Vulkan SDK comes in many versions which map to the header version it will have been packaged for.
 
@@ -21,7 +25,7 @@ It is highly recommended that developers try to keep up to date with the latest 
 
 Between minor versions of Vulkan, link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#versions-1.1[some extensions] get link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#extendingvulkan-compatibility-promotions[promoted] to the link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#extendingvulkan-coreversions[core version]. When targeting a newer minor version of Vulkan, an application will not need to enable the newly promoted extensions at the instance and device creation. However, if an application wants to keep backward compatibility, it will need to enable the extensions.
 
-For a summary of what is new in each version, check out the xref:./vulkan_release_summary.adoc[Vulkan Release Summary]
+For a summary of what is new in each version, check out the xref:{chapters}vulkan_release_summary.adoc#vulkan-release-summary[Vulkan Release Summary]
 
 == Structs and enums
 

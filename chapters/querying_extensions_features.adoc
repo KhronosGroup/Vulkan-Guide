@@ -1,6 +1,10 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[querying-extensions-features]]
 = Querying Properties, Extensions, Features, Limits, and Formats
 
 One of Vulkan's main features is that is can be used to develop on multiple platforms and devices. To make this possible, an application is responsible for querying the information from each physical device and then basing decisions on this information.
@@ -22,19 +26,19 @@ There are many other components in Vulkan that are labeled as properties. The te
 [NOTE]
 .Note
 ====
-Check out the xref:./enabling_extensions.adoc[Enabling Extensions] chapter for more information.
+Check out the xref:{chapters}enabling_extensions.adoc#enabling-extensions[Enabling Extensions] chapter for more information.
 
 There is a link:https://www.khronos.org/registry/vulkan/#repo-docs[Registry] with all available extensions.
 ====
 
-There are many times when a set of new functionality is desired in Vulkan that doesn't currently exist. Extensions have the ability to add new functionality. Extensions may define new Vulkan functions, enums, structs, or feature bits. While all of these extended items are found by default in the Vulkan Headers, it is **undefined behavior** to use extended Vulkan if the xref:./enabling_extensions.adoc[extensions are not enabled].
+There are many times when a set of new functionality is desired in Vulkan that doesn't currently exist. Extensions have the ability to add new functionality. Extensions may define new Vulkan functions, enums, structs, or feature bits. While all of these extended items are found by default in the Vulkan Headers, it is **undefined behavior** to use extended Vulkan if the xref:{chapters}enabling_extensions.adoc#enabling-extensions[extensions are not enabled].
 
 == Features
 
 [NOTE]
 .Note
 ====
-Checkout the xref:./enabling_features.adoc[Enabling Features] chapter for more information.
+Checkout the xref:{chapters}enabling_features.adoc#enabling-features[Enabling Features] chapter for more information.
 ====
 
 Features describe functionality which is not supported on all implementations. Features can be link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#vkGetPhysicalDeviceFeatures[queried] and then enabled when creating the `VkDevice`. Besides the link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#features[list of all features], some link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-requirements[features are mandatory] due to newer Vulkan versions or use of extensions.

@@ -1,6 +1,7 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+[[ray-tracing]]
 = Ray Tracing
 
 A set of five interrelated extensions provide ray tracing support in the Vulkan API.
@@ -31,6 +32,7 @@ Additionally, some implementations may opt not to expose ray tracing
 extensions on 32-bit drivers.
 ====
 
+[[VK_KHR_acceleration_structure]]
 == VK_KHR_acceleration_structure
 
 Acceleration structures are an implementation-dependent opaque representation
@@ -62,6 +64,7 @@ To create an acceleration structure:
     object, build scratch buffer, and geometry data pointers (for vertices,
     indices and transforms)
 
+[[VK_KHR_ray_tracing_pipeline]]
 == VK_KHR_ray_tracing_pipeline
 
 The `VK_KHR_ray_tracing_pipeline` extension introduces ray tracing pipelines.
@@ -105,6 +108,7 @@ image::https://www.khronos.org/assets/uploads/blogs/2020-The-ray-tracing-mechani
     The any-hit shader is used to filter an intersection and therefore is often used to
     implement alpha-testing.
 
+[[VK_KHR_ray_query]]
 == VK_KHR_ray_query
 
 The `VK_KHR_ray_query` extension provides support for tracing rays from all
@@ -143,6 +147,7 @@ if (rayQueryGetIntersectionTypeEXT(rq, true) == gl_RayQueryCommittedIntersection
 }
 ----
 
+[[VK_KHR_pipeline_library]]
 == VK_KHR_pipeline_library
 
 `VK_KHR_pipeline_library` introduces pipeline libraries. A pipeline library is
@@ -173,6 +178,7 @@ To link ray tracing pipeline libraries into a full pipeline:
     libraries to be used as inputs to linking, and set `VkPipelineLibraryCreateInfoKHR::libraryCount`
     to the appropriate value
 
+[[VK_KHR_deferred_host_operations]]
 == VK_KHR_deferred_host_operations
 
 `VK_KHR_deferred_host_operations` introduces a mechanism for distributing expensive

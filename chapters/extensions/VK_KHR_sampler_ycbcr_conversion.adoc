@@ -3,6 +3,7 @@
 
 :YCbCr: pass:q[Y′C~B~C~R~]
 
+[[VK_KHR_sampler_ycbcr_conversion]]
 = VK_KHR_sampler_ycbcr_conversion
 
 [NOTE]

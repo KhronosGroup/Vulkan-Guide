@@ -1,6 +1,7 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+[[vertex-input-data-processing]]
 = Vertex Input Data Processing
 
 This chapter is an overview of the link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex[Fixed-Function Vertex Processing chapter in the spec] to help give a high level understanding of how an application can map data to the vertex shader when using a graphics pipeline.

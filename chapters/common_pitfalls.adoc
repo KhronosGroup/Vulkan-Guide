@@ -1,6 +1,7 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+[[common-pitfalls]]
 = Common Pitfalls for New Vulkan Developers
 
 This is a short list of assumptions, traps, and anti-patterns in the Vulkan API. It is not a list of "`best practices`", rather it covers the common mistakes that developers new to Vulkan could easily make.

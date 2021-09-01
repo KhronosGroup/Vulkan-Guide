@@ -1,17 +1,21 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[protected]]
 = Protected Memory
 
 Protected memory divides device memory into "`protected device memory`" and "`unprotected device memory`".
 
-In general, most OS don't allow one application to access another application's GPU memory unless explicitly shared (e.g. via xref:./extensions/external.adoc[external memory]). A common example of protected memory is for containing DRM content, which a process might be allowed to modify (e.g. for image filtering, or compositing playback controls and closed captions) but shouldn' be able to extract into unprotected memory. The data comes in encrypted and remains encrypted until it reaches the pixels on the display.
+In general, most OS don't allow one application to access another application's GPU memory unless explicitly shared (e.g. via xref:{chapters}extensions/external.adoc#external-memory[external memory]). A common example of protected memory is for containing DRM content, which a process might be allowed to modify (e.g. for image filtering, or compositing playback controls and closed captions) but shouldn' be able to extract into unprotected memory. The data comes in encrypted and remains encrypted until it reaches the pixels on the display.
 
 The Vulkan Spec link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-memory[explains in detail] what "`protected device memory`" enforces. The following is a breakdown of what is required in order to properly enable a protected submission using protected memory.
 
 == Checking for support
 
-Protected memory was added in Vulkan 1.1 and there was no extension prior. This means any Vulkan 1.0 device will not be capable of supporting protected memory. To check for support, an application must xref:./enabling_features.adoc[query and enable] the `VkPhysicalDeviceProtectedMemoryFeatures::protectedMemory` field.
+Protected memory was added in Vulkan 1.1 and there was no extension prior. This means any Vulkan 1.0 device will not be capable of supporting protected memory. To check for support, an application must xref:{chapters}enabling_features.adoc#enabling-features[query and enable] the `VkPhysicalDeviceProtectedMemoryFeatures::protectedMemory` field.
 
 == Protected queues
 
@@ -123,7 +127,7 @@ submitInfo.pCommandBuffers               = protectedCommandBuffers;
 vkQueueSubmit(protectedQueue, 1, &submitInfo, fence));
 ----
 
-or using xref:./extensions/VK_KHR_synchronization2.adoc[VK_KHR_synchronization2]
+or using xref:{chapters}extensions/VK_KHR_synchronization2.adoc#VK_KHR_synchronization2[VK_KHR_synchronization2]
 
 [source,cpp]
 ----

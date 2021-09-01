@@ -1,6 +1,9 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+ifndef::chapters[:chapters:]
+
+[[development-tools]]
 = Development Tools
 
 The Vulkan ecosystem consists of many tools for development. This is **not** a full list and this is offered as a good starting point for many developers. Please continue to do your own research and search for other tools as the development ecosystem is much larger than what can reasonably fit on a single Markdown page.
@@ -15,8 +18,8 @@ Layers are optional components that augment the Vulkan system. They can intercep
 
 === Khronos Layers
 
-  * xref:./validation_overview.adoc#khronos-validation-layer[`VK_LAYER_KHRONOS_validation`], the Khronos Validation Layer.
-    It is every developer's first layer of defense when debugging their Vulkan application and this is the reason it is at the top of this list. Read the xref:./validation_overview.adoc[Validation Overview chapter] for more details.
+  * xref:{chapters}validation_overview.adoc#khronos-validation-layer[`VK_LAYER_KHRONOS_validation`], the Khronos Validation Layer.
+    It is every developer's first layer of defense when debugging their Vulkan application and this is the reason it is at the top of this list. Read the xref:{chapters}validation_overview.adoc#validation-overview[Validation Overview chapter] for more details.
     The validation layer included multiple features:
   ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/synchronization_usage.html[Synchronization Validation]: Identify resource access conflicts due to missing or incorrect synchronization operations between actions (Draw, Copy, Dispatch, Blit) reading or writing the same regions of memory.
   ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/gpu_validation.html[GPU-Assisted Validation]: Instrument shader code to perform run-time checks for error conditions produced during shader execution.

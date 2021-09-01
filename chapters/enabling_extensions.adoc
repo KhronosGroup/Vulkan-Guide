@@ -1,6 +1,9 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+ifndef::chapters[:chapters:]
+
+[[enabling-extensions]]
 = Enabling Extensions
 
 This section goes over the logistics for enabling extensions.
@@ -70,11 +73,11 @@ It is important to remember that extensions add the existence of functionality t
 
 image::images/enabling_extensions_8bit.png[enabling_extensions_8bit.png]
 
-This means after enabling the extension, an application will still need to xref:./enabling_features.adoc[query and enable the features] needed from an extension.
+This means after enabling the extension, an application will still need to xref:{chapters}enabling_features.adoc#enabling-features[query and enable the features] needed from an extension.
 
 == Promotion Process
 
-When minor versions of xref:./vulkan_release_summary.adoc[Vulkan are released], some extensions are link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-promotion[promoted as defined in the spec]. The goal of promotion is to have extended functionality, that the Vulkan Working Group has decided is widely supported, to be in the core Vulkan spec. More details about Vulkan versions can be found in the xref:./versions.adoc[version chapter].
+When minor versions of xref:{chapters}vulkan_release_summary.adoc#vulkan-release-summary[Vulkan are released], some extensions are link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-promotion[promoted as defined in the spec]. The goal of promotion is to have extended functionality, that the Vulkan Working Group has decided is widely supported, to be in the core Vulkan spec. More details about Vulkan versions can be found in the xref:{chapters}versions.adoc#versions[version chapter].
 
 An example would be something such as `VK_KHR_get_physical_device_properties2` which is used for most other extensions. In Vulkan 1.0, an application has to query for support of `VK_KHR_get_physical_device_properties2` before being able to call a function such as `vkGetPhysicalDeviceFeatures2KHR`. Starting in Vulkan 1.1, the `vkGetPhysicalDeviceFeatures2` function is guaranteed to be supported.
 

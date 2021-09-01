@@ -1,6 +1,10 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[atomics]]
 = Atomics
 
 The purpose of this chapter is to help users understand the various features Vulkan exposes for atomic operations.
@@ -81,7 +85,7 @@ This extension allows for `64-bit int` atomic operations for **images** and **sp
 
 === Image vs Sparse Image support
 
-This extension exposes both a `shaderImageInt64Atomics` and `sparseImageInt64Atomics` feature bit. The `sparseImage*` feature is an additional feature bit and is only allowed to be used if the `shaderImage*` bit is enabled as well. Some hardware has a hard time doing atomics on images with xref:./sparse_resources.adoc[sparse resources], therefor the atomic feature is split up to allow **sparse images** as an additional feature an implementation can expose.
+This extension exposes both a `shaderImageInt64Atomics` and `sparseImageInt64Atomics` feature bit. The `sparseImage*` feature is an additional feature bit and is only allowed to be used if the `shaderImage*` bit is enabled as well. Some hardware has a hard time doing atomics on images with xref:{chapters}sparse_resources.adoc#sparse-resources[sparse resources], therefor the atomic feature is split up to allow **sparse images** as an additional feature an implementation can expose.
 
 == VK_EXT_shader_atomic_float
 

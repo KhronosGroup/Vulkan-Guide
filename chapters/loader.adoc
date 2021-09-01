@@ -1,6 +1,7 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+[[loader]]
 = Loader
 
 The loader is responsible for mapping an application to Vulkan layers and Vulkan installable client drivers (ICD).

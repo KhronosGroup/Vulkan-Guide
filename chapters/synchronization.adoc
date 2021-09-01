@@ -1,6 +1,10 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[synchronization]]
 = Synchronization
 
 Synchronization is one of the most powerful but also most complex parts of using Vulkan. The application developer is now responsible for managing synchronization using the various link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#synchronization[Vulkan synchronization primitives]. Improper use of synchronization can lead to hard-to-find bugs as well as poor performance in cases where the the GPU is unnecessarily idle.
@@ -30,4 +34,4 @@ While Pipeline Barriers might be hard to understand at first, there are many gre
 
 The `VK_KHR_synchronization2` extension overhauls the original core synchronization APIs to reduce complexity for application developers, as well as adding a few additional features not present in the original APIs.
 
-Read the xref:./extensions/VK_KHR_synchronization2.adoc[VK_KHR_synchronization2] chapter for more info about the difference in the synchronization APIs and how to port over to using the new extension
+Read the xref:{chapters}extensions/VK_KHR_synchronization2.adoc#VK_KHR_synchronization2[VK_KHR_synchronization2] chapter for more info about the difference in the synchronization APIs and how to port over to using the new extension

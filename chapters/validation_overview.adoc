@@ -1,6 +1,10 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[validation-overview]]
 = Vulkan Validation Overview
 
 [NOTE]
@@ -35,6 +39,7 @@ A `VUID` is an unique ID given to each valid usage. This allows a way to point t
 
 Using `VUID-vkBindImageMemory-memoryOffset-01046` as an example, it is as simple as adding the VUID to an anchor in the HMTL version of the spec (link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VUID-vkBindImageMemory-memoryOffset-01046[vkspec.html#VUID-vkBindImageMemory-memoryOffset-01046]) and it will jump right to the VUID.
 
+[[khronos-validation-layer]]
 == Khronos Validation Layer
 
 Since Vulkan doesn't do any error checking, it is **very important**, when developing, to enable the link:https://github.com/KhronosGroup/Vulkan-ValidationLayers[Validation Layers] right away to help catch invalid behavior. Applications should also never ship the Validation Layers with their application as they noticeably reduce performance and are designed for the development phase.
@@ -123,9 +128,9 @@ Each error message contains a uniform logging pattern. This allows information t
 Note: The following is not ideal and is being looked into how to make it simpler
 ====
 
-Currently, the spec is designed to only show the VUIDs depending on the xref:./vulkan_spec.adoc#vulkan-spec-variations[version and extensions the spec was built with]. Simply put, additions of extensions and versions may alter the VU language enough (from new API items added) that a separate VUID is created.
+Currently, the spec is designed to only show the VUIDs depending on the xref:{chapters}vulkan_spec.adoc#vulkan-spec-variations[version and extensions the spec was built with]. Simply put, additions of extensions and versions may alter the VU language enough (from new API items added) that a separate VUID is created.
 
-An example of this from the link:https://github.com/KhronosGroup/Vulkan-Docs[Vulkan-Docs] where the xref:./vulkan_spec.adoc[spec in generated from]
+An example of this from the link:https://github.com/KhronosGroup/Vulkan-Docs[Vulkan-Docs] where the xref:{chapters}vulkan_spec.adoc#vulkan-spec[spec in generated from]
 
 [source,c]
 ----
@@ -143,7 +148,7 @@ What this creates is two very similar VUIDs
 
 In this example, both VUIDs are very similar and the only difference is the fact `VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT` is referenced in one and not this other. This is because the enum was added with the addition of `VK_EXT_descriptor_indexing` which is now part of Vulkan 1.2.
 
-This means the 2 valid xref:./vulkan_spec.adoc#html-full[html links to the spec] would look like
+This means the 2 valid xref:{chapters}vulkan_spec.adoc#html-full[html links to the spec] would look like
 
   * `1.1/html/vkspec.html#VUID-VkPipelineLayoutCreateInfo-pSetLayouts-00287`
   * `1.2/html/vkspec.html#VUID-VkPipelineLayoutCreateInfo-descriptorType-03016`

@@ -1,6 +1,10 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[mapping-data-to-shaders]]
 = Mapping Data to Shaders
 
 [NOTE]
@@ -13,13 +17,14 @@ This chapter goes over how to link:https://www.khronos.org/registry/vulkan/specs
 
 In core Vulkan, there are 5 fundamental ways to map data from your Vulkan application to interface with SPIR-V:
 
-  * xref:#input-attributes[Input Attributes]
-  * xref:#descriptors[Descriptors]
-  ** xref:#descriptor-types[Descriptor types]
-  * xref:#push-constants[Push Constants]
-  * xref:#specialization-constants[Specialization Constants]
-  * xref:#physical-storage-buffer[Physical Storage Buffer]
+  * <<input-attributes, Input Attributes>>
+  * <<descriptors, Descriptors>>
+  ** <<descriptor-types, Descriptor types>>
+  * <<push-constants, Push Constants>>
+  * <<specialization-constants, Specialization Constants>>
+  * <<physical-storage-buffer, Physical Storage Buffer>>
 
+[[input-attributes]]
 == Input Attributes
 
 The only shader stage in core Vulkan that has an input attribute controlled by Vulkan is the vertex shader stage (`VK_SHADER_STAGE_VERTEX_BIT`). This involves declaring the interface slots when creating the `VkPipeline` and then binding the `VkBuffer` before draw time with the data to map. Other shaders stages, such as a fragment shader stage, has input attributes, but the values are determined from the output of the previous stages ran before it.
@@ -86,9 +91,10 @@ vkEndCommandBuffer();
 [NOTE]
 .Note
 ====
-More information can be found in the xref:./vertex_input_data_processing.adoc[Vertex Input Data Processing] chapter
+More information can be found in the xref:{chapters}vertex_input_data_processing.adoc#vertex-input-data-processing[Vertex Input Data Processing] chapter
 ====
 
+[[descriptors]]
 == Descriptors
 
 A link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets[resource descriptor] is the core way to map data such as uniform buffers, storage buffers, samplers, etc. to any shader stage in Vulkan. One way to conceptualize a descriptor is by thinking of it as a pointer to memory that the shader can use.
@@ -168,6 +174,7 @@ The following results would look as followed
 
 image::images/mapping_data_to_shaders_descriptor_2.png[mapping_data_to_shaders_descriptor_2.png]
 
+[[descriptor-types]]
 === Descriptor types
 
 The Vulkan Spec has a link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-storage-class-correspondence[Shader Resource and Storage Class Correspondence] table that describes how each descriptor type needs to be mapped to in SPIR-V.
@@ -432,6 +439,7 @@ OpDecorate %inputAttachment InputAttachmentIndex 0
 %inputAttachment = OpVariable %ptr UniformConstant
 ----
 
+[[push-constants]]
 == Push Constants
 
 A push constant is a small bank of values accessible in shaders. Push constants allow the application to set values used in shaders without creating buffers or modifying and binding descriptor sets for each update.
@@ -473,6 +481,7 @@ vkCmdDraw();
 vkEndCommandBuffer();
 ----
 
+[[specialization-constants]]
 == Specialization Constants
 
 link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-specialization-constants[Specialization constants] are a mechanism allowing a constant value in SPIR-V to be specified at `VkPipeline` creation time. This is powerful as it replaces the idea of doing preprocessor macros in the high level shading language (GLSL, HLSL, etc).
@@ -572,6 +581,7 @@ The typical use cases for specialization constants can be best grouped into thre
   ** It is possible to set the length of an array or a variable type used through a specialization constant.
   ** It is important to note that a compiler will need to allocate registers depending on these types and sizes. This means it is likely that a pipeline cache will fail if the difference is significant in registers allocated.
 
+[[physical-storage-buffer]]
 == Physical Storage Buffer
 
 The link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_KHR_buffer_device_address.html#_description[VK_KHR_buffer_device_address] extension promoted to Vulkan 1.2 adds the ability to have "`pointers in the shader`". Using the `PhysicalStorageBuffer` storage class in SPIR-V an application can call `vkGetBufferDeviceAddress` which will return the `VkDeviceAddress` to the memory.
@@ -604,7 +614,7 @@ With all the above examples it is important to be aware that there are link:http
   ** `maxDescriptorSetSampledImages`
   ** `maxDescriptorSetStorageImages`
   ** `maxDescriptorSetInputAttachments`
-  ** `VkPhysicalDeviceDescriptorIndexingProperties` if using xref:./extensions/VK_EXT_inline_uniform_block.adoc[Descriptor Indexing]
-  ** `VkPhysicalDeviceInlineUniformBlockPropertiesEXT` if using xref:./extensions/VK_EXT_inline_uniform_block.adoc[Inline Uniform Block]
+  ** `VkPhysicalDeviceDescriptorIndexingProperties` if using xref:{chapters}extensions/VK_EXT_inline_uniform_block.adoc#VK_EXT_inline_uniform_block[Descriptor Indexing]
+  ** `VkPhysicalDeviceInlineUniformBlockPropertiesEXT` if using xref:{chapters}extensions/VK_EXT_inline_uniform_block.adoc#VK_EXT_inline_uniform_block[Inline Uniform Block]
   * Push Constants
   ** `maxPushConstantsSize` - guaranteed at least `128` bytes on all devices

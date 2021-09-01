@@ -1,6 +1,10 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[subgroups]]
 = Subgroups
 
 The Vulkan Spec defines subgroups as:
@@ -20,7 +24,7 @@ For more detailed information about subgroups there is a great link:https://www.
 
 == Subgroup size
 
-It is important to also realize the size of a subgroup can be dynamic for an implementation. Some implementations may dispatch shaders with a varying subgroup size for different subgroups. As a result, they could implicitly split a large subgroup into smaller subgroups or represent a small subgroup as a larger subgroup, some of whose invocations were inactive on launch. Using xref:./extensions/shader_features.adoc#vk_ext_subgroup_size_control[VK_EXT_subgroup_size_control] an application can query for this information.
+It is important to also realize the size of a subgroup can be dynamic for an implementation. Some implementations may dispatch shaders with a varying subgroup size for different subgroups. As a result, they could implicitly split a large subgroup into smaller subgroups or represent a small subgroup as a larger subgroup, some of whose invocations were inactive on launch. Using xref:{chapters}extensions/shader_features.adoc#vk_ext_subgroup_size_control[VK_EXT_subgroup_size_control] an application can query for this information.
 
 == Checking for support
 

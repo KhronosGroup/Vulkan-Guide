@@ -1,6 +1,10 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[what-vulkan-can-do]]
 = What Vulkan Can Do
 
 Vulkan can be used to develop applications for many use cases. While Vulkan applications can choose to use a subset of the functionality described below, it was designed so a developer could use all of them in a single API.
@@ -18,7 +22,7 @@ Note: It is important to understand Vulkan is a box of tools and there are multi
 [NOTE]
 .Note
 ====
-Note: All Vulkan implementations are required to support Graphics, but the xref:wsi.adoc#wsi[WSI] system is not required.
+Note: All Vulkan implementations are required to support Graphics, but the xref:{chapters}wsi.adoc#wsi[WSI] system is not required.
 ====
 
 == Compute

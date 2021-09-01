@@ -1,6 +1,7 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+[[memory-allocation]]
 = Memory Allocation
 
 Managing the device memory in Vulkan is something some developers might be new to and it is important to understand some of the basics.

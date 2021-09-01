@@ -1,6 +1,7 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+[[vulkan-cts]]
 = Vulkan CTS
 
 The Vulkan Conformance Tests Suite (CTS) is a set of tests used to verify the conformance of an implementation. A conformant implementation shows that it has successfully passed CTS and it is a valid implementation of Vulkan. A link:https://www.khronos.org/conformance/adopters/conformant-products/vulkan[list of conformant products] is publicly available.

@@ -1,6 +1,7 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+[[VK_EXT_memory_priority]]
 = VK_EXT_memory_priority
 
 Memory management is an important part of Vulkan. The `VK_EXT_memory_priority` extension was designed to allow an application to prevent important allocations from being moved to slower memory.
