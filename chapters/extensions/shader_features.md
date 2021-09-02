@@ -157,6 +157,43 @@ This extension has two levels to it. The first is the `variablePointersStorageBu
 
 This extension allows the use of std430 memory layout in UBOs. More information about [std140 and std430 memory layouts](https://www.khronos.org/opengl/wiki/Interface_Block_(GLSL)#Memory_layout) and [Vulkan Standard Buffer Layout Interface](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-standard-layout) can be found outside this guide. These memory layout changes are only applied to `Uniforms` as other storage items such as Push Constants and SSBO already allow for std430 style layouts.
 
+One example of when the `uniformBufferStandardLayout` feature is needed is when an application doesn't want the array stride for a UBO to be restricted to `extended alignment`
+
+```glsl
+layout(std140, set = 0, binding = 0) uniform ubo140 {
+   float floatArray140[8];
+};
+
+layout(std430, set = 0, binding = 1) uniform ubo430 {
+   float floatArray430[8];
+};
+```
+
+Which translates in SPIR-V to
+
+```swift
+// extended alignment for array is rounded up to multiple of 16
+OpDecorate %floatArray140 ArrayStride 16
+OpMemberDecorate %ubo140 0 Offset 0
+
+// base alignment is 4 bytes (OpTypeFloat 32)
+// only valid with uniformBufferStandardLayout feature enabled
+OpDecorate %floatArray430 ArrayStride 4
+OpMemberDecorate %ubo430 0 Offset 0
+
+%float = OpTypeFloat 32               
+
+%floatArray140 = OpTypeArray %float %uint_8
+     %ubo140 = OpTypeStruct %floatArray140
+%ubo140ptr = OpTypePointer Uniform %ubo140
+
+%floatArray430 = OpTypeArray %float %uint_8
+     %ubo430 = OpTypeStruct %floatArray430
+%ubo430ptr = OpTypePointer Uniform %ubo430        
+```
+
+> Make sure to set `--uniform-buffer-standard-layout` when running the SPIR-V Validator
+
 # VK_KHR_relaxed_block_layout
 
 > Promoted to core in Vulkan 1.1
