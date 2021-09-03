@@ -57,12 +57,25 @@ or, for chapters `chapters/extensions/page.adoc`, add this boilerplate:
 This is a xref:{chapters}page.adoc#anchor[cross-reference]
 ----
 
-The `anchor` is not optional. If cross-referencing
-`chapters/extensions/page.adoc`, mark it up as follows:
+If cross-referencing `chapters/extensions/page.adoc`, mark it up as follows:
 
 [source,asciidoc]
 ----
 This is a xref:{chapters}/extensions/page.adoc#anchor[cross-reference]
+----
+--
+  . The `anchor` is arbitrary, but is not optional. While asciidoctor will
+    generate anchor names automatically based on section titles, for link
+    stability it is best to use an explicit anchor on the title of the
+    target file:
++
+--
+[source,asciidoc]
+----
+\ifndef::chapters[:chapters:]
+
+[[anchor]]
+= Target Page
 ----
 --
 
