@@ -10,4 +10,4 @@ image::images/pipeline_cache_cache.png[pipeline_cache_cache.png]
 
 While pipeline caches are an important tool, it is important to create a robust system for them which Arseny Kapoulkine talks about in his link:https://zeux.io/2019/07/17/serializing-pipeline-cache/[blog post].
 
-To illustrate the performance gain and see a reference implementation of pipeline caches Khronos offers a link:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/pipeline_cache[sample] and link:https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/performance/pipeline_cache/pipeline_cache_tutorial.adoc[tutorial].
+To illustrate the performance gain and see a reference implementation of pipeline caches Khronos offers a link:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/pipeline_cache[sample] and link:https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/performance/pipeline_cache/pipeline_cache_tutorial.md[tutorial].

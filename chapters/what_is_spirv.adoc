@@ -48,7 +48,7 @@ There is a rich ecosystem of tools to take advantage of SPIR-V. The link:https:/
 
 === SPIRV-Tools
 
-The Khronos link:https://github.com/KhronosGroup/SPIRV-Tools[SPIRV-Tools] project provides C and C++ APIs and a command line interface to work with SPIR-V modules. More information in the link:https://github.com/KhronosGroup/SPIRV-Guide/blob/master/chapters/khronos_tooling.adoc#spir-v-tools[SPIRV-Guide].
+The Khronos link:https://github.com/KhronosGroup/SPIRV-Tools[SPIRV-Tools] project provides C and C++ APIs and a command line interface to work with SPIR-V modules. More information in the link:https://github.com/KhronosGroup/SPIRV-Guide/blob/master/chapters/khronos_tooling.md#spir-v-tools[SPIRV-Guide].
 
 === SPIRV-Cross
 

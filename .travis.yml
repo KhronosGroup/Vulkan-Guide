@@ -4,6 +4,6 @@ rvm:
 before_script:
   - gem install awesome_bot
 script:
-  - awesome_bot --allow-dupe chapters/*.adoc chapters/extensions/*.adoc --white-list https://www.youtube.com/
+  - awesome_bot --allow-dupe chapters/*.adoc chapters/extensions/*.adoc --white-list https://www.youtube.com/,https://khr.io/slack
 notifications:
   email: false

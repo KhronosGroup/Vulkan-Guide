@@ -216,7 +216,7 @@ This extension has two levels to it. The first is the `variablePointersStorageBu
 Promoted to core in Vulkan 1.2
 ====
 
-This extension allows the use of std430 memory layout in UBOs. More information about link:https://www.khronos.org/opengl/wiki/Interface_Block_(GLSL[std140 and std430 memory layouts]#Memory_layout) and link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-standard-layout[Vulkan Standard Buffer Layout Interface] can be found outside this guide. These memory layout changes are only applied to `Uniforms` as other storage items such as Push Constants and SSBO already allow for std430 style layouts.
+This extension allows the use of std430 memory layout in UBOs. More information about link:https://www.khronos.org/opengl/wiki/Interface_Block_\(GLSL\)#Memory_layout[std140 and std430 memory layouts] and link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-standard-layout[Vulkan Standard Buffer Layout Interface] can be found outside this guide. These memory layout changes are only applied to `Uniforms` as other storage items such as Push Constants and SSBO already allow for std430 style layouts.
 
 One example of when the `uniformBufferStandardLayout` feature is needed is when an application doesn't want the array stride for a UBO to be restricted to `extended alignment`
 
@@ -458,7 +458,7 @@ This extension allows the shader to read the value of a monotonically incrementi
 
 This extension was created due to some implementation having more than one subgroup size and Vulkan originally only exposing a single subgroup size.
 
-For example, if an implementation only has support for xref:{chapters}subgroups.adoc#subgroups[subgroups] of size `4` and `16` before they would have had to expose only one size, but now can expose both. This allows applications to potentially control the hardware at a finer granularity for implementations that expose multiple subgroup sizes.
+For example, if an implementation only has support for xref:{chapters}subgroups.md#subgroups[subgroups] of size `4` and `16` before they would have had to expose only one size, but now can expose both. This allows applications to potentially control the hardware at a finer granularity for implementations that expose multiple subgroup sizes.
 
 [[VK_KHR_shader_non_semantic_info]]
 == VK_KHR_shader_non_semantic_info
@@ -469,7 +469,7 @@ For example, if an implementation only has support for xref:{chapters}subgroups.
 link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_clock.html[SPV_KHR_non_semantic_info]
 ====
 
-This extension exposes link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_non_semantic_info.html[SPV_KHR_non_semantic_info] which link:https://github.com/KhronosGroup/SPIRV-Guide/blob/master/chapters/nonsemantic.adoc[adds the ability] to declare extended instruction sets that have no semantic impact and can be safely removed from a module.
+This extension exposes link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_non_semantic_info.html[SPV_KHR_non_semantic_info] which link:https://github.com/KhronosGroup/SPIRV-Guide/blob/master/chapters/nonsemantic.md[adds the ability] to declare extended instruction sets that have no semantic impact and can be safely removed from a module.
 
 [[VK_KHR_shader_terminate_invocation]]
 == VK_KHR_shader_terminate_invocation

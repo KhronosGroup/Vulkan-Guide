@@ -341,7 +341,7 @@ ssbo.a = ssbo.a + 1.0;
 ssbo.b = ssbo.b + 1;
 ----
 
-**Note:** `BufferBlock` and `Uniform` would have been seen prior to link:https://github.com/KhronosGroup/Vulkan-Guide/blob/master/chapters/extensions/shader_features.adoc#vk_khr_storage_buffer_storage_class[Vulkan 1.1 or VK_KHR_storage_buffer_storage_class]
+**Note:** `BufferBlock` and `Uniform` would have been seen prior to xref:{chapters}extensions/shader_features.adoc#VK_KHR_storage_buffer_storage_class[VK_KHR_storage_buffer_storage_class]
 
 [source,swift]
 ----
