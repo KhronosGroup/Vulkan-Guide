@@ -1,3 +1,4 @@
 # Vulkan Guide - Redirect Page
 
-The Vulkan  Guide has been converted from Markdown to Asciidoc markup. If you are looking for the former contents of this page, please refer to [VK_KHR_sampler_ycbcr_conversion.adoc](./VK_KHR_sampler_ycbcr_conversion.adoc).
+In an effort to allow the Vulkan Guide to better communicate with the Vulkan Spec, which is written in Asciidoc markup,
+the Vulkan Guide has been converted from Markdown to Asciidoc markup. If you are looking for the former contents of this page, please refer to [VK_KHR_sampler_ycbcr_conversion.adoc](./VK_KHR_sampler_ycbcr_conversion.adoc).
