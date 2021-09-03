@@ -1,0 +1,1 @@
+atomics.adoc
