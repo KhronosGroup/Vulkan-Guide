@@ -216,7 +216,7 @@ This extension has two levels to it. The first is the `variablePointersStorageBu
 Promoted to core in Vulkan 1.2
 ====
 
-This extension allows the use of std430 memory layout in UBOs. More information about link:https://www.khronos.org/opengl/wiki/Interface_Block_\(GLSL\)#Memory_layout[std140 and std430 memory layouts] and link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-standard-layout[Vulkan Standard Buffer Layout Interface] can be found outside this guide. These memory layout changes are only applied to `Uniforms` as other storage items such as Push Constants and SSBO already allow for std430 style layouts.
+This extension allows the use of std430 memory layout in UBOs. More information about link:https://www.khronos.org/opengl/wiki/Interface_Block_(GLSL)#Memory_layout[std140 and std430 memory layouts] and link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-standard-layout[Vulkan Standard Buffer Layout Interface] can be found outside this guide. These memory layout changes are only applied to `Uniforms` as other storage items such as Push Constants and SSBO already allow for std430 style layouts.
 
 One example of when the `uniformBufferStandardLayout` feature is needed is when an application doesn't want the array stride for a UBO to be restricted to `extended alignment`
 
