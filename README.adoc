@@ -6,8 +6,6 @@
 The Khronos{regtitle} Vulkan Working Group
 :data-uri:
 :icons: font
-:toc2:
-:toclevels: 2
 :max-width: 100%
 :numbered:
 :source-highlighter: rouge
