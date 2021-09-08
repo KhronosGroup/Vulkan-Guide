@@ -1,0 +1,85 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+
+[[development-tools]]
+= Development Tools
+
+The Vulkan ecosystem consists of many tools for development. This is **not** a full list and this is offered as a good starting point for many developers. Please continue to do your own research and search for other tools as the development ecosystem is much larger than what can reasonably fit on a single Markdown page.
+
+Khronos hosts link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples], a collection of code and tutorials that demonstrates API usage and explains the implementation of performance best practices.
+
+LunarG is privately sponsored to develop and maintain Vulkan ecosystem components and is currently the curator for the link:https://github.com/KhronosGroup/Vulkan-Loader[Vulkan Loader] and link:https://github.com/KhronosGroup/Vulkan-ValidationLayers[Vulkan Validation Layers] Khronos Group repositores. In addition, LunarG delivers the link:https://vulkan.lunarg.com/[Vulkan SDK] and develops other key tools such as the link:https://vulkan.lunarg.com/doc/sdk/latest/windows/vkconfig.html[Vulkan Configurator] and link:https://vulkan.lunarg.com/doc/sdk/latest/windows/capture_tools.html[GFXReconstruct].
+
+== Vulkan Layers
+
+Layers are optional components that augment the Vulkan system. They can intercept, evaluate, and modify existing Vulkan functions on their way from the application down to the hardware. Layers are implemented as libraries that can be enabled and configured using link:https://vulkan.lunarg.com/doc/sdk/latest/windows/vkconfig.html[Vulkan Configurator].
+
+=== Khronos Layers
+
+  * xref:{chapters}validation_overview.adoc#khronos-validation-layer[`VK_LAYER_KHRONOS_validation`], the Khronos Validation Layer.
+    It is every developer's first layer of defense when debugging their Vulkan application and this is the reason it is at the top of this list. Read the xref:{chapters}validation_overview.adoc#validation-overview[Validation Overview chapter] for more details.
+    The validation layer included multiple features:
+  ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/synchronization_usage.html[Synchronization Validation]: Identify resource access conflicts due to missing or incorrect synchronization operations between actions (Draw, Copy, Dispatch, Blit) reading or writing the same regions of memory.
+  ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/gpu_validation.html[GPU-Assisted Validation]: Instrument shader code to perform run-time checks for error conditions produced during shader execution.
+  ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/debug_printf.html[Shader printf]: Debug shader code by "`printing`" any values of interest to the debug callback or stdout.
+  ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html[Best Practices Warnings]: Highlights potential performance issues, questionable usage patterns, common mistakes.
+
+  * link:https://vulkan.lunarg.com/doc/view/latest/windows/synchronization2_layer.html[`VK_LAYER_KHRONOS_synchronization2`], the Khronos Synchronization2 layer.
+    The `VK_LAYER_KHRONOS_synchronization2` layer implements the `VK_KHR_synchronization2` extension. By default, it will disable itself if the underlying driver provides the extension.
+
+=== Vulkan SDK layers
+
+Besides the Khronos Layers, the Vulkan SDK included additional useful platform independent layers.
+
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/api_dump_layer.html[`VK_LAYER_LUNARG_api_dump`], a layer to log Vulkan API calls.
+    The API dump layer prints API calls, parameters, and values to the identified output stream.
+
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/capture_tools.html[`VK_LAYER_LUNARG_gfxreconstruct`], a layer for capturing frames created with Vulkan.
+    This layer is a part of GFXReconstruct, a software for capturing and replaying Vulkan API calls. Full Android support is also available at <https://github.com/LunarG/gfxreconstruct>
+
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/device_simulation_layer.html[`VK_LAYER_LUNARG_device_simulation`], a layer to test Vulkan applications portability.
+    The device simulation layer can be used to test whether a Vulkan application would run on a Vulkan device with lower capabilities.
+
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/screenshot_layer.html[`VK_LAYER_LUNARG_screenshot`], a screenshot layer.
+    Captures the rendered image of a Vulkan application to a viewable image.
+
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/monitor_layer.html[`VK_LAYER_LUNARG_monitor`], a framerate monitor layer.
+    Display the Vulkan application FPS in the window title bar to give a hint about the performance.
+
+=== Vulkan Third-party layers
+
+There are also other publicly available layers that can be used to help in development.
+
+  * link:https://github.com/ARM-software/perfdoc[`VK_LAYER_ARM_mali_perf_doc`], the ARM PerfDoc layer.
+    Checks Vulkan applications for best practices on Arm Mali devices.
+
+  * link:https://github.com/powervr-graphics/perfdoc[`VK_LAYER_IMG_powervr_perf_doc`], the PowerVR PerfDoc layer.
+    Checks Vulkan applications for best practices on Imagination Technologies PowerVR devices.
+
+  * link:https://developer.qualcomm.com/software/adreno-gpu-sdk/tools[`VK_LAYER_adreno`], the Vulkan Adreno Layer.
+    Checks Vulkan applications for best practices on Qualcomm Adreno devices.
+
+== Debugging
+
+Debugging something running on a GPU can be incredibly hard, luckily there are tools out there to help.
+
+  * link:https://developer.arm.com/tools-and-software/graphics-and-gaming/arm-mobile-studio/components/graphics-analyzer[Arm Graphics Analyzer]
+  * link:https://github.com/google/gapid[GAPID]
+  * link:https://developer.nvidia.com/nsight-graphics[NVIDIA Nsight]
+  * link:https://developer.imaginationtech.com[PVRCarbon]
+  * link:https://renderdoc.org/[RenderDoc]
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/capture_tools.html[GFXReconstruct]
+
+== Profiling
+
+With anything related to a GPU it is best to not assume and profile when possible. Here is a list of known profilers to aid in your development.
+
+  * link:https://gpuopen.com/rgp/[AMD Radeon GPU Profiler] - Low-level performance analysis tool for AMD Radeon GPUs.
+  * link:https://developer.arm.com/tools-and-software/graphics-and-gaming/arm-mobile-studio/components/streamline-performance-analyzer[Arm Streamline Performance Analyzer] - Visualize the performance of mobile games and applications for a broad range of devices, using Arm Mobile Studio.
+  * link:https://software.intel.com/content/www/us/en/develop/tools/graphics-performance-analyzers.html[Intel(R) GPA] - Intel's Graphics Performance Analyzers that supports capturing and analyzing multi-frame streams of Vulkan apps.
+  * link:https://github.com/GPUOpen-Tools/OCAT[OCAT] - The Open Capture and Analytics Tool (OCAT) provides an FPS overlay and performance measurement for D3D11, D3D12, and Vulkan.
+  * link:https://developer.imaginationtech.com[PVRTune]
+  * link:https://developer.qualcomm.com/software/snapdragon-profiler[Qualcomm Snapdragon Profiler] - Profiling tool targeting Adreno GPU.
+  * link:https://www.vktracer.com[VKtracer] - Cross-vendor and cross-platform profiler.

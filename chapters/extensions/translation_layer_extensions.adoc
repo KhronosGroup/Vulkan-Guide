@@ -1,0 +1,34 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters: ../]
+
+[[translation-layer-extensions]]
+= Translation Layer Extensions
+
+There is a class of extensions that were only created to allow efficient ways for xref:{chapters}portability_initiative.adoc#translation-layer[translation layers] to map to Vulkan.
+
+This includes replicating legacy behavior that is challenging for drivers to implement efficiently. This functionality is **not** considered forward looking, and is **not** expected to be promoted to a KHR extension or to core Vulkan.
+
+Unless this is needed for translation, it is **highly recommended** that developers use alternative techniques of using the GPU to achieve the same functionality.
+
+[[VK_EXT_custom_border_color]]
+== VK_EXT_custom_border_color
+
+Vulkan provides a transparent black, opaque black, and opaque white `VkBorderColor` for `VkSampler` objects in the core spec. Both OpenGL and D3D have the option to set the sampler border to be a custom color.
+
+[[VK_EXT_depth_clip_enable]]
+== VK_EXT_depth_clip_enable
+
+The depth clip enable functionality is specified differently from D3D11 and Vulkan. Instead of `VkPipelineRasterizationStateCreateInfo::depthClampEnable`, D3D11 has link:https://docs.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_rasterizer_desc[DepthClipEnable (D3D12_RASTERIZER_DESC)], which only affects the viewport clip of depth values before rasterization and does not affect the depth clamp that always occurs in the output merger stage of the D3D11 graphics pipeline.
+
+[[VK_EXT_provoking_vertex]]
+== VK_EXT_provoking_vertex
+
+Vulkan's defaults convention for provoking vertex is "`first vertex`" while OpenGL's defaults convention is "`last vertex`".
+
+[[VK_EXT_transform_feedback]]
+== VK_EXT_transform_feedback
+
+Everything needed for transform feedback can be done via a compute shader in Vulkan. There is also a great link:http://jason-blog.jlekstrand.net/2018/10/transform-feedback-is-terrible-so-why.html[blog by Jason Ekstrand] on why transform feedback is terrible and should be avoided.

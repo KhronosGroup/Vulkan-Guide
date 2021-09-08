@@ -1,0 +1,60 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[platforms]]
+= Platforms
+
+While Vulkan runs on many platforms, each has small variations on how Vulkan is managed.
+
+image::images/platforms_overview.png[platforms_overview.png]
+
+== Android
+
+The Vulkan API is link:https://developer.android.com/ndk/guides/graphics/getting-started[available] on any Android device starting with API level 24 (Android Nougat), however not all devices will have a Vulkan driver.
+
+Android uses its link:https://source.android.com/devices/architecture/hal[Hardware Abstraction Layer (HAL)] to find the Vulkan Driver in a link:https://source.android.com/devices/graphics/implement-vulkan#driver_emun[predefined path].
+
+All 64-bit devices that launch with API level 29 (Android Q) or later must include a Vulkan 1.1 driver.
+
+== BSD Unix
+
+Vulkan is supported on many BSD Unix distributions.
+
+== Fuchsia
+
+Vulkan is supported on the link:https://fuchsia.dev/fuchsia-src/concepts/graphics/magma/vulkan[Fuchsia operation system].
+
+== iOS
+
+Vulkan is not natively supported on iOS, but can still be targeted with xref:{chapters}portability_initiative.adoc#portability-initiative[Vulkan Portability Tools].
+
+== Linux
+
+Vulkan is supported on many Linux distributions.
+
+== MacOS
+
+Vulkan is not natively supported on MacOS, but can still be targeted with xref:{chapters}portability_initiative.adoc#portability-initiative[Vulkan Portability Tools].
+
+== Nintendo Switch
+
+The Nintendo Switch runs an NVIDIA Tegra chipset that supports native Vulkan.
+
+== QNX
+
+Vulkan is supported on QNX operation system.
+
+== Stadia
+
+Google's Stadia runs on AMD based Linux machines and Vulkan is the required graphics API.
+
+== Windows
+
+Vulkan is supported on Windows 7, Windows 8, and Windows 10.
+
+== Others
+
+Some embedded systems support Vulkan by allowing presentation link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#display[directly-to-display].

@@ -1,0 +1,43 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+[[what-is-vulkan]]
+= What is Vulkan?
+
+[NOTE]
+.Note
+====
+Vulkan is a new generation graphics and compute API that provides high-efficiency, cross-platform access to modern GPUs used in a wide variety of devices from PCs and consoles to mobile phones and embedded platforms.
+====
+
+Vulkan is not a company, nor language, but rather a way for developers to program their modern GPU hardware in a cross-platform and cross-vendor fashion. The Khronos Group is a member-driven consortium that created and maintains Vulkan.
+
+== Vulkan at its core
+
+At the core, Vulkan is an link:https://www.khronos.org/registry/vulkan/#apispecs[API Specification] that conformant hardware implementations follow. The public specification is generated from the link:https://github.com/KhronosGroup/Vulkan-Docs/blob/master/xml/vk.xml[./xml/vk.xml] Vulkan Registry file in the official public copy of the Vulkan Specification repo found at link:https://github.com/KhronosGroup/Vulkan-Docs[Vulkan-Doc]. Documentation of the link:https://www.khronos.org/registry/vulkan/specs/1.2/registry.html[XML schema] is also available.
+
+The Khronos Group, along with the Vulkan Specification, releases link:http://www.open-std.org/jtc1/sc22/wg14/www/standards[C99] link:https://github.com/KhronosGroup/Vulkan-Headers/tree/master/include/vulkan[header files] generated from the link:https://www.khronos.org/registry/vulkan/#apiregistry[API Registry] that developers can use to interface with the Vulkan API.
+
+For those who might not work with C code, there are various link:https://github.com/KhronosGroup/Khronosdotorg/blob/main/api/vulkan/resources.md#language-bindings[language] link:https://github.com/vinjn/awesome-vulkan#bindings[bindings] out there.
+
+== Vulkan and OpenGL
+
+Some developers might be aware of the other Khronos Group standard link:https://www.khronos.org/opengl/[OpenGL] which is also a 3D Graphics API. Vulkan is not a direct replacement for OpenGL, but rather an explicit API that allows for more explicit control of the GPU.
+
+Khronos' link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples] article on link:https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/vulkan_basics.md["How does Vulkan compare to OpenGL ES? What should you expect when targeting Vulkan?] offers a more detailed comparison between the two APIs.
+
+image::images/what_is_vulkan_compared_to_gl.png[what_is_vulkan_compared_to_gl.png]
+
+Vulkan puts more work and responsibility into the application. Not every developer will want to make that extra investment, but those that do so correctly can find power and performance improvements.
+
+image::images/what_is_vulkan_decision.png[what_is_vulkan_decision.png]
+
+== Using helping libraries
+
+While some developers may want to try using Vulkan with no help, it is common to use some lighter libraries in your development flow to help abstract some of the more tedious aspect of Vulkan. Here are some link:https://github.com/KhronosGroup/Khronosdotorg/blob/main/api/vulkan/resources.md#libraries[libraries] to link:https://github.com/vinjn/awesome-vulkan#libraries[help with development]
+
+image::images/what_is_vulkan_layer.png[what_is_vulkan_layer]
+
+== Learning to use Vulkan
+
+Vulkan is a tool for developers to create hardware accelerated applications. The Vulkan Guide tries to cover the more logistical material such as extensions, versions, spec, etc. For more information how to "`use`" Vulkan to create something such as the Hello World Triangle, please take a look at resources such as those found in link:https://www.vulkan.org/learn[Khronos' Vulkan "`learn`" page]. If you want to get more hands-on help and knowledge, feel free to join the link:https://khr.io/slack[Khronos Developer Slack] or the link:https://community.khronos.org/[Khronos Community Forums] as well!

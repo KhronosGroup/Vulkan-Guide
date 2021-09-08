@@ -1,9 +1,0 @@
-language: ruby
-rvm:
-  - 2.4
-before_script:
-  - gem install awesome_bot
-script:
-  - awesome_bot --allow-dupe chapters/*.md chapters/extensions/*.md --white-list https://www.youtube.com/
-notifications:
-  email: false
