@@ -21,7 +21,7 @@ Command buffers submitted to different queues are unordered relative to each oth
 
 You can only submit work to a `VkQueue` from one thread at a time, but different threads can submit work to different a `VkQueue` simultaneously.
 
-How a `vkQueue` is mapped to the underlying hardware is implementation-defined. Some implementations will have multiple hardware queues and submitting work to multiple `vkQueue`s will proceed independently and concurrently. Some implementations will do scheduling at a kernel driver level before submitting work to the hardware. There is no current way in Vulkan to expose the exact details how each `vkQueue` is mapped.
+How a `VkQueue` is mapped to the underlying hardware is implementation-defined. Some implementations will have multiple hardware queues and submitting work to multiple `VkQueue`&#8203;s will proceed independently and concurrently. Some implementations will do scheduling at a kernel driver level before submitting work to the hardware. There is no current way in Vulkan to expose the exact details how each `VkQueue` is mapped.
 
 [NOTE]
 .Note
@@ -31,7 +31,7 @@ Not all applications will require or benefit from multiple queues. It is reasona
 
 = Queue Family
 
-There are various types of operations a `VkQueue` can support. A "`Queue Family`" just describes a set of `VkQueue`s that have common properties and support the same functionality, as advertised in `VkQueueFamilyProperties`.
+There are various types of operations a `VkQueue` can support. A "`Queue Family`" just describes a set of `VkQueue`&#8203;s that have common properties and support the same functionality, as advertised in `VkQueueFamilyProperties`.
 
 The following are the queue operations found in link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkQueueFlagBits.html[VkQueueFlagBits]:
 
