@@ -142,7 +142,9 @@ Clipping always occurs, unless using the `depthClipEnable` from xref:{chapters}e
 0 <= Zc <= Wc
 ----
 
-When the normalized device coordinates (NDC) are calculated, anything outside of `[0, 1]` is clipped. A few examples where `Zd` is the result of `Zc`/`Wc`:
+When the normalized device coordinates (NDC) are calculated, anything outside of `[0, 1]` is clipped.
+
+A few examples where `Zd` is the result of `Zc`/`Wc`:
 
   * `vec4(1.0, 1.0, 2.0, 2.0)` - not clipped (`Zd` == `1.0`)
   * `vec4(1.0, 1.0, 0.0, 2.0)` - not clipped (`Zd` == `0.0`)
@@ -158,7 +160,7 @@ In the last pre-rasterization shader stage, these values will be linearly interp
 
 [NOTE]
 ====
-`ClipDistance` and `CullDistance` are `gl_ClipDistance[]` and `gl_CullDistance[]` in GLSL
+`ClipDistance` and `CullDistance` are `gl_ClipDistance[]` and `gl_CullDistance[]` in GLSL.
 ====
 
 [[porting-from-opengl]]
@@ -244,7 +246,7 @@ The input built-in `FragCoord` is the framebuffer coordinate. The `Z` component 
 
 [NOTE]
 ====
-`FragDepth` and `FragCoord` are `gl_FragDepth` and `gl_FragCoord` in GLSL
+`FragDepth` and `FragCoord` are `gl_FragDepth` and `gl_FragCoord` in GLSL.
 ====
 
 [NOTE]
@@ -313,7 +315,9 @@ image::images/depth_test.png[depth_test]
 [[depth-compare-operation]]
 ==== Depth Compare Operation
 
-The `VkPipelineDepthStencilStateCreateInfo::depthCompareOp` provides the comparison function used for the depth test. An example where `depthCompareOp` == `VK_COMPARE_OP_LESS` (`Zf` < `Za`)
+The `VkPipelineDepthStencilStateCreateInfo::depthCompareOp` provides the comparison function used for the depth test.
+
+An example where `depthCompareOp` == `VK_COMPARE_OP_LESS` (`Zf` < `Za`)
 
   * `Zf` = 1.0 | `Za` = 2.0 | test passes
   * `Zf` = 1.0 | `Za` = 1.0 | test fails
@@ -331,7 +335,7 @@ Even if the depth test passes, if `VkPipelineDepthStencilStateCreateInfo::depthW
 
 [NOTE]
 ====
-The `depthWriteEnable` value can be set xref:{chapters}dynamic_state.adoc[dynamically] using `VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT` from link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_EXT_extended_dynamic_state.html[VK_EXT_extended_dynamic_state mask].
+The `depthWriteEnable` value can be set xref:{chapters}dynamic_state.adoc[dynamically] using `VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT` from link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_EXT_extended_dynamic_state.html[VK_EXT_extended_dynamic_state].
 ====
 
 [[depth-clamping]]
