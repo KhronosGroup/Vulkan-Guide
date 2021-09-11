@@ -139,6 +139,12 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 
 // include::{chapters}threading.adoc[]
 
+== xref:{chapters}depth.adoc[Depth]
+
+// include::{chapters}depth.adoc[]
+
+  * `VK_EXT_depth_range_unrestricted`, `VK_EXT_depth_clip_enable`
+
 == xref:{chapters}mapping_data_to_shaders.adoc[Mapping Data to Shaders]
 
 // include::{chapters}mapping_data_to_shaders.adoc[]

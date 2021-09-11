@@ -150,6 +150,10 @@ include::{chapters}pipeline_cache.adoc[]
 
 include::{chapters}threading.adoc[]
 
+// == Depth
+
+include::{chapters}depth.adoc[]
+
 // == Mapping Data to Shaders
 
 include::{chapters}mapping_data_to_shaders.adoc[]
