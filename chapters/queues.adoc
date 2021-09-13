@@ -47,7 +47,7 @@ The following are the queue operations found in link:https://www.khronos.org/reg
 
 == Knowing which Queue Family is needed
 
-Each operation in the Vulkan Spec has a "`Supported Queue Types`" section generated from the link:https://github.com/KhronosGroup/Vulkan-Docs/blob/master/xml/vk.xml[vk.xml] file. The following is 3 different examples of what it looks like in the Spec:
+Each operation in the Vulkan Spec has a "`Supported Queue Types`" section generated from the link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/xml/vk.xml[vk.xml] file. The following is 3 different examples of what it looks like in the Spec:
 
 image::images/queues_cmd_draw.png[queues_cmd_dispatch.png]
 

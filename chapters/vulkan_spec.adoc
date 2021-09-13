@@ -17,7 +17,7 @@ Reference the Vulkan Spec early and often.
 
 == Vulkan Spec Variations
 
-The Vulkan Spec can be built for any version and with any permutation of extensions. The Khronos Group hosts the link:https://www.khronos.org/registry/vulkan/specs/[Vulkan Spec Registry] which contains a few publicly available variations that most developers will find sufficient. Anyone can build their own variation of the Vulkan Spec from link:https://github.com/KhronosGroup/Vulkan-Docs/blob/master/BUILD.adoc[Vulkan-Docs].
+The Vulkan Spec can be built for any version and with any permutation of extensions. The Khronos Group hosts the link:https://www.khronos.org/registry/vulkan/specs/[Vulkan Spec Registry] which contains a few publicly available variations that most developers will find sufficient. Anyone can build their own variation of the Vulkan Spec from link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/BUILD.adoc[Vulkan-Docs].
 
 When building the Vulkan Spec, you pass in what version of Vulkan to build for as well as what extensions to include. A Vulkan Spec without any extensions is also referred to as the link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#extendingvulkan-coreversions[core version] as it is the minimal amount of Vulkan an implementation needs to support in order to be xref:{chapters}vulkan_cts.adoc#vulkan-cts[conformant].
 
