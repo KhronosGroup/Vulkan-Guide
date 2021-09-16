@@ -209,7 +209,7 @@ The framebuffer depth coordinate `Zf` is represented as:
 
 [source]
 ----
-Zf = Pz * Zd * Oz
+Zf = Pz * Zd + Oz
 ----
 
   * `Zd` = `Zc`/`Wc` (see <<primitive-clipping,Primitive Clipping>>)
