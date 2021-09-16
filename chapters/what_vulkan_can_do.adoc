@@ -10,9 +10,8 @@ ifndef::chapters[:chapters:]
 Vulkan can be used to develop applications for many use cases. While Vulkan applications can choose to use a subset of the functionality described below, it was designed so a developer could use all of them in a single API.
 
 [NOTE]
-.Note
 ====
-Note: It is important to understand Vulkan is a box of tools and there are multiple ways of doing a task.
+It is important to understand Vulkan is a box of tools and there are multiple ways of doing a task.
 ====
 
 == Graphics
@@ -20,9 +19,8 @@ Note: It is important to understand Vulkan is a box of tools and there are multi
 2D and 3D graphics are primarily what the Vulkan API is designed for. Vulkan is designed to allow developers to create hardware accelerated graphical applications.
 
 [NOTE]
-.Note
 ====
-Note: All Vulkan implementations are required to support Graphics, but the xref:{chapters}wsi.adoc#wsi[WSI] system is not required.
+All Vulkan implementations are required to support Graphics, but the xref:{chapters}wsi.adoc#wsi[WSI] system is not required.
 ====
 
 == Compute
@@ -30,9 +28,8 @@ Note: All Vulkan implementations are required to support Graphics, but the xref:
 Due to the parallel nature of GPUs, a new style of programming referred to as link:https://en.wikipedia.org/wiki/General-purpose_computing_on_graphics_processing_units[GPGPU] can be used to exploit a GPU for computational tasks. Vulkan supports compute variations of `VkQueues`, `VkPipelines`, and more which allow Vulkan to be used for general computation.
 
 [NOTE]
-.Note
 ====
-Note: All Vulkan implementations are required to support Compute.
+All Vulkan implementations are required to support Compute.
 ====
 
 == Ray Tracing
@@ -43,9 +40,8 @@ Cross-vendor API support for ray tracing was added to Vulkan as a set of extensi
 These are primarily link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline[`VK_KHR_ray_tracing_pipeline`], link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_query[`VK_KHR_ray_query`], and link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure[`VK_KHR_acceleration_structure`].
 
 [NOTE]
-.Note
 ====
-Note: There is also an older link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing[NVIDIA vendor extension] exposing an implementation of ray tracing on Vulkan. This extension preceded the cross-vendor extensions. For new development, applications are recommended to prefer the more recent KHR extensions.
+There is also an older link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing[NVIDIA vendor extension] exposing an implementation of ray tracing on Vulkan. This extension preceded the cross-vendor extensions. For new development, applications are recommended to prefer the more recent KHR extensions.
 ====
 
 == Video
@@ -55,7 +51,6 @@ link:https://www.khronos.org/blog/an-introduction-to-vulkan-video?mc_cid=8052312
 Vulkan Video adheres to the Vulkan philosophy of providing flexible, fine-grained control over video processing scheduling, synchronization, and memory utilization to the application.
 
 [NOTE]
-.Note
 ====
 link:https://github.com/KhronosGroup/Vulkan-Docs/issues/1497[feedback] for the provisional specification is welcomed
 ====
@@ -65,9 +60,8 @@ link:https://github.com/KhronosGroup/Vulkan-Docs/issues/1497[feedback] for the p
 Currently, the Vulkan Working Group is looking into how to make Vulkan a first class API for exposing ML compute capabilities of modern GPUs. More information was announced at link:https://www.youtube.com/watch?v=_57aiwJISCI&feature=youtu.be&t=5007[Siggraph 2019].
 
 [NOTE]
-.Note
 ====
-Note: As of now, there exists no public Vulkan API for machine learning.
+As of now, there exists no public Vulkan API for machine learning.
 ====
 
 == Safety Critical
@@ -75,8 +69,7 @@ Note: As of now, there exists no public Vulkan API for machine learning.
 Currently, the Vulkan Working Group is looking into how to make Vulkan usable for safety critical systems.
 
 [NOTE]
-.Note
 ====
-Note: As of now, there exists no public Vulkan API for safety critical systems.
+As of now, there exists no public Vulkan API for safety critical systems.
 ====
 

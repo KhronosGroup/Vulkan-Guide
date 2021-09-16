@@ -10,7 +10,7 @@ Vulkan link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vk
 
 Unlike normal resources that call `vkBindBufferMemory()` or `vkBindImageMemory()`, sparse memory is bound via a link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#sparsememory-resource-binding[queue operation] `vkQueueBindSparse()`. The main advantage of this is that an application can rebind memory to a sparse resource throughout its lifetime.
 
-It is important to note that this requires some extra consideration from the application. Applications **must** use synchronization primitives to guarantee that other queues do not access ranges of memory concurrently with a binding change. Also, freeing a `VkDeviceMemory` object with `vkFreeMemory()` will **not** cause resources (or resource regions) bound to the memory object to become unbound. Applications must not access resources bound to memory that has been freed.
+It is important to notice that this requires some extra consideration from the application. Applications **must** use synchronization primitives to guarantee that other queues do not access ranges of memory concurrently with a binding change. Also, freeing a `VkDeviceMemory` object with `vkFreeMemory()` will **not** cause resources (or resource regions) bound to the memory object to become unbound. Applications must not access resources bound to memory that has been freed.
 
 == Sparse Buffers
 

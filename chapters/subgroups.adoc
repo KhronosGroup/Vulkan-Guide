@@ -10,7 +10,6 @@ ifndef::chapters[:chapters:]
 The Vulkan Spec defines subgroups as:
 
 [NOTE]
-.Note
 ====
 A set of shader invocations that can synchronize and share data with each other efficiently. In compute shaders, the local workgroup is a superset of the subgroup.
 ====
@@ -55,7 +54,6 @@ if ((subgroupProperties.supportedOperations & VK_SUBGROUP_FEATURE_BALLOT_BIT) !=
 For supported stages, the Vulkan Spec guarantees the following support:
 
 [NOTE]
-.Note
 ====
 **supportedStages** will have the **VK_SHADER_STAGE_COMPUTE_BIT** bit set if any of the physical device's queues support **VK_QUEUE_COMPUTE_BIT**.
 ====
@@ -63,7 +61,6 @@ For supported stages, the Vulkan Spec guarantees the following support:
 For supported operations, the Vulkan Spec guarantees the following support:
 
 [NOTE]
-.Note
 ====
 **supportedOperations** will have the **VK_SUBGROUP_FEATURE_BASIC_BIT** bit set if any of the physical device's queues support **VK_QUEUE_GRAPHICS_BIT** or **VK_QUEUE_COMPUTE_BIT**.
 ====

@@ -5,7 +5,6 @@
 = Pipeline Dynamic State
 
 [NOTE]
-.Note
 ====
 link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-dynamic-state[Vulkan Spec chapter]
 ====
@@ -76,9 +75,8 @@ vkEndCommandBuffer();
 == When to use dynamic state
 
 [NOTE]
-.Note
 ====
-Note: Vulkan is a tool, so as with most things, and there is no single answer for this.
+Vulkan is a tool, so as with most things, and there is no single answer for this.
 ====
 
 Some implementations might have a performance loss using some certain `VkDynamicState` state over a static value, but dynamic states might prevent an application from having to create many permutations of pipeline objects which might be a bigger desire for the application.

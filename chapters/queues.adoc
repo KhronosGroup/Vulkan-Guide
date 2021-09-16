@@ -8,7 +8,6 @@ ifndef::chapters[:chapters:]
 = Queues
 
 [NOTE]
-.Note
 ====
 Further resources for queues from link:https://gpuopen.com/learn/concurrent-execution-asynchronous-queues/[AMD] and link:https://www.khronos.org/assets/uploads/developers/library/2016-vulkan-devday-uk/9-Asynchonous-compute.pdf[NVIDIA]
 ====
@@ -24,7 +23,6 @@ You can only submit work to a `VkQueue` from one thread at a time, but different
 How a `VkQueue` is mapped to the underlying hardware is implementation-defined. Some implementations will have multiple hardware queues and submitting work to multiple `VkQueue`&#8203;s will proceed independently and concurrently. Some implementations will do scheduling at a kernel driver level before submitting work to the hardware. There is no current way in Vulkan to expose the exact details how each `VkQueue` is mapped.
 
 [NOTE]
-.Note
 ====
 Not all applications will require or benefit from multiple queues. It is reasonable for an application to have a single "`universal`" graphics supported queue to submit all the work to the GPU.
 ====

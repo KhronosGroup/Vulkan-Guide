@@ -55,7 +55,6 @@ Each explained in more details below.
 == VK_KHR_shader_atomic_int64
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.2
 
@@ -74,7 +73,6 @@ The `shaderBufferInt64Atomics` is always guaranteed to be supported if using Vul
 == VK_EXT_shader_image_atomic_int64
 
 [NOTE]
-.Note
 ====
 link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_image_int64.html[SPV_EXT_shader_image_int64]
 
@@ -90,7 +88,6 @@ This extension exposes both a `shaderImageInt64Atomics` and `sparseImageInt64Ato
 == VK_EXT_shader_atomic_float
 
 [NOTE]
-.Note
 ====
 link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_atomic_float_add.html[SPV_EXT_shader_atomic_float_add]
 
@@ -118,15 +115,13 @@ and `64-bit float` support:
   * `shaderSharedFloat64*` - shared memory
 
 [NOTE]
-.Note
 ====
-Note: OpenGLES link:https://www.khronos.org/registry/OpenGL/extensions/OES/OES_shader_image_atomic.txt[OES_shader_image_atomic] allowed the use of atomics on `r32f` for `imageAtomicExchange`. For porting, an application will want to check for `shaderImageFloat32Atomics` support to be able to do the same in Vulkan.
+OpenGLES link:https://www.khronos.org/registry/OpenGL/extensions/OES/OES_shader_image_atomic.txt[OES_shader_image_atomic] allowed the use of atomics on `r32f` for `imageAtomicExchange`. For porting, an application will want to check for `shaderImageFloat32Atomics` support to be able to do the same in Vulkan.
 ====
 
 == VK_EXT_shader_atomic_float2
 
 [NOTE]
-.Note
 ====
 link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_atomic_float_min_max.html[SPV_EXT_shader_atomic_float_min_max]
 

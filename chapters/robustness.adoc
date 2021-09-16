@@ -14,7 +14,11 @@ image::images/robustness_flow.png[robustness_flow.png]
 
 The nature of some Vulkan applications requires the ability run shader code that cannot be guaranteed to avoid bad memory accesses. Robustness is needed for these applications.
 
-**Please note** that turning on robustness may incur a runtime performance cost. Application writers should carefully consider the implications of enabling robustness.
+[NOTE]
+.Important
+====
+Turning on robustness may incur a runtime performance cost. Application writers should carefully consider the implications of enabling robustness.
+====
 
 == What Vulkan provides in core
 

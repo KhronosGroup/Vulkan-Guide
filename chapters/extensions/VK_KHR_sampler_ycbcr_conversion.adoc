@@ -7,7 +7,6 @@
 = VK_KHR_sampler_ycbcr_conversion
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.1
 ====

@@ -301,10 +301,9 @@ layout(location = 1) in vec2 in1;
 
 image::images/vertex_input_data_processing_understanding_format.png[vertex_input_data_processing_understanding_format]
 
-It is important to note that `in1` is a `vec2` while the input attribute is `VK_FORMAT_R32G32B32_SFLOAT` which doesn't fully match. According to the spec:
+It is important to notice that `in1` is a `vec2` while the input attribute is `VK_FORMAT_R32G32B32_SFLOAT` which doesn't fully match. According to the spec:
 
 [NOTE]
-.Note
 ====
 If the vertex shader has fewer components, the extra components are discarded.
 ====
@@ -321,15 +320,14 @@ The link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspe
 Each `location` in the `VkVertexInputAttributeDescription` has 4 components. The example above already showed that extra components from the `format` are discarded when the shader input has fewer components.
 
 [NOTE]
-.Note
+.Example
 ====
-Example: `VK_FORMAT_R32G32B32_SFLOAT` has 3 components while a `vec2` has only 2
+`VK_FORMAT_R32G32B32_SFLOAT` has 3 components while a `vec2` has only 2
 ====
 
 For the opposite case, the spec says:
 
 [NOTE]
-.Note
 ====
 If the format does not include G, B, or A components, then those are filled with (0,0,1) as needed (using either 1.0f or integer 1 based on the format) for attributes that are not 64-bit data types.
 ====

@@ -10,7 +10,6 @@ ifndef::chapters[:chapters:]
 The Vulkan Specification (usually referred to as the _Vulkan Spec_) is the official description of how the Vulkan API works and is ultimately used to decide what is and is not valid Vulkan usage. At first glance, the Vulkan Spec seems like an incredibly huge and dry chunk of text, but it is usually the most useful item to have open when developing.
 
 [NOTE]
-.Note
 ====
 Reference the Vulkan Spec early and often.
 ====

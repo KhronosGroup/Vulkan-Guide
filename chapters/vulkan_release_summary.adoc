@@ -14,7 +14,6 @@ The following summary contains a list of the extensions added to the respective 
 == Vulkan 1.1
 
 [NOTE]
-.Note
 ====
 link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1[Vulkan Spec Section]
 ====
@@ -50,7 +49,6 @@ Besides the listed extensions below, Vulkan 1.1 introduced the xref:{chapters}su
 == Vulkan 1.2
 
 [NOTE]
-.Note
 ====
 link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2[Vulkan Spec Section]
 ====

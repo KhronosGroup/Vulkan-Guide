@@ -5,7 +5,6 @@
 = VK_EXT_descriptor_indexing
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.2
 
@@ -23,9 +22,9 @@ This extension was designed to be broken down into a few different, smaller feat
 Without this extension, descriptors in an application are not allowed to update between recording the command buffer and the execution of the command buffers. With this extension an application can querying for `descriptorBinding*UpdateAfterBind` support for the type of descriptor being used which allows an application to then update in between recording and execution.
 
 [NOTE]
-.Note
+.Example
 ====
-For example, if an application has a `StorageBuffer` descriptor, then it will query for `descriptorBindingStorageBufferUpdateAfterBind` support.
+If an application has a `StorageBuffer` descriptor, then it will query for `descriptorBindingStorageBufferUpdateAfterBind` support.
 ====
 
 After enabling the desired feature support for updating after bind, an application needs to setup the following in order to use a descriptor that can update after bind:

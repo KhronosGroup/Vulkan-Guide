@@ -8,9 +8,8 @@ ifndef::chapters[:chapters:]
 = Mapping Data to Shaders
 
 [NOTE]
-.Note
 ====
-Note: All SPIR-V assembly was generated with glslangValidator
+All SPIR-V assembly was generated with glslangValidator
 ====
 
 This chapter goes over how to link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces[interface Vulkan with SPIR-V] in order to map data. Using the `VkDeviceMemory` objects allocated from `vkAllocateMemory`, it is up to the application to properly map the data from Vulkan such that the SPIR-V shader understands how to consume it correctly.
@@ -69,9 +68,8 @@ input.offset   = 0;
 The only thing left to do is bind the vertex buffer and optional index buffer prior to the draw call.
 
 [NOTE]
-.Note
 ====
-Note: Using `VK_BUFFER_USAGE_VERTEX_BUFFER_BIT` when creating the `VkBuffer` is what makes it a "`vertex buffer`"
+Using `VK_BUFFER_USAGE_VERTEX_BUFFER_BIT` when creating the `VkBuffer` is what makes it a "`vertex buffer`"
 ====
 
 [source,c]
@@ -89,7 +87,6 @@ vkEndCommandBuffer();
 ----
 
 [NOTE]
-.Note
 ====
 More information can be found in the xref:{chapters}vertex_input_data_processing.adoc#vertex-input-data-processing[Vertex Input Data Processing] chapter
 ====
@@ -186,7 +183,6 @@ For GLSL, more information can be found in the link:https://www.khronos.org/regi
 ==== Storage Image
 
 [NOTE]
-.Note
 ====
 VK_DESCRIPTOR_TYPE_STORAGE_IMAGE
 ====
@@ -214,7 +210,6 @@ OpDecorate %storageImage Binding 0
 ==== Sampler and Sampled Image
 
 [NOTE]
-.Note
 ====
 VK_DESCRIPTOR_TYPE_SAMPLER and VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE
 ====
@@ -255,13 +250,11 @@ OpDecorate %samplerDescriptor Binding 0
 ==== Combined Image Sampler
 
 [NOTE]
-.Note
 ====
 VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
 ====
 
 [NOTE]
-.Note
 ====
 On some implementations, it **may** be more efficient to sample from an image using a combination of sampler and sampled image that are stored together in the descriptor set in a combined descriptor.
 ====
@@ -291,7 +284,6 @@ OpDecorate %combinedImageSampler Binding 0
 ==== Uniform Buffer
 
 [NOTE]
-.Note
 ====
 VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
 ====
@@ -324,7 +316,6 @@ OpDecorate %ubo Binding 0
 ==== Storage Buffer
 
 [NOTE]
-.Note
 ====
 VK_DESCRIPTOR_TYPE_STORAGE_BUFFER
 ====
@@ -341,7 +332,11 @@ ssbo.a = ssbo.a + 1.0;
 ssbo.b = ssbo.b + 1;
 ----
 
-**Note:** `BufferBlock` and `Uniform` would have been seen prior to xref:{chapters}extensions/shader_features.adoc#VK_KHR_storage_buffer_storage_class[VK_KHR_storage_buffer_storage_class]
+[NOTE]
+.Important
+====
+`BufferBlock` and `Uniform` would have been seen prior to xref:{chapters}extensions/shader_features.adoc#VK_KHR_storage_buffer_storage_class[VK_KHR_storage_buffer_storage_class]
+====
 
 [source,swift]
 ----
@@ -359,7 +354,6 @@ OpDecorate %ssbo Binding 0
 ==== Uniform Texel Buffer
 
 [NOTE]
-.Note
 ====
 VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER
 ====
@@ -386,7 +380,6 @@ OpDecorate %uniformTexelBuffer Binding 0
 ==== Storage Texel Buffer
 
 [NOTE]
-.Note
 ====
 VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER
 ====
@@ -415,7 +408,6 @@ OpDecorate %storageTexelBuffer Binding 0
 ==== Input Attachment
 
 [NOTE]
-.Note
 ====
 VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT
 ====
@@ -579,7 +571,7 @@ The typical use cases for specialization constants can be best grouped into thre
   ** Constant values allow a set of optimizations such as link:https://en.wikipedia.org/wiki/Constant_folding[constant folding], link:https://en.wikipedia.org/wiki/Dead_code_elimination[dead code elimination], etc. to occur.
   * Affecting types and memory sizes
   ** It is possible to set the length of an array or a variable type used through a specialization constant.
-  ** It is important to note that a compiler will need to allocate registers depending on these types and sizes. This means it is likely that a pipeline cache will fail if the difference is significant in registers allocated.
+  ** It is important to notice that a compiler will need to allocate registers depending on these types and sizes. This means it is likely that a pipeline cache will fail if the difference is significant in registers allocated.
 
 [[physical-storage-buffer]]
 == Physical Storage Buffer

@@ -8,7 +8,6 @@ ifndef::chapters[:chapters:]
 = Vulkan Validation Overview
 
 [NOTE]
-.Note
 ====
 The purpose of this section is to give a full overview of how Vulkan deals with __valid usage__ of the API.
 ====
@@ -18,7 +17,6 @@ The purpose of this section is to give a full overview of how Vulkan deals with 
 A **VU** is explicitly link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-validusage[defined in the Vulkan Spec] as:
 
 [NOTE]
-.Note
 ====
 set of conditions that **must** be met in order to achieve well-defined run-time behavior in an application.
 ====
@@ -45,7 +43,6 @@ Using `VUID-vkBindImageMemory-memoryOffset-01046` as an example, it is as simple
 Since Vulkan doesn't do any error checking, it is **very important**, when developing, to enable the link:https://github.com/KhronosGroup/Vulkan-ValidationLayers[Validation Layers] right away to help catch invalid behavior. Applications should also never ship the Validation Layers with their application as they noticeably reduce performance and are designed for the development phase.
 
 [NOTE]
-.Note
 ====
 The Khronos Validation Layer used to consist of multiple layers but now has been unified to a single `VK_LAYER_KHRONOS_validition` layer. link:https://www.lunarg.com/wp-content/uploads/2019/04/UberLayer_V3.pdf[More details explained in LunarG's whitepaper].
 ====
@@ -76,7 +73,7 @@ VkDeviceMemory handle (https://www.khronos.org/registry/vulkan/specs/1.1-extensi
 html/vkspec.html#VUID-vkBindBufferMemory-memory-parameter)
 ----
 
-  * The first thing to note is the VUID is listed first in the message (`VUID-vkBindBufferMemory-memory-parameter`)
+  * The first thing to notice is the VUID is listed first in the message (`VUID-vkBindBufferMemory-memory-parameter`)
   ** There is also a link at the end of the message to the VUID in the spec
   * `The Vulkan spec states:` is the quoted VUID from the spec.
   * The `VK_OBJECT_TYPE_INSTANCE` is the link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_debugging[VkObjectType]
@@ -123,9 +120,8 @@ Each error message contains a uniform logging pattern. This allows information t
 == Multiple VUIDs
 
 [NOTE]
-.Note
 ====
-Note: The following is not ideal and is being looked into how to make it simpler
+The following is not ideal and is being looked into how to make it simpler
 ====
 
 Currently, the spec is designed to only show the VUIDs depending on the xref:{chapters}vulkan_spec.adoc#vulkan-spec-variations[version and extensions the spec was built with]. Simply put, additions of extensions and versions may alter the VU language enough (from new API items added) that a separate VUID is created.
