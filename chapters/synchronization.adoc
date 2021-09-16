@@ -9,13 +9,15 @@ ifndef::chapters[:chapters:]
 
 Synchronization is one of the most powerful but also most complex parts of using Vulkan. The application developer is now responsible for managing synchronization using the various link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#synchronization[Vulkan synchronization primitives]. Improper use of synchronization can lead to hard-to-find bugs as well as poor performance in cases where the the GPU is unnecessarily idle.
 
-The Khronos Validation Layer has implemented some link:https://vulkan.lunarg.com/doc/sdk/latest/windows/synchronization_usage.html[validation for synchronization]. It can easily be enabled by the link:https://vulkan.lunarg.com/doc/sdk/latest/windows/vkconfig.html[Vulkan Configurator] included with the link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK]. A link:https://www.lunarg.com/wp-content/uploads/2020/09/Final_LunarG_Guide_to_Vulkan-Synchronization_Validation_08_20.pdf[detailed whitepaper] discussing the synchronization validation has been written as well and released as a link:https://www.khronos.org/blog/a-guide-to-vulkan-synchronization-validation[Khronos Blog].
+There are a link:https://github.com/KhronosGroup/Vulkan-Docs/wiki/Synchronization-Examples[set of examples] and a link:https://www.khronos.org/blog/understanding-vulkan-synchronization[Understanding Vulkan Synchronization] blog provided by Khronos on how to use some of the synchronization primitives. There are also presentations from Tobias Hector from past Vulkan talks: link:https://www.khronos.org/assets/uploads/developers/library/2017-vulkan-devu-vancouver/009%20-%20Synchronization%20-%20Keeping%20Your%20Device%20Fed.pdf[part 1 slides] (link:https://www.youtube.com/watch?v=YkJ4hKCPjm0[video]) and link:https://www.khronos.org/assets/uploads/developers/library/2018-vulkanised/06-Keeping%20Your%20Device%20Fed%20v4_Vulkanised2018.pdf[part 2 slides] (link:https://www.youtube.com/watch?v=5GDg4OxkSEc[video]).
+
+The following is an overview diagram of the difference between `VkEvent`, `VkFence`, and `VkSemaphore`
 
 image::images/synchronization_overview.png[synchronization_overview.png]
 
-== Overall strategies
+== Validation
 
-There are a link:https://github.com/KhronosGroup/Vulkan-Docs/wiki/Synchronization-Examples[set of examples] provided by Khronos on how to use some of the synchronization primitives. The goal is to keep the GPU fed with data as described in this great presentation from Tobias Hector: link:https://www.khronos.org/assets/uploads/developers/library/2017-vulkan-devu-vancouver/009%20-%20Synchronization%20-%20Keeping%20Your%20Device%20Fed.pdf[part 1 slides] (link:https://www.youtube.com/watch?v=YkJ4hKCPjm0[video]) and link:https://www.khronos.org/assets/uploads/developers/library/2018-vulkanised/06-Keeping%20Your%20Device%20Fed%20v4_Vulkanised2018.pdf[part 2 slides] (link:https://www.youtube.com/watch?v=5GDg4OxkSEc[video]).
+The Khronos Validation Layer has implemented some link:https://vulkan.lunarg.com/doc/sdk/latest/windows/synchronization_usage.html[validation for synchronization]. It can easily be enabled by the link:https://vulkan.lunarg.com/doc/sdk/latest/windows/vkconfig.html[Vulkan Configurator] included with the link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK]. A link:https://www.lunarg.com/wp-content/uploads/2020/09/Final_LunarG_Guide_to_Vulkan-Synchronization_Validation_08_20.pdf[detailed whitepaper] discussing the synchronization validation has been written as well and released as a link:https://www.khronos.org/blog/a-guide-to-vulkan-synchronization-validation[Khronos Blog].
 
 == Pipeline Barriers
 
