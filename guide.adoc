@@ -185,7 +185,6 @@ include::{chapters}common_pitfalls.adoc[]
 = When and Why to use Extensions
 
 [NOTE]
-.Note
 ====
 These are supplemental references for the various Vulkan Extensions. Please consult the Vulkan Spec for further details on any extension
 ====

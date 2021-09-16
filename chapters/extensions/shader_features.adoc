@@ -78,7 +78,6 @@ OpExtension  "SPV_KHR_8bit_storage"
 == VK_KHR_spirv_1_4
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.2
 ====
@@ -90,7 +89,6 @@ This extension is designed for a Vulkan 1.1 implementations to expose the SPIR-V
 == VK_KHR_8bit_storage and VK_KHR_16bit_storage
 
 [NOTE]
-.Note
 ====
 link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage]
 
@@ -105,7 +103,6 @@ Both `VK_KHR_8bit_storage` (promoted in Vulkan 1.2) and `VK_KHR_16bit_storage` (
 == VK_KHR_shader_float16_int8
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.2
 
@@ -118,7 +115,6 @@ This extension allows the use of 8-bit integer types or 16-bit floating-point ty
 == VK_KHR_shader_atomic_int64
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.2
 
@@ -133,7 +129,6 @@ An example would involve using `uint64_t atomicAnd(inout uint64_t mem, uint64_t 
 == VK_KHR_shader_float_controls
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.2
 
@@ -146,7 +141,6 @@ This extension allows the ability to set how rounding of floats are handled. The
 == VK_KHR_storage_buffer_storage_class
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.1
 
@@ -188,7 +182,6 @@ Since `SPV_KHR_storage_buffer_storage_class` was added to SPIR-V 1.3, if you tar
 == VK_KHR_variable_pointers
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.1
 
@@ -198,7 +191,6 @@ link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Regist
 A `Variable pointer` is defined in SPIR-V as
 
 [NOTE]
-.Note
 ====
 A pointer of logical pointer type that results from one of the following instructions: `OpSelect`, `OpPhi`, `OpFunctionCall`, `OpPtrAccessChain`, `OpLoad`, or `OpConstantNull`
 ====
@@ -211,7 +203,6 @@ This extension has two levels to it. The first is the `variablePointersStorageBu
 == VK_KHR_uniform_buffer_standard_layout
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.2
 ====
@@ -262,7 +253,6 @@ Make sure to set `--uniform-buffer-standard-layout` when running the SPIR-V Vali
 == VK_KHR_relaxed_block_layout
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.1
 ====
@@ -300,7 +290,6 @@ layout (set = 0, binding = 0) buffer StorageBuffer {
 `VK_KHR_relaxed_block_layout` can also be seen as a subset of `VK_EXT_scalar_block_layout`
 
 [NOTE]
-.Note
 ====
 Make sure to set `--relax-block-layout` when running the SPIR-V Validator
 ====
@@ -309,7 +298,6 @@ Make sure to set `--relax-block-layout` when running the SPIR-V Validator
 == VK_EXT_scalar_block_layout
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.2
 
@@ -344,7 +332,6 @@ OpMemberDecorate 11(StorageBuffer) 3 Offset 28
 ----
 
 [NOTE]
-.Note
 ====
 Make sure to set `--scalar-block-layout` when running the SPIR-V Validator
 ====
@@ -354,7 +341,6 @@ Make sure to set `--scalar-block-layout` when running the SPIR-V Validator
 == VK_KHR_vulkan_memory_model
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.2
 
@@ -367,7 +353,6 @@ The link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspe
 == VK_KHR_shader_subgroup_extended_types
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.2
 
@@ -382,7 +367,6 @@ For example, if an implementation supports 8-bit integers an application can now
 == VK_EXT_shader_viewport_index_layer
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.2
 
@@ -399,7 +383,6 @@ In GLSL these are represented by `gl_ViewportIndex` and `gl_Layer` built-ins.
 == VK_KHR_shader_draw_parameters
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.1
 
@@ -416,7 +399,6 @@ In GLSL these are represented by `gl_BaseInstanceARB`, `gl_BaseVertexARB` and `g
 == VK_EXT_shader_stencil_export
 
 [NOTE]
-.Note
 ====
 link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_stencil_export.html[SPV_EXT_shader_stencil_export]
 
@@ -431,7 +413,6 @@ In GLSL this is represented by a `out int gl_FragStencilRefARB` built-in.
 == VK_EXT_shader_demote_to_helper_invocation
 
 [NOTE]
-.Note
 ====
 link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_demote_to_helper_invocation.html[SPV_EXT_demote_to_helper_invocation]
 
@@ -444,7 +425,6 @@ This extension was created to help with matching the HLSL `discard` instruction 
 == VK_KHR_shader_clock
 
 [NOTE]
-.Note
 ====
 link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_clock.html[SPV_KHR_shader_clock]
 
@@ -464,7 +444,6 @@ For example, if an implementation only has support for xref:{chapters}subgroups.
 == VK_KHR_shader_non_semantic_info
 
 [NOTE]
-.Note
 ====
 link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_clock.html[SPV_KHR_non_semantic_info]
 ====
@@ -475,7 +454,6 @@ This extension exposes link:https://htmlpreview.github.io/?https://github.com/Kh
 == VK_KHR_shader_terminate_invocation
 
 [NOTE]
-.Note
 ====
 link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_terminate_invocation.html[SPV_KHR_terminate_invocation]
 ====
@@ -486,7 +464,6 @@ This extension adds the new instruction `OpTerminateInvocation` to provide a dis
 == VK_KHR_workgroup_memory_explicit_layout
 
 [NOTE]
-.Note
 ====
 link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_workgroup_memory_explicit_layout.html[SPV_KHR_workgroup_memory_explicit_layout]
 ====

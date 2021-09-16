@@ -121,7 +121,7 @@ If unsure to use only early or late fragment tests for your application, use bot
 
 It is always better to clear a depth buffer at the start of the pass with `loadOp` set to `VK_ATTACHMENT_LOAD_OP_CLEAR`, but depth images can also be cleared outside a render pass using `vkCmdClearDepthStencilImage`.
 
-When clearing, note that `VkClearValue` is a union and `VkClearDepthStencilValue depthStencil` should be set instead of the color clear value.
+When clearing, notice that `VkClearValue` is a union and `VkClearDepthStencilValue depthStencil` should be set instead of the color clear value.
 
 [[pre-rasterization]]
 == Pre-rasterization

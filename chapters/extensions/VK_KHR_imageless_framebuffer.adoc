@@ -5,7 +5,6 @@
 = VK_KHR_imageless_framebuffer
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.2
 ====

@@ -21,7 +21,6 @@ Additional SPIR-V and GLSL extensions also expose the necessary programmable fun
   * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_flags_primitive_culling.txt[GLSL_EXT_ray_flags_primitive_culling]
 
 [NOTE]
-.Note
 ====
 Many ray tracing applications require large contiguous memory
 allocations. Due to the limited size of the address space, this can prove

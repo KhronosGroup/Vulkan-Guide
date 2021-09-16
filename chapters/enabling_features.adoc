@@ -24,7 +24,6 @@ All features in Vulkan can be categorized/found in 3 sections
 All features must be enabled at `VkDevice` creation time inside the link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkDeviceCreateInfo[VkDeviceCreateInfo] struct.
 
 [NOTE]
-.Note
 ====
 Don't forget to query first with `vkGetPhysicalDeviceFeatures` or `vkGetPhysicalDeviceFeatures2`
 ====

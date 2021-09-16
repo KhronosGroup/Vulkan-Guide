@@ -46,7 +46,12 @@ Just because the platform supports Vulkan does not mean there is device support.
 
 A driver targeting a physical piece of GPU hardware is the most common case for a Vulkan implementation. It is important to understand that while a certain GPU might have the physical capabilities of running Vulkan, it still requires a driver to control it. The driver is in charge of getting the Vulkan calls mapped to the hardware in the most efficient way possible.
 
-Drivers, like any software, are updated and this means there can be many variations of drivers for the same physical device and platform. There is a link:https://vulkan.gpuinfo.org/[Vulkan Database], developed and maintained by Sascha Willems, which is the largest collection of recorded Vulkan implementation details (note that just because a physical device or platform isn't in the Vulkan Database doesn't mean it couldn't exist).
+Drivers, like any software, are updated and this means there can be many variations of drivers for the same physical device and platform. There is a link:https://vulkan.gpuinfo.org/[Vulkan Database], developed and maintained by Sascha Willems, which is the largest collection of recorded Vulkan implementation details
+
+[NOTE]
+====
+Just because a physical device or platform isn't in the Vulkan Database doesn't mean it couldn't exist.
+====
 
 === Null Driver
 

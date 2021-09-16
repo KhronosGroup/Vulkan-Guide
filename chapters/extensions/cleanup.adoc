@@ -8,7 +8,6 @@ ifndef::chapters[:chapters: ../]
 = Cleanup Extensions
 
 [NOTE]
-.Note
 ====
 These are extensions that are unofficially called "`cleanup extension`". The Vulkan Guide defines them as cleanup extensions due to their nature of only adding a small bit of functionality or being very simple, self-explanatory extensions in terms of their purpose.
 ====
@@ -17,7 +16,6 @@ These are extensions that are unofficially called "`cleanup extension`". The Vul
 == VK_KHR_driver_properties
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.2
 ====
@@ -28,7 +26,6 @@ This extension adds more information to query about each implementation. The lin
 == VK_EXT_host_query_reset
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.2
 ====
@@ -39,7 +36,6 @@ This extension allows an application to call `vkResetQueryPool` from the host in
 == VK_KHR_separate_depth_stencil_layouts
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.2
 ====
@@ -50,7 +46,6 @@ This extension allows an application when using a depth/stencil format to do an 
 == VK_KHR_depth_stencil_resolve
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.2
 ====
@@ -63,7 +58,6 @@ For more information please check out the GDC presentation. (link:https://www.kh
 == VK_EXT_separate_stencil_usage
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.2
 ====
@@ -76,7 +70,6 @@ A good use case of this is when using the xref:{chapters}VK_KHR_image_format_lis
 == VK_KHR_dedicated_allocation
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.1
 ====
@@ -87,7 +80,6 @@ Normally applications allocate large chunks for `VkDeviceMemory` and then suball
 == VK_EXT_sampler_filter_minmax
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.2
 ====
@@ -98,7 +90,6 @@ By default, Vulkan samplers using linear filtering return a filtered texel value
 == VK_KHR_sampler_mirror_clamp_to_edge
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.2
 ====
@@ -142,7 +133,6 @@ The current list of extensions that fit this category are:
 All of these are very simple extensions and were promoted to core in their respective versions to make it easier to use without having to query for their support.
 
 [NOTE]
-.Note
 ====
 `VK_KHR_get_physical_device_properties2` has additional functionality as it adds the ability to query feature support for extensions and newer Vulkan versions. It has become a requirement for most other Vulkan extensions because of this.
 ====

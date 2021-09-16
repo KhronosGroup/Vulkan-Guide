@@ -9,7 +9,6 @@ ifndef::chapters[:chapters:]
 This section provides a mapping between the Vulkan term for a concept and the terminology used in other APIs. It is organized in alphabetical order by Vulkan term. If you are searching for the Vulkan equivalent of a concept used in an API you know, you can find the term you know in this list and then search the xref:{chapters}vulkan_spec.adoc#vulkan-spec[Vulkan specification] for the corresponding Vulkan term.
 
 [NOTE]
-.Note
 ====
 Not everything will be a perfect 1:1 match, the goal is to give a rough idea where to start looking in the spec.
 ====

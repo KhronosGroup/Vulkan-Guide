@@ -24,7 +24,6 @@ There are many other components in Vulkan that are labeled as properties. The te
 == Extensions
 
 [NOTE]
-.Note
 ====
 Check out the xref:{chapters}enabling_extensions.adoc#enabling-extensions[Enabling Extensions] chapter for more information.
 
@@ -36,7 +35,6 @@ There are many times when a set of new functionality is desired in Vulkan that d
 == Features
 
 [NOTE]
-.Note
 ====
 Checkout the xref:{chapters}enabling_features.adoc#enabling-features[Enabling Features] chapter for more information.
 ====
@@ -56,9 +54,9 @@ Every `VkBuffer` and `VkImage` requires a format from the supported Vulkan link:
 Each format has a set of `VkFormatFeatureFlagBits` for how the format is supported or not. These features bits are grouped further for how the format is used.
 
 [NOTE]
-.Note
+.Example
 ====
-Example: One can check if the `VK_FORMAT_R8_UNORM` format supports being sampled when an images is created with a `tiling` parameter of `VK_IMAGE_TILING_LINEAR`.
+One can check if the `VK_FORMAT_R8_UNORM` format supports being sampled when an images is created with a `tiling` parameter of `VK_IMAGE_TILING_LINEAR`.
 
 To do this, query the `linearTilingFeatures` flags for `VK_FORMAT_R8_UNORM` to see if the `VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT` is set for the implementation.
 ====

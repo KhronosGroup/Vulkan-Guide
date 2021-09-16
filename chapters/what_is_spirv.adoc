@@ -5,7 +5,6 @@
 = What is SPIR-V
 
 [NOTE]
-.Note
 ====
 Please read the link:https://github.com/KhronosGroup/SPIRV-Guide[SPIRV-Guide] for more in detail information about SPIR-V
 ====

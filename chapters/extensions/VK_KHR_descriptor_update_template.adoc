@@ -5,7 +5,6 @@
 = VK_KHR_descriptor_update_template
 
 [NOTE]
-.Note
 ====
 Promoted to core in Vulkan 1.1
 

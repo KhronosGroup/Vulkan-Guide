@@ -22,7 +22,6 @@ Protected memory was added in Vulkan 1.1 and there was no extension prior. This 
 A protected queue can read both protected and unprotected memory, but can only write to protected memory. If a queue can write to unprotected memory, then it can't also read from protected memory.
 
 [NOTE]
-.Note
 ====
 Often performance counters and other timing measurement systems are disabled or less accurate for protected queues to prevent side-channel attacks.
 ====
