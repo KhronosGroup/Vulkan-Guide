@@ -27,7 +27,7 @@ How a `VkQueue` is mapped to the underlying hardware is implementation-defined. 
 Not all applications will require or benefit from multiple queues. It is reasonable for an application to have a single "`universal`" graphics supported queue to submit all the work to the GPU.
 ====
 
-= Queue Family
+== Queue Family
 
 There are various types of operations a `VkQueue` can support. A "`Queue Family`" just describes a set of `VkQueue`&#8203;s that have common properties and support the same functionality, as advertised in `VkQueueFamilyProperties`.
 
@@ -43,7 +43,7 @@ The following are the queue operations found in link:https://www.khronos.org/reg
   * `VK_QUEUE_PROTECTED_BIT` used for xref:{chapters}protected.adoc#protected[protected memory].
   * `VK_QUEUE_VIDEO_DECODE_BIT_KHR` and `VK_QUEUE_VIDEO_ENCODE_BIT_KHR` used with link:https://www.khronos.org/blog/an-introduction-to-vulkan-video?mc_cid=8052312abe&mc_eid=64241dfcfa[Vulkan Video].
 
-== Knowing which Queue Family is needed
+=== Knowing which Queue Family is needed
 
 Each operation in the Vulkan Spec has a "`Supported Queue Types`" section generated from the link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/xml/vk.xml[vk.xml] file. The following is 3 different examples of what it looks like in the Spec:
 
@@ -53,7 +53,7 @@ image::images/queues_cmd_dispatch.png[queues_cmd_dispatch.png]
 
 image::images/queues_cmd_executecommands.png[queues_cmd_dispatch.png]
 
-== Querying for Queue Family
+=== Querying for Queue Family
 
 The following is the simplest logic needed if an application only wants a single graphics `vkQueue`
 
