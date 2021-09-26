@@ -89,10 +89,9 @@ It is important to realize there is a subtle difference for **some** extension t
 
 The link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_differences_relative_to_vk_khr_8bit_storage[Vulkan spec describes the change] for `VK_KHR_8bit_storage` for Vulkan 1.2 where it states:
 
-[SPEC]
-====
+____
 If the VK_KHR_8bit_storage extension is not supported, support for the SPIR-V StorageBuffer8BitAccess capability in shader modules is optional.
-====
+____
 
 "not supported" here refers to the fact that an implementation might support Vulkan 1.2, but if an application queries `vkEnumerateDeviceExtensionProperties` it is possible that `VK_KHR_8bit_storage` will not be in the result.
 
