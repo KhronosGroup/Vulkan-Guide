@@ -1,6 +1,8 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+ifndef::chapters[:chapters: ../]
+
 [[VK_KHR_image_format_list]]
 = VK_KHR_image_format_list
 
