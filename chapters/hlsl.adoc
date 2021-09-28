@@ -97,7 +97,7 @@ Aside from the syntax differences, built-ins use HLSL names. E.g. `gl_vertex` be
 [[Tooling]]
 = Tooling
 
-As is the case with GLSL to SPIR-V, to use HLSL with Vulkan, a shader compiler is required. Whereas link:https://github.com/KhronosGroup/glslang[glslang] is the reference GLSL to SPIR-V compiler, the link:https://https://github.com/microsoft/DirectXShaderCompiler[DirectXShaderCompiler] (DXC) is the reference HLSL to SPIR-V compiler. Thanks to open source contributions, the SPIR-V backend of DXC is now officially supported and enabled in DXC and be used out-of-the box. A pre-compiled DXC for compiling shaders offline with SPIR-V support is bundled with the official link:https://vulkan.lunarg.com/[LunarG Vulkan SDK] or can be downloaded from the link:https://github.com/microsoft/DirectXShaderCompiler/releases[official repository].
+As is the case with GLSL to SPIR-V, to use HLSL with Vulkan, a shader compiler is required. Whereas link:https://github.com/KhronosGroup/glslang[glslang] is the reference GLSL to SPIR-V compiler, the link:https://github.com/microsoft/DirectXShaderCompiler[DirectXShaderCompiler] (DXC) is the reference HLSL to SPIR-V compiler. Thanks to open source contributions, the SPIR-V backend of DXC is now officially supported and enabled in DXC and be used out-of-the box. A pre-compiled DXC for compiling shaders offline with SPIR-V support is bundled with the official link:https://vulkan.lunarg.com/[LunarG Vulkan SDK] or can be downloaded from the link:https://github.com/microsoft/DirectXShaderCompiler/releases[official repository].
 
 While other shader compiling tools like link:https://github.com/KhronosGroup/glslang/wiki/HLSL-FAQ[glslang] also offer HLSL support, DXC has the most complete and up-to-date support.
 
