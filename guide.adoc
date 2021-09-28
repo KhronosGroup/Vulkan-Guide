@@ -182,6 +182,10 @@ include::{chapters}atomics.adoc[]
 
 include::{chapters}common_pitfalls.adoc[]
 
+// == Using HLSL shaders
+
+include::{chapters}hlsl.adoc[]
+
 = When and Why to use Extensions
 
 [NOTE]
