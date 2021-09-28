@@ -7,7 +7,7 @@ ifndef::chapters[:chapters:]
 [[hlsl-in-vulkan]]
 = HLSL in Vulkan
 
-Vulkan does not directly consume shaders in a human-readable text format, but instead uses link:./what_is_spirv.adoc[SPIR-V] as an intermediate representation. This opens the option to use shader languages other than e.g. GLSL, as long as they can target the Vulkan SPIR-V environment.
+Vulkan does not directly consume shaders in a human-readable text format, but instead uses xref:{chapters}what_is_spirv.adoc[SPIR-V] as an intermediate representation. This opens the option to use shader languages other than e.g. GLSL, as long as they can target the Vulkan SPIR-V environment.
 
 One such language is the High Level Shading Language (HLSL) by Microsoft, used by DirectX. Thanks to link:https://www.khronos.org/blog/hlsl-first-class-vulkan-shading-language[recent additions to Vulkan 1.2] it is now considered a first class shading language for Vulkan that can be used just as easily as GLSL.
 
@@ -22,7 +22,7 @@ From the application's point-of-view, using HLSL is exactly the same as using GL
 
 [[hlsl-spirv-mapping-manual]]
 == HLSL to SPIR-V feature mapping manual
-A great starting point on using HLSL in Vulkan via SPIR-V is the link:https://github.com/microsoft/DirectXShaderCompiler/blob/master/docs/SPIR-V.rst#implicit-location-number-assignment[HLSL to SPIR-V feature mapping manual]. It contains detailed information on semantics, syntax, supported features and extensions and much more and is a must-read. The link:./decoder_ring.adoc[decoder ring] also has a translation table for concepts and terms used in Vulkan an DirectX.
+A great starting point on using HLSL in Vulkan via SPIR-V is the link:https://github.com/microsoft/DirectXShaderCompiler/blob/master/docs/SPIR-V.rst#implicit-location-number-assignment[HLSL to SPIR-V feature mapping manual]. It contains detailed information on semantics, syntax, supported features and extensions and much more and is a must-read. The xref:{chapters}decoder_ring.adoc[decoder ring] also has a translation table for concepts and terms used in Vulkan an DirectX.
 
 [[vk-namespace]]
 == The Vulkan HLSL namespace
