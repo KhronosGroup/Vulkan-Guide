@@ -16,26 +16,26 @@ With link:https://github.com/microsoft/DirectXShaderCompiler/blob/master/docs/SP
 image::images/what_is_spirv_dxc.png[what_is_spriv_dxc.png]
 
 [[applications-pov]]
-= From the application's point-of-view
+== From the application's point-of-view
 
 From the application's point-of-view, using HLSL is exactly the same as using GLSL. As the application always consumes shaders in the SPIR-V format, the only difference is in the tooling to generate the SPIR-V shaders from the desired shading language.
 
 [[hlsl-spirv-mapping-manual]]
-= HLSL to SPIR-V feature mapping manual
+== HLSL to SPIR-V feature mapping manual
 A great starting point on using HLSL in Vulkan via SPIR-V is the link:https://github.com/microsoft/DirectXShaderCompiler/blob/master/docs/SPIR-V.rst#implicit-location-number-assignment[HLSL to SPIR-V feature mapping manual]. It contains detailed information on semantics, syntax, supported features and extensions and much more and is a must-read. The link:./decoder_ring.adoc[decoder ring] also has a translation table for concepts and terms used in Vulkan an DirectX.
 
 [[vk-namespace]]
-= The Vulkan HLSL namespace
+== The Vulkan HLSL namespace
 To make HLSL compatible with Vulkan, an link:https://github.com/microsoft/DirectXShaderCompiler/blob/master/docs/SPIR-V.rst#the-implicit-vk-namespace)[implicit namespace] has been introduced that provides an interface for for Vulkan-specific features.
 
 [[syntax-comparison]]
-= Syntax comparison
+== Syntax comparison
 
 Similar to regular programming languages, HLSL and GLSL differ in their syntax. While GLSL is more procedural (like C), HLSL is more object-oriented (like C++).
 
 Here is the same shader written in both languages to give quick comparison on how they basically differ, including the aforementioned namespace that e.g. adds explicit locations:
 
-== GLSL
+=== GLSL
 [source,glsl]
 ----
 #version 450
@@ -59,7 +59,7 @@ void main()
 }
 ----
 
-== HLSL
+=== HLSL
 [source,hlsl]
 ----
 struct VSInput
@@ -95,13 +95,13 @@ VSOutput main(VSInput input, uint VertexIndex : SV_VertexID)
 Aside from the syntax differences, built-ins use HLSL names. E.g. `gl_vertex` becomes `VertexIndex` in HLSL. A list of GLSL to HLSL built-in mappings can be found link:https://anteru.net/blog/2016/mapping-between-HLSL-and-GLSL/[here].
 
 [[Tooling]]
-= Tooling
+== Tooling
 
 As is the case with GLSL to SPIR-V, to use HLSL with Vulkan, a shader compiler is required. Whereas link:https://github.com/KhronosGroup/glslang[glslang] is the reference GLSL to SPIR-V compiler, the link:https://github.com/microsoft/DirectXShaderCompiler[DirectXShaderCompiler] (DXC) is the reference HLSL to SPIR-V compiler. Thanks to open source contributions, the SPIR-V backend of DXC is now officially supported and enabled in DXC and be used out-of-the box. A pre-compiled DXC for compiling shaders offline with SPIR-V support is bundled with the official link:https://vulkan.lunarg.com/[LunarG Vulkan SDK] or can be downloaded from the link:https://github.com/microsoft/DirectXShaderCompiler/releases[official repository].
 
 While other shader compiling tools like link:https://github.com/KhronosGroup/glslang/wiki/HLSL-FAQ[glslang] also offer HLSL support, DXC has the most complete and up-to-date support.
 
-== Compiling HLSL to SPIR-V with DXC
+=== Compiling HLSL to SPIR-V with DXC
 
 Compiling a shader offline via the pre-compiled dxc binary is similar to compiling with glslang:
 
@@ -121,7 +121,7 @@ Extensions are implicitly enabled based on feature usage, but can also be explic
 dxc.exe -spirv -T vs_6_1 -E main .\input.vert -Fo .\output.vert.spv -fspv-extension=SPV_EXT_descriptor_indexing
 ----
 
-= Shader model coverage
+== Shader model coverage
 
 DirectX and HLSL use a fixed shader model notion to describe the supported feature set. This is different from Vulkan and SPIR-V's flexible extension based way of adding features to shaders. The following table tries to list Vulkan's coverage for the HLSL shader models without guarantee of completeness:
 
