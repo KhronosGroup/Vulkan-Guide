@@ -154,7 +154,11 @@ DirectX and HLSL use a fixed shader model notion to describe the supported featu
 | Shader integer dot product, SV_ShadingRate
 
 | link:https://github.com/microsoft/DirectXShaderCompiler/wiki/Shader-Model-6.5[Shader Model 6.5]
-| ✔ (partially)
+| ✗ (partially)
 | DXR1.1 (KHR ray tracing), Mesh and Amplification shaders, additional Wave intrinsics
+
+| link:https://github.com/microsoft/DirectXShaderCompiler/wiki/Shader-Model-6.6[Shader Model 6.6]
+| ✗ (partially)
+| VK_NV_compute_shader_derivatives, VK_KHR_shader_atomic_int64
 
 |===
