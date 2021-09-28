@@ -32,8 +32,7 @@ Shaderc builds both tools as a standalone command line tool (link:https://github
 
 === DXC
 
-link:https://github.com/microsoft/DirectXShaderCompiler[DirectXShaderCompiler] also supports link:https://github.com/Microsoft/DirectXShaderCompiler/wiki/SPIR%E2%80%90V-CodeGen
-[translating HLSL into the SPIR-V].
+link:https://github.com/microsoft/DirectXShaderCompiler[DirectXShaderCompiler] also supports link:https://github.com/Microsoft/DirectXShaderCompiler/wiki/SPIR%E2%80%90V-CodeGen[translating HLSL into the SPIR-V].
 
 image::images/what_is_spirv_dxc.png[what_is_spirv_dxc.png]
 
