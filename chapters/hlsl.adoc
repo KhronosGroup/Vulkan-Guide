@@ -120,3 +120,41 @@ Extensions are implicitly enabled based on feature usage, but can also be explic
 ----
 dxc.exe -spirv -T vs_6_1 -E main .\input.vert -Fo .\output.vert.spv -fspv-extension=SPV_EXT_descriptor_indexing
 ----
+
+= Shader model coverage
+
+DirectX and HLSL use a fixed shader model notion to describe the supported feature set. This is different from Vulkan and SPIR-V's flexible extension based way of adding features to shaders. The following table tries to list Vulkan's coverage for the HLSL shader models without guarantee of completeness:
+
+.Shader models
+|===
+| Shader Model | Supported | Remarks
+
+| Shader Model 5.1 and below
+| ✔
+| Excluding features without Vulkan equivalent
+
+| link:https://github.com/microsoft/DirectXShaderCompiler/wiki/Shader-Model-6.0[Shader Model 6.0]
+| ✔
+| Wave intrinsics, 64-bit integers
+
+| link:https://github.com/microsoft/DirectXShaderCompiler/wiki/Shader-Model-6.1[Shader Model 6.1]
+| ✔
+| SV_ViewID, SV_Barycentrics
+
+| link:https://github.com/microsoft/DirectXShaderCompiler/wiki/Shader-Model-6.2[Shader Model 6.2]
+| ✔
+| 16-bit types, Denorm mode
+
+| link:https://github.com/microsoft/DirectXShaderCompiler/wiki/Shader-Model-6.3[Shader Model 6.3]
+| ✔
+| Hardware accelerated ray tracing
+
+| link:https://github.com/microsoft/DirectXShaderCompiler/wiki/Shader-Model-6.4[Shader Model 6.4]
+| ✔ 
+| Shader integer dot product, SV_ShadingRate
+
+| link:https://github.com/microsoft/DirectXShaderCompiler/wiki/Shader-Model-6.5[Shader Model 6.5]
+| ✔ (partially)
+| DXR1.1 (KHR ray tracing), Mesh and Amplification shaders, additional Wave intrinsics
+
+|===
