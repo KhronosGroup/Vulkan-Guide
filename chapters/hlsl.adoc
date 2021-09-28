@@ -18,7 +18,7 @@ image::images/what_is_spirv_dxc.png[what_is_spriv_dxc.png]
 [[applications-pov]]
 = From the application's point-of-view
 
-From the application's point-of-view, using HLSL is exactly the same as using GLSL. As the application always consumes shaders in the SPIR-V format, the only difference is in the tooling to generate the SPIR-V shaders from the desired shader format.
+From the application's point-of-view, using HLSL is exactly the same as using GLSL. As the application always consumes shaders in the SPIR-V format, the only difference is in the tooling to generate the SPIR-V shaders from the desired shading language.
 
 [[hlsl-spirv-mapping-manual]]
 = HLSL to SPIR-V feature mapping manual
