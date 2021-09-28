@@ -177,6 +177,9 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 
 // include::{chapters}common_pitfalls.adoc[]
 
+== xref:{chapters}hlsl.adoc[Using HLSL shaders]
+
+// include::{chapters}hlsl.adoc[]
 
 = When and Why to use Extensions
 
