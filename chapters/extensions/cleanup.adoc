@@ -101,6 +101,11 @@ This extension adds a new sampler address mode (`VK_SAMPLER_ADDRESS_MODE_MIRROR_
 
 These extensions add new `VkFormat` that were not originally in the spec
 
+[[VK_KHR_format_feature_flags2]]
+== VK_KHR_format_feature_flags2
+
+This extension adds a new `VkFormatFeatureFlagBits2KHR` 64bits format feature flag type to extend the existing `VkFormatFeatureFlagBits` which is limited to 31 flags.
+
 [[maintenance-extensions]]
 == Maintenance Extensions
 

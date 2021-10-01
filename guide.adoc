@@ -104,6 +104,10 @@ include::{chapters}enabling_extensions.adoc[]
 
 include::{chapters}enabling_features.adoc[]
 
+// === Formats
+
+include::{chapters}formats.adoc[]
+
 // == Queues and Queue Family
 
 include::{chapters}queues.adoc[]

@@ -99,6 +99,10 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 
 // include::{chapters}enabling_features.adoc[]
 
+=== xref:{chapters}formats.adoc[Formats]
+
+// include::{chapters}formats.adoc[]
+
 == xref:{chapters}queues.adoc[Queues and Queue Family]
 
 // include::{chapters}queues.adoc[]
