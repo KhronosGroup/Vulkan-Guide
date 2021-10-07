@@ -49,21 +49,9 @@ Limits are implementation-dependent minimums, maximums, and other device charact
 
 == Formats
 
-Every `VkBuffer` and `VkImage` requires a format from the supported Vulkan link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#formats-definition[VkFormat] list. The supported formats may vary across implementations, but a link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#features-required-format-support[minimum set of format features are guaranteed]. An application can link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#formats-properties[query] for the supported format properties.
+Vulkan provides many `VkFormat` that have multiple `VkFormatFeatureFlags` each holding a various link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkFormatFeatureFlagBits.html[VkFormatFeatureFlagBits] bitmasks that can be queried.
 
-Each format has a set of `VkFormatFeatureFlagBits` for how the format is supported or not. These features bits are grouped further for how the format is used.
-
-[NOTE]
-.Example
-====
-One can check if the `VK_FORMAT_R8_UNORM` format supports being sampled when an images is created with a `tiling` parameter of `VK_IMAGE_TILING_LINEAR`.
-
-To do this, query the `linearTilingFeatures` flags for `VK_FORMAT_R8_UNORM` to see if the `VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT` is set for the implementation.
-====
-
-=== External Formats
-
-Currently only supported with the `VK_ANDROID_external_memory_android_hardware_buffer` extension. This extension allows Android applications to import implementation-defined external formats. There are many restrictions what are allowed with these external formats which are link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats[documented in the spec.]
+Checkout the xref:{chapters}formats.adoc#feature-support[Format chapter] for more information.
 
 == Tools
 
