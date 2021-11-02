@@ -1,6 +1,8 @@
 // Copyright 2019-2021 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
+ifndef::chapters[:chapters:]
+
 [[vulkan-cts]]
 = Vulkan CTS
 

@@ -27,7 +27,7 @@ How a `VkQueue` is mapped to the underlying hardware is implementation-defined. 
 Not all applications will require or benefit from multiple queues. It is reasonable for an application to have a single "`universal`" graphics supported queue to submit all the work to the GPU.
 ====
 
-= Queue Family
+== Queue Family
 
 There are various types of operations a `VkQueue` can support. A "`Queue Family`" just describes a set of `VkQueue`&#8203;s that have common properties and support the same functionality, as advertised in `VkQueueFamilyProperties`.
 
@@ -43,7 +43,7 @@ The following are the queue operations found in link:https://www.khronos.org/reg
   * `VK_QUEUE_PROTECTED_BIT` used for xref:{chapters}protected.adoc#protected[protected memory].
   * `VK_QUEUE_VIDEO_DECODE_BIT_KHR` and `VK_QUEUE_VIDEO_ENCODE_BIT_KHR` used with link:https://www.khronos.org/blog/an-introduction-to-vulkan-video?mc_cid=8052312abe&mc_eid=64241dfcfa[Vulkan Video].
 
-== Knowing which Queue Family is needed
+=== Knowing which Queue Family is needed
 
 Each operation in the Vulkan Spec has a "`Supported Queue Types`" section generated from the link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/xml/vk.xml[vk.xml] file. The following is 3 different examples of what it looks like in the Spec:
 
@@ -53,9 +53,9 @@ image::images/queues_cmd_dispatch.png[queues_cmd_dispatch.png]
 
 image::images/queues_cmd_executecommands.png[queues_cmd_dispatch.png]
 
-== Querying for Queue Family
+=== Querying for Queue Family
 
-The following is the simplest logic needed if an application only wants a single graphics `vkQueue`
+The following is the simplest logic needed if an application only wants a single graphics `VkQueue`
 
 [source,cpp]
 ----
@@ -80,11 +80,11 @@ for (uint32_t i = 0; i < count; i++) {
 
 Unlike other handles such as `VkDevice`, `VkBuffer`, `VkDeviceMemory`, there is **no** `vkCreateQueue` or `vkAllocateQueue`. Instead, the driver is in charge of creating and destroying the `VkQueue` handles during `vkCreateDevice`/`vkDestroyDevice` time.
 
-The following examples will use the hypothetical implementation which support 3 `VkQueue`s from 2 Queue Families:
+The following examples will use the hypothetical implementation which support 3 `VkQueue`&#8203;s from 2 Queue Families:
 
 image::images/queues_hypothetical.png[queues_hypothetical.png]
 
-The following is an example how to create all 3 `VkQueue`s with the logical device:
+The following is an example how to create all 3 `VkQueue`&#8203;s with the logical device:
 
 [source,cpp]
 ----
@@ -101,13 +101,13 @@ deviceCreateInfo.queueCreateInfoCount = 2;
 vkCreateDevice(physicalDevice, &deviceCreateInfo, nullptr, &device);
 ----
 
-After creating the `VkDevice` the application can use `vkGetDeviceQueue` to get the `vkQueue` handles
+After creating the `VkDevice` the application can use `vkGetDeviceQueue` to get the `VkQueue` handles
 
 [source,cpp]
 ----
-vkQueue graphicsQueue0 = VK_NULL_HANDLE;
-vkQueue graphicsQueue1 = VK_NULL_HANDLE;
-vkQueue transferQueue0 = VK_NULL_HANDLE;
+VkQueue graphicsQueue0 = VK_NULL_HANDLE;
+VkQueue graphicsQueue1 = VK_NULL_HANDLE;
+VkQueue transferQueue0 = VK_NULL_HANDLE;
 
 // Can be obtained in any order
 vkGetDeviceQueue(device, 0, 0, &transferQueue0); // family 0 - queue 0
