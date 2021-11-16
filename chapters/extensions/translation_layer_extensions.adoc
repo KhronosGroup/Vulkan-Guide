@@ -41,5 +41,5 @@ The new value is associated with the image view, and is
 intended to match D3D12's SRV ResourceMinLODClamp parameter.
 Using MinLod and similar functionality is primarily intended for sparse texturing since higher resolution mip levels can be paged in and out on demand.
 There are many ways to achieve a similar clamp in Vulkan. A `VkImageView` can clamp the base level, but a `MinLod` can also clamp to a fractional LOD
-and does not have to modify the base texture dimension, which might simplify some algorithms. VkSamplers can also clamp to fractional LOD, but
+and does not have to modify the base texture dimension, which might simplify some algorithms. `VkSampler`&#8203;s can also clamp to fractional LOD, but
 using many unique samplers for this purpose might not be practical.
