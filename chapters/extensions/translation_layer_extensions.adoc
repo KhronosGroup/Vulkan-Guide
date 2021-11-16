@@ -32,3 +32,14 @@ Vulkan's defaults convention for provoking vertex is "`first vertex`" while Open
 == VK_EXT_transform_feedback
 
 Everything needed for transform feedback can be done via a compute shader in Vulkan. There is also a great link:http://jason-blog.jlekstrand.net/2018/10/transform-feedback-is-terrible-so-why.html[blog by Jason Ekstrand] on why transform feedback is terrible and should be avoided.
+
+[[VK_EXT_image_view_min_lod]]
+== VK_EXT_image_view_min_lod
+
+This extension provides an API-side version of the `MinLod` SPIR-V qualifier.
+The new value is associated with the image view, and is
+intended to match D3D12's SRV ResourceMinLODClamp parameter.
+Using MinLod and similar functionality is primarily intended for sparse texturing since higher resolution mip levels can be paged in and out on demand.
+There are many ways to achieve a similar clamp in Vulkan. A `VkImageView` can clamp the base level, but a `MinLod` can also clamp to a fractional LOD
+and does not have to modify the base texture dimension, which might simplify some algorithms. `VkSampler`&#8203;s can also clamp to fractional LOD, but
+using many unique samplers for this purpose might not be practical.
