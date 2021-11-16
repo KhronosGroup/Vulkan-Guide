@@ -36,7 +36,7 @@ Everything needed for transform feedback can be done via a compute shader in Vul
 [[VK_EXT_image_view_min_lod]]
 == VK_EXT_image_view_min_lod
 
-This extension provides an API-side version of the MinLod SPIR-V qualifier.
+This extension provides an API-side version of the `MinLod` SPIR-V qualifier.
 The new value is associated with the image view, and is
 intended to match D3D12's SRV ResourceMinLODClamp parameter.
 Using MinLod and similar functionality is primarily intended for sparse texturing since higher resolution mip levels can be paged in and out on demand.
