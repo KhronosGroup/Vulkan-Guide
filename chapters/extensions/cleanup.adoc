@@ -106,16 +106,22 @@ These extensions add new `VkFormat` that were not originally in the spec
 
 This extension adds a new `VkFormatFeatureFlagBits2KHR` 64bits format feature flag type to extend the existing `VkFormatFeatureFlagBits` which is limited to 31 flags.
 
+[[VK_EXT_rgba10x6_formats]]
+== VK_EXT_rgba10x6_formats
+
+This extension adds an exception for `VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16` in the link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/pull/3397[validation layers] to allow being able to render to the format.
+
 [[maintenance-extensions]]
 == Maintenance Extensions
 
 The maintenance extensions add a collection of minor features that were intentionally left out or overlooked from the original Vulkan 1.0 release.
 
-Currently, there are 3 maintenance extensions, all of which were bundled in Vulkan 1.1 as core. All the details for each are well defined in the extension appendix page.
+Currently, there are 4 maintenance extensions. The first 3 were bundled in Vulkan 1.1 as core. All the details for each are well defined in the extension appendix page.
 
   * link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance1[VK_KHR_maintenance1]
   * link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance2[VK_KHR_maintenance2]
   * link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance3[VK_KHR_maintenance3]
+  * link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance4[VK_KHR_maintenance4]
 
 [[pnext-expansions]]
 == pNext Expansions

@@ -18,6 +18,11 @@ Unless this is needed for translation, it is **highly recommended** that develop
 
 Vulkan provides a transparent black, opaque black, and opaque white `VkBorderColor` for `VkSampler` objects in the core spec. Both OpenGL and D3D have the option to set the sampler border to be a custom color.
 
+[[VK_EXT_border_color_swizzle]]
+== VK_EXT_border_color_swizzle
+
+After the publication of `VK_EXT_custom_border_color`, it was discovered that some implementations had undefined behavior when combining a sampler that uses a custom border color with image views whose component mapping is not the identity mapping.
+
 [[VK_EXT_depth_clip_enable]]
 == VK_EXT_depth_clip_enable
 
