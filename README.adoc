@@ -194,7 +194,7 @@ These are supplemental references for the various Vulkan Extensions. Please cons
 
 == xref:{chapters}extensions/cleanup.adoc[Cleanup Extensions]
 
-  * `VK_EXT_4444_formats`, `VK_KHR_bind_memory2`, `VK_KHR_create_renderpass2`, `VK_KHR_dedicated_allocation`, `VK_KHR_driver_properties`, `VK_KHR_get_memory_requirements2`, `VK_KHR_get_physical_device_properties2`, `VK_EXT_host_query_reset`, `VK_KHR_maintenance1`, `VK_KHR_maintenance2`, `VK_KHR_maintenance3`, `VK_KHR_separate_depth_stencil_layouts`, `VK_KHR_depth_stencil_resolve`, `VK_EXT_separate_stencil_usage`, `VK_EXT_sampler_filter_minmax`, `VK_KHR_sampler_mirror_clamp_to_edge`, `VK_EXT_ycbcr_2plane_444_formats`
+  * `VK_EXT_4444_formats`, `VK_KHR_bind_memory2`, `VK_KHR_create_renderpass2`, `VK_KHR_dedicated_allocation`, `VK_KHR_driver_properties`, `VK_KHR_get_memory_requirements2`, `VK_KHR_get_physical_device_properties2`, `VK_EXT_host_query_reset`, `VK_KHR_maintenance1`, `VK_KHR_maintenance2`, `VK_KHR_maintenance3`, `VK_KHR_maintenance4`, `VK_KHR_separate_depth_stencil_layouts`, `VK_KHR_depth_stencil_resolve`, `VK_EXT_separate_stencil_usage`, `VK_EXT_sampler_filter_minmax`, `VK_KHR_sampler_mirror_clamp_to_edge`, `VK_EXT_ycbcr_2plane_444_formats`, `VK_KHR_format_feature_flags2`, `VK_EXT_rgba10x6_formats`
 
 // include::{chapters}extensions/cleanup.adoc[]
 
@@ -224,7 +224,7 @@ These are supplemental references for the various Vulkan Extensions. Please cons
 
 == xref:{chapters}extensions/translation_layer_extensions.adoc[Translation Layer Extensions]
 
-  * `VK_EXT_custom_border_color`, `VK_EXT_depth_clip_enable`, `VK_EXT_provoking_vertex`, `VK_EXT_transform_feedback`, `VK_EXT_image_view_min_lod`
+  * `VK_EXT_custom_border_color`, `VK_EXT_border_color_swizzle`, `VK_EXT_depth_clip_enable`, `VK_EXT_provoking_vertex`, `VK_EXT_transform_feedback`, `VK_EXT_image_view_min_lod`
 
 // include::{chapters}extensions/translation_layer_extensions.adoc[]
 
@@ -262,7 +262,7 @@ These are supplemental references for the various Vulkan Extensions. Please cons
 
 == link:https://www.khronos.org/blog/vulkan-timeline-semaphores[VK_KHR_timeline_semaphore]
 
-// (https://www.khronos.org/blog/vulkan-timeline-semaphores)
+== link:https://www.khronos.org/blog/streamlining-render-passes[VK_KHR_dynamic_rendering]
 
 == xref:{chapters}extensions/VK_KHR_shader_subgroup_uniform_control_flow.adoc[VK_KHR_shader_subgroup_uniform_control_flow]
 

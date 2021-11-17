@@ -258,7 +258,7 @@ include::{chapters}extensions/VK_KHR_sampler_ycbcr_conversion.adoc[]
 
 // == link:https://www.khronos.org/blog/vulkan-timeline-semaphores[VK_KHR_timeline_semaphore]
 
-// (https://www.khronos.org/blog/vulkan-timeline-semaphores)
+// == link:https://www.khronos.org/blog/streamlining-render-passes[VK_KHR_dynamic_rendering]
 
 // == VK_KHR_shader_subgroup_uniform_control_flow
 
