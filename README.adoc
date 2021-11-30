@@ -147,7 +147,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 
 // include::{chapters}depth.adoc[]
 
-  * `VK_EXT_depth_range_unrestricted`, `VK_EXT_depth_clip_enable`
+  * `VK_EXT_depth_range_unrestricted`, `VK_EXT_depth_clip_enable`, `VK_EXT_depth_clip_control`
 
 == xref:{chapters}mapping_data_to_shaders.adoc[Mapping Data to Shaders]
 
@@ -224,7 +224,7 @@ These are supplemental references for the various Vulkan Extensions. Please cons
 
 == xref:{chapters}extensions/translation_layer_extensions.adoc[Translation Layer Extensions]
 
-  * `VK_EXT_custom_border_color`, `VK_EXT_border_color_swizzle`, `VK_EXT_depth_clip_enable`, `VK_EXT_provoking_vertex`, `VK_EXT_transform_feedback`, `VK_EXT_image_view_min_lod`
+  * `VK_EXT_custom_border_color`, `VK_EXT_border_color_swizzle`, `VK_EXT_depth_clip_enable`, `VK_EXT_depth_clip_control`, `VK_EXT_provoking_vertex`, `VK_EXT_transform_feedback`, `VK_EXT_image_view_min_lod`
 
 // include::{chapters}extensions/translation_layer_extensions.adoc[]
 

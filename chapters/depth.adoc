@@ -173,7 +173,11 @@ In OpenGL the `view volume` is expressed as
 -Wc <= Zc <= Wc
 ----
 
-and anything outside of `[-1, 1]` is clipped. The link:https://github.com/KhronosGroup/Vulkan-Docs/issues/1054#issuecomment-547202276[workaround currently] is to perform the conversion in the pre-rasterization shader
+and anything outside of `[-1, 1]` is clipped.
+
+The link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_EXT_depth_clip_control.html[VK_EXT_depth_clip_control] extension was added to allow efficient layering of OpenGL over Vulkan. By setting the `VkPipelineViewportDepthClipControlCreateInfoEXT::negativeOneToOne` to `VK_TRUE` when creating the `VkPipeline` it will use the OpenGL `[-1, 1]` view volume.
+
+If `VK_EXT_depth_clip_control` is not available, the link:https://github.com/KhronosGroup/Vulkan-Docs/issues/1054#issuecomment-547202276[workaround currently] is to perform the conversion in the pre-rasterization shader
 
 [source,glsl]
 ----
