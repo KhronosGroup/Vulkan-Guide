@@ -10,7 +10,7 @@ The Vulkan ecosystem consists of many tools for development. This is **not** a f
 
 Khronos hosts link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples], a collection of code and tutorials that demonstrates API usage and explains the implementation of performance best practices.
 
-LunarG is privately sponsored to develop and maintain Vulkan ecosystem components and is currently the curator for the link:https://github.com/KhronosGroup/Vulkan-Loader[Vulkan Loader] and link:https://github.com/KhronosGroup/Vulkan-ValidationLayers[Vulkan Validation Layers] Khronos Group repositores. In addition, LunarG delivers the link:https://vulkan.lunarg.com/[Vulkan SDK] and develops other key tools such as the link:https://vulkan.lunarg.com/doc/sdk/latest/windows/vkconfig.html[Vulkan Configurator] and link:https://vulkan.lunarg.com/doc/sdk/latest/windows/capture_tools.html[GFXReconstruct].
+LunarG is privately sponsored to develop and maintain Vulkan ecosystem components and is currently the curator for the link:https://github.com/KhronosGroup/Vulkan-Loader[Vulkan Loader] and link:https://github.com/KhronosGroup/Vulkan-ValidationLayers[Vulkan Validation Layers] Khronos Group repositories. In addition, LunarG delivers the link:https://vulkan.lunarg.com/[Vulkan SDK] and develops other key tools such as the link:https://vulkan.lunarg.com/doc/sdk/latest/windows/vkconfig.html[Vulkan Configurator] and link:https://vulkan.lunarg.com/doc/sdk/latest/windows/capture_tools.html[GFXReconstruct].
 
 == Vulkan Layers
 
