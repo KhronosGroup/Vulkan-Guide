@@ -567,7 +567,7 @@ The typical use cases for specialization constants can be best grouped into thre
   * Toggling features
   ** Support for a feature in Vulkan isn't known until runtime. This usage of specialization constants is to prevent writing two separate shaders, but instead embedding a constant runtime decision.
   * Improving backend optimizations
-  ** The "`backend`" here refers the the implementation's compiler that takes the resulting SPIR-V and lowers it down to some ISA to run on the device.
+  ** The "`backend`" here refers the implementation's compiler that takes the resulting SPIR-V and lowers it down to some ISA to run on the device.
   ** Constant values allow a set of optimizations such as link:https://en.wikipedia.org/wiki/Constant_folding[constant folding], link:https://en.wikipedia.org/wiki/Dead_code_elimination[dead code elimination], etc. to occur.
   * Affecting types and memory sizes
   ** It is possible to set the length of an array or a variable type used through a specialization constant.
