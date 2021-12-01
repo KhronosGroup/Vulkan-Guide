@@ -18,7 +18,7 @@ Command buffers submitted to a `VkQueue` start in order, but are allowed to proc
 
 Command buffers submitted to different queues are unordered relative to each other unless you explicitly synchronize them with a `VkSemaphore`.
 
-You can only submit work to a `VkQueue` from one thread at a time, but different threads can submit work to different a `VkQueue` simultaneously.
+You can only submit work to a `VkQueue` from one thread at a time, but different threads can submit work to a different `VkQueue` simultaneously.
 
 How a `VkQueue` is mapped to the underlying hardware is implementation-defined. Some implementations will have multiple hardware queues and submitting work to multiple `VkQueue`&#8203;s will proceed independently and concurrently. Some implementations will do scheduling at a kernel driver level before submitting work to the hardware. There is no current way in Vulkan to expose the exact details how each `VkQueue` is mapped.
 
