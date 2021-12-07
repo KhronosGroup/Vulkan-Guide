@@ -153,7 +153,7 @@ The Validation Layer uses the device properties of the application in order to d
 
 == Special Usage Tags
 
-T) which is only designed for emulation layers. If an application's intended usage corresponds to one of the special use cases, the following approach will allow you to ignore the warnings.
+The link:https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html[Best Practices layer] will produce warnings when an application tries to use any extension with link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse[special usage tags]. An example of such an extension is xref:{chapters}extensions/translation_layer_extensions.adoc#vk_ext_transform_feedback[VK_EXT_transform_feedback] which is only designed for emulation layers. If an application's intended usage corresponds to one of the special use cases, the following approach will allow you to ignore the warnings.
 
 Ignoring Special Usage Warnings with `VK_EXT_debug_report`
 
