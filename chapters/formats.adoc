@@ -3,7 +3,7 @@
 
 ifndef::chapters[:chapters:]
 
-[[Formats]]
+[[formats]]
 = Formats
 
 Vulkan formats are used to describe how memory is laid out. This chapter aims to give a high-level overview of the variations of formats in Vulkan and some logistical information for how to use them. All details are already well specified in both the link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats[Vulkan Spec format chapter] and the link:https://www.khronos.org/registry/DataFormat/specs/1.3/dataformat.1.3.html[Khronos Data Format Specification].
@@ -91,7 +91,7 @@ Some formats have both a depth and stencil component and can be accessed separat
 link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_KHR_separate_depth_stencil_layouts.html[VK_KHR_separate_depth_stencil_layouts] and link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_EXT_separate_stencil_usage.html[VK_EXT_separate_stencil_usage], which are both promoted to Vulkan 1.2, can be used to have finer control between the depth and stencil components.
 ====
 
-More information about depth format can also be found in the xref:{chapters}depth.adoc#formats[depth chapter].
+More information about depth format can also be found in the xref:{chapters}depth.adoc#depth-formats[depth chapter].
 
 === Compressed
 
@@ -111,7 +111,7 @@ representation of multiple pixels encoded interdependently within a region.
 
 === Planar
 
-link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_KHR_sampler_ycbcr_conversion.html[VK_KHR_sampler_ycbcr_conversion] and link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_EXT_ycbcr_2plane_444_formats.html[VK_EXT_ycbcr_2plane_444_formats] add xref:{chapters}VK_KHR_sampler_ycbcr_conversion.adoc#formats[multi-planar formats] to Vulkan. The planes can be accessed separately with `VK_IMAGE_ASPECT_PLANE_0_BIT`, `VK_IMAGE_ASPECT_PLANE_1_BIT`, and `VK_IMAGE_ASPECT_PLANE_2_BIT`.
+link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_KHR_sampler_ycbcr_conversion.html[VK_KHR_sampler_ycbcr_conversion] and link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_EXT_ycbcr_2plane_444_formats.html[VK_EXT_ycbcr_2plane_444_formats] add xref:{chapters}VK_KHR_sampler_ycbcr_conversion.adoc#multi-planar-formats[multi-planar formats] to Vulkan. The planes can be accessed separately with `VK_IMAGE_ASPECT_PLANE_0_BIT`, `VK_IMAGE_ASPECT_PLANE_1_BIT`, and `VK_IMAGE_ASPECT_PLANE_2_BIT`.
 
 === Packed
 
