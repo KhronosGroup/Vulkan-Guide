@@ -21,6 +21,11 @@ image::images/khronos_logo.png[Khronos logo]
 
 The Vulkan Guide is designed to help developers get up and going with the world of Vulkan. It is aimed to be a light read that leads to many other useful links depending on what a developer is looking for. All information is intended to help better fill the gaps about the many nuances of Vulkan.
 
+[NOTE]
+====
+The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
+====
+
 :leveloffset: 1
 
 = Logistics Overview

@@ -15,7 +15,7 @@ Promoted to core in Vulkan 1.1
 
 All the examples below use a `4:2:0` multi-planar {YCbCr} format for illustration purposes.
 
-[[formats]]
+[[multi-planar-formats]]
 == Multi-planar Formats
 
 To represent a {YCbCr} image for which the Y' (luma) data is stored in plane 0, the C~B~ blue chroma difference value ("U") data is stored in plane 1, and the C~R~ red chroma difference value ("V") data is stored in plane 2, an application would use the `VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM format`.

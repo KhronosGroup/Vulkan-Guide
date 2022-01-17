@@ -15,7 +15,7 @@ While stencil is closely related depth, this chapter does not aim to cover it ou
 ====
 
   *  <<graphics-pipeline, Graphics Pipeline>>
-  *  <<formats, Formats>>
+  *  <<depth-formats, Depth Formats>>
   *  <<depth-buffer-as-a-vkimage, Depth Buffer as a VkImage>>
   **  <<layout, Layout>>
   **  <<clearing, Clearing>>
@@ -45,8 +45,8 @@ The concept of "depth" is only used for xref:{chapters}what_vulkan_can_do.adoc[g
 
 Inside the `VkGraphicsPipelineCreateInfo` there are many different values related to `depth` that can be controlled. Some states are even xref:{chapters}dynamic_state.adoc[dynamic] as well.
 
-[[formats]]
-== Formats
+[[depth-formats]]
+== Depth Formats
 
 There are a few different depth formats and an implementation may expose support for in Vulkan.
 
