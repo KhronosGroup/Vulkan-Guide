@@ -25,7 +25,7 @@ Vulkan is supported on many BSD Unix distributions.
 
 == Fuchsia
 
-Vulkan is supported on the link:https://fuchsia.dev/fuchsia-src/concepts/graphics/magma/vulkan[Fuchsia operation system].
+Vulkan is supported on the link:https://fuchsia.dev/fuchsia-src/development/graphics/magma/concepts/vulkan[Fuchsia operation system].
 
 == iOS
 

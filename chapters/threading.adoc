@@ -21,7 +21,7 @@ The idea is command buffers can be recorded on multiple threads while having a r
 
 image::images/threading_command_buffers.png[threading_command_buffers.png]
 
-Khronos' link:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/command_buffer_usage[sample] and link:https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/performance/command_buffer_usage/command_buffer_usage_tutorial.md[tutorial] show in more detail how to record command buffers in parallel.
+Khronos' link:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/command_buffer_usage[sample and tutorial] show in more detail how to record command buffers in parallel.
 
 == Descriptor Pools
 
