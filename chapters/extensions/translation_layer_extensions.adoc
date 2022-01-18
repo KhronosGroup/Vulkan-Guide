@@ -43,7 +43,7 @@ Vulkan's defaults convention for provoking vertex is "`first vertex`" while Open
 [[VK_EXT_transform_feedback]]
 == VK_EXT_transform_feedback
 
-Everything needed for transform feedback can be done via a compute shader in Vulkan. There is also a great link:http://jason-blog.jlekstrand.net/2018/10/transform-feedback-is-terrible-so-why.html[blog by Jason Ekstrand] on why transform feedback is terrible and should be avoided.
+Everything needed for transform feedback can be done via a compute shader in Vulkan. There is also a great link:https://www.jlekstrand.net/jason/blog/2018/10/transform-feedback-is-terrible-so-why/[blog by Jason Ekstrand] on why transform feedback is terrible and should be avoided.
 
 [[VK_EXT_image_view_min_lod]]
 == VK_EXT_image_view_min_lod
