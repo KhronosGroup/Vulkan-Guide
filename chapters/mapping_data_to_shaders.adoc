@@ -19,6 +19,14 @@ In core Vulkan, there are 5 fundamental ways to map data from your Vulkan applic
   * <<input-attributes, Input Attributes>>
   * <<descriptors, Descriptors>>
   ** <<descriptor-types, Descriptor types>>
+  *** <<storage-image, VK_DESCRIPTOR_TYPE_STORAGE_IMAGE>>
+  *** <<sampler-and-sampled-image, VK_DESCRIPTOR_TYPE_SAMPLER and VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE>>
+  *** <<combined-image-sampler, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER>>
+  *** <<uniform-buffer, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER>>
+  *** <<storage-buffer, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER>>
+  *** <<uniform-texel-buffer, VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER>>
+  *** <<storage-texel-buffer, VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER>>
+  *** <<input-attachment, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT>>
   * <<push-constants, Push Constants>>
   * <<specialization-constants, Specialization Constants>>
   * <<physical-storage-buffer, Physical Storage Buffer>>
@@ -180,12 +188,10 @@ The following shows an example of what GLSL and SPIR-V mapping to each of the li
 
 For GLSL, more information can be found in the link:https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf)
 
+[[storage-image]]
 ==== Storage Image
 
-[NOTE]
-====
-VK_DESCRIPTOR_TYPE_STORAGE_IMAGE
-====
+`VK_DESCRIPTOR_TYPE_STORAGE_IMAGE`
 
 [source,glsl]
 ----
@@ -207,12 +213,10 @@ OpDecorate %storageImage Binding 0
 %storageImage = OpVariable %ptr UniformConstant
 ----
 
+[[sampler-and-sampled-image]]
 ==== Sampler and Sampled Image
 
-[NOTE]
-====
-VK_DESCRIPTOR_TYPE_SAMPLER and VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE
-====
+`VK_DESCRIPTOR_TYPE_SAMPLER` and `VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE`
 
 [source,glsl]
 ----
@@ -247,12 +251,10 @@ OpDecorate %samplerDescriptor Binding 0
 %textureSampled = OpImageSampleExplicitLod %v4float %1 %coordinate Lod %float_0
 ----
 
+[[combined-image-sampler]]
 ==== Combined Image Sampler
 
-[NOTE]
-====
-VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
-====
+`VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER`
 
 [NOTE]
 ====
@@ -281,11 +283,14 @@ OpDecorate %combinedImageSampler Binding 0
 %textureSampled = OpImageSampleExplicitLod %v4float %load %coordinate Lod %float_0
 ----
 
+[[uniform-buffer]]
 ==== Uniform Buffer
+
+`VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER`
 
 [NOTE]
 ====
-VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
+Uniform buffers can also have xref:{chapters}descriptor_dynamic_offset.adoc[dynamic offsets at bind time] (VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC)
 ====
 
 [source,glsl]
@@ -313,11 +318,14 @@ OpDecorate %ubo Binding 0
 %ubo           = OpVariable %ptr Uniform
 ----
 
+[[storage-buffer]]
 ==== Storage Buffer
+
+`VK_DESCRIPTOR_TYPE_STORAGE_BUFFER`
 
 [NOTE]
 ====
-VK_DESCRIPTOR_TYPE_STORAGE_BUFFER
+Storage buffers can also have xref:{chapters}descriptor_dynamic_offset.adoc[dynamic offsets at bind time] (VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC)
 ====
 
 [source,glsl]
@@ -351,12 +359,10 @@ OpDecorate %ssbo Binding 0
 %ssbo          = OpVariable %ptr StorageBuffer
 ----
 
+[[uniform-texel-buffer]]
 ==== Uniform Texel Buffer
 
-[NOTE]
-====
-VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER
-====
+`VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER`
 
 [source,glsl]
 ----
@@ -377,12 +383,10 @@ OpDecorate %uniformTexelBuffer Binding 0
 
 ----
 
+[[storage-texel-buffer]]
 ==== Storage Texel Buffer
 
-[NOTE]
-====
-VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER
-====
+`VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER`
 
 [source,glsl]
 ----
@@ -405,12 +409,10 @@ OpDecorate %storageTexelBuffer Binding 0
 %storageTexelBuffer = OpVariable %ptr UniformConstant
 ----
 
+[[input-attachment]]
 ==== Input Attachment
 
-[NOTE]
-====
-VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT
-====
+`VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT`
 
 [source,glsl]
 ----

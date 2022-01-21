@@ -1,0 +1,129 @@
+// Copyright 2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+
+[[descriptor-dynamic-offset]]
+= Descriptor Dynamic Offset
+
+Vulkan offers two types of descriptors that allow adjusting the offset at bind time as link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#descriptorsets-binding-dynamicoffsets[defined in the spec].
+
+* dynamic uniform buffer (`VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC`)
+* dynamic storage buffer (`VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC`)
+
+== Example
+
+This example will have buffer of 32 bytes and 16 of the bytes will be set at `vkUpdateDescriptorSets` time. In this first example, we will not add any dynamic offset.
+
+[source,c]
+----
+VkDescriptorSet descriptorSet; // allocated
+VkBuffer buffer; // size of 32 bytes
+
+VkDescriptorBufferInfo bufferInfo = {
+    buffer,
+    4,      // offset
+    16      // range
+};
+
+VkWriteDescriptorSet writeInfo = {
+    .dstSet = descriptorSet,
+    .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC,
+    .pBufferInfo = bufferInfo
+};
+
+vkUpdateDescriptorSets(
+    1,         // descriptorWriteCount,
+    &writeInfo // pDescriptorWrites,
+);
+
+// No dynamic offset
+vkCmdBindDescriptorSets(
+    1,              // descriptorSetCount,
+    &descriptorSet, // pDescriptorSets,
+    0,              // dynamicOffsetCount
+    NULL            // pDynamicOffsets
+);
+----
+
+Our buffer now currently looks like the following:
+
+image::images/descriptor_dynamic_offset_example_a.png[descriptor_dynamic_offset_example_a.png]
+
+Next, a 8 byte dynamic offset will applied at bind time.
+
+[source,c]
+----
+uint32_t offsets[1] = { 8 };
+vkCmdBindDescriptorSets(
+    1,              // descriptorSetCount,
+    &descriptorSet, // pDescriptorSets,
+    1,              // dynamicOffsetCount
+    offsets         // pDynamicOffsets
+);
+----
+
+Our buffer currently looks like the following:
+
+image::images/descriptor_dynamic_offset_example_b.png[descriptor_dynamic_offset_example_b.png]
+
+== Example with VK_WHOLE_SIZE
+
+This time the `VK_WHOLE_SIZE` value will be used for the range. Everything looks the same as the above example except the `VkDescriptorBufferInfo::range`
+
+[source,c]
+----
+VkDescriptorSet descriptorSet; // allocated
+VkBuffer buffer; // size of 32 bytes
+
+VkDescriptorBufferInfo info = {
+    buffer,
+    4,             // offset
+    VK_WHOLE_SIZE  // range
+};
+
+VkWriteDescriptorSet writeInfo = {
+    .dstSet = descriptorSet,
+    .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC,
+    .pBufferInfo = bufferInfo
+};
+
+vkUpdateDescriptorSets(
+    1,         // descriptorWriteCount,
+    &writeInfo // pDescriptorWrites,
+);
+
+// No dynamic offset
+vkCmdBindDescriptorSets(
+    1,              // descriptorSetCount,
+    &descriptorSet, // pDescriptorSets,
+    0,              // dynamicOffsetCount
+    NULL            // pDynamicOffsets
+);
+----
+
+Our buffer currently looks like the following:
+
+image::images/descriptor_dynamic_offset_example_c.png[descriptor_dynamic_offset_example_c.png]
+
+This time, if we attempt to apply a dynamic offset it will be met with undefined behavior and the link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/2846[validation layers will give an error]
+
+[source,c]
+----
+// Invalid
+uint32_t offsets[1] = { 8 };
+vkCmdBindDescriptorSets(
+    1,              // descriptorSetCount,
+    &descriptorSet, // pDescriptorSets,
+    1,              // dynamicOffsetCount
+    offsets         // pDynamicOffsets
+);
+----
+
+This is what it looks like with the invalid dynamic offset
+
+image::images/descriptor_dynamic_offset_example_d.png[descriptor_dynamic_offset_example_d.png]
+
+== Limits
+
+It is important to also check the `minUniformBufferOffsetAlignment` and `minStorageBufferOffsetAlignment` as both the base offset and dynamic offset must be multiples of these limits.
