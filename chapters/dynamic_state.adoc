@@ -1,4 +1,4 @@
-// Copyright 2019-2021 The Khronos Group, Inc.
+// Copyright 2019-2022 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
@@ -83,6 +83,7 @@ Vulkan is a tool, so as with most things, and there is no single answer for this
 
 Some implementations might have a performance loss using some certain `VkDynamicState` state over a static value, but dynamic states might prevent an application from having to create many permutations of pipeline objects which might be a bigger desire for the application.
 
+[[states-that-are-dynamic]]
 == What states are dynamic
 
 The full list of possible dynamic states can be found in link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkDynamicState[VkDynamicState].

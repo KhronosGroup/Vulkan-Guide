@@ -1,4 +1,4 @@
-// Copyright 2019-2021 The Khronos Group, Inc.
+// Copyright 2019-2022 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 // Required for both single-page and combined guide xrefs to work
@@ -31,12 +31,12 @@ Not all applications will require or benefit from multiple queues. It is reasona
 
 There are various types of operations a `VkQueue` can support. A "`Queue Family`" just describes a set of `VkQueue`&#8203;s that have common properties and support the same functionality, as advertised in `VkQueueFamilyProperties`.
 
-The following are the queue operations found in link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkQueueFlagBits.html[VkQueueFlagBits]:
+The following are the queue operations found in link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkQueueFlagBits.html[VkQueueFlagBits]:
 
   * `VK_QUEUE_GRAPHICS_BIT` used for `vkCmdDraw*` and graphic pipeline commands.
   * `VK_QUEUE_COMPUTE_BIT` used for `vkCmdDispatch*` and `vkCmdTraceRays*` and compute pipeline related commands.
   * `VK_QUEUE_TRANSFER_BIT` used for all transfer commands.
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkPipelineStageFlagBits.html[VK_PIPELINE_STAGE_TRANSFER_BIT] in the Spec describes "`transfer commands`".
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPipelineStageFlagBits.html[VK_PIPELINE_STAGE_TRANSFER_BIT] in the Spec describes "`transfer commands`".
   ** Queue Families with only `VK_QUEUE_TRANSFER_BIT` are usually for using link:https://en.wikipedia.org/wiki/Direct_memory_access[DMA] to asynchronously transfer data between host and device memory on discrete GPUs, so transfers can be done concurrently with independent graphics/compute operations.
   ** `VK_QUEUE_GRAPHICS_BIT` and `VK_QUEUE_COMPUTE_BIT` can always implicitly accept `VK_QUEUE_TRANSFER_BIT` commands.
   * `VK_QUEUE_SPARSE_BINDING_BIT` used for binding xref:{chapters}sparse_resources.adoc#sparse-resources[sparse resources] to memory with `vkQueueBindSparse`.

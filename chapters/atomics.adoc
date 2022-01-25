@@ -1,4 +1,4 @@
-// Copyright 2019-2021 The Khronos Group, Inc.
+// Copyright 2019-2022 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 // Required for both single-page and combined guide xrefs to work
@@ -45,10 +45,10 @@ While both GLSL and SPIR-V support the use of atomic counters, Vulkan does **not
 
 The current extensions that expose additional support for atomics are:
 
-  * link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_KHR_shader_atomic_int64.html[VK_KHR_shader_atomic_int64]
-  * link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_EXT_shader_image_atomic_int64.html[VK_EXT_shader_image_atomic_int64]
-  * link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_EXT_shader_atomic_float.html[VK_EXT_shader_atomic_float]
-  * link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_EXT_shader_atomic_float2.html[VK_EXT_shader_atomic_float2]
+  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_shader_atomic_int64.html[VK_KHR_shader_atomic_int64]
+  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_shader_image_atomic_int64.html[VK_EXT_shader_image_atomic_int64]
+  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_shader_atomic_float.html[VK_EXT_shader_atomic_float]
+  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_shader_atomic_float2.html[VK_EXT_shader_atomic_float2]
 
 Each explained in more details below.
 
@@ -68,7 +68,7 @@ The two feature bits, `shaderBufferInt64Atomics` and `shaderSharedInt64Atomics`,
   * `shaderBufferInt64Atomics` - buffers
   * `shaderSharedInt64Atomics` - shared memory
 
-The `shaderBufferInt64Atomics` is always guaranteed to be supported if using Vulkan 1.2 or the extension is exposed.
+The `shaderBufferInt64Atomics` is always guaranteed to be supported if using Vulkan 1.2+ or the extension is exposed.
 
 == VK_EXT_shader_image_atomic_int64
 

@@ -1,4 +1,4 @@
-// Copyright 2019-2021 The Khronos Group, Inc.
+// Copyright 2019-2022 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 // Required for both single-page and combined guide xrefs to work
@@ -39,17 +39,17 @@ There are many times when a set of new functionality is desired in Vulkan that d
 Checkout the xref:{chapters}enabling_features.adoc#enabling-features[Enabling Features] chapter for more information.
 ====
 
-Features describe functionality which is not supported on all implementations. Features can be link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#vkGetPhysicalDeviceFeatures[queried] and then enabled when creating the `VkDevice`. Besides the link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#features[list of all features], some link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-requirements[features are mandatory] due to newer Vulkan versions or use of extensions.
+Features describe functionality which is not supported on all implementations. Features can be link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#vkGetPhysicalDeviceFeatures[queried] and then enabled when creating the `VkDevice`. Besides the link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#features[list of all features], some link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-requirements[features are mandatory] due to newer Vulkan versions or use of extensions.
 
 A common technique is for an extension to expose a new struct that can be passed through `pNext` that adds more features to be queried.
 
 == Limits
 
-Limits are implementation-dependent minimums, maximums, and other device characteristics that an application may need to be aware of. Besides the link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#limits[list of all limits], some limits also have link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#limits-minmax[minimum/maximum required values] guaranteed from a Vulkan implementation.
+Limits are implementation-dependent minimums, maximums, and other device characteristics that an application may need to be aware of. Besides the link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#limits[list of all limits], some limits also have link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#limits-minmax[minimum/maximum required values] guaranteed from a Vulkan implementation.
 
 == Formats
 
-Vulkan provides many `VkFormat` that have multiple `VkFormatFeatureFlags` each holding a various link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkFormatFeatureFlagBits.html[VkFormatFeatureFlagBits] bitmasks that can be queried.
+Vulkan provides many `VkFormat` that have multiple `VkFormatFeatureFlags` each holding a various link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkFormatFeatureFlagBits.html[VkFormatFeatureFlagBits] bitmasks that can be queried.
 
 Checkout the xref:{chapters}formats.adoc#feature-support[Format chapter] for more information.
 
