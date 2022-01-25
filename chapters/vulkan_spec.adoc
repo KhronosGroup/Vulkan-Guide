@@ -1,4 +1,4 @@
-// Copyright 2019-2021 The Khronos Group, Inc.
+// Copyright 2019-2022 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 // Required for both single-page and combined guide xrefs to work
@@ -18,7 +18,7 @@ Reference the Vulkan Spec early and often.
 
 The Vulkan Spec can be built for any version and with any permutation of extensions. The Khronos Group hosts the link:https://www.khronos.org/registry/vulkan/specs/[Vulkan Spec Registry] which contains a few publicly available variations that most developers will find sufficient. Anyone can build their own variation of the Vulkan Spec from link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/BUILD.adoc[Vulkan-Docs].
 
-When building the Vulkan Spec, you pass in what version of Vulkan to build for as well as what extensions to include. A Vulkan Spec without any extensions is also referred to as the link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#extendingvulkan-coreversions[core version] as it is the minimal amount of Vulkan an implementation needs to support in order to be xref:{chapters}vulkan_cts.adoc#vulkan-cts[conformant].
+When building the Vulkan Spec, you pass in what version of Vulkan to build for as well as what extensions to include. A Vulkan Spec without any extensions is also referred to as the link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#extendingvulkan-coreversions[core version] as it is the minimal amount of Vulkan an implementation needs to support in order to be xref:{chapters}vulkan_cts.adoc#vulkan-cts[conformant].
 
 == Vulkan Spec Format
 
@@ -28,7 +28,7 @@ The Vulkan Spec can be built into different formats.
 
 Due to the size of the Vulkan Spec, a chunked version is the default when you visit the default `index.html` page.
 
-Example: link:https://www.khronos.org/registry/vulkan/specs/1.2/html/[https://www.khronos.org/registry/vulkan/specs/1.2/html/]
+Example: link:https://www.khronos.org/registry/vulkan/specs/1.3/html/[https://www.khronos.org/registry/vulkan/specs/1.3/html/]
 
 Prebuilt HTML Chunked Vulkan Spec
 
@@ -45,12 +45,16 @@ Prebuilt HTML Chunked Vulkan Spec
   ** link:https://www.khronos.org/registry/vulkan/specs/1.2/html/[Core]
   ** link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/[Core with Extensions]
   ** link:https://www.khronos.org/registry/vulkan/specs/1.2-khr-extensions/html/[Core with KHR Extensions]
+  * Vulkan 1.3 Specification
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3/html/[Core]
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/[Core with Extensions]
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-khr-extensions/html/[Core with KHR Extensions]
 
 === HTML Full
 
 If you want to view the Vulkan Spec in its entirety as HTML, you just need to view the `vkspec.html` file.
 
-Example: https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html
+Example: https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html
 
 Prebuilt HTML Full Vulkan Spec
 
@@ -67,12 +71,16 @@ Prebuilt HTML Full Vulkan Spec
   ** link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html[Core]
   ** link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html[Core with Extensions]
   ** link:https://www.khronos.org/registry/vulkan/specs/1.2-khr-extensions/html/vkspec.html[Core with KHR Extensions]
+  * Vulkan 1.3 Specification
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html[Core]
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html[Core with Extensions]
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-khr-extensions/html/vkspec.html[Core with KHR Extensions]
 
 === PDF
 
 To view the PDF format, visit the `pdf/vkspec.pdf` file.
 
-Example: https://www.khronos.org/registry/vulkan/specs/1.2/pdf/vkspec.pdf
+Example: https://www.khronos.org/registry/vulkan/specs/1.3/pdf/vkspec.pdf
 
 Prebuilt PDF Vulkan Spec
 
@@ -88,9 +96,13 @@ Prebuilt PDF Vulkan Spec
   ** link:https://www.khronos.org/registry/vulkan/specs/1.2/pdf/vkspec.pdf[Core]
   ** link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/pdf/vkspec.pdf[Core with Extensions]
   ** link:https://www.khronos.org/registry/vulkan/specs/1.2-khr-extensions/pdf/vkspec.pdf[Core with KHR Extensions]
+  * Vulkan 1.3 Specification
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3/pdf/vkspec.pdf[Core]
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/pdf/vkspec.pdf[Core with Extensions]
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-khr-extensions/pdf/vkspec.pdf[Core with KHR Extensions]
 
 === Man pages
 
-The Khronos Group currently only host the Vulkan Man Pages for the latest version of the 1.2 spec, with all extensions, on the link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/[online registry].
+The Khronos Group currently only host the Vulkan Man Pages for the latest version of the 1.3 spec, with all extensions, on the link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/[online registry].
 
 The Vulkan Man Pages can also be found in the VulkanSDK for each SDK version. See the link:https://vulkan.lunarg.com/doc/sdk/latest/windows/apispec.html[Man Pages] for the latest Vulkan SDK.

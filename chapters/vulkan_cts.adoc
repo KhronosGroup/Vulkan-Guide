@@ -1,4 +1,4 @@
-// Copyright 2019-2021 The Khronos Group, Inc.
+// Copyright 2019-2022 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
@@ -14,4 +14,4 @@ The link:https://github.com/KhronosGroup/VK-GL-CTS/tree/master/external/vulkanct
 
 image::images/vulkan_cts_overview.png[vulkan_cts_overview.png]
 
-An application can query the version of CTS passed for an implementation using the link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkConformanceVersion[VkConformanceVersion] property via the `VK_KHR_driver_properties` extension (this was promoted to core in Vulkan 1.2).
+An application can query the version of CTS passed for an implementation using the link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VkConformanceVersion[VkConformanceVersion] property via the `VK_KHR_driver_properties` extension (this was promoted to core in Vulkan 1.2).

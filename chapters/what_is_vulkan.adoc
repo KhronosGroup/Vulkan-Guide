@@ -1,4 +1,4 @@
-// Copyright 2019-2021 The Khronos Group, Inc.
+// Copyright 2019-2022 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
@@ -15,7 +15,7 @@ Vulkan is not a company, nor language, but rather a way for developers to progra
 
 == Vulkan at its core
 
-At the core, Vulkan is an link:https://www.khronos.org/registry/vulkan/#apispecs[API Specification] that conformant hardware implementations follow. The public specification is generated from the link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/xml/vk.xml[./xml/vk.xml] Vulkan Registry file in the official public copy of the Vulkan Specification repo found at link:https://github.com/KhronosGroup/Vulkan-Docs[Vulkan-Doc]. Documentation of the link:https://www.khronos.org/registry/vulkan/specs/1.2/registry.html[XML schema] is also available.
+At the core, Vulkan is an link:https://www.khronos.org/registry/vulkan/#apispecs[API Specification] that conformant hardware implementations follow. The public specification is generated from the link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/xml/vk.xml[./xml/vk.xml] Vulkan Registry file in the official public copy of the Vulkan Specification repo found at link:https://github.com/KhronosGroup/Vulkan-Docs[Vulkan-Doc]. Documentation of the link:https://www.khronos.org/registry/vulkan/specs/1.3/registry.html[XML schema] is also available.
 
 The Khronos Group, along with the Vulkan Specification, releases link:http://www.open-std.org/jtc1/sc22/wg14/www/standards[C99] link:https://github.com/KhronosGroup/Vulkan-Headers/tree/main/include/vulkan[header files] generated from the link:https://www.khronos.org/registry/vulkan/#apiregistry[API Registry] that developers can use to interface with the Vulkan API.
 

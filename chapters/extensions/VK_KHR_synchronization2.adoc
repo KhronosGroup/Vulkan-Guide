@@ -1,10 +1,15 @@
-// Copyright 2019-2021 The Khronos Group, Inc.
+// Copyright 2019-2022 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters: ../]
 
 [[VK_KHR_synchronization2]]
 = VK_KHR_synchronization2
+
+[NOTE]
+====
+Promoted to core in Vulkan 1.3
+====
 
 The `VK_KHR_synchronization2` extension provides improvements to pipeline barriers, events, image layout transitions and queue submission. This document shows the difference between the original Vulkan synchronization operations and those provided by the extension. There are also examples of how to update application code to make use of the extension.
 

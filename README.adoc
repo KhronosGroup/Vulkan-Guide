@@ -203,7 +203,7 @@ These are supplemental references for the various Vulkan Extensions. Please cons
 
 == xref:{chapters}extensions/cleanup.adoc[Cleanup Extensions]
 
-  * `VK_EXT_4444_formats`, `VK_KHR_bind_memory2`, `VK_KHR_create_renderpass2`, `VK_KHR_dedicated_allocation`, `VK_KHR_driver_properties`, `VK_KHR_get_memory_requirements2`, `VK_KHR_get_physical_device_properties2`, `VK_EXT_host_query_reset`, `VK_KHR_maintenance1`, `VK_KHR_maintenance2`, `VK_KHR_maintenance3`, `VK_KHR_maintenance4`, `VK_KHR_separate_depth_stencil_layouts`, `VK_KHR_depth_stencil_resolve`, `VK_EXT_separate_stencil_usage`, `VK_EXT_sampler_filter_minmax`, `VK_KHR_sampler_mirror_clamp_to_edge`, `VK_EXT_ycbcr_2plane_444_formats`, `VK_KHR_format_feature_flags2`, `VK_EXT_rgba10x6_formats`
+  * `VK_EXT_4444_formats`, `VK_KHR_bind_memory2`, `VK_KHR_create_renderpass2`, `VK_KHR_dedicated_allocation`, `VK_KHR_driver_properties`, `VK_KHR_get_memory_requirements2`, `VK_KHR_get_physical_device_properties2`, `VK_EXT_host_query_reset`, `VK_KHR_maintenance1`, `VK_KHR_maintenance2`, `VK_KHR_maintenance3`, `VK_KHR_maintenance4`, `VK_KHR_separate_depth_stencil_layouts`, `VK_KHR_depth_stencil_resolve`, `VK_EXT_separate_stencil_usage`, `VK_EXT_sampler_filter_minmax`, `VK_KHR_sampler_mirror_clamp_to_edge`, `VK_EXT_ycbcr_2plane_444_formats`, `VK_KHR_format_feature_flags2`, `VK_EXT_rgba10x6_formats`, `VK_KHR_copy_commands2`
 
 // include::{chapters}extensions/cleanup.adoc[]
 

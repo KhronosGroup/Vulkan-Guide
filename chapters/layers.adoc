@@ -1,4 +1,4 @@
-// Copyright 2019-2021 The Khronos Group, Inc.
+// Copyright 2019-2022 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
@@ -6,7 +6,7 @@ ifndef::chapters[:chapters:]
 [[layers]]
 = Layers
 
-Layers are optional components that augment the Vulkan system. They can intercept, evaluate, and modify existing Vulkan functions on their way from the application down to the hardware. Layer properties can be queried from an application with link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#vkEnumerateInstanceLayerProperties[vkEnumerateInstanceLayerProperties].
+Layers are optional components that augment the Vulkan system. They can intercept, evaluate, and modify existing Vulkan functions on their way from the application down to the hardware. Layer properties can be queried from an application with link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#vkEnumerateInstanceLayerProperties[vkEnumerateInstanceLayerProperties].
 
 == Using Layers
 
@@ -21,7 +21,7 @@ Please see the link:https://vulkan.lunarg.com/doc/sdk/latest/windows/vkconfig.ht
 
 == Device Layers Deprecation
 
-There used to be both instance layers and device layers, but device layers were link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#extendingvulkan-layers-devicelayerdeprecation[deprecated] early in Vulkan's life and should be avoided.
+There used to be both instance layers and device layers, but device layers were link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#extendingvulkan-layers-devicelayerdeprecation[deprecated] early in Vulkan's life and should be avoided.
 
 == Creating a Layer
 

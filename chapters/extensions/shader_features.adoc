@@ -1,4 +1,4 @@
-// Copyright 2019-2021 The Khronos Group, Inc.
+// Copyright 2019-2022 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 // Required for both single-page and combined guide xrefs to work
@@ -207,7 +207,7 @@ This extension has two levels to it. The first is the `variablePointersStorageBu
 Promoted to core in Vulkan 1.2
 ====
 
-This extension allows the use of std430 memory layout in UBOs. More information about link:https://www.khronos.org/opengl/wiki/Interface_Block_(GLSL)#Memory_layout[std140 and std430 memory layouts] and link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-standard-layout[Vulkan Standard Buffer Layout Interface] can be found outside this guide. These memory layout changes are only applied to `Uniforms` as other storage items such as Push Constants and SSBO already allow for std430 style layouts.
+This extension allows the use of std430 memory layout in UBOs. More information about link:https://www.khronos.org/opengl/wiki/Interface_Block_(GLSL)#Memory_layout[std140 and std430 memory layouts] and link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-standard-layout[Vulkan Standard Buffer Layout Interface] can be found outside this guide. These memory layout changes are only applied to `Uniforms` as other storage items such as Push Constants and SSBO already allow for std430 style layouts.
 
 One example of when the `uniformBufferStandardLayout` feature is needed is when an application doesn't want the array stride for a UBO to be restricted to `extended alignment`
 
@@ -257,7 +257,7 @@ Make sure to set `--uniform-buffer-standard-layout` when running the SPIR-V Vali
 Promoted to core in Vulkan 1.1
 ====
 
-This extension allows implementations to indicate they can support more variation in block `Offset` decorations. This comes up when using std430 memory layout where a `vec3` (which is 12 bytes) is still defined as a 16 byte alignment. With relaxed block layout an application can fit a `float` on either side of the `vec3` and maintain the 16 byte alignment between them. For more information see link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-layout[Offset and Stride Assignment] for details.
+This extension allows implementations to indicate they can support more variation in block `Offset` decorations. This comes up when using std430 memory layout where a `vec3` (which is 12 bytes) is still defined as a 16 byte alignment. With relaxed block layout an application can fit a `float` on either side of the `vec3` and maintain the 16 byte alignment between them. For more information see link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-layout[Offset and Stride Assignment] for details.
 
 [source,glsl]
 ----
@@ -347,7 +347,7 @@ Promoted to core in Vulkan 1.2
 link:https://www.khronos.org/blog/comparing-the-vulkan-spir-v-memory-model-to-cs/[Comparing the Vulkan SPIR-V memory model to C's]
 ====
 
-The link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-model[Vulkan Memory Model] formally defines how to synchronize memory accesses to the same memory locations performed by multiple shader invocations and this extension exposes a boolean to let implementations to indicate support for it. This is important because with many things targeting Vulkan/SPIR-V it is important that any memory transfer operations an application might attempt to optimize doesn't break across implementations.
+The link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-model[Vulkan Memory Model] formally defines how to synchronize memory accesses to the same memory locations performed by multiple shader invocations and this extension exposes a boolean to let implementations to indicate support for it. This is important because with many things targeting Vulkan/SPIR-V it is important that any memory transfer operations an application might attempt to optimize doesn't break across implementations.
 
 [[VK_KHR_shader_subgroup_extended_types]]
 == VK_KHR_shader_subgroup_extended_types
@@ -414,6 +414,8 @@ In GLSL this is represented by a `out int gl_FragStencilRefARB` built-in.
 
 [NOTE]
 ====
+Promoted to core in Vulkan 1.3
+
 link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_demote_to_helper_invocation.html[SPV_EXT_demote_to_helper_invocation]
 
 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_demote_to_helper_invocation.txt[GLSL - GL_EXT_demote_to_helper_invocation]
@@ -436,6 +438,11 @@ This extension allows the shader to read the value of a monotonically incrementi
 [[VK_EXT_subgroup_size_control]]
 == VK_EXT_subgroup_size_control
 
+[NOTE]
+====
+Promoted to core in Vulkan 1.3
+====
+
 This extension was created due to some implementation having more than one subgroup size and Vulkan originally only exposing a single subgroup size.
 
 For example, if an implementation only has support for xref:{chapters}subgroups.md#subgroups[subgroups] of size `4` and `16` before they would have had to expose only one size, but now can expose both. This allows applications to potentially control the hardware at a finer granularity for implementations that expose multiple subgroup sizes.
@@ -445,6 +452,8 @@ For example, if an implementation only has support for xref:{chapters}subgroups.
 
 [NOTE]
 ====
+Promoted to core in Vulkan 1.3
+
 link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_clock.html[SPV_KHR_non_semantic_info]
 ====
 
@@ -455,6 +464,8 @@ This extension exposes link:https://htmlpreview.github.io/?https://github.com/Kh
 
 [NOTE]
 ====
+Promoted to core in Vulkan 1.3
+
 link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_terminate_invocation.html[SPV_KHR_terminate_invocation]
 ====
 
@@ -474,6 +485,11 @@ The explicit layout support and some form of aliasing is also required for layer
 
 [[VK_KHR_zero_initialize_workgroup_memory]]
 == VK_KHR_zero_initialize_workgroup_memory
+
+[NOTE]
+====
+Promoted to core in Vulkan 1.3
+====
 
 This extension allows `OpVariable` with a `Workgroup` `Storage Class` to use the `Initializer` operand.
 
