@@ -96,13 +96,17 @@ include::{chapters}layers.adoc[]
 
 include::{chapters}querying_extensions_features.adoc[]
 
-// === Enabling Extensions
+// === Enabling Vulkan Extensions
 
 include::{chapters}enabling_extensions.adoc[]
 
-// === Enabling Features
+// === Enabling Vulkan Features
 
 include::{chapters}enabling_features.adoc[]
+
+// === Using SPIR-V Extension
+
+include::{chapters}spirv_extensions.adoc[]
 
 // === Formats
 

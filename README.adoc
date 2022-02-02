@@ -96,13 +96,17 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 // include::{chapters}querying_extensions_features.adoc[]
 
-=== xref:{chapters}enabling_extensions.adoc[Enabling Extensions]
+=== xref:{chapters}enabling_extensions.adoc[Enabling Vulkan Extensions]
 
 // include::{chapters}enabling_extensions.adoc[]
 
-=== xref:{chapters}enabling_features.adoc[Enabling Features]
+=== xref:{chapters}enabling_features.adoc[Enabling Vulkan Features]
 
 // include::{chapters}enabling_features.adoc[]
+
+=== xref:{chapters}spirv_extensions.adoc[Using SPIR-V Extension]
+
+// include::{chapters}spirv_extensions.adoc[]
 
 === xref:{chapters}formats.adoc[Formats]
 
