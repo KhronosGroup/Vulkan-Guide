@@ -186,9 +186,13 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 // include::{chapters}subgroups.adoc[]
 
+  * `VK_EXT_subgroup_size_control`, `VK_KHR_shader_subgroup_extended_types`, `VK_EXT_shader_subgroup_ballot`, `VK_EXT_shader_subgroup_vote`
+
 == xref:{chapters}atomics.adoc[Atomics]
 
 // include::{chapters}atomics.adoc[]
+
+  * `VK_KHR_shader_atomic_int64`, `VK_EXT_shader_image_atomic_int64`, `VK_EXT_shader_atomic_float`, `VK_EXT_shader_atomic_float2`
 
 == xref:{chapters}common_pitfalls.adoc[Common Pitfalls]
 
@@ -231,7 +235,7 @@ These are supplemental references for the various Vulkan Extensions. Please cons
 
 == xref:{chapters}extensions/shader_features.adoc[Shader Features]
 
-  * `VK_KHR_8bit_storage`, `VK_KHR_16bit_storage`, `VK_KHR_relaxed_block_layout`, `VK_KHR_shader_atomic_int64`, `VK_EXT_scalar_block_layout`, `VK_KHR_shader_clock`, `VK_EXT_shader_demote_to_helper_invocation`, `VK_KHR_shader_draw_parameters`, `VK_KHR_shader_float16_int8`, `VK_KHR_shader_float_controls`, `VK_KHR_shader_non_semantic_info`, `VK_EXT_shader_stencil_export`, `VK_EXT_shader_subgroup_ballot`, `VK_KHR_shader_subgroup_extended_types`, `VK_EXT_shader_subgroup_vote`, `VK_KHR_shader_terminate_invocation`, `VK_EXT_shader_viewport_index_layer`, `VK_KHR_spirv_1_4`, `VK_KHR_storage_buffer_storage_class`, `VK_EXT_subgroup_size_control`, `VK_KHR_uniform_buffer_standard_layout`, `VK_KHR_variable_pointers`, `VK_KHR_vulkan_memory_model`, `VK_KHR_workgroup_memory_explicit_layout`, `VK_KHR_zero_initialize_workgroup_memory`
+  * `VK_KHR_8bit_storage`, `VK_KHR_16bit_storage`, `VK_KHR_relaxed_block_layout`, `VK_EXT_scalar_block_layout`, `VK_KHR_shader_clock`, `VK_EXT_shader_demote_to_helper_invocation`, `VK_KHR_shader_draw_parameters`, `VK_KHR_shader_float16_int8`, `VK_KHR_shader_float_controls`, `VK_KHR_shader_non_semantic_info`, `VK_EXT_shader_stencil_export`, `VK_KHR_shader_terminate_invocation`, `VK_EXT_shader_viewport_index_layer`, `VK_KHR_spirv_1_4`, `VK_KHR_storage_buffer_storage_class`, `VK_KHR_uniform_buffer_standard_layout`, `VK_KHR_variable_pointers`, `VK_KHR_vulkan_memory_model`, `VK_KHR_workgroup_memory_explicit_layout`, `VK_KHR_zero_initialize_workgroup_memory`
 
 // include::{chapters}extensions/shader_features.adoc[]
 
