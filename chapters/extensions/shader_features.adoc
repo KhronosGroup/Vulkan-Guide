@@ -7,72 +7,11 @@ ifndef::chapters[:chapters: ../]
 [[shader-features]]
 = Shader Features
 
-There is a class of extensions whose purpose is just to interact with the SPIR-V interface of Vulkan. This can be things such as exposing SPIR-V capabilities, valid types supported, etc. It is important to remember that SPIR-V is an intermediate language and not an API, it relies on an API, such as Vulkan, to expose what features are available to the application at runtime.
-
 There are various reasons why every part of SPIR-V was not exposed to Vulkan 1.0. Over time the Vulkan Working Group has identified use cases where it makes sense to expose a new SPIR-V feature.
 
-Some of the following extensions were added alongside a SPIR-V extension. For example, the `VK_KHR_8bit_storage` extension was created in parallel with `SPV_KHR_8bit_storage`. The Vulkan extension allows an application to query for support in the implementation. The SPIR-V extension is there to define the changes made to the SPIR-V intermediate representation.
+Some of the following extensions were added alongside a SPIR-V extension. For example, the `VK_KHR_8bit_storage` extension was created in parallel with `SPV_KHR_8bit_storage`. The Vulkan extension only purpose is to allow an application to query for SPIR-V support in the implementation. The SPIR-V extension is there to define the changes made to the SPIR-V intermediate representation.
 
-== Example Workflow
-
-This example is to illustrate the steps to use a shader feature extension. What this example is doing is not the point, this is for understanding the logistics involved. This example will be using `VK_KHR_8bit_storage` as an example, but details about the extension can be found below in its <<vk_khr_8bit_storage-and-vk_khr_16bit_storage, own section below>>.
-
-  1. Check if the Vulkan extension is supported or if has been promoted in the Vulkan version being used.
-  ** For this case, an application would query `VK_KHR_8bit_storage` or check if Vulkan 1.2 is supported.
-  2. xref:{chapters}enabling_extensions.adoc#enabling-extensions[Enable the extension].
-  3. Query the Physical Device feature struct exposed by the Vulkan extension.
-  ** `VkPhysicalDevice8BitStorageFeatures::uniformAndStorageBuffer8BitAccess` or `VkPhysicalDeviceVulkan12Features::uniformAndStorageBuffer8BitAccess` in this case.
-  4. If using a high-level shading language, such as GLSL, make any changes needed.
-  ** In this example, we will need to use the GLSL extension to convert
-+
---
-[source,glsl]
-----
-#version 450
-
-// Without 8bit storage
-layout (set = 0, binding = 0) readonly buffer StorageBuffer {
-    uint data; // 0x0000AABB
-} ssbo;
-
-void main() {
-    uint a = ssbo.data & 0x0000FF00;
-    uint b = ssbo.data & 0x000000FF;
-}
-----
-
-to
-
-[source,glsl]
-----
-#version 450
-#extension GL_EXT_shader_8bit_storage : enable
-
-// With 8bit storage
-layout (set = 0, binding = 0) readonly buffer StorageBuffer {
-    uint8_t dataA; // 0xAA
-    uint8_t dataB; // 0xBB
-} ssbo;
-
-void main() {
-    uint a = uint(ssbo.dataA);
-    uint b = uint(ssbo.dataB);
-}
-----
---
-
-  5. Convert to SPIR-V and make sure any SPIR-V extensions involved are supported. Tools such as `glslang` and `SPIRV-Tools` will handle this for an application.
-  ** In this example, when converting the updated shader to SPIR-V the assembly will describe the features being used
-+
-[source,spirv]
-----
-OpCapability Shader
-OpCapability UniformAndStorageBuffer8BitAccess
-OpExtension  "SPV_KHR_8bit_storage"
-----
-
-  6. Alter any Vulkan code needed to match with the SPIR-V interface changes
-  ** In this example, the only change is that the storage buffer descriptor only is 2 bytes large now instead of originally 4 bytes, but the content of the 2 bytes of data would remain the same.
+For details how to use SPIR-V extension please read the xref:{chapters}spirv_extensions.adoc[dedicated Vulkan Guide chapter].
 
 [[VK_KHR_spirv_1_4]]
 == VK_KHR_spirv_1_4
@@ -98,6 +37,41 @@ link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shad
 ====
 
 Both `VK_KHR_8bit_storage` (promoted in Vulkan 1.2) and `VK_KHR_16bit_storage` (promoted in Vulkan 1.1) were added to allow the ability to use small values as input or output to a SPIR-V storage object. Prior to these extensions, all UBO, SSBO, and push constants needed to consume at least 4 bytes. With this, an application can now use 8-bit or 16-bit values directly from a buffer. It is also commonly paired with the use of `VK_KHR_shader_float16_int8` as this extension only deals with the storage interfaces.
+
+The following is an example of using `SPV_KHR_8bit_storage` with the GLSL extension:
+
+[source,glsl]
+----
+#version 450
+
+// Without 8-bit storage each block variable has to be 32-byte wide
+layout (set = 0, binding = 0) readonly buffer StorageBuffer {
+    uint data; // 0x0000AABB
+} ssbo;
+
+void main() {
+    uint a = ssbo.data & 0x0000FF00;
+    uint b = ssbo.data & 0x000000FF;
+}
+----
+
+With the extension
+
+[source,glsl]
+----
+#version 450
+#extension GL_EXT_shader_8bit_storage : enable
+
+layout (set = 0, binding = 0) readonly buffer StorageBuffer {
+    uint8_t dataA; // 0xAA
+    uint8_t dataB; // 0xBB
+} ssbo;
+
+void main() {
+    uint a = uint(ssbo.dataA);
+    uint b = uint(ssbo.dataB);
+}
+----
 
 [[VK_KHR_shader_float16_int8]]
 == VK_KHR_shader_float16_int8
