@@ -120,7 +120,7 @@ layout(set = 0, binding = 0) buffer ssbo {
 
 If you target Vulkan 1.0 (which requires SPIR-V 1.0), using glslang `--target-env vulkan1.0`, you will get something like:
 
-[source,spirv]
+[source,swift]
 ----
     Decorate 7(ssbo) BufferBlock
 8:  TypePointer Uniform 7(ssbo)
@@ -130,7 +130,7 @@ If you target Vulkan 1.0 (which requires SPIR-V 1.0), using glslang `--target-en
 
 Since `SPV_KHR_storage_buffer_storage_class` was added to SPIR-V 1.3, if you target Vulkan 1.1 (which requires SPIR-V 1.3) ,using glslang `--target-env vulkan1.1`, it will make use of the new `StorageBuffer` class.
 
-[source,spirv]
+[source,swift]
 ----
     Decorate 7(ssbo) Block
 8:  TypePointer StorageBuffer 7(ssbo)
@@ -158,144 +158,6 @@ A pointer of logical pointer type that results from one of the following instruc
 When this extension is enabled, invocation-private pointers can be dynamic and non-uniform. Without this extension a variable pointer must be selected from pointers pointing into the same structure or be `OpConstantNull`.
 
 This extension has two levels to it. The first is the `variablePointersStorageBuffer` feature bit which allows implementations to support the use of variable pointers into a SSBO only. The `variablePointers` feature bit allows the use of variable pointers outside the SSBO as well.
-
-[[VK_KHR_uniform_buffer_standard_layout]]
-== VK_KHR_uniform_buffer_standard_layout
-
-[NOTE]
-====
-Promoted to core in Vulkan 1.2
-====
-
-This extension allows the use of std430 memory layout in UBOs. More information about link:https://www.khronos.org/opengl/wiki/Interface_Block_(GLSL)#Memory_layout[std140 and std430 memory layouts] and link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-standard-layout[Vulkan Standard Buffer Layout Interface] can be found outside this guide. These memory layout changes are only applied to `Uniforms` as other storage items such as Push Constants and SSBO already allow for std430 style layouts.
-
-One example of when the `uniformBufferStandardLayout` feature is needed is when an application doesn't want the array stride for a UBO to be restricted to `extended alignment`
-
-[source,glsl]
-----
-layout(std140, set = 0, binding = 0) uniform ubo140 {
-   float floatArray140[8];
-};
-
-layout(std430, set = 0, binding = 1) uniform ubo430 {
-   float floatArray430[8];
-};
-----
-
-Which translates in SPIR-V to
-
-[source,swift]
-----
-// extended alignment for array is rounded up to multiple of 16
-OpDecorate %floatArray140 ArrayStride 16
-OpMemberDecorate %ubo140 0 Offset 0
-
-// base alignment is 4 bytes (OpTypeFloat 32)
-// only valid with uniformBufferStandardLayout feature enabled
-OpDecorate %floatArray430 ArrayStride 4
-OpMemberDecorate %ubo430 0 Offset 0
-
-%float = OpTypeFloat 32
-
-%floatArray140 = OpTypeArray %float %uint_8
-     %ubo140 = OpTypeStruct %floatArray140
-%ubo140ptr = OpTypePointer Uniform %ubo140
-
-%floatArray430 = OpTypeArray %float %uint_8
-     %ubo430 = OpTypeStruct %floatArray430
-%ubo430ptr = OpTypePointer Uniform %ubo430
-----
-
-Make sure to set `--uniform-buffer-standard-layout` when running the SPIR-V Validator
-
-
-[[VK_KHR_relaxed_block_layout]]
-== VK_KHR_relaxed_block_layout
-
-[NOTE]
-====
-Promoted to core in Vulkan 1.1
-====
-
-This extension allows implementations to indicate they can support more variation in block `Offset` decorations. This comes up when using std430 memory layout where a `vec3` (which is 12 bytes) is still defined as a 16 byte alignment. With relaxed block layout an application can fit a `float` on either side of the `vec3` and maintain the 16 byte alignment between them. For more information see link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-layout[Offset and Stride Assignment] for details.
-
-[source,glsl]
-----
-// SPIR-V offsets WITHOUT relaxed block layout
-layout (set = 0, binding = 0) buffer StorageBuffer {
-    vec3 a;  // Offset: 0
-    float b; // Offset: 16
-} ssbo;
-
-// SPIR-V offsets WITH relaxed block layout
-layout (set = 0, binding = 0) buffer StorageBuffer {
-    vec3 a;  // Offset: 0
-    float b; // Offset: 12
-} ssbo;
-
-
-// SPIR-V offsets WITHOUT relaxed block layout
-layout (set = 0, binding = 0) buffer StorageBuffer {
-    float b; // Offset: 0
-    vec3 a;  // Offset: 16
-} ssbo;
-
-// SPIR-V offsets WITH relaxed block layout
-layout (set = 0, binding = 0) buffer StorageBuffer {
-    float b; // Offset: 0
-    vec3 a;  // Offset: 4
-} ssbo;
-----
-
-`VK_KHR_relaxed_block_layout` can also be seen as a subset of `VK_EXT_scalar_block_layout`
-
-[NOTE]
-====
-Make sure to set `--relax-block-layout` when running the SPIR-V Validator
-====
-
-[[VK_EXT_scalar_block_layout]]
-== VK_EXT_scalar_block_layout
-
-[NOTE]
-====
-Promoted to core in Vulkan 1.2
-
-link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_scalar_block_layout.txt[GLSL - GL_EXT_scalar_block_layout]
-====
-
-This extension allows all storage types to be aligned solely based on the size of their components, without additional requirements.
-
-An example would be where an application straddles the 16-byte boundary. With scalar block layout the following GLSL/SPIR-V would be legal to use
-
-[source,glsl]
-----
-#version 450
-#extension GL_EXT_scalar_block_layout : enable
-
-layout (scalar, set = 0, binding = 0) buffer StorageBuffer {
-    vec3 a; // Offset: 0
-    vec2 b; // Offset: 12
-    vec2 c; // Offset: 20
-    vec3 d; // Offset: 28
-} ssbo;
-----
-
-\... translated to
-
-[source,spirv]
-----
-OpMemberDecorate 11(StorageBuffer) 0 Offset 0
-OpMemberDecorate 11(StorageBuffer) 1 Offset 12
-OpMemberDecorate 11(StorageBuffer) 2 Offset 20
-OpMemberDecorate 11(StorageBuffer) 3 Offset 28
-----
-
-[NOTE]
-====
-Make sure to set `--scalar-block-layout` when running the SPIR-V Validator
-====
-
 
 [[VK_KHR_vulkan_memory_model]]
 == VK_KHR_vulkan_memory_model

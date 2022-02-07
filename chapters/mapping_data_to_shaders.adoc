@@ -52,7 +52,7 @@ void main() {
 
 There is only a single input attribute at location 0. This can also be seen in the generated SPIR-V assembly:
 
-[source,spirv]
+[source,swift]
 ----
                 Name 18  "inPosition"
                 Decorate 18(inPosition) Location 0
@@ -453,7 +453,7 @@ layout(push_constant) uniform myPushConstants {
 
 Resulting SPIR-V assembly:
 
-[source,spirv]
+[source,swift]
 ----
 MemberDecorate 13(myPushConstants) 0 Offset 0
 Decorate 13(myPushConstants) Block
@@ -521,7 +521,7 @@ void main() {
 
 Resulting SPIR-V assembly:
 
-[source,spirv]
+[source,spswiftirv]
 ----
                       Decorate 9(outColor) Location 0
                       Decorate 10(myColor) SpecId 0

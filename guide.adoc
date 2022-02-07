@@ -186,6 +186,10 @@ include::{chapters}dynamic_state.adoc[]
 
 include::{chapters}subgroups.adoc[]
 
+// Shader Memory Layout
+
+include::{chapters}shader_memory_layout.adoc[]
+
 // == Atomics
 
 include::{chapters}atomics.adoc[]
