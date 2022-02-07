@@ -52,6 +52,7 @@ The current extensions that expose additional support for atomics are:
 
 Each explained in more details below.
 
+[[VK_KHR_shader_atomic_int64]]
 == VK_KHR_shader_atomic_int64
 
 [NOTE]
@@ -70,6 +71,7 @@ The two feature bits, `shaderBufferInt64Atomics` and `shaderSharedInt64Atomics`,
 
 The `shaderBufferInt64Atomics` is always guaranteed to be supported if using Vulkan 1.2+ or the extension is exposed.
 
+[[VK_EXT_shader_image_atomic_int64]]
 == VK_EXT_shader_image_atomic_int64
 
 [NOTE]
@@ -85,6 +87,7 @@ This extension allows for `64-bit int` atomic operations for **images** and **sp
 
 This extension exposes both a `shaderImageInt64Atomics` and `sparseImageInt64Atomics` feature bit. The `sparseImage*` feature is an additional feature bit and is only allowed to be used if the `shaderImage*` bit is enabled as well. Some hardware has a hard time doing atomics on images with xref:{chapters}sparse_resources.adoc#sparse-resources[sparse resources], therefor the atomic feature is split up to allow **sparse images** as an additional feature an implementation can expose.
 
+[[VK_EXT_shader_atomic_float]]
 == VK_EXT_shader_atomic_float
 
 [NOTE]
@@ -119,6 +122,7 @@ and `64-bit float` support:
 OpenGLES link:https://www.khronos.org/registry/OpenGL/extensions/OES/OES_shader_image_atomic.txt[OES_shader_image_atomic] allowed the use of atomics on `r32f` for `imageAtomicExchange`. For porting, an application will want to check for `shaderImageFloat32Atomics` support to be able to do the same in Vulkan.
 ====
 
+[[VK_EXT_shader_atomic_float2]]
 == VK_EXT_shader_atomic_float2
 
 [NOTE]

@@ -1,0 +1,244 @@
+// Copyright 2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[shader-memory-layout]]
+= Shader Memory Layout
+
+When an implementation accesses memory from an interface, it needs to know how the **memory layout**. This includes things such as **offsets**, **stride**, and **alignments**. While the Vulkan Spec has a link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-layout[section dedicated to this], it can be hard to parse due to the various extensions that add extra complexity to the spec language. This chapter aims to help explain all the memory layout concepts Vulkan uses with some high level shading language (GLSL) examples.
+
+[[alignment-requirements]]
+== Alignment Requirements
+
+Vulkan has 3 link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-alignment-requirements[alignment requirements] that interface objects can be laid out in.
+
+- extended alignment (also know as `std140`)
+- base alignment (also know as `std430`)
+- scalar alignment
+
+The spec language for alignment breaks down the rule for each of the following block member types.
+
+- scalar (`float`, `int`, `char`, etc)
+- vector (`float2`, `vec3`, `'uvec4' etc)
+- matrix
+- array
+- struct
+
+[[VK_KHR_uniform_buffer_standard_layout]]
+== VK_KHR_uniform_buffer_standard_layout
+
+[NOTE]
+====
+Promoted to core in Vulkan 1.2
+====
+
+This extension allows the use of `std430` memory layout in UBOs. link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-standard-layout[Vulkan Standard Buffer Layout Interface] can be found outside this guide. These memory layout changes are only applied to `Uniforms` as other storage items such as Push Constants and SSBO already allow for std430 style layouts.
+
+One example of when the `uniformBufferStandardLayout` feature is needed is when an application doesn't want the array stride for a UBO to be restricted to `extended alignment`
+
+[source,glsl]
+----
+layout(std140, binding = 0) uniform ubo140 {
+   float array140[8];
+};
+
+layout(std430, binding = 1) uniform ubo430 {
+   float array430[8];
+};
+----
+
+Which translates in SPIR-V to
+
+[source,swift]
+----
+// extended alignment for array is rounded up to multiple of 16
+OpDecorate %array140 ArrayStride 16
+
+// base alignment is 4 bytes (OpTypeFloat 32)
+// only valid with uniformBufferStandardLayout feature enabled
+OpDecorate %array430 ArrayStride 4
+----
+
+Make sure to set `--uniform-buffer-standard-layout` when running the SPIR-V Validator.
+
+[[VK_KHR_relaxed_block_layout]]
+== VK_KHR_relaxed_block_layout
+
+[NOTE]
+====
+Promoted to core in Vulkan 1.1
+
+There was never a feature bit added for this extension, so all Vulkan 1.1+ devices support relaxed block layout.
+====
+
+This extension allows implementations to indicate they can support more variation in block `Offset` decorations. This comes up when using `std430` memory layout where a `vec3` (which is 12 bytes) is still defined as a 16 byte alignment. With relaxed block layout an application can fit a `float` on either side of the `vec3` and maintain the 16 byte alignment between them.
+
+[source,glsl]
+----
+// SPIR-V offsets WITHOUT relaxed block layout
+layout (set = 0, binding = 0) buffer block {
+    float b; // Offset: 0
+    vec3 a;  // Offset: 16
+} ssbo;
+
+// SPIR-V offsets WITH relaxed block layout
+layout (set = 0, binding = 0) buffer block {
+    float b; // Offset: 0
+    vec3 a;  // Offset: 4
+} ssbo;
+----
+
+`VK_KHR_relaxed_block_layout` can also be seen as a subset of `VK_EXT_scalar_block_layout`
+
+[NOTE]
+====
+Make sure to set `--relax-block-layout` when running the SPIR-V Validator and using a Vulkan 1.0 environment.
+====
+
+[NOTE]
+====
+Currently there is no way in GLSL to legally express relaxed block layout, but an developer can use the `--hlsl-offsets` with `glslang` to produce the desired offsets.
+====
+
+[[VK_EXT_scalar_block_layout]]
+== VK_EXT_scalar_block_layout
+
+[NOTE]
+====
+Promoted to core in Vulkan 1.2
+
+link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_scalar_block_layout.txt[GLSL - GL_EXT_scalar_block_layout]
+====
+
+This extension allows most storage types to be aligned in `scalar alignment`. A big difference is being able to straddle the 16-byte boundary.
+
+In GLSL this can be used with `scalar` keyword and extension
+
+[source,glsl]
+----
+#extension GL_EXT_scalar_block_layout : enable
+layout (scalar, binding = 0) buffer block { }
+----
+
+[NOTE]
+====
+Make sure to set `--scalar-block-layout` when running the SPIR-V Validator.
+====
+
+[NOTE]
+====
+The `Workgroup` storage class is not supported with `VK_EXT_scalar_block_layout` and the `workgroupMemoryExplicitLayoutScalarBlockLayout` in xref:{chapters}extensions/shader_features.adoc#VK_KHR_workgroup_memory_explicit_layout[VK_KHR_workgroup_memory_explicit_layout] is needed to enabled scalar support.
+====
+
+[[alignment-examples]]
+== Alignment Examples
+
+The following are some GLSL to SPIR-V examples to help better understand the difference in the alignments supported.
+
+=== Alignment Example 1
+
+[source,glsl]
+----
+layout(binding = 0) buffer block {
+    vec2 a[4];
+    vec4 b;
+};
+----
+
+Which translates in SPIR-V to
+
+[source,swift]
+----
+// extended alignment (std140)
+OpDecorate %vec2array ArrayStride 16
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 64
+
+// scalar alignment and base alignment (std430)
+OpDecorate %vec2array ArrayStride 8
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 32
+----
+
+=== Alignment Example 2
+
+[source,glsl]
+----
+layout(binding = 0) buffer block {
+    float a;
+    vec2 b;
+    vec2 c;
+};
+----
+
+Which translates in SPIR-V to
+
+[source,swift]
+----
+// extended alignment (std140) and base alignment (std430)
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 8
+OpMemberDecorate %block 2 Offset 16
+
+// scalar alignment
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 4
+OpMemberDecorate %block 2 Offset 12
+----
+
+=== Alignment Example 3
+
+[source,glsl]
+----
+layout(binding = 0) buffer block {
+    vec3 a;
+    vec2 b;
+    vec4 c;
+};
+----
+
+Which translates in SPIR-V to
+
+[source,swift]
+----
+// extended alignment (std140) and base alignment (std430)
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 16
+OpMemberDecorate %block 2 Offset 32
+
+// scalar alignment
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 12
+OpMemberDecorate %block 2 Offset 20
+----
+
+=== Alignment Example 4
+
+[source,glsl]
+----
+layout (binding = 0) buffer block {
+    vec3 a;
+    vec2 b;
+    vec2 c;
+    vec3 d;
+};
+----
+
+Which translates in SPIR-V to
+
+[source,swift]
+----
+// extended alignment (std140) and base alignment (std430)
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 16
+OpMemberDecorate %block 2 Offset 24
+OpMemberDecorate %block 3 Offset 32
+
+// scalar alignment
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 12
+OpMemberDecorate %block 2 Offset 20
+OpMemberDecorate %block 3 Offset 28
+----

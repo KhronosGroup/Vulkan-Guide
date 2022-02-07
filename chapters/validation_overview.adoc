@@ -64,7 +64,7 @@ The Validation Layers attempt to supply as much useful information as possible w
 
 This example shows a case where an link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-implicit-validity[implicit VU] is triggered. There will not be a number at the end of the VUID.
 
-[source,spirv]
+[source]
 ----
 Validation Error: [ VUID-vkBindBufferMemory-memory-parameter ] Object 0: handle =
 0x20c8650, type = VK_OBJECT_TYPE_INSTANCE; | MessageID = 0xe9199965 | Invalid
@@ -83,7 +83,7 @@ html/vkspec.html#VUID-vkBindBufferMemory-memory-parameter)
 
 This example shows an error where some `VkImage` is trying to be bound to 2 different `VkDeviceMemory` objects
 
-[source,spirv]
+[source]
 ----
 Validation Error: [ VUID-vkBindImageMemory-image-01044 ] Object 0: handle =
 0x90000000009, name = myTextureMemory, type = VK_OBJECT_TYPE_DEVICE_MEMORY; Object 1:
