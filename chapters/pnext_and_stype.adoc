@@ -6,16 +6,19 @@ ifndef::chapters[:chapters:]
 [[pnext-and-stype]]
 = pNext and sType
 
-People new to Vulkan will start to notice the `pNext` and `sType` variables all around the Vulkan Spec.
+People new to Vulkan will start to notice the `pNext` and `sType` variables all around the Vulkan Spec. The `void* pNext` is used to allow for expanding the Vulkan Spec by creating a Linked List between structures. The `VkStructureType sType` is used by the loader, layers, and implementations to know what type of struct was passed in by `pNext`. `pNext` is mostly used when dealing with extensions that expose new structures.
 
-The `void* pNext` is used to allow for expanding the Vulkan Spec by creating a Linked List between structures. The link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#fundamentals-validusage-pNext[pNext valid usage] section of the Vulkan Spec goes into detail explaining the two different variations of `pNext` structures. The `VkStructureType sType` is used by the loader, layers, and implementations to know what type of struct was passed in by `pNext`. `pNext` is mostly used when dealing with extensions that expose new structures.
+== Two Base Structures
 
-An example to help illustrate the use of `pNext` from an application's point of view:
+The Vulkan API link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#fundamentals-validusage-pNext[provides two base structures], `VkBaseInStructure` and `VkBaseOutStructure`, to be used as a convenient way to iterate through a structure pointer chain.
+
+The `In` of `VkBaseInStructure` refers to the fact `pNext` is a `const *` and are read-only to loader, layers, and driver receiving them. The `Out` of `VkBaseOutStructure` refers the `pNext` being used to return data back to the application.
+
+== Setting pNext Structure Example
 
 [source,cpp]
 ----
-// An example with two structures, "a" and "b"
-// These structs have members you'd find in real Vulkan structures
+// An example with two simple structures, "a" and "b"
 typedef struct VkA {
     VkStructureType sType;
     void* pNext;
@@ -50,13 +53,15 @@ printf("VkA value = %u \n", a.value);
 printf("VkB value = %u \n", b.value);
 ----
 
+== Reading pNext Values Example
+
 Underneath, the loader, layers, and driver are now able to find the chained `pNext` structures. Here is an example to help illustrate how one **could** implement `pNext` from the loader, layer, or driver point of view.
 
 [source,cpp]
 ----
 void vkGetValue(VkA* pA) {
 
-    VkA* next = reinterpret_cast<VkA*>(pA->pNext);
+    VkBaseOutStructure* next = reinterpret_cast<VkBaseOutStructure*>(pA->pNext);
     while (next != nullptr) {
         switch (next->sType) {
 
@@ -78,7 +83,7 @@ void vkGetValue(VkA* pA) {
 
         // This works because the first two values of all chainable Vulkan structs
         // are "sType" and "pNext" making the offsets the same for pNext
-        next = reinterpret_cast<VkA*>(next->pNext);
+        next = reinterpret_cast<VkBaseOutStructure*>(next->pNext);
     }
 
     // ...
