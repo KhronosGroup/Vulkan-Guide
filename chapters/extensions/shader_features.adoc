@@ -279,6 +279,21 @@ link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shar
 
 This extension provides a way for the shader to define the layout of `Workgroup` `Storage Class` memory. `Workgroup` variables can be declared in blocks, and then use the same explicit layout decorations (e.g. `Offset`, `ArrayStride`) as other storage classes.
 
+One use case is to do large vector copies (e.g. `uvec4` at at a time) from buffer memory into shared memory, even if the shared memory is really a different type (e.g. `scalar fp16`).
+
+Another use case is a developers could potentially use this to reuse shared memory and reduce the total shared memory consumption using something such as the following:
+
+[source]
+----
+pass1 - write shmem using type A
+barrier()
+pass2 - read shmem using type A
+barrier()
+pass3 - write shmem using type B
+barrier()
+pass4 - read shmem using type B
+----
+
 The explicit layout support and some form of aliasing is also required for layering OpenCL on top of Vulkan.
 
 [[VK_KHR_zero_initialize_workgroup_memory]]
