@@ -186,7 +186,7 @@ The Vulkan Spec has a link:https://www.khronos.org/registry/vulkan/specs/1.3-ext
 
 The following shows an example of what GLSL and SPIR-V mapping to each of the link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-types[descriptor types] looks like.
 
-For GLSL, more information can be found in the link:https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf)
+For GLSL, more information can be found in the link:https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf[GLSL Spec - 12.2.4. Vulkan Only: Samplers, Images, Textures, and Buffers]
 
 [[storage-image]]
 ==== Storage Image
@@ -196,7 +196,7 @@ For GLSL, more information can be found in the link:https://www.khronos.org/regi
 [source,glsl]
 ----
 // VK_FORMAT_R32_UINT
-layout(set = 0, binding = 0, r32ui[GLSL Spec - 12.2.4. Vulkan Only: Samplers, Images, Textures, and Buffers] uniform uimage2D storageImage;
+layout(set = 0, binding = 0, r32ui) uniform uimage2D storageImage;
 
 // example usage for reading and writing in GLSL
 const uvec4 texel = imageLoad(storageImage, ivec2(0, 0));
