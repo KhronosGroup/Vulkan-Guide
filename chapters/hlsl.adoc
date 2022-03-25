@@ -168,7 +168,7 @@ if (FAILED(hres)) {
 std::vector<LPCWSTR> arguments;
 arguments.push_back(L"-spirv");
 
-// Select target profile based on shader extension
+// Select target profile based on shader file extension
 LPCWSTR targetProfile{};
 size_t idx = filename.rfind('.');
 if (idx != std::string::npos) {
@@ -205,7 +205,7 @@ if (FAILED(hres) && (resultOp)) {
 	CComPtr<IDxcBlobEncoding> errorBlob;
 	hres = resultOp->GetErrorBuffer(&errorBlob);
 	if (SUCCEEDED(hres) && errorBlob) {
-		std::cerr << "Sder compilation failed :\n\n" << (const char*)errorBlob->GetBufferPointer();
+		std::cerr << "Shader compilation failed :\n\n" << (const char*)errorBlob->GetBufferPointer();
 		throw std::runtime_error("Compilation failed");
 	}
 }
