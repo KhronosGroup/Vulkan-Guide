@@ -97,11 +97,17 @@ Aside from the syntax differences, built-ins use HLSL names. E.g. `gl_vertex` be
 [[Tooling]]
 == Tooling
 
-As is the case with GLSL to SPIR-V, to use HLSL with Vulkan, a shader compiler is required. Whereas link:https://github.com/KhronosGroup/glslang[glslang] is the reference GLSL to SPIR-V compiler, the link:https://github.com/microsoft/DirectXShaderCompiler[DirectXShaderCompiler] (DXC) is the reference HLSL to SPIR-V compiler. Thanks to open source contributions, the SPIR-V backend of DXC is now officially supported and enabled in DXC and be used out-of-the box. A pre-compiled DXC for compiling shaders offline with SPIR-V support is bundled with the official link:https://vulkan.lunarg.com/[LunarG Vulkan SDK] or can be downloaded from the link:https://github.com/microsoft/DirectXShaderCompiler/releases[official repository].
+=== DirectXShaderCompiler (DXC)
+
+As is the case with GLSL to SPIR-V, to use HLSL with Vulkan, a shader compiler is required. Whereas link:https://github.com/KhronosGroup/glslang[glslang] is the reference GLSL to SPIR-V compiler, the link:https://github.com/microsoft/DirectXShaderCompiler[DirectXShaderCompiler] (DXC) is the reference HLSL to SPIR-V compiler. Thanks to open source contributions, the SPIR-V backend of DXC is now officially supported and enabled in DXC and be used out-of-the box. 
+
+==== Where to get
+
+The link:https://vulkan.lunarg.com/[LunarG Vulkan SDK] includes pre-compiled DXC binaries, libraries and headers to get you started. If you're looking for the latest releases, check the link:https://github.com/microsoft/DirectXShaderCompiler/releases[official DXC repository].
 
 While other shader compiling tools like link:https://github.com/KhronosGroup/glslang/wiki/HLSL-FAQ[glslang] also offer HLSL support, DXC has the most complete and up-to-date support.
 
-=== Compiling HLSL to SPIR-V with DXC
+==== Offline compilation using the stand-alone compiler
 
 Compiling a shader offline via the pre-compiled dxc binary is similar to compiling with glslang:
 
@@ -119,6 +125,105 @@ Extensions are implicitly enabled based on feature usage, but can also be explic
 [source]
 ----
 dxc.exe -spirv -T vs_6_1 -E main .\input.vert -Fo .\output.vert.spv -fspv-extension=SPV_EXT_descriptor_indexing
+----
+
+The resulting SPIR-V can then be directly loaded, same as SPIR-V generated from GLSL.
+
+=== Runtime compilation using the library
+
+DXC can also be integrated into a Vulkan application using the DirectX Compiler API. This allows for runtime compilation of shaders. Doing so requires you to include the `dxcapi.h` header and link against the `dxcompiler` library. The easiest way is using the dynamic library and distributing it with your application (e.g. `dxcompiler.dll` on Windows).
+
+Compiling HLSL to SPIR-V at runtime then is pretty straight-forward:
+
+[source, cpp]
+----
+#include "include/dxc/dxcapi.h"
+
+...
+
+HRESULT hres;
+
+// Initialize DXC library
+CComPtr<IDxcLibrary> library;
+hres = DxcCreateInstance(CLSID_DxcLibrary, IID_PPV_ARGS(&library));
+if (FAILED(hres)) {
+	throw std::runtime_error("Could not init DXC Library");
+}
+
+// Initialize the DXC compiler
+CComPtr<IDxcCompiler> compiler;
+hres = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&compiler));
+if (FAILED(hres)) {
+	throw std::runtime_error("Could not init DXC Compiler");
+}
+
+// Load the HLSL text shader from disk
+uint32_t codePage = CP_UTF8;
+CComPtr<IDxcBlobEncoding> sourceBlob;
+hres = library->CreateBlobFromFile(filename.c_str(), &codePage, &sourceBlob);
+if (FAILED(hres)) {
+	throw std::runtime_error("Could not load shader file");
+}
+
+// Set up arguments to be passed to the shader compiler
+
+// Tell the compiler to output SPIR-V
+std::vector<LPCWSTR> arguments;
+arguments.push_back(L"-spirv");
+
+// Select target profile based on shader extension
+LPCWSTR targetProfile{};
+size_t idx = filename.rfind('.');
+if (idx != std::string::npos) {
+	std::wstring extension = filename.substr(idx + 1);
+	if (extension == L"vert") {
+		targetProfile = L"vs_6_1";
+	}
+	if (extension == L"frag") {
+		targetProfile = L"ps_6_1";
+	}
+	// Mapping for other file types go here (cs_x_y, lib_x_y, etc.)
+}
+
+// Compile shader
+CComPtr<IDxcOperationResult> resultOp;
+hres = compiler->Compile(
+	sourceBlob,
+	nullptr,
+	L"main",
+	targetProfile,
+	arguments.data(), 
+	(uint32_t)arguments.size(),
+	nullptr, 
+	0,
+	nullptr,
+	&resultOp);
+
+if (SUCCEEDED(hres)) {
+	resultOp->GetStatus(&hres);
+}
+
+// Output error if compilation failed
+if (FAILED(hres) && (resultOp)) {
+	CComPtr<IDxcBlobEncoding> errorBlob;
+	hres = resultOp->GetErrorBuffer(&errorBlob);
+	if (SUCCEEDED(hres) && errorBlob) {
+		std::cerr << "Sder compilation failed :\n\n" << (const char*)errorBlob->GetBufferPointer();
+		throw std::runtime_error("Compilation failed");
+	}
+}
+
+// Get compilation result
+CComPtr<IDxcBlob> code;
+resultOp->GetResult(&code);
+
+// Create a Vulkan shader module from the compilation result
+VkShaderModuleCreateInfo shaderModuleCI{};
+shaderModuleCI.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+shaderModuleCI.codeSize = code->GetBufferSize();
+shaderModuleCI.pCode = (uint32_t*)code->GetBufferPointer();
+VkShaderModule shaderModule;
+vkCreateShaderModule(device, &shaderModuleCI, nullptr, &shaderModule);
 ----
 
 == Shader model coverage
