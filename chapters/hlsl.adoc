@@ -94,20 +94,18 @@ VSOutput main(VSInput input, uint VertexIndex : SV_VertexID)
 
 Aside from the syntax differences, built-ins use HLSL names. E.g. `gl_vertex` becomes `VertexIndex` in HLSL. A list of GLSL to HLSL built-in mappings can be found link:https://anteru.net/blog/2016/mapping-between-HLSL-and-GLSL/[here].
 
-[[Tooling]]
-== Tooling
-
-=== DirectXShaderCompiler (DXC)
+[[DirectXShaderCompiler]]
+== DirectXShaderCompiler (DXC)
 
 As is the case with GLSL to SPIR-V, to use HLSL with Vulkan, a shader compiler is required. Whereas link:https://github.com/KhronosGroup/glslang[glslang] is the reference GLSL to SPIR-V compiler, the link:https://github.com/microsoft/DirectXShaderCompiler[DirectXShaderCompiler] (DXC) is the reference HLSL to SPIR-V compiler. Thanks to open source contributions, the SPIR-V backend of DXC is now officially supported and enabled in DXC and be used out-of-the box. 
 
-==== Where to get
+=== Where to get
 
 The link:https://vulkan.lunarg.com/[LunarG Vulkan SDK] includes pre-compiled DXC binaries, libraries and headers to get you started. If you're looking for the latest releases, check the link:https://github.com/microsoft/DirectXShaderCompiler/releases[official DXC repository].
 
 While other shader compiling tools like link:https://github.com/KhronosGroup/glslang/wiki/HLSL-FAQ[glslang] also offer HLSL support, DXC has the most complete and up-to-date support.
 
-==== Offline compilation using the stand-alone compiler
+=== Offline compilation using the stand-alone compiler
 
 Compiling a shader offline via the pre-compiled dxc binary is similar to compiling with glslang:
 
