@@ -223,6 +223,59 @@ VkShaderModule shaderModule;
 vkCreateShaderModule(device, &shaderModuleCI, nullptr, &shaderModule);
 ----
 
+=== Vulkan shader stage to HLSL target shader profile mapping
+
+When compiling HLSL with DXC you need to select a target shader profile. The name for a profile consists of the shader type and the desired shader model.
+
+|===
+| Vulkan shader stage | HLSL target shader profile | Remarks
+
+|`VK_SHADER_STAGE_VERTEX_BIT`
+| `vs`
+|
+
+|`VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT`
+| `hs`
+| Hull shader in HLSL terminology
+
+|`VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT`
+| `ds`
+| Domain shader in HLSL terminology
+
+|`VK_SHADER_STAGE_GEOMETRY_BIT`
+| `gs`
+|
+
+|`VK_SHADER_STAGE_FRAGMENT_BIT`
+| `ps`
+| Pixel shader in HLSL terminology
+
+|`VK_SHADER_STAGE_COMPUTE_BIT`
+| `cs`
+|
+
+|`VK_SHADER_STAGE_RAYGEN_BIT_KHR`, 
+`VK_SHADER_STAGE_ANY_HIT_BIT_KHR`,
+`VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR`,
+`VK_SHADER_STAGE_MISS_BIT_KHR`,
+`VK_SHADER_STAGE_INTERSECTION_BIT_KHR`,
+`VK_SHADER_STAGE_CALLABLE_BIT_KHR`
+| `lib`
+| All raytracing related shaders are built using the `lib` shader target profile and must use at least shader model 6.3 (e.g. `lib_6_3`).
+
+| `VK_SHADER_STAGE_TASK_BIT_NV`
+| `as`
+| Amplification shader in HLSL terminology. Must use at least shader model 6.5 (e.g. `as_6_5`).
+
+| `VK_SHADER_STAGE_MESH_BIT_NV`
+| `ms`
+| Must use at least shader model 6.5 (e.g. `ms_6_5`).
+
+
+|===
+
+So if you for example you want to compile a compute shader targeting shader model 6.6 features, the target shader profile would be `cs_6_6`. For a ray tracing any hit shader it would be `lib_6_3`.
+
 == Shader model coverage
 
 DirectX and HLSL use a fixed shader model notion to describe the supported feature set. This is different from Vulkan and SPIR-V's flexible extension based way of adding features to shaders. The following table tries to list Vulkan's coverage for the HLSL shader models without guarantee of completeness:
