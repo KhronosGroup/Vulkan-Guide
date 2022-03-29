@@ -66,10 +66,10 @@ As of now, there exists no public Vulkan API for machine learning.
 
 == Safety Critical
 
-Currently, the Vulkan Working Group is looking into how to make Vulkan usable for safety critical systems.
+Vulkan SC ("Safety Critical") aims to bring the graphics and compute capabilities of modern GPUs to safety-critical systems in the automotive, avionics, industrial and medical space. It was publicly link:https://www.khronos.org/news/press/khronos-releases-vulkan-safety-critical-1.0-specification-to-deliver-safety-critical-graphics-compute[launched on March 1st 2022] and the specification is available link:https://www.khronos.org/vulkansc/[here].
 
 [NOTE]
 ====
-As of now, there exists no public Vulkan API for safety critical systems.
+Vulkan SC is based on Vulkan 1.2, but removed functionality that is not needed for safety-critical markets, increases the robustness of the specification by eliminating ignored parameters and undefined behaviors, and enables enhanced detection, reporting, and correction of run-time faults.
 ====
 
