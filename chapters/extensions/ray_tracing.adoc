@@ -134,17 +134,13 @@ together.
 ----
 rayQueryEXT rq;
 
-rayQueryInitializeEXT(rq, accStruct, gl_RayFlagsNoneEXT, 0, origin, tMin, direction, tMax);
+rayQueryInitializeEXT(rq, accStruct, gl_RayFlagsTerminateOnFirstHitEXT, cullMask, origin, tMin, direction, tMax);
 
-while(rayQueryProceedEXT(rq)) {
-        if (rayQueryGetIntersectionTypeEXT(rq, false) == gl_RayQueryCandidateIntersectionTriangleEXT) {
-                //...
-                rayQueryConfirmIntersectionEXT(rq);
-        }
-}
+// Traverse the acceleration structure and store information about the first intersection (if any)
+rayQueryProceedEXT(rq);
 
 if (rayQueryGetIntersectionTypeEXT(rq, true) == gl_RayQueryCommittedIntersectionNoneEXT) {
-        //...
+    // Not in shadow
 }
 ----
 
