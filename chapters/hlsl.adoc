@@ -148,7 +148,7 @@ if (FAILED(hres)) {
 }
 
 // Initialize the DXC compiler
-CComPtr<IDxcCompiler> compiler;
+CComPtr<IDxcCompiler3> compiler;
 hres = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&compiler));
 if (FAILED(hres)) {
 	throw std::runtime_error("Could not init DXC Compiler");
@@ -167,6 +167,18 @@ if (FAILED(hres)) {
 // Tell the compiler to output SPIR-V
 std::vector<LPCWSTR> arguments;
 arguments.push_back(L"-spirv");
+// nVidia: This allows for the compiler to do a better job at optimizing texture accesses. We have seen frame rate improvements of > 1% when toggling this flag on.
+arguments.push_back(L"-all-resources-bound");
+// VK_KHR_shader_float16_int8
+arguments.push_back(L"-enable-16bit-types");
+// memory layout for resources
+arguments.push_back(L"-fvk-use-dx-layout");
+// Vulkan version
+arguments.push_back(L"-fspv-target-env=vulkan1.1");
+// useful extensions
+arguments.push_back(L"-fspv-extension=SPV_GOOGLE_hlsl_functionality1");
+arguments.push_back(L"-fspv-extension=SPV_GOOGLE_user_type");
+arguments.push_back(L"-fspv-reflect");
 
 // Select target profile based on shader file extension
 LPCWSTR targetProfile{};
