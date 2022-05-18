@@ -53,7 +53,7 @@ Google's Stadia runs on AMD based Linux machines and Vulkan is the required grap
 
 == Windows
 
-Vulkan is supported on Windows 7, Windows 8, and Windows 10.
+Vulkan is supported on Windows 7, Windows 8, Windows 10, and Windows 11.
 
 == Others
 
