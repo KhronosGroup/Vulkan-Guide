@@ -65,7 +65,7 @@ There are also other publicly available layers that can be used to help in devel
 
 Debugging something running on a GPU can be incredibly hard, luckily there are tools out there to help.
 
-  * link:https://developer.arm.com/tools-and-software/graphics-and-gaming/arm-mobile-studio/components/graphics-analyzer[Arm Graphics Analyzer]
+  * link:https://developer.arm.com/Tools%20and%20Software/Graphics%20Analyzer [Arm Graphics Analyzer]
   * link:https://github.com/google/gapid[GAPID]
   * link:https://developer.nvidia.com/nsight-graphics[NVIDIA Nsight]
   * link:https://developer.imaginationtech.com[PVRCarbon]
@@ -77,7 +77,7 @@ Debugging something running on a GPU can be incredibly hard, luckily there are t
 With anything related to a GPU it is best to not assume and profile when possible. Here is a list of known profilers to aid in your development.
 
   * link:https://gpuopen.com/rgp/[AMD Radeon GPU Profiler] - Low-level performance analysis tool for AMD Radeon GPUs.
-  * link:https://developer.arm.com/tools-and-software/graphics-and-gaming/arm-mobile-studio/components/streamline-performance-analyzer[Arm Streamline Performance Analyzer] - Visualize the performance of mobile games and applications for a broad range of devices, using Arm Mobile Studio.
+  * link:https://developer.arm.com/Tools%20and%20Software/Streamline%20Performance%20Analyzer [Arm Streamline Performance Analyzer] - Visualize the performance of mobile games and applications for a broad range of devices, using Arm Mobile Studio.
   * link:https://www.intel.com/content/www/us/en/developer/tools/graphics-performance-analyzers/overview.html[Intel(R) GPA] - Intel's Graphics Performance Analyzers that supports capturing and analyzing multi-frame streams of Vulkan apps.
   * link:https://github.com/GPUOpen-Tools/OCAT[OCAT] - The Open Capture and Analytics Tool (OCAT) provides an FPS overlay and performance measurement for D3D11, D3D12, and Vulkan.
   * link:https://developer.imaginationtech.com[PVRTune]
