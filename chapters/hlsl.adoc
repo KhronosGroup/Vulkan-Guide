@@ -11,7 +11,7 @@ Vulkan does not directly consume shaders in a human-readable text format, but in
 
 One such language is the High Level Shading Language (HLSL) by Microsoft, used by DirectX. Thanks to link:https://www.khronos.org/blog/hlsl-first-class-vulkan-shading-language[recent additions to Vulkan 1.2] it is now considered a first class shading language for Vulkan that can be used just as easily as GLSL.
 
-With link:https://github.com/microsoft/DirectXShaderCompiler/blob/master/docs/SPIR-V.rst#unsupported-hlsl-features[a few exceptions], all Vulkan features and shader stages available with GLSL can be used with HLSL too, including recent Vulkan additions like hardware accelerated ray tracing. On the other hand, HLSL to SPIR-V supports Vulkan exclusive features that are not (yet) available in DirectX.
+With link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst#unsupported-hlsl-features[a few exceptions], all Vulkan features and shader stages available with GLSL can be used with HLSL too, including recent Vulkan additions like hardware accelerated ray tracing. On the other hand, HLSL to SPIR-V supports Vulkan exclusive features that are not (yet) available in DirectX.
 
 image::images/what_is_spirv_dxc.png[what_is_spriv_dxc.png]
 
@@ -22,11 +22,11 @@ From the application's point-of-view, using HLSL is exactly the same as using GL
 
 [[hlsl-spirv-mapping-manual]]
 == HLSL to SPIR-V feature mapping manual
-A great starting point on using HLSL in Vulkan via SPIR-V is the link:https://github.com/microsoft/DirectXShaderCompiler/blob/master/docs/SPIR-V.rst[HLSL to SPIR-V feature mapping manual]. It contains detailed information on semantics, syntax, supported features and extensions and much more and is a must-read. The xref:{chapters}decoder_ring.adoc[decoder ring] also has a translation table for concepts and terms used in Vulkan an DirectX.
+A great starting point on using HLSL in Vulkan via SPIR-V is the link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst[HLSL to SPIR-V feature mapping manual]. It contains detailed information on semantics, syntax, supported features and extensions and much more and is a must-read. The xref:{chapters}decoder_ring.adoc[decoder ring] also has a translation table for concepts and terms used in Vulkan an DirectX.
 
 [[vk-namespace]]
 == The Vulkan HLSL namespace
-To make HLSL compatible with Vulkan, an link:https://github.com/microsoft/DirectXShaderCompiler/blob/master/docs/SPIR-V.rst#the-implicit-vk-namespace)[implicit namespace] has been introduced that provides an interface for for Vulkan-specific features.
+To make HLSL compatible with Vulkan, an link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst#the-implicit-vk-namespace)[implicit namespace] has been introduced that provides an interface for for Vulkan-specific features.
 
 [[syntax-comparison]]
 == Syntax comparison
@@ -43,7 +43,7 @@ Here is the same shader written in both languages to give quick comparison on ho
 layout (location = 0) in vec3 inPosition;
 layout (location = 1) in vec3 inColor;
 
-layout (binding = 0) uniform UBO 
+layout (binding = 0) uniform UBO
 {
 	mat4 projectionMatrix;
 	mat4 modelMatrix;
@@ -52,7 +52,7 @@ layout (binding = 0) uniform UBO
 
 layout (location = 0) out vec3 outColor;
 
-void main() 
+void main()
 {
 	outColor = inColor * float(gl_VertexIndex);
 	gl_Position = ubo.projectionMatrix * ubo.viewMatrix * ubo.modelMatrix * vec4(inPosition.xyz, 1.0);
@@ -201,9 +201,9 @@ hres = compiler->Compile(
 	nullptr,
 	L"main",
 	targetProfile,
-	arguments.data(), 
+	arguments.data(),
 	(uint32_t)arguments.size(),
-	nullptr, 
+	nullptr,
 	0,
 	nullptr,
 	&resultOp);
@@ -266,7 +266,7 @@ When compiling HLSL with DXC you need to select a target shader profile. The nam
 | `cs`
 |
 
-|`VK_SHADER_STAGE_RAYGEN_BIT_KHR`, 
+|`VK_SHADER_STAGE_RAYGEN_BIT_KHR`,
 `VK_SHADER_STAGE_ANY_HIT_BIT_KHR`,
 `VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR`,
 `VK_SHADER_STAGE_MISS_BIT_KHR`,
@@ -317,7 +317,7 @@ DirectX and HLSL use a fixed shader model notion to describe the supported featu
 | Hardware accelerated ray tracing
 
 | link:https://github.com/microsoft/DirectXShaderCompiler/wiki/Shader-Model-6.4[Shader Model 6.4]
-| ✔ 
+| ✔
 | Shader integer dot product, SV_ShadingRate
 
 | link:https://github.com/microsoft/DirectXShaderCompiler/wiki/Shader-Model-6.5[Shader Model 6.5]

@@ -38,7 +38,7 @@ The way to load a layer in implicitly varies between loader and platform.
 
 === Android
 
-As of Android P (Android 9 / API level 28), if a device is in a debuggable state such that `getprop ro.debuggable` link:http://androidxref.com/9.0.0_r3/xref/frameworks/native/vulkan/libvulkan/layers_extensions.cpp#454[returns 1], then the loader will look in link:http://androidxref.com/9.0.0_r3/xref/frameworks/native/vulkan/libvulkan/layers_extensions.cpp#67[/data/local/debug/vulkan].
+As of Android P (Android 9 / API level 28), if a device is in a debuggable state such that `getprop ro.debuggable` link:hhttps://cs.android.com/android/platform/superproject/+/android-9.0.0_r1:frameworks/native/vulkan/libvulkan/layers_extensions.cpp;l=454[returns 1], then the loader will look in link:https://cs.android.com/android/platform/superproject/+/android-9.0.0_r1:frameworks/native/vulkan/libvulkan/layers_extensions.cpp;l=67[/data/local/debug/vulkan].
 
 Starting in Android P (Android 9 / API level 28) implicit layers can be link:https://developer.android.com/ndk/guides/graphics/validation-layer#vl-adb[pushed using ADB] if the application was built in debug mode.
 
