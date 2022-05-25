@@ -290,7 +290,7 @@ VkSemaphoreSubmitInfoKHR waitSemaphoreSubmitInfo = {
 
 // Note this is allowing a stage to set the signal operation
 VkSemaphoreSubmitInfoKHR signalSemaphoreSubmitInfo = {
-    .semaphore = waitSemaphore,
+    .semaphore = signalSemaphore,
     .value = 2, // replaces VkTimelineSemaphoreSubmitInfo
     .stageMask = VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT_KHR, // when to signal semaphore
     .deviceIndex = 0, // replaces VkDeviceGroupSubmitInfo
