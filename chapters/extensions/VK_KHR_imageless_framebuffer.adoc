@@ -11,7 +11,7 @@ ifndef::chapters[:chapters: ../]
 Promoted to core in Vulkan 1.2
 ====
 
-When creating a `VkFramebuffer` you normally need to pass the `VkImageViews` being used in `VkFramebufferCreateInfo::pAttachments`. This conventional way, however, has forced us to make multiple framebuffers as many as swapchain image views we have. Luckly if we are able to introduce the `VK_KHR_imageless_framebuffer` feature, we just need only one framebuffer per a render pass by separating actural image view resources from it. `VK_KHR_imageless_framebuffer` let us to create a VkFramebuffer with only metadata and give information of image views to a render pass at instance beginning time. But you should notice that it's not a kind of dynamic binding feature, as still requires fixed information like width, height, and so on. You must recreate a framebuffer from scratch when size of a swapchain changes.
+When creating a `VkFramebuffer` you normally need to pass the `VkImageView`s being used in `VkFramebufferCreateInfo::pAttachments`. Needing the `VkImageView` forces an application to make a framebuffer for each swapchain image. With `VK_KHR_imageless_framebuffer` the `VkImageView` information is given at `vkCmdBeginRenderPass` time instead. This means only one `VkFramebuffer` for all the swapchain images. It is important to notice that when the size of the swapchain changes, the `VkFramebuffer` will still need to be recreated to adjust information such as the `height` and `width`.
 
 To use an imageless `VkFramebuffer`
 
