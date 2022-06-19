@@ -11,8 +11,8 @@ The Khronos{regtitle} Vulkan Working Group
 :source-highlighter: rouge
 :rouge-style: github
 
-image::../images/vulkan_logo.png[Vulkan Logo]
-image::../images/khronos_logo.png[Khronos logo]
+image::../../images/vulkan_logo.png[Vulkan Logo]
+image::../../images/khronos_logo.png[Khronos logo]
 
 // Use {chapters} as base path for individual chapters, to allow single
 // pages to work properly as well. Must have trailing slash.
