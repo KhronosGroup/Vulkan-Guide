@@ -1,0 +1,36 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+
+[[portability-initiative]]
+= 移植性に関わるイニシアチブ
+
+[NOTE]
+====
+現在、暫定的な link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_portability_subset.html[VK_KHR_portability_subset] 拡張機能が link:https://github.com/KhronosGroup/Vulkan-Headers/blob/main/include/vulkan/vulkan_beta.h[vulkan_beta.h] ヘッダで提供されています。詳細はlink:https://www.khronos.org/blog/fighting-fragmentation-vulkan-portability-extension-released-implementations-shipping[プレスリリース]を参照してください。
+====
+
+link:https://www.vulkan.org/portability[Vulkan Portability Initiative] は、Khronos グループ内の取り組みで、現在 Vulkan のネイティブドライバが提供されていないプラットフォームを含む、すべての主要なプラットフォームでネイティブレベルのパフォーマンスで普遍的に利用できる Vulkan 機能のlink:https://github.com/KhronosGroup/Vulkan-Portability[サブセット]を定義し、発展させるためのリソースを開発しています。一言で言えば、Vulkan をネイティブにサポートしていないプラットフォーム（MacOSやiOSなど）でも、Vulkan を利用できるようにするためのイニシアチブです。
+
+image::../../../chapters/images/portability_initiative_overview.png[portability_initiative_overview.png]
+
+== 変換レイヤ
+
+レイヤを挟んだ実装は、業界の API 断片化に対抗し、より多くのアプリケーションをより多くのプラットフォーム上で実行できるようにします。 たとえば、下の図の1行目は、Vulkan を移植対象として、プラットフォームに追加の API を導入し、カーネルレベルのドライバを追加することなく、より多くのコンテンツを実現できることを示しています。 レイヤを挟んだ API の実装は、複数のプラットフォームでの本番アプリケーションをリリースするために使われています。
+
+図の列は、レイヤプロジェクトが、ネイティブドライバがない場合でも、追加のプラットフォームで API を利用できることを示しています。アプリケーション開発者は、選択したグラフィックス API で開発し、複数プラットフォームでリリース出来るため、柔軟な開発が可能です。図の最初の列は、Vulkan Portability Initiative の活動で、レイヤを挟んだ実装を Vulkan の機能を多様なプラットフォームで使えるようにしています。
+
+image::../../../chapters/images/portability_initiative_table.png[portability_initiative_table.png]
+
+== MacOS と iOS ツール
+
+Khronos Blog では、link:https://www.khronos.org/blog/new-release-of-vulkan-sdk[macOS と iOS のサポート]に関する情報を提供しています。
+
+image::../../../chapters/images/portability_initiative_macos.png[portability_initiative_macos.png]
+
+== gfx-rs
+
+現在、Mozilla は link:https://github.com/gfx-rs/portability[gfx-rs の移植性]を推進しており、link:https://gfx-rs.github.io/2017/07/24/low-level.html[gfx-hal] を他のさまざまなAPIとのインターフェイスとして使用しています。
+
+image::../../../chapters/images/portability_initiative_gfxrs.png[portability_initiative_gfxrs.png]

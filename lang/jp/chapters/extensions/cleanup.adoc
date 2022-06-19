@@ -1,0 +1,249 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters: ../]
+
+[[cleanup]]
+= クリーンアップ拡張機能
+
+[NOTE]
+====
+これらは非公式に「クリーンアップ拡張機能」と呼ばれている拡張機能です。Vulkan Guide では、ちょっとした機能を追加するだけのものや、目的が非常にシンプルで分かりやすい拡張であるという性質から、クリーンアップ拡張と定義されています。
+====
+
+[[VK_KHR_driver_properties]]
+== VK_KHR_driver_properties
+
+[NOTE]
+====
+Vulkan 1.2でコアに昇格
+====
+
+この拡張機能は、各実装に関するクエリに、より多くの情報を追加します。link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VkDriverId[VkDriverId] は、その実装の登録ベンダーの ID になります。link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VkConformanceVersion[VkConformanceVersion] は、実装が合格した Vulkan Conformance Test Suite のバージョンを表示します。
+
+[[VK_EXT_host_query_reset]]
+== VK_EXT_host_query_reset
+
+[NOTE]
+====
+Vulkan 1.2でコアに昇格
+====
+
+この拡張機能により、アプリケーションはホストから `vkCmdResetQueryPool` をサブミットするロジックをセットアップする代わりに、`vkResetQueryPool` を呼び出すことができます。
+
+[[VK_KHR_separate_depth_stencil_layouts]]
+== VK_KHR_separate_depth_stencil_layouts
+
+[NOTE]
+====
+Vulkan 1.2でコアに昇格
+====
+
+この拡張機能は、深度/ステンシルフォーマットを使用するアプリケーションが、深度とステンシルのそれぞれに対して個別に画像変換を行えるようにします。Vulkan 1.2以降、この機能はすべての実装に必要です。
+
+[[VK_KHR_depth_stencil_resolve]]
+== VK_KHR_depth_stencil_resolve
+
+[NOTE]
+====
+Vulkan 1.2でコアに昇格
+====
+
+この拡張機能は、マルチサンプリングされた深度/ステンシルのアタッチメントを、カラーアタッチメントと同様にサブパスで自動的に解決する機能を追加します。
+
+詳細については、GDCのプレゼンテーションをご覧ください。(link:https://www.khronos.org/assets/uploads/developers/presentations/Vulkan-Depth-Stencil-Resolve-GDC-Mar19.pdf[スライド]とlink:https://www.youtube.com/watch?v=GnnEmJFFC7Q&t=1980s[動画])
+
+[[VK_EXT_separate_stencil_usage]]
+== VK_EXT_separate_stencil_usage
+
+[NOTE]
+====
+Vulkan 1.2でコアに昇格
+====
+
+深度とステンシルの両方の使用法を表現するフォーマットがありますが、それらの異なる使用法をリストアップする方法はありませんでした。`VkImageStencilUsageCreateInfo` では、アプリケーションがイメージのステンシルの使用法について、別の `VkImageUsageFlags` を渡すことができるようになりました。深度の使用法は、`VkImageCreateInfo::usage` に渡された元の使用法であり、`VkImageStencilUsageCreateInfo` を使用しなくても、ステンシルの使用法は同様に同じになります。
+
+xref:{chapters}VK_KHR_image_format_list.adoc#VK_KHR_image_format_list[VK_KHR_image_format_list] 拡張機能を使用する場合が良い使用例です。これは、アプリケーションが作成時にその `VkImage` の可能なイメージビューをより明示的に記述する方法を提供します。これにより、いくつかの実装では、設定された使用法に応じて実装に依存した最適化を行うことができます。
+
+[[VK_KHR_dedicated_allocation]]
+== VK_KHR_dedicated_allocation
+
+[NOTE]
+====
+Vulkan 1.1でコアに昇格
+====
+
+通常、アプリケーションは `VkDeviceMemory` に大きなチャンクを割り当て、その後、さまざまなバッファやイメージにサブアロケートします。しかし、`VkImage` や `VkBuffer` に専用の割り当てがあった方が良い場合もあるでしょう。アプリケーションは `VkMemoryDedicatedRequirements` を `vkGetBufferMemoryRequirements2` や `vkGetImageMemoryRequirements2` に渡すことで、専用の割り当てが望ましいか必要かを知ることができます。外部メモリを扱う場合、しばしば専用の割り当てが必要になります。
+
+[[VK_EXT_sampler_filter_minmax]]
+== VK_EXT_sampler_filter_minmax
+
+[NOTE]
+====
+Vulkan 1.2でコアに昇格
+====
+
+デフォルトでは、線形フィルタリングを使用する Vulkan サンプラは、提供されたテクスチャ座標の近傍にあるテクセルのコレクションの加重平均を計算することによって生成されたフィルタリングされたテクセル値を返します。この拡張機能は、アプリケーションが、通常は平均化されるテクセルのコンポーネント単位の最小値（`VK_SAMPLER_REDUCTION_MODE_MIN`）または最大値（`VK_SAMPLER_REDUCTION_MODE_MAX`）を計算することによって、フィルタリングされたテクセル値を生成できるようにする、新しいサンプラパラメータを提供します。これは link:https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_filter_minmax.txt[GL_EXT_texture_filter_minmax] に似ています。
+
+[[VK_KHR_sampler_mirror_clamp_to_edge]]
+== VK_KHR_sampler_mirror_clamp_to_edge
+
+[NOTE]
+====
+Vulkan 1.2でコアに昇格
+====
+
+この拡張機能では、新しいサンプラアドレスモード（`VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE`）が追加されています。このモードでは、元の画像の2倍の大きさのテクスチャマップを効果的に使用し、新しい画像の追加の半分は元の画像の鏡像となります。この新しいモードでは、元の画像を使って一致する「鏡像」を生成することで、反対側のエッジが一致する画像を生成する必要性が緩和されます。このモードでは、テクスチャを負の `s`、`t`、`r` 方向に一度だけミラーリングすることができます。
+
+[[VK_EXT_4444_formats-and-VK_EXT_ycbcr_2plane_444_formats]]
+== VK_EXT_4444_formats and VK_EXT_ycbcr_2plane_444_formats
+
+[NOTE]
+====
+Vulkan 1.3でコアに昇格
+====
+
+これらの拡張機能は、もともと仕様になかった新しい `VkFormat` を追加します。
+
+[[VK_KHR_format_feature_flags2]]
+== VK_KHR_format_feature_flags2
+
+[NOTE]
+====
+Vulkan 1.3でコアに昇格
+====
+
+この拡張機能は、新しい `VkFormatFeatureFlagBits2KHR` 64ビットのフォーマット機能フラグタイプを追加して、31フラグに制限されている既存の `VkFormatFeatureFlagBits` を拡張します。
+
+[[VK_EXT_rgba10x6_formats]]
+== VK_EXT_rgba10x6_formats
+
+この拡張機能は、link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/pull/3397[検証レイヤ]に `VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16` の例外を追加して、フォーマットにレンダリングできるようにします。
+
+[[maintenance-extensions]]
+== メンテナンス拡張機能
+
+メンテナンス拡張機能は、オリジナルの Vulkan 1.0リリース時には意図的に省かれていた、または見落とされていたマイナーな機能をまとめて追加するものです。
+
+現在、4つのメンテナンス拡張機能があり、最初の3つは Vulkan 1.1にコアとしてバンドルされています。各拡張機能の詳細は、拡張機能の付録ページに記載されています。
+
+  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance1[VK_KHR_maintenance1] - Vulkan 1.1コア
+  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance2[VK_KHR_maintenance2] - Vulkan 1.1コア
+  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance3[VK_KHR_maintenance3] - Vulkan 1.1コア
+  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance4[VK_KHR_maintenance4] - Vulkan 1.3コア
+
+[[pnext-expansions]]
+== pNext 拡張機能
+
+オリジナルの Vulkan 1.0仕様に含まれるいくつかの構造体は、`sType`/`pNext` が欠けているため、適切な拡張ができないことに Vulkan のワーキンググループが気付きました。
+
+バージョン間の下位互換性を維持することは非常に重要であるため、最善の解決策は、ミスを修正するための拡張機能を作成することでした。これらの拡張機能は主に新しい構造体ですが、新しい構造体を利用するために新しい関数のエントリポイントも作成する必要があります。
+
+現在、このカテゴリーに当てはまる拡張子のリストは以下の通りです。
+
+  * `VK_KHR_get_memory_requirements2`
+  ** Vulkan 1.1でコアに追加されました
+  * `VK_KHR_get_physical_device_properties2`
+  ** Vulkan 1.1でコアに追加されました
+  * `VK_KHR_bind_memory2`
+  ** Vulkan 1.1でコアに追加されました
+  * `VK_KHR_create_renderpass2`
+  ** Vulkan 1.2でコアに追加されました
+  * `VK_KHR_copy_commands2`
+  ** Vulkan 1.3でコアに追加されました
+
+これらはいずれも非常にシンプルな拡張機能で、それぞれのバージョンでコアに昇格したことで、対応のクエリをしなくても簡単に使えるようになりました。
+
+[NOTE]
+====
+`VK_KHR_get_physical_device_properties2` には、拡張機能や新しい Vulkan バージョンの機能サポートをクエリする機能が追加されています。このため、他のほとんどの Vulkan 拡張機能には必須となっています。
+====
+
+=== 例
+
+標準の `vkBindImageMemory` を使用する代わりに、`VK_KHR_bind_memory2` を例として使用します。
+
+[source,cpp]
+----
+// VkImage images[3]
+// VkDeviceMemory memories[2];
+
+vkBindImageMemory(myDevice, images[0], memories[0], 0);
+vkBindImageMemory(myDevice, images[1], memories[0], 64);
+vkBindImageMemory(myDevice, images[2], memories[1], 0);
+----
+
+一括して行えるようになりました。
+
+[source,cpp]
+----
+// VkImage images[3];
+// VkDeviceMemory memories[2];
+
+VkBindImageMemoryInfo infos[3];
+infos[0] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, NULL, images[0], memories[0], 0};
+infos[1] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, NULL, images[1], memories[0], 64};
+infos[2] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, NULL, images[2], memories[1], 0};
+
+vkBindImageMemory2(myDevice, 3, infos);
+----
+
+`VK_KHR_sampler_ycbcr_conversion` のようないくつかの拡張機能では，`pNext` に渡すことができる構造体を公開しています．
+
+[source,cpp]
+----
+VkBindImagePlaneMemoryInfo plane_info[2];
+plane_info[0] = {VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO, NULL, VK_IMAGE_ASPECT_PLANE_0_BIT};
+plane_info[1] = {VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO, NULL, VK_IMAGE_ASPECT_PLANE_1_BIT};
+
+// vkBindImagemMemory() で欠落した pNext に他の拡張機能の構造体を渡せるようになりました。
+VkBindImageMemoryInfo infos[2];
+infos[0] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, &plane_info[0], image, memories[0], 0};
+infos[1] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, &plane_info[1], image, memories[1], 0};
+
+vkBindImageMemory2(myDevice, 2, infos);
+----
+
+=== 使用しなくても問題ありません
+
+アプリケーションが上記の拡張機能に依存した拡張機能のいずれかを使用する必要がない限り、通常はオリジナルの関数/構造体を使用しても問題ありません。
+
+このような場合、次のように対処することができます。
+
+[source,cpp]
+----
+void HandleVkBindImageMemoryInfo(const VkBindImageMemoryInfo* info) {
+    // ...
+}
+
+//
+// ツール/実装へのエントリーポイント
+//
+void vkBindImageMemory(VkDevice device,
+                       VkImage image,
+                       VkDeviceMemory memory,
+                       VkDeviceSize memoryOffset)
+{
+    VkBindImageMemoryInfo info;
+    // 元の呼び出しは pNext や sType を持たない
+    info.sType = VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO;
+    info.pNext = nullptr;
+
+    // 構造体の残りの部分は同じにする
+    info.image = image;
+    info.memory = memory;
+    info.memoryOffset = memoryOffset;
+
+    HandleVkBindImageMemoryInfo(&info);
+}
+
+void vkBindImageMemory2(VkDevice device,
+                        uint32_t bindInfoCount, const
+                        VkBindImageMemoryInfo* pBindInfos)
+{
+    for (uint32_t i = 0; i < bindInfoCount; i++) {
+        HandleVkBindImageMemoryInfo(pBindInfos[i]);
+    }
+}
+----

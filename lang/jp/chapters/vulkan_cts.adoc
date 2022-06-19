@@ -1,0 +1,17 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+
+[[vulkan-cts]]
+= Vulkan CTS
+
+Vulkan Conformance Tests Suite（CTS）は、実装の適合性を検証するために使用されるテストのセットです。適合した実装は、CTS に合格したことと、それが Vulkan の有効な実装であることを示します。link:https://www.khronos.org/conformance/adopters/conformant-products/vulkan[適合製品のリスト]は公開されています。
+
+適合する実装を持つ企業は、公開されている Vulkan 仕様を自由に使って製品を作ることができます。なお、Vulkan の名称やロゴを API の実装と共に使用するには、Vulkan API のすべての実装が link:https://www.khronos.org/adopters[Khronos Vulkan Adopter Program] で適合性をテストされなければなりません。
+
+link:https://github.com/KhronosGroup/VK-GL-CTS/tree/master/external/vulkancts[Vulkan CTS のソースコード]は自由に利用でき、link:https://github.com/KhronosGroup/VK-GL-CTS/wiki/Contributing[Contributing Wiki] に従っている限り、誰でも自由に新しいテストを作成して Vulkan CTS に追加することができます。
+
+image::../../../chapters/images/vulkan_cts_overview.png[vulkan_cts_overview.png]
+
+アプリケーションは `VK_KHR_driver_properties` 拡張機能により、 link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VkConformanceVersion[VkConformanceVersion] プロパティを使用して、実装が合格した CTS のバージョンをクエリすることができます（これは Vulkan 1.2でコアに昇格しました）。

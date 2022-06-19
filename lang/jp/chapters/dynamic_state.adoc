@@ -1,0 +1,91 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+
+[[dynamic-state]]
+= パイプラインの動的な状態（Dynamic State）
+
+[NOTE]
+====
+link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-dynamic-state[Vulkan Spec の章]
+====
+
+== 概要
+
+グラフィックスの `VkPipeline` オブジェクトを作成する際、状態を設定するための流れは以下の通りです。
+
+[source,cpp]
+----
+// ビューポートの状態を例にあげる
+VkViewport viewport = {0.0, 0.0, 32.0, 32.0, 0.0, 1.0};
+
+// 状態の値を設定
+VkPipelineViewportStateCreateInfo viewportStateCreateInfo;
+viewportStateCreateInfo.pViewports = &viewport;
+viewportStateCreateInfo.viewportCount = 1;
+
+// 状態の値が設定されたパイプラインを作成する
+VkGraphicsPipelineCreateInfo pipelineCreateInfo;
+pipelineCreateInfo.pViewportState = &viewportStateCreateInfo;
+vkCreateGraphicsPipelines(pipelineCreateInfo, &pipeline);
+
+vkBeginCommandBuffer();
+// パイプラインを選択し、状態の静的な値で描画する
+vkCmdBindPipeline(pipeline);
+vkCmdDraw();
+vkEndCommandBuffer();
+----
+
+`VkPipeline` がlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-dynamic-state[動的な状態]を使用している場合、一部のパイプライン情報を作成時に省略し、代わりにコマンドバッファの記録時に設定することができます。新しいフローは以下のようになります。
+
+[source,cpp]
+----
+// ビューポートの状態を例にあげる
+VkViewport viewport = {0.0, 0.0, 32.0, 32.0, 0.0, 1.0};
+VkDynamicState dynamicState = VK_DYNAMIC_STATE_VIEWPORT;
+
+// 今は使用しない
+VkPipelineViewportStateCreateInfo viewportStateCreateInfo;
+viewportStateCreateInfo.pViewports = nullptr;
+// ここでは使用するビューポートの数を指定する必要がある
+viewportStateCreateInfo.viewportCount = 1;
+
+// 状態を動的に設定
+VkPipelineDynamicStateCreateInfo dynamicStateCreateInfo;
+dynamicStateCreateInfo.dynamicStateCount = 1;
+dynamicStateCreateInfo.pDynamicStates = &dynamicState;
+
+// 状態の値が分からない状態でパイプラインを作成する
+VkGraphicsPipelineCreateInfo pipelineCreateInfo;
+pipelineCreateInfo.pViewportState = &viewportStateCreateInfo;
+pipelineCreateInfo.pDynamicState = &dynamicStateCreateInfo;
+vkCreateGraphicsPipelines(pipelineCreateInfo, &pipeline);
+
+vkBeginCommandBuffer();
+vkCmdBindPipeline(pipeline);
+// 記録時のパイプラインの状態を設定する
+vkCmdSetViewport(viewport);
+vkCmdDraw();
+viewport.height = 64.0;
+// 描画の間に新しい状態の値を設定する
+vkCmdSetViewport(viewport);
+vkCmdDraw();
+vkEndCommandBuffer();
+----
+
+== 動的な状態を使うとき
+
+[NOTE]
+====
+Vulkan はツールなので、他のものと同様に、唯一の答えはありません。
+====
+
+実装によっては、`VkDynamicState` を使用すると、静的な値を使用するよりもパフォーマンスが低下する場合があります。しかし、動的な状態にすることで、パイプラインオブジェクトのバリエーションを大量に作成する必要がなくなります。アプリケーションによっては、これが有用かもしれません。
+
+[[states-that-are-dynamic]]
+== 動的な状態とは
+
+動的にすることができる状態のリストは、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VkDynamicState[VkDynamicState] にあります。
+
+`VK_EXT_extended_dynamic_state`、`VK_EXT_extended_dynamic_state2`、`VK_EXT_vertex_input_dynamic_state`、`VK_EXT_color_write_enable` 拡張機能は、コンパイルしてバインドするパイプライン状態オブジェクトの数を減らすために追加されました。

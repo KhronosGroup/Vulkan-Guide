@@ -1,0 +1,55 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../]
+
+[[VK_KHR_imageless_framebuffer]]
+= VK_KHR_imageless_framebuffer
+
+[NOTE]
+====
+Vulkan 1.2でコアに昇格
+====
+
+`VkFramebuffer` を作成する場合、通常は `VkFramebufferCreateInfo::pAttachments` に `VkImageView` を渡す必要があります。
+
+イメージレスな `VkFramebuffer` を利用するには
+
+  * `VkPhysicalDeviceImagelessFramebufferFeatures::imagelessFramebuffer` または `VkPhysicalDeviceVulkan12Features::imagelessFramebuffer` をクエリして、実装がサポートしていることを確認します。
+  * `VkFramebufferCreateInfo::flags` に `VK_FRAMEBUFFER_CREATE_IMAGELESS_BIT` を設定します。
+  * `VkFramebufferCreateInfo::pNext` に `VkFramebufferAttachmentsCreateInfo` 構造体を含めます。
+  * レンダーパスの開始時に、`VkRenderPassAttachmentBeginInfo` 構造体を `VkRenderPassBeginInfo::pNext` に渡し、互換性のあるアタッチメントを指定します。
+
+
+[source,cpp]
+----
+// アタッチメントに関する情報を埋める
+VkFramebufferAttachmentImageInfo attachments_image_info = {};
+// ...
+
+VkFramebufferAttachmentsCreateInfo attachments_create_info = {};
+// ...
+attachments_create_info.attachmentImageInfoCount = 1;
+attachments_create_info.pAttachmentImageInfos = &attachments_image_info;
+
+// FrameBufferをイメージレスで作成する
+VkFramebufferCreateInfo framebuffer_info = {};
+framebuffer_info.pNext = &attachments_create_info;
+framebuffer_info.flags |= VK_FRAMEBUFFER_CREATE_IMAGELESS_BIT;
+// ...
+framebffer_info.pAttachments = NULL; // pAttachments はここでは無視される
+
+vkCreateFramebuffer(device, &framebuffer_info, NULL, &framebuffer_object);
+
+// ...
+
+// コマンドバッファの記録開始
+VkRenderPassAttachmentBeginInfo attachment_begin_info = {};
+// attachment_begin_info.pAttachments に VkImageView オブジェクトが含まれる
+
+VkRenderPassBeginInfo begin_info = {};
+begin_info.pNext = &attachment_begin_info;
+// ...
+
+vkCmdBeginRenderPass(command_buffer, &begin_info, VK_SUBPASS_CONTENTS_INLINE);
+----

@@ -1,0 +1,108 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[vulkan-spec]]
+= Vulkan Specification
+
+Vulkan Specification（通常 _Vulkan Spec_ と呼ばれる）は、公式に Vulkan API の動作を記述したもので、Vulkan の有効もしくは無効な使い方を定めています。一見すると、Vulkan Spec は巨大で無味乾燥ですが、開発時に最も役に立つ資料です。
+
+[NOTE]
+====
+Vulkan Spec を早く、頻繁に参照することをお勧めします。
+====
+
+== Vulkan Spec バリエーション
+
+Vulkan Spec は、どのバージョンでも、どのような拡張機能の組み合わせでもビルドすることができます。Khronos Group は link:https://www.khronos.org/registry/vulkan/specs/[Vulkan Spec Registry] をホストしており、ほとんどの開発者にとって十分なバリエーションが公開されています。誰でも link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/BUILD.adoc[Vulkan-Docs] から独自の Vulkan Spec をビルドすることができます。
+
+Vulkan Spec をビルドする際には、どのバージョン用か、どの拡張機能を含めるかを指定します。拡張機能を含まない Vulkan Spec はlink:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#extendingvulkan-coreversions[コアバージョン]とも呼ばれ、link:./../../../chapters/vulkan_cts.md[適合]するために実装がサポートするべき最小限の Vulkan となります。
+
+== Vulkan Spec フォーマット
+
+Vulkan Spec は、さまざまなフォーマットに対応しています。
+
+=== HTML チャンク
+
+Vulkan Spec のサイズは大きいため、デフォルトの `index.html` ページにアクセスすると、チャンク版がデフォルトで表示されます。
+
+例：link:https://www.khronos.org/registry/vulkan/specs/1.3/html/[https://www.khronos.org/registry/vulkan/specs/1.3/html/]
+
+ビルド済み HTML チャンク Vulkan Spec
+
+  * Vulkan SDK には、チャンク版の仕様書がパッケージされています。各バージョンの Vulkan SDK には、対応するバージョンの仕様書が含まれています。最新の Vulkan SDK については、link:https://vulkan.lunarg.com/doc/sdk/latest/windows/chunked_spec/index.html[Chunked Specification] をご覧ください。 
+  * Vulkan 1.0 Specification
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.0/html/[コア]
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/[コアと拡張機能]
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/html/[コアと WSI 拡張機能]
+  * Vulkan 1.1 Specification
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.1/html/[コア]
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/[コアと拡張機能]
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.1-khr-extensions/html/[コアと KHR 拡張機能]
+  * Vulkan 1.2 Specification
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.2/html/[コア]
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/[コアと拡張機能]
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.2-khr-extensions/html/[コアと KHR 拡張機能]
+  * Vulkan 1.3 Specification
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3/html/[コア]
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/[コアと拡張機能]
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-khr-extensions/html/[コアと KHR 拡張機能]
+
+=== HTML フル
+
+Vulkan Spec 全体を HTML で見るには、`vkspec.html` ファイルを表示します。
+
+例： https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html
+
+ビルド済み HTML フル Vulkan Spec 
+
+  * Vulkan SDK には、対応したバージョンの Vulkan Spec が HTML として丸ごとパッケージされています。最新の Vulkan SDK に対応するバージョンの link:https://vulkan.lunarg.com/doc/sdk/latest/windows/vkspec.html[HTML 版の Specification] をご覧ください。（注意：読み込みに時間がかかります。フル HTML 版の利点は検索機能です。） 
+  * Vulkan 1.0 Specification 
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.0/html/vkspec.html[コア] 
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html[コアと拡張機能] 
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/html/vkspec.html[コアと WSI 拡張機能] 
+  * Vulkan 1.1 Specification 
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.1/html/vkspec.html[コア] 
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html[コアと拡張機能] 
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.1-khr-extensions/html/vkspec.html[コアと KHR 拡張機能] 
+  * Vulkan 1.2 Specification 
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html[コア] 
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html[コアと拡張機能] 
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.2-khr-extensions/html/vkspec.html[コアと KHR 拡張機能]
+  * Vulkan 1.3 Specification
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html[コア]
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html[コアと拡張機能]
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-khr-extensions/html/vkspec.html[コアと KHR 拡張機能]
+
+=== PDF
+
+PDF フォーマットは `pdf/vkspec.pdf` ファイルをご覧ください。
+
+例： https://www.khronos.org/registry/vulkan/specs/1.3/pdf/vkspec.pdf
+
+ビルド済み PDF Vulkan Spec 
+
+  * Vulkan 1.0 Specification 
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.0/pdf/vkspec.pdf[コア] 
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.0-extensions/pdf/vkspec.pdf[コアと拡張機能] 
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/pdf/vkspec.pdf[コアと WSI 拡張機能] 
+  * Vulkan 1.1 Specification 
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.1/pdf/vkspec.pdf[コア] 
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.1-extensions/pdf/vkspec.pdf[コアと拡張機能] 
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.1-khr-extensions/pdf/vkspec.pdf[コアと KHR 拡張機能] 
+  * Vulkan 1.2 Specification 
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.2/pdf/vkspec.pdf[コア] 
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/pdf/vkspec.pdf[コアと拡張機能] 
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.2-khr-extensions/pdf/vkspec.pdf[コアと KHR 拡張機能]
+  * Vulkan 1.3 Specification
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3/pdf/vkspec.pdf[コア]
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/pdf/vkspec.pdf[コアと拡張機能]
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-khr-extensions/pdf/vkspec.pdf[コアと KHR 拡張機能]
+
+=== マニュアルページ
+
+Khronos Group は現在、最新バージョンの1.3仕様のすべての拡張機能を含む Vulkan Man Pages のみを link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/[オンラインレジストリ]でホストしています。
+
+また、Vulkan Man Pages は、各バージョンの Vulkan SDK にも掲載されています。最新の Vulkan SDK の link:https://vulkan.lunarg.com/doc/sdk/latest/windows/apispec.html[マニュアルページ] をご覧ください。

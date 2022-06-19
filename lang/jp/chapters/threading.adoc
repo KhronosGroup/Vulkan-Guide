@@ -1,0 +1,28 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[threading]]
+= スレッド化
+
+Vulkan と OpenGL の大きな違いの一つは、Vulkan がシングルスレッドのステートマシンシステムに限定されていないことです。アプリケーションにスレッドを実装する前に、Vulkan でスレッドがどのように機能するかを理解することが重要です。
+
+Vulkan Spec のlink:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#fundamentals-threadingbehavior[スレッドの挙動] では、Vulkan の外部同期要素をアプリケーションがどのように管理するかを詳しく説明しています。重要なのは、Vulkan のマルチスレッドはホスト側のスケーリングを提供するだけであり、デバイスと相互に作用するものは依然としてxref:{chapters}sychronization.adoc#synchronization[正しく同期される]必要があるということです。
+
+Vulkan の実装では、マルチスレッドを導入することは想定されていないため、アプリがマルチ CPU のパフォーマンスを求める場合は、アプリがスレッドの管理を担当することになります。
+
+== コマンドプール
+
+link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#commandbuffers-pools[コマンドプール]とは、複数のスレッドにまたがってコマンドバッファを記録できるシステムです。1つのコマンドプールは外部で同期していなければならず、複数のスレッドから同時にアクセスすることはできません。ホストスレッドごとに独立したコマンドプールを使用することで、コストのかかるロックをかけずに複数のコマンドバッファを並行して作成することができます。
+
+これは、コマンドバッファを複数のスレッドで記録しつつ、比較的軽いスレッドでサブミットを処理できるというアイディアです。
+
+image::../../../chapters/images/threading_command_buffers.png[threading_command_buffers.png]
+
+Khronos のlink:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/command_buffer_usage[サンプルとチュートリアル]では、コマンドバッファを並列に記録する方法が詳しく紹介されています。
+
+== ディスクリプタプール
+
+link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#VkDescriptorPool[ディスクリプタプール]は、ディスクリプタセットの割り当て、解放、リセット、および更新に使用されます。複数のディスクリプタプールを作成することで、各アプリケーションのホストスレッドは、各ディスクリプタプールのディスクリプタセットを同時に管理することができます。
