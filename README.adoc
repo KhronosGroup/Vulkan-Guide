@@ -16,7 +16,7 @@ image::images/khronos_logo.png[Khronos logo]
 
 :lang-jp: lang/jp/
 This document is also available in the following languages: +
-xref:{lang-jp}README-jp.adoc:[Japanese]
+xref:{lang-jp}README-jp.adoc[Japanese]
 
 
 // Use {chapters} as base path for individual chapters, to allow single
