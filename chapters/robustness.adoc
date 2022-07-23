@@ -24,37 +24,37 @@ Turning on robustness may incur a runtime performance cost. Application writers 
 
 == What Vulkan provides in core
 
-All Vulkan implementations are required to support the `robustBufferAccess` feature. The link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess[spec describes what is considered out-of-bounds] and also how it should be handled. Implementations are given some amount of flexibility for `robustBufferAccess`. An example would be accessing a `vec4(x,y,z,w)` where the `w` value is out-of-bounds as the spec allows the implementation to decide if the `x`, `y`, and `z` are also considered out-of-bounds or not.
+All Vulkan implementations are required to support the `robustBufferAccess` feature. The link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess[spec describes what is considered out-of-bounds] and also how it should be handled. Implementations are given some amount of flexibility for `robustBufferAccess`. An example would be accessing a `vec4(x,y,z,w)` where the `w` value is out-of-bounds as the spec allows the implementation to decide if the `x`, `y`, and `z` are also considered out-of-bounds or not.
 
-If dealing with the update after bind functionality found in `VK_EXT_descriptor_indexing` (which is core as of Vulkan 1.2) it is important to be aware of the link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustBufferAccessUpdateAfterBind[robustBufferAccessUpdateAfterBind] which indicates if an implementation can support both `robustBufferAccess` and the ability to update the descriptor after binding it.
+If dealing with the update after bind functionality found in `VK_EXT_descriptor_indexing` (which is core as of Vulkan 1.2) it is important to be aware of the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustBufferAccessUpdateAfterBind[robustBufferAccessUpdateAfterBind] which indicates if an implementation can support both `robustBufferAccess` and the ability to update the descriptor after binding it.
 
-The `robustBufferAccess` feature has some limitations as it only covers buffers and not images. It also allows out-of-bounds writes and atomics to modify the data of the buffer being accessed. For applications looking for a stronger form of robustness, there is link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_robustness2.html[VK_EXT_robustness2].
+The `robustBufferAccess` feature has some limitations as it only covers buffers and not images. It also allows out-of-bounds writes and atomics to modify the data of the buffer being accessed. For applications looking for a stronger form of robustness, there is link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_robustness2.html[VK_EXT_robustness2].
 
-When images are out-of-bounds core Vulkan link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-output-coordinate-validation[provides the guarantee] that stores and atomics have no effect on the memory being accessed.
+When images are out-of-bounds core Vulkan link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-output-coordinate-validation[provides the guarantee] that stores and atomics have no effect on the memory being accessed.
 
 == VK_EXT_image_robustness
 
 === robustImageAccess
 
-The link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustImageAccess[robustImageAccess] feature in link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_robustness[VK_EXT_image_robustness] enables out-of-bounds checking against the dimensions of the image view being accessed. If there is an out-of-bounds access to any image it will return `(0, 0, 0, 0)` or `(0, 0, 0, 1)`.
+The link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustImageAccess[robustImageAccess] feature in link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_robustness[VK_EXT_image_robustness] enables out-of-bounds checking against the dimensions of the image view being accessed. If there is an out-of-bounds access to any image it will return `(0, 0, 0, 0)` or `(0, 0, 0, 1)`.
 
 The `robustImageAccess` feature provides no guarantees about the values returned for access to an invalid LOD, it is still undefined behavior.
 
 == VK_EXT_robustness2
 
-Some applications, such as those being ported from other APIs such as D3D12, require stricter guarantees than `robustBufferAccess` and `robustImageAccess` provide. The link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_robustness2.html[VK_EXT_robustness2] extension adds this by exposing 3 new robustness features, described in the following sections. For some implementations these extra guarantees can come at a performance cost. Applications that don't need the extra robustness are recommended to use `robustBufferAccess` and/or `robustImageAccess` instead where possible.
+Some applications, such as those being ported from other APIs such as D3D12, require stricter guarantees than `robustBufferAccess` and `robustImageAccess` provide. The link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_robustness2.html[VK_EXT_robustness2] extension adds this by exposing 3 new robustness features, described in the following sections. For some implementations these extra guarantees can come at a performance cost. Applications that don't need the extra robustness are recommended to use `robustBufferAccess` and/or `robustImageAccess` instead where possible.
 
 === robustBufferAccess2
 
-The link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2[robustBufferAccess2] feature can be seen as a superset of `robustBufferAccess`.
+The link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2[robustBufferAccess2] feature can be seen as a superset of `robustBufferAccess`.
 
-With the feature enabled, it prevents all out-of-bounds writes and atomic from modifying any memory backing buffers. The `robustBufferAccess2` feature also enforces the values that must be returned for the various types of buffers when accessed out-of-bounds as link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess[described in the spec].
+With the feature enabled, it prevents all out-of-bounds writes and atomic from modifying any memory backing buffers. The `robustBufferAccess2` feature also enforces the values that must be returned for the various types of buffers when accessed out-of-bounds as link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess[described in the spec].
 
-It is important to query the `robustUniformBufferAccessSizeAlignment` and `robustStorageBufferAccessSizeAlignment` from link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceRobustness2PropertiesEXT.html[VkPhysicalDeviceRobustness2PropertiesEXT] as the alignment of where buffers are bound-checked is different between implementations.
+It is important to query the `robustUniformBufferAccessSizeAlignment` and `robustStorageBufferAccessSizeAlignment` from link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceRobustness2PropertiesEXT.html[VkPhysicalDeviceRobustness2PropertiesEXT] as the alignment of where buffers are bound-checked is different between implementations.
 
 === robustImageAccess2
 
-The link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustImageAccess2[robustImageAccess2] feature can be seen as a superset of `robustImageAccess`. It builds on the out-of-bounds checking against the dimensions of the image view being accessed, adding stricter requirements on which values may be returned.
+The link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustImageAccess2[robustImageAccess2] feature can be seen as a superset of `robustImageAccess`. It builds on the out-of-bounds checking against the dimensions of the image view being accessed, adding stricter requirements on which values may be returned.
 
 With `robustImageAccess2` an out-of-bounds access to an R, RG, or RGB format will return `(0, 0, 0, 1)`. For an RGBA format, such as `VK_FORMAT_R8G8B8A8_UNORM`, it will return `(0, 0, 0, 0)`.
 
@@ -62,6 +62,6 @@ For the case of accessing an image LOD outside the supported range, with `robust
 
 === nullDescriptor
 
-Without the link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor[nullDescriptor] feature enabled, when updating a `VkDescriptorSet`, all the resources backing it must be non-null, even if the descriptor is statically not used by the shader. This feature allows descriptors to be backed by null resources or views. Loads from a null descriptor return zero values and stores and atomics to a null descriptor are discarded.
+Without the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor[nullDescriptor] feature enabled, when updating a `VkDescriptorSet`, all the resources backing it must be non-null, even if the descriptor is statically not used by the shader. This feature allows descriptors to be backed by null resources or views. Loads from a null descriptor return zero values and stores and atomics to a null descriptor are discarded.
 
 The `nullDescriptor` feature also allows accesses to vertex input bindings where `vkCmdBindVertexBuffers::pBuffers` is null.

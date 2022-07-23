@@ -11,7 +11,7 @@ Protected memory divides device memory into "`protected device memory`" and "`un
 
 In general, most OS don't allow one application to access another application's GPU memory unless explicitly shared (e.g. via xref:{chapters}extensions/external.adoc#external-memory[external memory]). A common example of protected memory is for containing DRM content, which a process might be allowed to modify (e.g. for image filtering, or compositing playback controls and closed captions) but shouldn' be able to extract into unprotected memory. The data comes in encrypted and remains encrypted until it reaches the pixels on the display.
 
-The Vulkan Spec link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-protected-memory[explains in detail] what "`protected device memory`" enforces. The following is a breakdown of what is required in order to properly enable a protected submission using protected memory.
+The Vulkan Spec link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-protected-memory[explains in detail] what "`protected device memory`" enforces. The following is a breakdown of what is required in order to properly enable a protected submission using protected memory.
 
 == Checking for support
 
@@ -87,7 +87,7 @@ When creating a swapchain the `VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR` bit is use
 
 All `VkImage` from `vkGetSwapchainImagesKHR` using a protected swapchain are the same as if the image was created with `VK_IMAGE_CREATE_PROTECTED_BIT`.
 
-Sometimes it is unknown whether swapchains can be created with the `VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR` flag set. The link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_surface_protected_capabilities.html[VK_KHR_surface_protected_capabilities] extension is exposed on platforms where this might be unknown.
+Sometimes it is unknown whether swapchains can be created with the `VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR` flag set. The link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_surface_protected_capabilities.html[VK_KHR_surface_protected_capabilities] extension is exposed on platforms where this might be unknown.
 
 == Protected command buffer
 
