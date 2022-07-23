@@ -185,10 +185,14 @@ if (idx != std::string::npos) {
 
 // Configure the compiler arguments for compiling the HLSL shader to SPIR-V
 std::vector<LPCWSTR> arguments = {
-	filename.c_str(),		// (Optional) name of the shader file to be displayed e.g. in an error message
-	L"-E", L"main",			// Shader main entry point
-	L"-T", targetProfile,	// Shader target profile
-	L"-spirv"				// Compile to SPIRV
+	// (Optional) name of the shader file to be displayed e.g. in an error message
+	filename.c_str(),
+	// Shader main entry point
+	L"-E", L"main",
+	// Shader target profile
+	L"-T", targetProfile,
+	// Compile to SPIRV
+	L"-spirv"				
 };
 
 // Compile shader
