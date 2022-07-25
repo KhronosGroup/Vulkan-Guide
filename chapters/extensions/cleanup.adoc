@@ -20,7 +20,7 @@ These are extensions that are unofficially called "`cleanup extension`". The Vul
 Promoted to core in Vulkan 1.2
 ====
 
-This extension adds more information to query about each implementation. The link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VkDriverId[VkDriverId] will be a registered vendor's ID for the implementation. The link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VkConformanceVersion[VkConformanceVersion] displays which version of xref:{chapters}vulkan_cts.adoc#vulkan-cts[the Vulkan Conformance Test Suite] the implementation passed.
+This extension adds more information to query about each implementation. The link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VkDriverId[VkDriverId] will be a registered vendor's ID for the implementation. The link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VkConformanceVersion[VkConformanceVersion] displays which version of xref:{chapters}vulkan_cts.adoc#vulkan-cts[the Vulkan Conformance Test Suite] the implementation passed.
 
 [[VK_EXT_host_query_reset]]
 == VK_EXT_host_query_reset
@@ -84,7 +84,7 @@ Normally applications allocate large chunks for `VkDeviceMemory` and then suball
 Promoted to core in Vulkan 1.2
 ====
 
-By default, Vulkan samplers using linear filtering return a filtered texel value produced by computing a weighted average of a collection of texels in the neighborhood of the texture coordinate provided. This extension provides a new sampler parameter which allows applications to produce a filtered texel value by computing a component-wise minimum (`VK_SAMPLER_REDUCTION_MODE_MIN`) or maximum (`VK_SAMPLER_REDUCTION_MODE_MAX`) of the texels that would normally be averaged. This is similar to link:https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_filter_minmax.txt[GL EXT_texture_filter_minmax].
+By default, Vulkan samplers using linear filtering return a filtered texel value produced by computing a weighted average of a collection of texels in the neighborhood of the texture coordinate provided. This extension provides a new sampler parameter which allows applications to produce a filtered texel value by computing a component-wise minimum (`VK_SAMPLER_REDUCTION_MODE_MIN`) or maximum (`VK_SAMPLER_REDUCTION_MODE_MAX`) of the texels that would normally be averaged. This is similar to link:https://registry.khronos.org/OpenGL/extensions/EXT/EXT_texture_filter_minmax.txt[GL EXT_texture_filter_minmax].
 
 [[VK_KHR_sampler_mirror_clamp_to_edge]]
 == VK_KHR_sampler_mirror_clamp_to_edge
@@ -128,10 +128,10 @@ The maintenance extensions add a collection of minor features that were intentio
 
 Currently, there are 4 maintenance extensions. The first 3 were bundled in Vulkan 1.1 as core. All the details for each are well defined in the extension appendix page.
 
-  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance1[VK_KHR_maintenance1] - core in Vulkan 1.1
-  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance2[VK_KHR_maintenance2] - core in Vulkan 1.1
-  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance3[VK_KHR_maintenance3] - core in Vulkan 1.1
-  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance4[VK_KHR_maintenance4] - core in Vulkan 1.3
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance1[VK_KHR_maintenance1] - core in Vulkan 1.1
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance2[VK_KHR_maintenance2] - core in Vulkan 1.1
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance3[VK_KHR_maintenance3] - core in Vulkan 1.1
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance4[VK_KHR_maintenance4] - core in Vulkan 1.3
 
 [[pnext-expansions]]
 == pNext Expansions

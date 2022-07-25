@@ -7,12 +7,12 @@ ifndef::chapters[:chapters:]
 [[shader-memory-layout]]
 = Shader Memory Layout
 
-When an implementation accesses memory from an interface, it needs to know how the **memory layout**. This includes things such as **offsets**, **stride**, and **alignments**. While the Vulkan Spec has a link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-layout[section dedicated to this], it can be hard to parse due to the various extensions that add extra complexity to the spec language. This chapter aims to help explain all the memory layout concepts Vulkan uses with some high level shading language (GLSL) examples.
+When an implementation accesses memory from an interface, it needs to know how the **memory layout**. This includes things such as **offsets**, **stride**, and **alignments**. While the Vulkan Spec has a link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-layout[section dedicated to this], it can be hard to parse due to the various extensions that add extra complexity to the spec language. This chapter aims to help explain all the memory layout concepts Vulkan uses with some high level shading language (GLSL) examples.
 
 [[alignment-requirements]]
 == Alignment Requirements
 
-Vulkan has 3 link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-alignment-requirements[alignment requirements] that interface objects can be laid out in.
+Vulkan has 3 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-alignment-requirements[alignment requirements] that interface objects can be laid out in.
 
 - extended alignment (also know as `std140`)
 - base alignment (also know as `std430`)
@@ -34,7 +34,7 @@ The spec language for alignment breaks down the rule for each of the following b
 Promoted to core in Vulkan 1.2
 ====
 
-This extension allows the use of `std430` memory layout in UBOs. link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-standard-layout[Vulkan Standard Buffer Layout Interface] can be found outside this guide. These memory layout changes are only applied to `Uniforms` as other storage items such as Push Constants and SSBO already allow for std430 style layouts.
+This extension allows the use of `std430` memory layout in UBOs. link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-standard-layout[Vulkan Standard Buffer Layout Interface] can be found outside this guide. These memory layout changes are only applied to `Uniforms` as other storage items such as Push Constants and SSBO already allow for std430 style layouts.
 
 One example of when the `uniformBufferStandardLayout` feature is needed is when an application doesn't want the array stride for a UBO to be restricted to `extended alignment`
 

@@ -31,7 +31,7 @@ The depth clip enable functionality is specified differently from D3D11 and Vulk
 [[VK_EXT_depth_clip_control]]
 == VK_EXT_depth_clip_control
 
-The depth clip control functionality allows the application to use the OpenGL depth range in NDC. In OpenGL it is `[-1, 1]` as opposed to Vulkan’s default of `[0, 1]`. Support for clip control was supported in OpenGL via the link:https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_clip_control.txt[ARB_clip_control] extension.
+The depth clip control functionality allows the application to use the OpenGL depth range in NDC. In OpenGL it is `[-1, 1]` as opposed to Vulkan’s default of `[0, 1]`. Support for clip control was supported in OpenGL via the link:https://registry.khronos.org/OpenGL/extensions/ARB/ARB_clip_control.txt[ARB_clip_control] extension.
 
 More info in the xref:{chapters}depth.adoc#user-defined-clipping-and-culling[depth chapter]
 

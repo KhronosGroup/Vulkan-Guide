@@ -8,11 +8,11 @@ ifndef::chapters[:chapters: ../]
 
 A set of five interrelated extensions provide ray tracing support in the Vulkan API.
 
-  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_acceleration_structure.html[VK_KHR_acceleration_structure]
-  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_ray_tracing_pipeline.html[VK_KHR_ray_tracing_pipeline]
-  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_ray_query.html[VK_KHR_ray_query]
-  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_pipeline_library.html[VK_KHR_pipeline_library]
-  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_deferred_host_operations.html[VK_KHR_deferred_host_operations]
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_acceleration_structure.html[VK_KHR_acceleration_structure]
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_ray_tracing_pipeline.html[VK_KHR_ray_tracing_pipeline]
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_ray_query.html[VK_KHR_ray_query]
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_pipeline_library.html[VK_KHR_pipeline_library]
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_deferred_host_operations.html[VK_KHR_deferred_host_operations]
 
 Additional SPIR-V and GLSL extensions also expose the necessary programmable functionality for shaders:
 

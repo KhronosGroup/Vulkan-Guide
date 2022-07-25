@@ -45,10 +45,10 @@ While both GLSL and SPIR-V support the use of atomic counters, Vulkan does **not
 
 The current extensions that expose additional support for atomics are:
 
-  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_shader_atomic_int64.html[VK_KHR_shader_atomic_int64]
-  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_shader_image_atomic_int64.html[VK_EXT_shader_image_atomic_int64]
-  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_shader_atomic_float.html[VK_EXT_shader_atomic_float]
-  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_shader_atomic_float2.html[VK_EXT_shader_atomic_float2]
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_shader_atomic_int64.html[VK_KHR_shader_atomic_int64]
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_shader_image_atomic_int64.html[VK_EXT_shader_image_atomic_int64]
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_shader_atomic_float.html[VK_EXT_shader_atomic_float]
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_shader_atomic_float2.html[VK_EXT_shader_atomic_float2]
 
 Each explained in more details below.
 
@@ -119,7 +119,7 @@ and `64-bit float` support:
 
 [NOTE]
 ====
-OpenGLES link:https://www.khronos.org/registry/OpenGL/extensions/OES/OES_shader_image_atomic.txt[OES_shader_image_atomic] allowed the use of atomics on `r32f` for `imageAtomicExchange`. For porting, an application will want to check for `shaderImageFloat32Atomics` support to be able to do the same in Vulkan.
+OpenGLES link:https://registry.khronos.org/OpenGL/extensions/OES/OES_shader_image_atomic.txt[OES_shader_image_atomic] allowed the use of atomics on `r32f` for `imageAtomicExchange`. For porting, an application will want to check for `shaderImageFloat32Atomics` support to be able to do the same in Vulkan.
 ====
 
 [[VK_EXT_shader_atomic_float2]]

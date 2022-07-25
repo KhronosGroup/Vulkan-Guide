@@ -8,7 +8,7 @@ ifndef::chapters[:chapters: ../]
 
 == Overview
 
-link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_shader_subgroup_uniform_control_flow.html[VK_KHR_shader_subgroup_uniform_control_flow]
+link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_shader_subgroup_uniform_control_flow.html[VK_KHR_shader_subgroup_uniform_control_flow]
 provides stronger guarantees for reconvergence of invocations in a shader. If
 the extension is supported, shaders can be modified to include a new attribute
 that provides the stronger guarantees (see
