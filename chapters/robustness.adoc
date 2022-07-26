@@ -65,3 +65,11 @@ For the case of accessing an image LOD outside the supported range, with `robust
 Without the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor[nullDescriptor] feature enabled, when updating a `VkDescriptorSet`, all the resources backing it must be non-null, even if the descriptor is statically not used by the shader. This feature allows descriptors to be backed by null resources or views. Loads from a null descriptor return zero values and stores and atomics to a null descriptor are discarded.
 
 The `nullDescriptor` feature also allows accesses to vertex input bindings where `vkCmdBindVertexBuffers::pBuffers` is null.
+
+== VK_EXT_pipeline_robustness
+
+Because for some implementations robustness can come at a performance cost, the `VK_EXT_pipeline_robustness` extension was added to allow a developers to request robustness on a per-pipeline stage basis.
+
+At `VkPipeline` creation time the `VkPipelineRobustnessBufferBehaviorEXT` and `VkPipelineRobustnessImageBehaviorEXT` can set which robustness for the resources of the pipeline.
+
+This extension also provides `VkPhysicalDevicePipelineRobustnessPropertiesEXT` which queries the implementation for what behavior it provides as default when no robustness features are enabled.
