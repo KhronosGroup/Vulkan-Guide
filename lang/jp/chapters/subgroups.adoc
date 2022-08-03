@@ -1,0 +1,89 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[subgroups]]
+= サブグループ
+
+Vulkan Spec では、サブグループを次のように定義しています。
+
+[NOTE]
+====
+互いのデータを効率的に同期・共有できるシェーダ呼び出しのセット。コンピュートシェーダでは、ローカルワークグループはサブグループのスーパーセットとなる。
+====
+
+多くの実装では、サブグループとは、同じ命令を一度に実行する呼び出しのグループのことです。サブグループを使うことで、シェーダを書く際に単一のワークグループよりも細かい粒度で作業することができます。
+
+== リソース
+
+サブグループの詳細については、link:https://www.khronos.org/blog/vulkan-subgroup-tutorial[Khronos のブログ記事]や Vulkan Developer Day 2018のプレゼンテーション（link:https://www.khronos.org/assets/uploads/developers/library/2018-vulkan-devday/06-subgroups.pdf[スライド]とlink:https://www.youtube.com/watch?v=8MyqQLu_tW0[ビデオ]）をご覧ください。GLSL のサポートについては、link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/khr/GL_KHR_shader_subgroup.txt[GL_KHR_shader_subgroup] 拡張機能があります。
+
+== サブグループのサイズ
+
+サブグループのサイズは、実装によって動的に変化する可能性があることも重要です。実装によっては、サブグループごとに、異なるサブグループサイズでシェーダをディスパッチすることがあります。その結果、大きなサブグループをより小さなサブグループに暗黙的に分割したり、小さなサブグループをより大きなサブグループとして表現したり、起動時にその一部が非アクティブになったりする可能性があります。
+
+[[VK_EXT_subgroup_size_control]]
+=== VK_EXT_subgroup_size_control
+
+[NOTE]
+====
+Vulkan 1.3でコアに昇格
+====
+
+この拡張機能は、いくつかの実装が複数のサブグループサイズを持つものの、Vulkan がもともと単一のサブグループサイズしか公開しないという理由で作成されました。
+
+たとえば、ある実装がサイズ `4` と `16` の両方のサブグループをサポートしている場合、以前はどちらか一方のサイズのみを公開する必要がありましたが、現在は両方を公開することができます。これにより、複数のサブグループサイズを公開する実装では、アプリケーションがより細かい粒度でハードウェアを制御できる可能性があります。デバイスがこの拡張をサポートしていない場合は、おそらくサポートされているサブグループサイズが1つだけであることを意味します。
+
+== 対応の確認
+
+Vulkan 1.1では、サブグループのすべての情報は、`VkPhysicalDeviceSubgroupProperties` にあります。
+
+[source,cpp]
+----
+VkPhysicalDeviceSubgroupProperties subgroupProperties;
+
+VkPhysicalDeviceProperties2KHR deviceProperties2;
+deviceProperties2.sType      = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
+deviceProperties2.pNext      = &subgroupProperties;
+vkGetPhysicalDeviceProperties2(physicalDevice, &deviceProperties2);
+
+// フラグメントシェーダでサポートされているかどうかを確認する例
+if ((subgroupProperties.supportedStages & VK_SHADER_STAGE_FRAGMENT_BIT) != 0) {
+    // フラグメントシェーダに対応している
+}
+
+// バロットがサポートされているかどうかを確認する例
+if ((subgroupProperties.supportedOperations & VK_SUBGROUP_FEATURE_BALLOT_BIT) != 0) {
+    // バロットサブグループの操作をサポートしている
+}
+----
+
+=== 保証されている対応
+
+サポートされているステージでは、Vulkan Spec が以下の対応を保証しています。
+
+[NOTE]
+====
+**supportedStages** は、物理デバイスのキューに **VK_QUEUE_COMPUTE_BIT** がサポートされている場合、**VK_SHADER_STAGE_COMPUTE_BIT** ビットが設定されます。
+====
+
+サポートされている操作については、Vulkan Spec が以下の対応を保証しています。
+
+[NOTE]
+====
+**supportedOperations** は、物理デバイスのキューのいずれかが **VK_QUEUE_GRAPHICS_BIT** または **VK_QUEUE_COMPUTE_BIT** をサポートしている場合、**VK_SUBGROUP_FEATURE_BASIC_BIT** ビットが設定されます。
+====
+
+[[VK_KHR_shader_subgroup_extended_types]]
+== VK_KHR_shader_subgroup_extended_types
+
+[NOTE]
+====
+Vulkan 1.2でコアに昇格
+
+link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_shader_subgroup_extended_types.txt[GLSL_EXT_shader_subgroup_extended_types]
+====
+
+この拡張機能により、サブグループスコープを持つグループ操作で、8ビット整数、16ビット整数、64ビット整数、16ビット浮動小数点、およびこれらの型のベクターを使用できるようになります。

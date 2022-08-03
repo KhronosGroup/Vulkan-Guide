@@ -1,0 +1,60 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[platforms]]
+= プラットフォーム
+
+Vulkan は多くのプラットフォームで動作しますが、Vulkan の管理方法にそれぞれ小さな違いがあります。
+
+image::../../../chapters/images/platforms_overview.png[platforms_overview.png]
+
+== Android
+
+Vulkan API は、API レベル24（Android Nougat）以降のすべての Android 端末でlink:https://developer.android.com/ndk/guides/graphics/getting-started[利用可能]ですが、すべての端末に Vulkan ドライバが搭載されているわけではありません。
+
+Android は link:https://source.android.com/devices/architecture/hal[Hardware Abstraction Layer (HAL)] を使って、link:https://source.android.com/devices/graphics/implement-vulkan#driver_emun[あらかじめ定義されたパス]から Vulkan ドライバを探します。
+
+API レベル29（Android Q）以降で起動するすべての64ビット端末には、Vulkan 1.1ドライバを搭載しているはずです。
+
+== BSD Unix
+
+Vulkan は多くの BSD Unix ディストリビューションでサポートされています。
+
+== Fuchsia
+
+Vulkan は link:https://fuchsia.dev/fuchsia-src/development/graphics/magma/concepts/vulkan[Fuchsia Operation System] でサポートされています。
+
+== iOS
+
+iOS では Vulkan はネイティブにサポートされていませんが、xref:{chapters}portability_initiative.adoc#portability-initiative[Vulkan Portability Tools] を使って対象とすることができます。
+
+== Linux
+
+Vulkan は多くの Linux ディストリビューションでサポートされています。
+
+== MacOS
+
+MacOS では Vulkan はネイティブにサポートされていませんが、xref:{chapters}portability_initiative.adoc#portability-initiative[Vulkan Portability Tools] を使って対象とすることができます。
+
+== Nintendo Switch
+
+Nintendo Switch は、Vulkan をネイティブにサポートする NVIDIA Tegra チップセットを搭載しています。
+
+== QNX
+
+QNX オペレーションシステムでは、Vulkan がサポートされています。
+
+== Stadia
+
+Google の Stadia は AMD ベースの Linux マシンで動作し、Vulkan は必須のグラフィックス API です。
+
+== Windows
+
+Vulkan は、Windows 7、Windows 8、および Windows 10 でサポートされています。
+
+== Others
+
+組込みシステムの中には Vulkan をサポートしているものもあり、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#display[ディスプレイに直接]表示できます。

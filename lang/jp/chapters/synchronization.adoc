@@ -1,0 +1,39 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[synchronization]]
+= 同期
+
+同期は、Vulkan を使用する上で最も強力な部分の一つですが、同時に最も複雑な部分でもあります。アプリケーションは、さまざまな link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#synchronization[Vulkan 同期プリミティブ]を使用して同期を管理する責任があります。同期の使い方を誤ると、見つけにくいバグが発生したり、GPUが不必要にアイドル状態になってパフォーマンスが低下したりします。
+
+link:https://github.com/KhronosGroup/Vulkan-Docs/wiki/Synchronization-Examples[同期の例]とlink:https://www.khronos.org/blog/understanding-vulkan-synchronization[Vulkan Synchronization の理解]というブログ記事が Khronos によって提供されており、同期プリミティブの使用方法が紹介されています。また、Tobias Hector 氏による過去の Vulkan に関する講演のプレゼンテーションもあります。link:https://www.khronos.org/assets/uploads/developers/library/2017-vulkan-devu-vancouver/009%20-%20Synchronization%20-%20Keeping%20Your%20Device%20Fed.pdf[パート1スライド] (link:https://www.youtube.com/watch?v=YkJ4hKCPjm0[動画]) とlink:https://www.khronos.org/assets/uploads/developers/library/2018-vulkanised/06-Keeping%20Your%20Device%20Fed%20v4_Vulkanised2018.pdf[パート2スライド] (link:https://www.youtube.com/watch?v=5GDg4OxkSEc[動画]) 
+
+以下は `VkEvent`、`VkFence`、`VkSemaphore` の違いを示す概要図です。
+
+image::../../../chapters/images/synchronization_overview.png[synchronization_overview.png]
+
+== 検証
+
+Khronos Validation Layer は、link:https://vulkan.lunarg.com/doc/sdk/latest/windows/synchronization_usage.html[同期の検証]を実装しています。これは、link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK] に含まれる link:https://vulkan.lunarg.com/doc/sdk/latest/windows/vkconfig.html[Vulkan Configurator] で簡単に有効にすることができます。同期の検証については、link:https://www.lunarg.com/wp-content/uploads/2020/09/Final_LunarG_Guide_to_Vulkan-Synchronization_Validation_08_20.pdf[詳細なホワイトペーパー]が作成され、link:https://www.khronos.org/blog/a-guide-to-vulkan-synchronization-validation[Khronos Blog] として公開されています。
+
+== パイプラインバリア
+
+link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#synchronization-pipeline-barriers[パイプラインバリア]は、コマンドバッファが実行される際に、どのパイプラインステージが前のパイプラインステージを待つ必要があるかを制御します。
+
+image::../../../chapters/images/synchronization_pipeline_barrieres.png[synchronization_pipeline_barrieres.png]
+
+パイプラインバリアは、最初は理解しにくいかもしれませんが、Khronos の講演やその他のリソースには、このテーマについてより深く掘り下げたものがたくさんあります。
+
+  * link:https://www.khronos.org/assets/uploads/developers/library/2018-vulkanised/05-The%20low-level%20mysteries%20of%20pipeline%20barriers_Vulkanised2018.pdf[Vulkanised 2018 - Low-level mysteries of pipeline barriers] (link:https://www.youtube.com/watch?v=e0ySJ9Qzvrs[動画])
+  * link:https://www.khronos.org/assets/uploads/developers/library/2019-vulkanised/02_Live%20Long%20And%20Optimise-May19.pdf[Vulkanised 2019 - Live Long and Optimise]  (link:https://www.youtube.com/watch?v=ch6161wvME8&t=463s[動画]) Pipeline Analysis はスライドの12ページから
+  * link:https://gpuopen.com/learn/vulkan-barriers-explained/[Vulkan barriers explained] ブログ記事
+  * link:http://themaister.net/blog/2019/08/14/yet-another-blog-explaining-vulkan-synchronization/[Yet another blog post explaining Vulkan synchronization]
+
+== VK_KHR_synchronization2
+
+`VK_KHR_synchronization2` 拡張機能は、アプリケーション開発者にとっての複雑さを軽減するために、オリジナルのコア同期 API を見直し、オリジナルの API には無い機能を追加しています。
+
+同期 API の違いや、新しい拡張機能への移行方法については、xref:{chapters}extensions/VK_KHR_synchronization2.adoc#VK_KHR_synchronization2[VK_KHR_synchronization2] の章を参照してください。

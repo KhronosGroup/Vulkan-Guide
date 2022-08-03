@@ -1,0 +1,168 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../]
+
+:YCbCr: pass:q[Y′C~B~C~R~]
+
+[[VK_KHR_sampler_ycbcr_conversion]]
+= VK_KHR_sampler_ycbcr_conversion
+
+[NOTE]
+====
+Vulkan 1.1でコアに昇格
+====
+
+以下のすべての例では、説明のために `4:2:0` の multi-planar {YCbCr} フォーマットを使用しています。
+
+[[multi-planar-formats]]
+== Multi-planar フォーマット
+
+Y'（輝度）データを平面0に、C~B~ 青のクロマ差分（U）データを平面1に、C~R~ 赤のクロマ差分（V）データを平面2に格納した{YCbCr}画像を表現するには、`VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM` フォーマットを使用します。
+
+Vulkan の仕様では、各 multi-planar フォーマット表現と各色成分へのマッピングは別々に記述されています。マッピングと色変換はフォーマットから分離されているため、Vulkan はフォーマットで「RGB」カラーチャンネル表記を使用し、変換ではチャンネルから色変換の入力へのマッピングが記述されています。
+
+これにより、たとえば `VK_FORMAT_B8G8R8_UNORM` 画像は {YCbCr} テクセルを表現することができます。
+
+  * `G` == `Y`
+  * `B` == `Cb`
+  * `R` == `Cr`
+
+このため、スウィズル成分を `RGBA` と {YCbCr} フォーマットの間でマッピングする際に、注意が必要なことがあります。
+
+== 不連続
+
+通常、アプリケーションが `VkImage` を作成するときは、1つの `VkDeviceMemory` オブジェクトにのみバインドします。もし、実装が `VK_FORMAT_FEATURE_DISJOINT_BIT` をサポートしていれば、アプリケーションは複数の不連続な `VkDeviceMemory` を1つの `VkImage` にバインドすることができ、このとき各 `VkDeviceMemory` は1つの平面を表します。
+
+{YCbCr}画像に対する画像処理では、チャンネルを分けて処理することが多いです。たとえば、輝度チャンネルにシャープネス処理を施したり、輝度に選択的にノイズ除去を行ったりします。平面を分離することで、別々に処理したり、最終的に異なる画像に変更されていない平面データを再利用したりすることができます。
+
+不連続画像の使用は、いくつかの新しい関数を使用することで、通常の画像へのメモリのバインドと同じパターンに従います。以下は、新しいワークフローを表す擬似コードです。
+
+[source,cpp]
+----
+VkImagePlaneMemoryRequirementsInfo imagePlaneMemoryRequirementsInfo = {};
+imagePlaneMemoryRequirementsInfo.planeAspect = VK_IMAGE_ASPECT_PLANE_0_BIT;
+
+VkImageMemoryRequirementsInfo2 imageMemoryRequirementsInfo2 = {};
+imageMemoryRequirementsInfo2.pNext = &imagePlaneMemoryRequirementsInfo;
+imageMemoryRequirementsInfo2.image = myImage;
+
+// 各平面に必要なメモリを取得する
+VkMemoryRequirements2 memoryRequirements2 = {};
+vkGetImageMemoryRequirements2(device, &imageMemoryRequirementsInfo2, &memoryRequirements2);
+
+// 平面0のメモリを割り当てる
+VkMemoryAllocateInfo memoryAllocateInfo = {};
+memoryAllocateInfo.allocationSize       = memoryRequirements2.memoryRequirements.size;
+vkAllocateMemory(device, &memoryAllocateInfo, nullptr, &disjointMemoryPlane0));
+
+// 各平面で同じように割り当てる
+
+// 平面0のメモリをバインドする
+VkBindImagePlaneMemoryInfo bindImagePlaneMemoryInfo = {};
+bindImagePlaneMemoryInfo0.planeAspect               = VK_IMAGE_ASPECT_PLANE_0_BIT;
+
+VkBindImageMemoryInfo bindImageMemoryInfo = {};
+bindImageMemoryInfo.pNext        = &bindImagePlaneMemoryInfo0;
+bindImageMemoryInfo.image        = myImage;
+bindImageMemoryInfo.memory       = disjointMemoryPlane0;
+
+// 各平面で同じようにバインドする
+
+vkBindImageMemory2(device, bindImageMemoryInfoSize, bindImageMemoryInfoArray));
+----
+
+== メモリを各平面にコピーする
+
+アプリケーションが不連続メモリを使用していない場合でも、各平面にデータをコピーするときに `VK_IMAGE_ASPECT_PLANE_0_BIT` を使用する必要があります。
+
+たとえば、アプリケーションが `vkCmdCopyBufferToImage` を使って、単一の `VkBuffer` から単一の不連続でない `VkImage` にデータをコピーする場合、 `YUV420p` レイアウトのロジックは、次のようになります。
+
+[source,cpp]
+----
+VkBufferImageCopy bufferCopyRegions[3];
+bufferCopyRegions[0].imageSubresource.aspectMask = VK_IMAGE_ASPECT_PLANE_0_BIT;
+bufferCopyRegions[0].imageOffset                 = {0, 0, 0};
+bufferCopyRegions[0].imageExtent.width           = myImage.width;
+bufferCopyRegions[0].imageExtent.height          = myImage.height;
+bufferCopyRegions[0].imageExtent.depth           = 1;
+
+/// ...
+
+// Cb 成分は縦横が半分になる
+bufferCopyRegions[1].imageOffset                  = {0, 0, 0};
+bufferCopyRegions[1].imageExtent.width            = myImage.width / 2;
+bufferCopyRegions[1].imageExtent.height           = myImage.height / 2;
+bufferCopyRegions[1].imageSubresource.aspectMask  = VK_IMAGE_ASPECT_PLANE_1_BIT;
+
+/// ...
+
+// Cr 成分は縦横が半分になる
+bufferCopyRegions[2].imageOffset                  = {0, 0, 0};
+bufferCopyRegions[2].imageExtent.width            = myImage.width / 2;
+bufferCopyRegions[2].imageExtent.height           = myImage.height / 2;
+bufferCopyRegions[2].imageSubresource.aspectMask  = VK_IMAGE_ASPECT_PLANE_2_BIT;
+
+vkCmdCopyBufferToImage(...)
+----
+
+ここで注目すべきは、`imageOffset` のベースが VkImage 全体ではなく平面であるため、ゼロであるということです。そのため、 `imageOffset` を使用する際には、常に平面0ではなく、平面のベースから開始するようにしてください。
+
+== VkSamplerYcbcrConversion
+
+`VkSamplerYcbcrConversion` は link:https://www.khronos.org/registry/DataFormat/specs/1.3/dataformat.1.3.html#_introduction_to_color_conversions[Khronos Data Format Specification] で説明されている {YCbCr} 変換の「ここで説明する範囲外」の部分を全て記述しています。ここで設定する値は、取得する {YCbCr} データの入力と、RGB色空間への変換の方法に依存します。
+
+以下は、API の観点から使い方のヒントを与える疑似コードです。
+
+[source,cpp]
+----
+// 実装に {YCbCr} 変換をさせる方法を記述した、変換オブジェクトを作成する。
+VkSamplerYcbcrConversion samplerYcbcrConversion;
+VkSamplerYcbcrConversionCreateInfo samplerYcbcrConversionCreateInfo = {};
+// ...
+vkCreateSamplerYcbcrConversion(device, &samplerYcbcrConversionCreateInfo, nullptr, &samplerYcbcrConversion));
+
+VkSamplerYcbcrConversionInfo samplerYcbcrConversionInfo = {};
+samplerYcbcrConversionInfo.conversion = samplerYcbcrConversion;
+
+// 変換を伴う ImageView を作成する
+VkImageViewCreateInfo imageViewInfo = {};
+imageViewInfo.pNext = &samplerYcbcrConversionInfo;
+// ...
+vkCreateImageView(device, &imageViewInfo, nullptr, &myImageView));
+
+// 変換を伴うサンプラを作成する
+VkSamplerCreateInfo samplerInfo = {};
+samplerInfo.pNext = &samplerYcbcrConversionInfo;
+// ...
+vkCreateSampler(device, &samplerInfo, nullptr, &mySampler));
+----
+
+== combinedImageSamplerDescriptorCount
+
+確認すべき重要な値は `combinedImageSamplerDescriptorCount` で、これは実装が各 multi-planar フォーマットに何個のディスクリプタを使用するかを記述しています。つまり、`VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM` では、各結合イメージサンプラに対して1、2、または3個のディスクリプタを使用することが可能です。
+
+バインディング内のすべてのディスクリプタは、同じ最大値 `combinedImageSamplerDescriptorCount` を使用し、実装がバインディング内のディスクリプタの動的インデックスに均一なストライドを使用できるようにします。
+
+たとえば、2つのディスクリプタと、multi-planar フォーマット用の不変のサンプラで、それぞれ `VkSamplerYcbcrConversionImageFormatProperties::combinedImageSamplerDescriptorCount` 値が `2` と `3` であるディスクリプタセットのレイアウトバインディングを考えてみます。バインディングには2つのディスクリプタがあり、 `combinedImageSamplerDescriptorCount` の最大値は `3` なので、このレイアウトを持つディスクリプタセットは、ディスクリプタプールから `6` 個のディスクリプタを消費します。このレイアウトで `4` 個のディスクリプタセットを確保できるディスクリプタプールを作成するには、 `descriptorCount` は最低でも `24` でなければいけません。
+
+`combinedImageSamplerDescriptorCount` をクエリする擬似コードです。
+``
+
+[source,cpp]
+----
+VkSamplerYcbcrConversionImageFormatProperties samplerYcbcrConversionImageFormatProperties = {};
+
+VkImageFormatProperties imageFormatProperties   = {};
+VkImageFormatProperties2 imageFormatProperties2 = {};
+// ...
+imageFormatProperties2.pNext                 = &samplerYcbcrConversionImageFormatProperties;
+imageFormatProperties2.imageFormatProperties = imageFormatProperties;
+
+VkPhysicalDeviceImageFormatInfo2 imageFormatInfo = {};
+// ...
+imageFormatInfo.format = formatToQuery;
+vkGetPhysicalDeviceImageFormatProperties2(physicalDevice, &imageFormatInfo, &imageFormatProperties2));
+
+printf("combinedImageSamplerDescriptorCount = %u\n", samplerYcbcrConversionImageFormatProperties.combinedImageSamplerDescriptorCount);
+----

@@ -1,0 +1,116 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[queues]]
+= キュー
+
+[NOTE]
+====
+キューに関するその他のリソースは、link:https://gpuopen.com/learn/concurrent-execution-asynchronous-queues/[AMD] および link:https://www.khronos.org/assets/uploads/developers/library/2016-vulkan-devday-uk/9-Asynchonous-compute.pdf[NVIDIA] の資料をご覧ください。
+====
+
+アプリケーションは通常、`VkCommandBuffer` オブジェクトまたはxref:{chapters}sparse_resources.adoc#sparse-resources[スパースバインディング（sparse bindings）] の形で、`VkQueue` に仕事をサブミットします。
+
+`VkQueue` にサブミットされたコマンドバッファは順番に開始されますが、その後は独立して進行することができ、順番通りに完了するとは限りません。
+
+異なるキューにサブミットされたコマンドバッファは、`VkSemaphore` で明示的に同期させない限り、互いに順序付けられません。
+
+一度にひとつのスレッドからのみ `VkQueue` に仕事をサブミットすることができますが、異なるスレッドは同時に異なる `VkQueue` に仕事をサブミットすることができます。
+
+`VkQueue` が基礎となるハードウェアにどのようにマッピングされるかは、実装で定義されます。いくつかの実装では、複数のハードウェアキューを持ち、複数の `VkQueue` への仕事のサブミットは独立して同時に行われます。一部の実装では、ハードウェアに作業をサブミットする前にカーネルドライバレベルでスケジューリングを行います。現在の Vulkan では、各 `VkQueue` がどのようにマッピングされているか、正確な詳細を公開する方法はありません。
+
+[NOTE]
+====
+すべてのアプリケーションが複数のキューを必要としたり、その恩恵を受けたりするわけではありません。すべての仕事を GPU にサブミットするために、アプリケーションが単一の「ユニバーサル」グラフィックス対応キューを持つことは合理的です。
+====
+
+== キューファミリ
+
+`VkQueue` がサポートできる操作にはさまざまな種類があります。「キューファミリ」とは、`VkQueueFamilyProperties` で示されているように、共通のプロパティを持ち、同じ機能をサポートする `VkQueue` のセットを表しています。
+
+link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkQueueFlagBits.html[VkQueueFlagBits] に記載されているキューの操作を以下に示します。
+
+  * `VK_QUEUE_GRAPHICS_BIT` は `vkCmdDraw*` とグラフィックパイプラインのコマンドに使用されます。
+  * `VK_QUEUE_COMPUTE_BIT` は `vkCmdDispatch*` や `vkCmdTraceRays*` といったコンピュートパイプライン関連のコマンドに使用されます。
+  * `VK_QUEUE_TRANSFER_BIT` は全ての転送コマンドに使用されます。
+  ** 仕様書の link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPipelineStageFlagBits.html[VK_PIPELINE_STAGE_TRANSFER_BIT] には「転送コマンド」が記載されています。
+  ** `VK_QUEUE_TRANSFER_BIT` のみを持つキューファミリは、通常、link:https://en.wikipedia.org/wiki/Direct_memory_access[DMA] を使用して、ホストとディスクリート GPU 上のデバイスメモリ間で非同期にデータを転送するためのもので、独立したグラフィックス/コンピュート処理と同時に転送を行うことができます。
+  ** `VK_QUEUE_GRAPHICS_BIT` および `VK_QUEUE_COMPUTE_BIT` は、常に `VK_QUEUE_TRANSFER_BIT` コマンドを暗黙的に受け入れることができます。
+  * `VK_QUEUE_SPARSE_BINDING_BIT` は、xref:{chapters}sparse_resources.adoc#sparse-resources[スパースリソース（sparse resources）] を `vkQueueBindSparse` でメモリにバインドする際に使用されます。
+  * `VK_QUEUE_PROTECTED_BIT` は、xref:{chapters}protected.adoc#protected[保護されたメモリ]に使用されます。
+  * `VK_QUEUE_VIDEO_DECODE_BIT_KHR` と `VK_QUEUE_VIDEO_ENCODE_BIT_KHR` は、link:https://www.khronos.org/blog/an-introduction-to-vulkan-video?mc_cid=8052312abe&mc_eid=64241dfcfa[Vulkan Video] に使用されます。
+
+=== 必要とされるキューファミリを知る
+
+Vulkan Spec の各操作の箇所には、link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/xml/vk.xml[vk.xml] ファイルから生成された「対応するキューの種類」のセクションがあります。以下は、仕様書に記載されている3種類の例です。
+
+image::../../../chapters/images/queues_cmd_draw.png[queues_cmd_dispatch.png]
+
+image::../../../chapters/images/queues_cmd_dispatch.png[queues_cmd_dispatch.png]
+
+image::../../../chapters/images/queues_cmd_executecommands.png[queues_cmd_dispatch.png]
+
+=== キューファミリのクエリ
+
+アプリケーションが単一のグラフィックス `VkQueue` のみを必要とする場合に必要な最も単純なロジックは以下の通りです。
+
+[source,cpp]
+----
+uint32_t count = 0;
+vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &count, nullptr);
+std::vector<VkQueueFamilyProperties> properties(count);
+vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &count, properties.data());
+
+// Vulkan では、少なくともひとつのグラフィックスキューファミリを公開する実装が必要
+uint32_t graphicsQueueFamilyIndex;
+
+for (uint32_t i = 0; i < count; i++) {
+    if ((properties[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) != 0) {
+        // このキューファミリはグラフィックをサポートする
+        graphicsQueueFamilyIndex = i;
+        break;
+    }
+}
+----
+
+== キューの作成と取得
+
+`VkDevice`、`VkBuffer`、`VkDeviceMemory` などの他のハンドルとは異なり、`vkCreateQueue` や `vkAllocateQueue` は**ありません**。代わりに、ドライバが `vkCreateDevice` / `vkDestroyDevice` の際に `VkQueue` ハンドルの作成と破棄を行います。
+
+以下の例では、2つのキューファミリから3つの `VkQueue` をサポートする仮想的な実装を使用します。
+
+image::../../../chapters/images/queues_hypothetical.png[queues_hypothetical.png]
+
+以下に論理デバイスを用いて3つの `VkQueue` を作成する例を示します。
+
+[source,cpp]
+----
+VkDeviceQueueCreateInfo queueCreateInfo[2];
+queueCreateInfo[0].queueFamilyIndex = 0; // 転送
+queueCreateInfo[0].queueCount = 1;
+queueCreateInfo[1].queueFamilyIndex = 1; // グラフィックス
+queueCreateInfo[1].queueCount = 2;
+
+VkDeviceCreateInfo deviceCreateInfo   = {};
+deviceCreateInfo.pQueueCreateInfos    = queueCreateInfo;
+deviceCreateInfo.queueCreateInfoCount = 2;
+
+vkCreateDevice(physicalDevice, &deviceCreateInfo, nullptr, &device);
+----
+
+`VkDevice` を作成した後、アプリケーションは `vkGetDeviceQueue` を使って `VkQueue` のハンドルを取得することができます。
+
+[source,cpp]
+----
+VkQueue graphicsQueue0 = VK_NULL_HANDLE;
+VkQueue graphicsQueue1 = VK_NULL_HANDLE;
+VkQueue transferQueue0 = VK_NULL_HANDLE;
+
+// どのような順番でも入手可能
+vkGetDeviceQueue(device, 0, 0, &transferQueue0); // ファミリ 0 - キュー 0
+vkGetDeviceQueue(device, 1, 1, &graphicsQueue1); // ファミリ 1 - キュー 1
+vkGetDeviceQueue(device, 1, 0, &graphicsQueue0); // ファミリ 1 - キュー 0
+----

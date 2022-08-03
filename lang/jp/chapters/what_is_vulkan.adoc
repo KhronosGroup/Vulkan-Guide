@@ -1,0 +1,42 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+[[what-is-vulkan]]
+= Vulkan とは？
+
+[NOTE]
+====
+Vulkan は、PC やゲーム機、携帯電話、組み込みプラットフォームなど、さまざまな機器に搭載されている最新の GPU に対して、クロスプラットフォームで高効率にアクセスできる新世代のグラフィックスおよびコンピュート API です。
+====
+
+Vulkan は、企業でも言語でもなく、最新の GPU ハードウェアをクロスプラットフォーム、クロスベンダーでプログラミングするための手段です。Khronos Group は、Vulkan の開発と維持を行っている会員制のコンソーシアムです。
+
+== Vulkan のコア
+
+Vulkan は適合するハードウェアの実装が従う link:https://www.khronos.org/registry/vulkan/#apispecs[API 仕様]がコアとなっています。公開されている仕様は、Vulkan Specification リポジトリの公式公開コピーの link:https://github.com/KhronosGroup/Vulkan-Docs[Vulkan-Docs] にある link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/xml/vk.xml[./xml/vk.xml] Vulkan Registry ファイルから生成されています。また、link:https://www.khronos.org/registry/vulkan/specs/1.3/registry.html[XML スキーマ]のドキュメントも用意されています。
+
+Khronos Group は、Vulkan Specification とともに、link:https://www.khronos.org/registry/vulkan/#apiregistry[API Registry] から生成された http://www.open-std.org/jtc1/sc22/wg14/www/standards[C99] link:https://github.com/KhronosGroup/Vulkan-Headers/tree/main/include/vulkan[ヘッダファイル]を公開しており、Vulkan API のインターフェイスに使用することができます。
+
+C言語を扱わない人のために、さまざまなlink:https://github.com/KhronosGroup/Khronosdotorg/blob/main/api/vulkan/resources.md#language-bindings[言語]link:https://github.com/vinjn/awesome-vulkan#bindings[バインディング]も用意されています。
+
+== Vulkan と OpenGL
+
+同じ 3D グラフィックス API である Khronos Group の規格 link:https://www.khronos.org/opengl/[OpenGL] をご存知の方もいるかもしれません。Vulkanは OpenGL を直接置き換えるものではなく、GPU をより明示的に制御するための API です。
+
+Khronos の link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples] の記事link:https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/vulkan_basics.md[「Vulkan と OpenGL ES との比較は？ Vulkan に何を期待するべきか？」] では、2つの API をより詳しく比較しています。
+
+image::../../../chapters/images/what_is_vulkan_compared_to_gl.png[what_is_vulkan_compared_to_gl.png]
+
+Vulkan はアプリケーションに多くの作業と責任を課します。すべての開発者がこのような追加投資を望むわけではありませんが、適切に実装することでパワーとパフォーマンスが向上します。
+
+image::../../../chapters/images/what_is_vulkan_decision.png[what_is_vulkan_decision.png]
+
+== ライブラリの利用
+
+ヘルプ無しで Vulkan を使ってみたいという開発者もいるかもしれませんが、Vulkan の面倒な部分を抽象化するために軽いライブラリを使うのが一般的です。link:https://github.com/vinjn/awesome-vulkan#libraries[開発に役立つ]link:https://github.com/KhronosGroup/Khronosdotorg/blob/main/api/vulkan/resources.md#libraries[ライブラリ]を紹介します。
+
+image::../../../chapters/images/what_is_vulkan_layer.png[what_is_vulkan_layer]
+
+== Vulkan の使い方を学ぶ
+
+Vulkan は、ハードウェアアクセラレーションを利用するアプリケーションを作成するためのツールです。この Vulkan Guide では、拡張機能、バージョン、仕様など、よりロジカルな内容をカバーしています。Hello World Triangle のようなアプリケーション作成のための Vulkan の使い方については、link:https://www.vulkan.org/learn[Khronos の Vulkan 学習ページ]をご覧ください。また、より実践的なヘルプや知識を得たい場合は、link:https://www.khronos.org/news/permalink/khronos-developer-slack-5bfc62eb261764.20435008[Khronos Developer Slack] や link:https://community.khronos.org/[Khronos Community Forums] に気軽に参加してください！

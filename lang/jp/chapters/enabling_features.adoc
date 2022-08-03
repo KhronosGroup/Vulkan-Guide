@@ -1,0 +1,84 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+
+[[enabling-features]]
+= 機能の有効化
+
+ここでは、機能を有効化について説明します。
+
+== 機能のカテゴリ
+
+Vulkan のすべての機能は、3つのセクションに分類されます。
+
+  1. コア1.0機能
+  ** Vulkan 1.0の初期リリースから利用可能な機能をまとめたものです。機能のリストは、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VkPhysicalDeviceFeatures[VkPhysicalDeviceFeatures]に記載されています。
+  2. 将来のコアバージョンの機能
+  ** Vulkan 1.1以上では、いくつかの新機能が Vulkan のコアバージョンに追加されました。`VkPhysicalDeviceFeatures` のサイズの下位互換性を保つために、機能のグループを保持するための新しい構造体が作成されました。
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VkPhysicalDeviceVulkan11Features[VkPhysicalDeviceVulkan11Features]
+  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VkPhysicalDeviceVulkan12Features[VkPhysicalDeviceVulkan12Features]
+  3. 拡張機能の機能
+  ** 拡張機能には、その拡張機能のある側面を有効にするための機能が含まれていることがあります。これらはすべて `VkPhysicalDevice[ExtensionName]Features` とラベル付けされているので、簡単に見つけることができます。
+
+== 機能を有効にするには
+
+すべての機能は、`VkDevice` 作成時に link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VkDeviceCreateInfo[VkDeviceCreateInfo] 構造体内で有効にする必要があります。
+
+[NOTE]
+====
+最初に `vkGetPhysicalDeviceFeatures` または `vkGetPhysicalDeviceFeatures2` をクエリすることを忘れないでください。
+====
+
+コア1.0の機能では、オンにしたい機能を `VkDeviceCreateInfo::pEnabledFeatures` に設定するだけです。
+
+[source,cpp]
+----
+VkPhysicalDeviceFeatures features = {};
+vkGetPhysicalDeviceFeatures(physical_device, &features);
+
+// 機能がサポートされていない場合のロジック
+if (features.robustBufferAccess == VK_FALSE) {
+}
+
+VkDeviceCreateInfo info = {};
+info.pEnabledFeatures = &features;
+----
+
+コア1.0の機能を含む**すべての機能**については、`VkPhysicalDeviceFeatures2` を使用して、`VkDeviceCreateInfo.pNext` に渡してください。
+
+[source,cpp]
+----
+VkPhysicalDeviceShaderDrawParametersFeatures ext_feature = {};
+
+VkPhysicalDeviceFeatures2 physical_features2 = {};
+physical_features2.pNext = &ext_feature;
+
+vkGetPhysicalDeviceFeatures2(physical_device, &physical_features2);
+
+// 機能がサポートされていない場合のロジック
+if (ext_feature.shaderDrawParameters == VK_FALSE) {
+}
+
+VkDeviceCreateInfo info = {};
+info.pNext = &physical_features2;
+----
+
+また、「将来のコアバージョンの機能」についても同様です。
+
+[source,cpp]
+----
+VkPhysicalDeviceVulkan11Features features11 = {};
+
+VkPhysicalDeviceFeatures2 physical_features2 = {};
+physical_features2.pNext = &features11;
+
+vkGetPhysicalDeviceFeatures2(physical_device, &physical_features2);
+
+// 機能がサポートされていない場合のロジック
+if (features11.shaderDrawParameters == VK_FALSE) {
+}
+
+VkDeviceCreateInfo info = {};
+info.pNext = &physical_features2;
+----

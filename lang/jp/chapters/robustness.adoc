@@ -1,0 +1,67 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+
+[[robustness]]
+= 堅牢性
+
+== 堅牢性とは
+
+Vulkan アプリケーションが、アクセス権のないメモリにアクセス（ロード、ストア、アトミックの実行）しようとした場合、実装は何らかの反応をしなければなりません。堅牢性がない場合、それは未定義の振る舞いであり、実装はプログラムを終了させることさえ許されます。アクセスするメモリの種類に対して堅牢性が有効になっている場合、実装は仕様で定義された特定の動作をしなければなりません。
+
+image::../../../chapters/images/robustness_flow.png[robustness_flow.png]
+
+== いつ使うのか
+
+一部の Vulkan アプリケーションでは、悪質なメモリアクセスの回避を保証できないシェーダコードを実行する必要があります。このようなアプリケーションには堅牢性が必要です。
+
+[NOTE]
+.important
+====
+堅牢性を有効にすると、実行時パフォーマンスのコストが発生する場合があります。アプリケーションの作成者は、堅牢性を有効にするかどうかを慎重に検討する必要があります。
+====
+
+== Vulkan がコアで提供するもの
+
+すべての Vulkan の実装は `robustBufferAccess` 機能をサポートする必要があります。仕様では、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess[何が境界を越えたとみなされるか]、またどのように処理されるべきかが説明されています。`robustBufferAccess` については、実装にある程度の柔軟性が与えられています。たとえば、`vec4(x,y,z,w)` へのアクセスで `w` の値が境界を越えた場合、仕様では `x`、`y`、`z` も境界を越えたとみなすかどうかを実装が決定できるようになっています。
+
+`VK_EXT_descriptor_indexing`（Vulkan 1.2のコア）にあるバインド機能の後の更新を扱う場合は、実装が `robustBufferAccess` とディスクリプタのバインド後の更新機能の両方をサポートするかどうかを示す link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustBufferAccessUpdateAfterBind[robustBufferAccessUpdateAfterBind] を確認することが重要です。
+
+`robustBufferAccess` 機能は、バッファのみを対象としており、イメージは対象外であるため、いくつかの制限があります。また、アクセスされているバッファのデータを変更する境界を越えた書き込みやアトミックを許可してしまいます。より強力な堅牢性を求めるアプリケーションのために、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_robustness2.html[VK_EXT_robustness2] があります。
+
+イメージが境界を越えた場合、コア Vulkan では、ストアやアトミックがアクセスされるメモリに影響を与えないことがlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-output-coordinate-validation[保証されています]。
+
+== VK_EXT_image_robustness
+
+=== robustImageAccess
+
+link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_robustness[VK_EXT_image_robustness] の link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustImageAccess[robustImageAccess] 機能は、イメージビューのサイズに対する境界を越えたアクセスをチェックします。イメージの境界をへのアクセスがあった場合、`(0, 0, 0, 0)` または `(0, 0, 0, 1)` を返します。
+
+`robustImageAccess` 機能は、無効な LOD へのアクセスに対して返される値については何の保証もありません。
+
+== VK_EXT_robustness2
+
+D3D12 などの他の API から移植されるアプリケーションなどでは、`robustBufferAccess` や `robustImageAccess` が提供するものよりも厳しい保証が必要になる場合があります。link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_robustness2.html[VK_EXT_robustness2] 拡張機能では、以下のセクションで説明する3つの新しい堅牢性機能を公開することで、保証を追加しています。一部の実装では、これらの追加保証はパフォーマンスを犠牲にしています。追加の堅牢性を必要としないアプリケーションでは、可能な限り `robustBufferAccess` や `robustImageAccess` を代わりに使用することをお勧めします。
+
+=== robustBufferAccess2
+
+link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2[robustBufferAccess2] 機能は `robustBufferAccess` のスーパーセットと見なすことができます。
+
+この機能を有効にすると、境界を越えた書き込みやアトミックがバッファのメモリを変更することができなくなります。また、`robustBufferAccess2` 機能は、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess[仕様書に記載されている]ように、境界を越えたアクセスしたときに、さまざまなタイプのバッファに対して返さなければならない値を強制的に設定します。
+
+バッファが範囲チェックされる場所のアライメントは実装によって異なるため、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceRobustness2PropertiesEXT.html[VkPhysicalDeviceRobustness2PropertiesEXT] から `robustUniformBufferAccessSizeAlignment` および `robustStorageBufferAccessSizeAlignment` をクエリすることが重要です。
+
+=== robustImageAccess2
+
+link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustImageAccess2[robustImageAccess2] 機能は `robustImageAccess` のスーパーセットと見なすことができます。この機能は、アクセスしているイメージビューのサイズに対する境界を越えたかどうかのチェックをベースに、どのような値を返すことができるかについて、より厳しい要件を追加しています。
+
+`robustImageAccess2` では、R、RG、RGB フォーマットへの境界を越えたアクセスは `(0, 0, 0, 1)` を返します。`VK_FORMAT_R8G8B8A8_UNORM` のような RGBA フォーマットの場合は、`(0, 0, 0, 0)` を返します。
+
+また、`robustImageAccess2` を有効にして、サポートされていないイメージ LOD にアクセスした場合は、境界を越えたとみなされます。
+
+=== nullDescriptor
+
+link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor[nullDescriptor] 機能が有効になっていない場合、`VkDescriptorSet` を更新するときには、たとえディスクリプタがシェーダで静的に使用されていなくても、対応するすべてのリソースは非ヌルでなければなりません。この機能により、ディスクリプタをヌルのリソースまたはビューと対応させることができます。ヌルディスクリプタからのロードはゼロ値を返し、ヌルディスクリプタへのストアとアトミックは破棄されます。
+
+`nullDescriptor` 機能は、`vkCmdBindVertexBuffers::pBuffers` がヌルの場合にも、頂点入力バインディングへのアクセスを可能にします。

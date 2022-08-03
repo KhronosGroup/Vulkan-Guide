@@ -1,0 +1,84 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+
+[[checking-for-support]]
+= Vulkan 対応の確認
+
+Vulkan には、xref:{chapters}loader.adoc#loader[Vulkan Loader] と Vulkan Driver（ _Vulkan Implementation_ とも呼ばれます）の両方が必要です。ドライバは、Vulkan の API コールを Vulkan の有効な実装に変換する役割を果たします。最も一般的なケースは、GPU ハードウェアベンダーが、物理的な GPU 上で Vulkan を実行するためのドライバをリリースすることです。なお、Vulkan の実装全体をソフトウェアベースにすることも可能ですが、パフォーマンスへの影響は非常に顕著です。
+
+Vulkan の対応状況を確認する際には、プラットフォームの対応とデバイスの対応を区別することが重要です。
+
+== プラットフォーム対応
+
+まず確認しなければならないのは、xref:{chapters}platforms.adoc#platforms[プラットフォーム]が Vulkan に対応しているかどうかです。プラットフォームごとに、xref:{chapters}loader.adoc#loader[Vulkan Loader] の実装方法を管理する仕組みが異なります。ローダは Vulkan ドライバが正しく公開されているかどうかを判断する役割を担っています。
+
+=== Android
+
+Vulkan の情報を簡単に取得するには、Sascha Willems 氏が開発した link:https://play.google.com/store/apps/details?id=de.saschawillems.vulkancapsviewer&hl=en_US[Vulkan Hardware Capability Viewer] というアプリを実行します。このアプリは、Vulkan がサポートされているかどうかだけでなく、デバイスが提供するすべての機能を表示します。
+
+=== BSD Unix
+
+link:https://vulkan.lunarg.com/sdk/home#linux[Vulkan SDK] を入手します。`./vulkansdk.sh` というコマンドを使って Vulkan SDK をビルドし、link:https://vulkan.lunarg.com/doc/sdk/latest/linux/vulkaninfo.html[vulkaninfo] 実行ファイルを実行すると、Vulkanのサポートだけでなく、デバイスが提供するすべての機能を簡単に確認することができます。
+
+=== iOS
+
+Vulkan の情報を簡単に取得するには、LunarG が提供する link:https://apps.apple.com/us/app/vulkan-capabilities-viewer/id1552796816[Vulkan Hardware Capability Viewer] の iOS 版を実行します。このアプリは、Vulkan がサポートされているかどうかだけでなく、デバイスが提供するすべての機能を表示します。
+
+=== Linux
+
+link:https://vulkan.lunarg.com/sdk/home#linux[Vulkan SDK] を入手して、link:https://vulkan.lunarg.com/doc/sdk/latest/linux/vulkaninfo.html[vulkaninfo] 実行ファイルを実行すると、Vulkan の対応やデバイスが提供するすべての機能を簡単に確認できます。
+
+=== MacOS
+
+link:https://vulkan.lunarg.com/sdk/home#mac[Vulkan SDK] を入手して、link:https://vulkan.lunarg.com/doc/sdk/latest/mac/vulkaninfo.html[vulkaninfo] 実行ファイルを実行すると、Vulkan の対応やデバイスが提供するすべての機能を簡単に確認できます。
+
+=== Windows
+
+link:https://vulkan.lunarg.com/sdk/home#windows[Vulkan SDK] を入手して、link:https://vulkan.lunarg.com/doc/sdk/latest/windows/vulkaninfo.html[vulkaninfo] 実行ファイルを実行すると、Vulkan の対応やデバイスが提供するすべての機能を簡単に確認できます。
+
+== デバイス対応
+
+プラットフォームが Vulkan をサポートしていても、デバイスがサポートしているとは限りません。デバイス対応のためには、Vulkan を完全に実装した Vulkan ドライバが必要です。なお、Vulkan ドライバにはいくつかの種類があります。
+
+=== ハードウェア実装
+
+物理的な GPU ハードウェアを対象としたドライバは、Vulkan の実装において最も一般的なケースです。ある GPU が Vulkan を実行する物理的な能力を持っていたとしても、それを制御するためのドライバがなければ使えません。ドライバは、Vulkan コールを可能な限り効率的な方法でハードウェアにマッピングすることを担当します。
+
+ドライバは、他のソフトウェアと同様に更新されるため、同じ物理デバイスやプラットフォームに対して多くのバリエーションのドライバが存在することになります。Sascha Willems 氏によって開発・管理されている link:https://vulkan.gpuinfo.org/[Vulkan Database] は、Vulkan の実装の詳細を記録した最大のデータベースです。
+
+[NOTE]
+====
+物理デバイスやプラットフォームが Vulkan Database になくても、存在しないとは限りません。
+====
+
+=== ヌルドライバ
+
+「ヌルドライバ」とは、Vulkan の API コールを受け付けるものの、それに対して何もしないドライバのことです。これは、ドライバとのインタラクションをテストする際に、実用的な実装を必要としない場合によく用いられます。新機能のための link:./vulkan_cts.md[CTS テスト]の作成や、link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/master/docs/creating_tests.md#running-tests-on-devsim-and-mockicd[Validation Layers のテスト]など、多くのユースケースがヌルドライバのアイデアに依存しています。
+
+Khronos は、さまざまなプラットフォームで動作するヌルドライバのひとつの実装として、link:https://github.com/KhronosGroup/Vulkan-Tools/tree/master/icd[Mock ICD] を提供しています。
+
+=== ソフトウェア実装
+
+CPU 上でのみ動作する Vulkan の実装を作成することができます。これは、ハードウェアに依存しない Vulkan をテストする必要がある場合に便利ですが、ヌルドライバとは異なり、有効な結果を出力します。
+
+link:https://github.com/google/swiftshader[SwiftShader] は CPU ベースの実装の一例です。
+
+== Vulkan の確認方法
+
+=== VIA (Vulkan Installation Analyzer)
+
+link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK] には、使用しているコンピューターに Vulkan がインストールされているかどうかをチェックするユーティリティが含まれています。Windows、Linux、および macOS に対応しています。VIA は以下のことができます。
+
+ - 使用しているシステム上の Vulkan コンポーネントの状態を判断する
+ - Vulkan Loader とドライバが正しくインストールされているかどうかを確認する
+ - システムの状態をバグ報告の際に添付できる形で把握する
+
+詳細は link:https://vulkan.lunarg.com/doc/sdk/latest/windows/via.html[VIA の SDK ドキュメント]をご覧ください。
+
+=== Hello Create Instance
+
+Vulkan がクロスプラットフォームに対応しているかどうかを確認する簡単な方法は、シンプルな「Hello World」の Vulkan アプリケーションを作成することです。`vkCreateInstance` 関数は、Vulkan インスタンスを作成するために使用され、有効な Vulkan アプリケーションを書くための最短の方法でもあります。
+
+Vulkan SDK が提供する最小限の link:https://vulkan.lunarg.com/doc/view/latest/windows/tutorial/html/01-init_instance.html[vkCreateInstance] サンプル `01-init_instance.cpp` を使用することができます。

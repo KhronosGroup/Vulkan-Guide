@@ -1,0 +1,85 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+
+[[development-tools]]
+= 開発ツール
+
+Vulkan のエコシステムは、多くの開発ツールで構成されています。このページは完全なリスト**ではなく**、開発者にとっての出発点として提供されています。開発エコシステムは、1つのページに収められないほど大きいので、引き続き独自の調査を行い、他のツールを検索してください。
+
+Khronos は、link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples] をホストしています。Vulkan Samples は、API の使用方法を示すコードとチュートリアルのコレクションで、パフォーマンスのベストプラクティスの実装について説明しています。
+
+LunarG は、Vulkan エコシステムのコンポーネントを開発・維持するための民間スポンサーで、現在は link:https://github.com/KhronosGroup/Vulkan-Loader[Vulkan Loader] と link:https://github.com/KhronosGroup/Vulkan-ValidationLayers[Vulkan Validation Layers] の Khronos Group リポジトリのキュレーターを務めています。また、link:https://vulkan.lunarg.com/[Vulkan SDK] の提供や、link:https://vulkan.lunarg.com/doc/sdk/latest/windows/vkconfig.html[Vulkan Configurator] や link:https://vulkan.lunarg.com/doc/sdk/latest/windows/capture_tools.html[GFXReconstruct] などの主要ツールの開発も行っています。
+
+== Vulkan Layers
+
+レイヤは、Vulkan システムを補強するオプション要素です。レイヤは、アプリケーションからハードウェアに至るまで、既存の Vulkan 関数をインターセプト、評価、修正することができます。レイヤはライブラリとして実装されており、link:https://vulkan.lunarg.com/doc/sdk/latest/windows/vkconfig.html[Vulkan Configurator] を使って有効にしたり設定を変えたりできます。
+
+=== Khronos レイヤ
+
+  * xref:{chapters}validation_overview.adoc#khronos-validation-layer[`VK_LAYER_KHRONOS_validation`] は、Khronos Validation Layer のことです。
+    これは、Vulkan アプリケーションをデバッグする際の最初の防衛レイヤです。そのため、このリストの一番上に記載しました。詳細はxref:{chapters}validation_overview.adoc#validation-overview[検証の概要の章]をお読みください。
+    検証レイヤには複数の機能が含まれています。
+  ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/synchronization_usage.html[同期の検証]：メモリの同じ領域を読み書きするアクション（Draw、Copy、Dispatch、Blit）間の同期操作の欠落や不備によるリソースアクセスの衝突を特定します。
+  ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/gpu_validation.html[GPU 補助検証]：シェーダコードにさまざまな計測のためのコードを挿入し、シェーダ実行時に発生するエラー状態を実行時チェックします。
+  ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/debug_printf.html[シェーダ printf]：興味のある値をデバッグコールバックや標準出力に「プリント」して、シェーダコードをデバッグします。
+  ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html[ベストプラクティス警告]：潜在的なパフォーマンスの問題、疑わしい使用パターン、よくある間違いなどをハイライトします。
+
+  * link:https://vulkan.lunarg.com/doc/view/latest/windows/synchronization2_layer.html[`VK_LAYER_KHRONOS_synchronization2`] は、Khronos Synchronization2 レイヤのことです。
+    `VK_LAYER_KHRONOS_synchronization2` レイヤは、`VK_KHR_synchronization2` 拡張機能を実装します。デフォルトでは、基礎となるドライバがこの拡張機能を提供している場合、このレイヤは自分自身を無効にします。
+
+=== Vulkan SDK レイヤ
+
+Khronos レイヤの他にも、Vulkan SDK にはプラットフォームに依存しない便利なレイヤが含まれています。
+
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/api_dump_layer.html[`VK_LAYER_LUNARG_api_dump`] は、Vulkan API コールをログに記録するレイヤです。
+    API ダンプレイヤは、API コール、パラメータ、値を特定の出力ストリームにプリントします。
+
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/capture_tools.html[`VK_LAYER_LUNARG_gfxreconstruct`] は、Vulkan で作成されたフレームをキャプチャするためのレイヤです。
+    このレイヤは、Vulkan の API コールをキャプチャしてリプレイするソフトウェアである GFXReconstruct の一部です。Android のフル対応も <https://github.com/LunarG/gfxreconstruct> に含まれています。
+
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/device_simulation_layer.html[`VK_LAYER_LUNARG_device_simulation`] は、Vulkan アプリケーションの移植性をテストするためのレイヤです。
+    デバイスシミュレーションレイヤは、性能の低い Vulkan デバイス上で Vulkan アプリケーションが動作するかどうかをテストするために使用できます。
+
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/screenshot_layer.html[`VK_LAYER_LUNARG_screenshot`] は、スクリーンショットのレイヤです。
+    Vulkan アプリケーションのレンダリングイメージを表示可能なイメージにキャプチャします。
+
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/monitor_layer.html[`VK_LAYER_LUNARG_monitor`]は、フレームレートモニターレイヤです。
+    Vulkan アプリケーションの FPS をウィンドウのタイトルバーに表示して、パフォーマンスのヒントにします。
+
+=== Vulkan サードパーティレイヤ
+
+他にも開発に役立つレイヤが公開されています。
+
+  * link:https://github.com/ARM-software/perfdoc[`VK_LAYER_ARM_mali_perf_doc`] は、ARM PerfDoc レイヤです。
+    Arm Mali デバイス上の Vulkan アプリケーションのベストプラクティスをチェックします。
+
+  * link:https://github.com/powervr-graphics/perfdoc[`VK_LAYER_IMG_powervr_perf_doc`] は、PowerVR PerfDoc レイヤです。
+    Imagination Technologies PowerVR デバイス上の Vulkan アプリケーションのベストプラクティスをチェックします。
+
+  * link:https://developer.qualcomm.com/software/adreno-gpu-sdk/tools[`VK_LAYER_adreno`] は、Vulkan Adreno レイヤです。
+    Qualcomm Adreno デバイス上の Vulkan アプリケーションのベストプラクティスをチェックします。
+
+== デバッグ
+
+GPU で動作しているプログラムのデバッグは非常に困難ですが、幸いにも助けとなるツールが存在します。
+
+  * link:https://developer.arm.com/tools-and-software/graphics-and-gaming/arm-mobile-studio/components/graphics-analyzer[Arm Graphics Analyzer]
+  * link:https://github.com/google/gapid[GAPID]
+  * link:https://developer.nvidia.com/nsight-graphics[NVIDIA Nsight]
+  * link:https://developer.imaginationtech.com[PVRCarbon]
+  * link:https://renderdoc.org/[RenderDoc]
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/capture_tools.html[GFXReconstruct]
+
+== プロファイリング
+
+GPU に関連することであれば、可能な限りプロファイリングするのが最善です。ここでは、開発に役立つプロファイラを紹介します。
+
+  * link:https://gpuopen.com/rgp/[AMD Radeon GPU Profiler] - AMD Radeon GPU 用の低レベル性能解析ツール。
+  * link:https://developer.arm.com/tools-and-software/graphics-and-gaming/arm-mobile-studio/components/streamline-performance-analyzer[Arm Streamline Performance Analyzer] - Arm Mobile Studio を使用して、さまざまなデバイス向けのモバイルゲームやアプリケーションのパフォーマンスを視覚化します。
+  * link:https://www.intel.com/content/www/us/en/developer/tools/graphics-performance-analyzers/overview.html[Intel(R) GPA] - Vulkan アプリのマルチフレームストリームのキャプチャと解析をサポートする Intel の Graphics Performance Analyzers。
+  * link:https://github.com/GPUOpen-Tools/OCAT[OCAT] - Open Capture and Analytics Tool（OCAT）は、D3D11、D3D12、Vulkan の FPS オーバーレイとパフォーマンス測定を行います。
+  * link:https://developer.imaginationtech.com[PVRTune]
+  * link:https://developer.qualcomm.com/software/snapdragon-profiler[Qualcomm Snapdragon Profiler] - Adreno GPU を対象としたプロファイリングツール。
+  * link:https://www.vktracer.com[VKtracer] - クロスベンダ、クロスプラットフォームのプロファイラ。

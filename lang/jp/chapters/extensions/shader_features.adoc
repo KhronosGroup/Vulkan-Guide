@@ -1,0 +1,310 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters: ../]
+
+[[shader-features]]
+= シェーダ機能
+
+SPIR-V の全体が Vulkan 1.0で公開されなかった理由はさまざまです。少し経ってから Vulkan のワーキンググループは、SPIR-V の新機能を公開することに意味があるユースケースを特定しました。
+
+以下の拡張機能の中には、SPIR-V の拡張機能と並行して追加されたものがあります。たとえば、`VK_KHR_8bit_storage` という拡張機能は、`SPV_KHR_8bit_storage` と並行して作成されました。
+Vulkan 拡張機能は、アプリケーションが実装の SPIR-V 対応をクエリできるようにすることだけが目的です。SPIR-V 拡張機能は、SPIR-V の中間表現に加えられる変更を定義するためにあります。
+
+SPIR-V 拡張機能の使用方法の詳細については、xref:{chapters}spirv_extensions.adoc[専用の Vulkan Guide の章]をお読みください。
+
+
+[[VK_KHR_spirv_1_4]]
+== VK_KHR_spirv_1_4
+
+[NOTE]
+====
+Vulkan 1.2でコアに昇格
+====
+
+この拡張機能は、Vulkan 1.1の実装が SPIR-V 1.4の機能セットを公開するために設計されています。Vulkan 1.1は SPIR-V 1.3を必要とし、実装が Vulkan 1.2にアップグレードしない場合でも SPIR-V 1.4の機能を提供したいという場合がありました。
+
+[[VK_KHR_8bit_storage]]
+[[VK_KHR_16bit_storage]]
+== VK_KHR_8bit_storage と VK_KHR_16bit_storage
+
+[NOTE]
+====
+link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage]
+link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_16bit_storage.html[SPV_KHR_16bit_storage]
+link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shader_16bit_storage.txt[GLSL - GL_EXT_shader_16bit_storage] は両方を定義しています。
+====
+
+`VK_KHR_8bit_storage`（Vulkan 1.2で昇格）と `VK_KHR_16bit_storage`（Vulkan 1.1で昇格）の両方が追加され、SPIR-V ストレージオブジェクトへの入力または出力として小さな値を使用できるようになりました。 これらの拡張機能の前は、すべての UBO、SSBO、およびプッシュ定数は少なくとも4バイトを消費する必要がありました。 これにより、アプリケーションはバッファから直接8ビットまたは16ビットの値を使用できるようになります。 また、この拡張機能はストレージインターフェイスのみを処理するため、通常は `VK_KHR_shader_float16_int8` の使用とペアになります。
+
+以下は、GLSL 拡張機能で `SPV_KHR_8bit_storage` を使用する例です。
+
+[source,glsl]
+----
+#version 450
+
+// 8ビットストレージがない場合、各ブロック変数は32バイト幅である必要がある
+layout (set = 0, binding = 0) readonly buffer StorageBuffer {
+    uint data; // 0x0000AABB
+} ssbo;
+
+void main() {
+    uint a = ssbo.data & 0x0000FF00;
+    uint b = ssbo.data & 0x000000FF;
+}
+----
+
+拡張機能を使う場合
+
+[source,glsl]
+----
+#version 450
+#extension GL_EXT_shader_8bit_storage : enable
+
+layout (set = 0, binding = 0) readonly buffer StorageBuffer {
+    uint8_t dataA; // 0xAA
+    uint8_t dataB; // 0xBB
+} ssbo;
+
+void main() {
+    uint a = uint(ssbo.dataA);
+    uint b = uint(ssbo.dataB);
+}
+----
+
+
+[[VK_KHR_shader_float16_int8]]
+== VK_KHR_shader_float16_int8
+
+[NOTE]
+====
+Vulkan 1.2でコアに昇格
+
+link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shader_explicit_arithmetic_types.txt[GLSL - GL_EXT_shader_explicit_arithmetic_types]
+====
+
+この拡張機能は、算術演算に8ビット整数型と16ビット浮動小数点型を使用できるようにします。シェーダの入出力インターフェイスで8ビット整数型や16ビット浮動小数点型を使用できるようにするわけではないため、一般的には `VK_KHR_8bit_storage` や `VK_KHR_16bit_storage` と組み合わせて使用されます。
+
+[[VK_KHR_shader_float_controls]]
+== VK_KHR_shader_float_controls
+
+[NOTE]
+====
+Vulkan 1.2でコアに昇格
+
+link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_float_controls.html[SPV_KHR_float_controls]
+====
+
+この拡張機能では、浮動小数点数の丸めをどのように処理するかを設定することができます。`VkPhysicalDeviceFloatControlsProperties` では、クエリ可能な機能の全リストが表示されます。これは、OpenCL カーネルを Vulkan に変換する際に便利です。
+
+[[VK_KHR_storage_buffer_storage_class]]
+== VK_KHR_storage_buffer_storage_class
+
+[NOTE]
+====
+Vulkan 1.1でコアに昇格
+
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_storage_buffer_storage_class.html[SPV_KHR_storage_buffer_storage_class]
+====
+
+もともと SPIR-V は、UBO と SSBO の両方を「Uniform」ストレージクラスにまとめ、追加の修飾によってのみ区別していました。ハードウェアの中には、UBO と SSBO を2つの異なるストレージオブジェクトとして扱うものがあるため、SPIR-V はそれを反映させたいと考えました。この拡張機能は、SPIR-V を拡張して新しい `StorageBuffer` クラスを追加することを目的としています。
+
+例として、次のような GLSL シェーダを挙げることができます。
+
+[source,glsl]
+----
+layout(set = 0, binding = 0) buffer ssbo {
+    int x;
+};
+----
+
+Vulkan 1.0（SPIR-V 1.0が必要）をターゲットにして、glslang の `--target-env vulkan1.0` を使うと、次のようになります。
+
+[source,swift]
+----
+    Decorate 7(ssbo) BufferBlock
+8:  TypePointer Uniform 7(ssbo)
+9:  8(ptr) Variable Uniform
+12: TypePointer Uniform 6(int)
+----
+
+SPIR-V 1.3 には `SPV_KHR_storage_buffer_storage_class` が追加されたので、Vulkan 1.1 (SPIR-V 1.3 が必要) をターゲットにして、glslang の `--target-env vulkan1.1` を使用すると、新しい `StorageBuffer` クラスが使用されます。
+
+[source,swift]
+----
+    Decorate 7(ssbo) Block
+8:  TypePointer StorageBuffer 7(ssbo)
+9:  8(ptr) Variable StorageBuffer
+12: TypePointer StorageBuffer 6(int)
+----
+
+[[VK_KHR_variable_pointers]]
+== VK_KHR_variable_pointers
+
+[NOTE]
+====
+Vulkan 1.1でコアに昇格
+
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_variable_pointers.html[SPV_KHR_variable_pointers]
+====
+
+SPIR-V では、「変数ポインタ」を以下のように定義しています。
+
+[NOTE]
+====
+以下の命令のいずれかの結果として得られる論理ポインタ型のポインタです。`OpSelect`、`OpPhi`、`OpFunctionCall`、`OpPtrAccessChain`、`OpLoad`、または `OpConstantNull` 。
+====
+
+この拡張機能を有効にすると、呼び出しプライベートポインタを動的かつ非ユニフォームにすることができます。この拡張機能がない場合、変数ポインタは同じ構造体を指すポインタから選択されるか、または `OpConstantNull` でなければなりません。
+
+この拡張機能には2つのレベルがあります。1つ目は `variablePointersStorageBuffer` 機能ビットで、SSBO の内でのみ変数ポインタをサポートする実装を可能にします。`variablePointers` 機能ビットでは、SSBO の外でも変数ポインタの使用が可能になります。
+
+[[VK_KHR_vulkan_memory_model]]
+== VK_KHR_vulkan_memory_model
+
+[NOTE]
+====
+Vulkan 1.2でコアに昇格
+
+link:https://www.khronos.org/blog/comparing-the-vulkan-spir-v-memory-model-to-cs/[Comparing the Vulkan SPIR-V memory model to C's]
+====
+
+link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-model[Vulkan Memory Model] は、複数のシェーダ呼び出しによる同じメモリロケーションへのメモリアクセスを同期させる方法を公式に定義しています。この拡張機能では、実装がその対応を示すためのブール値を公開しています。これは、Vulkan/SPIR-V をターゲットにした多くの製品では、アプリケーションによって最適化されたメモリ転送操作が実装間で壊れないようにするために重要です。
+
+[[VK_EXT_shader_viewport_index_layer]]
+== VK_EXT_shader_viewport_index_layer
+
+[NOTE]
+====
+Vulkan 1.2でコアに昇格
+
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_viewport_index_layer.html[SPV_EXT_shader_viewport_index_layer]
+
+link:https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_shader_viewport_layer_array.txt[GLSL - GL_ARB_shader_viewport_layer_array]
+====
+
+この拡張機能は、頂点シェーダやテッセレーションシェーダからのエクスポート用に、`ViewportIndex` と `Layer` ビルトインを追加します。
+
+GLSL では、これらは `gl_ViewportIndex` と `gl_Layer` ビルトインによって表現されます。
+
+[[VK_KHR_shader_draw_parameters]]
+== VK_KHR_shader_draw_parameters
+
+[NOTE]
+====
+Vulkan 1.1でコアに昇格
+
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_draw_parameters.html[SPV_KHR_shader_draw_parameters]
+
+link:https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_shader_draw_parameters.txt[GLSL - GL_ARB_shader_draw_parameters]
+====
+
+この拡張機能は、頂点シェーダ用のビルトインの `BaseInstance`、`BaseVertex`、`DrawIndex` を追加します。これは、`VertexId` や `InstanceId` に、`BaseVertex` や `BaseInstance` のパラメータを含める場合と含めない場合の両方の使用例があるために追加されました。
+
+GLSL では、これらは `gl_BaseInstanceARB`、`gl_BaseVertexARB`、`gl_BaseInstanceARB` というビルドインで表現されています。
+
+[[VK_EXT_shader_stencil_export]]
+== VK_EXT_shader_stencil_export
+
+[NOTE]
+====
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_stencil_export.html[SPV_EXT_shader_stencil_export]
+
+link:https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_shader_stencil_export.txt[GLSL - GL_ARB_shader_stencil_export]
+====
+
+この拡張機能により、シェーダが呼び出しごとにステンシルの参照値を生成できるようになります。ステンシルテストが有効な場合、これによりシェーダで生成された値に対してテストを行うことができます。
+
+GLSL ではこれを `out int gl_FragStencilRefARB` というビルトインで表現しています。
+
+[[VK_EXT_shader_demote_to_helper_invocation]]
+== VK_EXT_shader_demote_to_helper_invocation
+
+[NOTE]
+====
+Vulkan 1.3でコアに昇格
+
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_demote_to_helper_invocation.html[SPV_EXT_demote_to_helper_invocation]
+
+link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_demote_to_helper_invocation.txt[GLSL - GL_EXT_demote_to_helper_invocation]
+====
+
+この拡張機能は、SPIR-V の HLSL `discard` 命令とのマッチングを助けるために、`demote` キーワードを追加して作成されました。フラグメントシェーダの呼び出しで `demote` を使用すると、ヘルパー呼び出しになります。この命令の後のメモリへのストアはすべて抑制され、フラグメントはフレームバッファへの出力を書き込みません。
+
+[[VK_KHR_shader_clock]]
+== VK_KHR_shader_clock
+
+[NOTE]
+====
+link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_clock.html[SPV_KHR_shader_clock]
+
+link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shader_realtime_clock.txt[GLSL - GL_EXT_shader_realtime_clock]
+====
+
+この拡張機能により、シェーダは実装が提供する単調増加するカウンタの値を読み取ることができます。これは、呼び出しが命令を実行する順序を追跡することによって、デバッグのために使用することができます。`OpReadClockKHR` を追加すると、デバッグしたいシェーダが変更されることに注意してください。これは、命令が存在しないかのような順序を表す一定レベルの精度があることを意味します。
+
+[[VK_KHR_shader_non_semantic_info]]
+== VK_KHR_shader_non_semantic_info
+
+[NOTE]
+====
+Vulkan 1.3でコアに昇格
+
+link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_clock.html[SPV_KHR_non_semantic_info]
+====
+
+この拡張機能は link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_non_semantic_info.html[SPV_KHR_non_semantic_info] を公開し、セマンティックな影響がなく、モジュールから安全に削除できる拡張命令セットを宣言するlink:https://github.com/KhronosGroup/SPIRV-Guide/blob/master/chapters/nonsemantic.md[機能を追加します]。
+
+[[VK_KHR_shader_terminate_invocation]]
+== VK_KHR_shader_terminate_invocation
+
+[NOTE]
+====
+Vulkan 1.3でコアに昇格
+
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_terminate_invocation.html[SPV_KHR_terminate_invocation]
+====
+
+この拡張機能では、新しい命令 `OpTerminateInvocation` を追加して、`OpKill` 命令よりも明確な機能を提供します。
+
+[[VK_KHR_workgroup_memory_explicit_layout]]
+== VK_KHR_workgroup_memory_explicit_layout
+
+[NOTE]
+====
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_workgroup_memory_explicit_layout.html[SPV_KHR_workgroup_memory_explicit_layout]
+
+link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shared_memory_block.txt[GLSL - GL_EXT_shared_memory_block]
+====
+
+この拡張機能は、シェーダが `Workgroup` `Storage Class` メモリのレイアウトを定義する方法を提供します。`Workgroup` 変数はブロックで宣言することができ、他のストレージクラスと同じ明示的なレイアウト修飾（例：`Offset`、`ArrayStride`）を使用します。
+
+1つの使用例は、実際には異なるタイプ（たとえば `scalar fp16`）である共有メモリに対しても、バッファメモリからの大きなベクトルコピー（たとえば `uvec4`）を実行することです。
+
+もう1つの使用例は、共有メモリを再利用し、次のようなものを使用して共有メモリの総消費量を削減することです。
+
+[source]
+----
+pass1 - 型 A を使って共有メモリに書き込む
+barrier()
+pass2 - 型 A を使って共有メモリを読み込む
+barrier()
+pass3 - 型 B を使って共有メモリに書き込む
+barrier()
+pass4 - 型 B を使って共有メモリを読み込む
+----
+
+また、Vulkan の上に OpenCL を重ねるには、明示的なレイアウトのサポートと何らかのエイリアシングが必要です。
+
+[[VK_KHR_zero_initialize_workgroup_memory]]
+== VK_KHR_zero_initialize_workgroup_memory
+
+[NOTE]
+====
+Vulkan 1.3でコアに昇格
+====
+
+この拡張機能により、`Workgroup` `Storage Class` を持つ `OpVariable` で、`Initializer` オペランドを使用できるようになります。
+
+セキュリティ上の理由から、信頼できないコンテンツ（Web ブラウザなど）を実行するアプリケーションは、ワークグループの実行開始時にワークグループのメモリをゼロ初期化できる必要があります。すべてのワークグループ変数をゼロに設定する命令を追加すると、アクセスパターンが悪くなるため、一部のハードウェアの能力よりも効率が悪くなります。

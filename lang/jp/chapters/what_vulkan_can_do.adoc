@@ -1,0 +1,75 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[what-vulkan-can-do]]
+= Vulkan で出来ること
+
+Vulkan はさまざまなユースケースに対応したアプリケーションの開発に使用できます。Vulkan アプリケーションは以下に紹介する機能を選択して使用できますが、ひとつの API でそれらすべてを使用できるように設計されています。
+
+[NOTE]
+====
+Vulkan はツールの箱であり、ひとつのタスクを行うには複数の方法があるということが重要です。
+====
+
+== グラフィックス
+
+2D および 3D グラフィックスは、Vulkan API のメイン機能です。Vulkan は、ハードウェアアクセラレーションを利用したグラフィカルなアプリケーションを作成できるように設計されています。
+
+[NOTE]
+====
+すべての Vulkan の実装はグラフィックスのサポートが必要ですが、link:../../../chapters/wsi.md[WSI] システムは必要ありません。
+====
+
+== コンピュート
+
+GPGPU と呼ばれる新しいプログラミングスタイルを用いて、GPU の並列性を計算タスクに活用できます。Vulkan は `VkQueues`、`VkPipelines` などのコンピュート用バリエーションをサポートしており、Vulkan を一般的な計算に使用することができます。
+
+[NOTE]
+====
+すべての Vulkan の実装はコンピュートをサポートする必要があります。
+====
+
+== レイトレーシング
+
+レイトレーシングとは光の物理的な振る舞いをシミュレートするというコンセプトに基づいた、ラスタライズとは別のレンダリング技術です。
+
+レイトレーシングのクロスベンダー API サポートは、Vulkan の1.2.162仕様で拡張機能として追加されました。 
+主な拡張機能は link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline[`VK_KHR_ray_tracing_pipeline`]、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_ray_query[`VK_KHR_ray_query`]、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_acceleration_structure[`VK_KHR_acceleration_structure`] です。
+
+[NOTE]
+====
+レイトレーシングの実装を公開している古い link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_ray_tracing[NVIDIA ベンダー拡張機能]もあります。この拡張機能はクロスベンダー拡張機能よりも前から存在しました。新規に開発する場合は、新しい KHR 拡張機能を使用することをお勧めします。
+====
+
+== ビデオ
+
+link:https://www.khronos.org/blog/an-introduction-to-vulkan-video?mc_cid=8052312abe&mc_eid=64241dfcfa[Vulkan Video] は、1.2.175仕様リリース時点で暫定仕様を公開しています。
+
+Vulkan Video は Vulkan の理念に基づき、ビデオ処理のスケジューリング、同期、メモリ使用などを、柔軟かつきめ細かくアプリケーションに提供します。
+
+[NOTE]
+====
+暫定仕様へのlink:https://github.com/KhronosGroup/Vulkan-Docs/issues/1497[フィードバック]をお待ちしています。
+====
+
+== 機械学習
+
+現在 Vulkan Working Group は、Vulkan を最新の GPU の機械学習計算機能を提供するためのファーストクラスの API にする方法を検討しています。詳細は link:https://www.youtube.com/watch?v=_57aiwJISCI&feature=youtu.be&t=5007[Siggraph 2019] で発表されました。
+
+[NOTE]
+====
+現時点では、機械学習用の Vulkan API は公開されていません。
+====
+
+== セーフティクリティカル
+
+Vulkan SC（Safety Critical）は、自動車、航空電子、産業、医療分野のセーフティクリティカルシステムに、最新のGPUのグラフィックスおよび計算能力をもたらすことを目的としています。link:https://www.khronos.org/news/press/khronos-releases-vulkan-safety-critical-1.0-specification-to-deliver-safety-critical-graphics-compute[2022年3月1日]に公開され、仕様はlink:https://www.khronos.org/vulkansc/[こちら]で確認できます。
+
+[NOTE]
+====
+Vulkan SC は、Vulkan 1.2をベースに、セーフティクリティカルな市場に不要な機能を削除し、無視されるパラメータや未定義の振る舞いを排除して仕様の堅牢性を高め、実行時フォルトの検出、報告、修正を強化したものです。
+====
+
