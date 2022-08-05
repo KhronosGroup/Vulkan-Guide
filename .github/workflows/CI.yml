@@ -27,7 +27,9 @@ jobs:
       # Run awesome_bot checker
       # Apparently this has trouble parsing one wiki link with () in it, so added to whitelist
       # need request-delay or will get 429 errors for sites such as GitHub
+      # whitelisting apps.apple.com as it is triggering a timeout.
+      # also adding setting timeout to 20 seconds from the default 10.
       - name: awesome_bot
         run: |
           gem install awesome_bot
-          awesome_bot --request-delay 2 --allow-dupe chapters/*.adoc chapters/extensions/*.adoc --white-list https://www.youtube.com/,https://khr.io/slack,https://www.khronos.org/opengl/wiki/Interface_Block_
+          awesome_bot --request-delay 2 -t 20 --allow-redirect --allow-dupe chapters/*.adoc chapters/extensions/*.adoc --white-list https://apps.apple.com/,https://www.youtube.com/,https://khr.io/slack,https://www.khronos.org/opengl/wiki/Interface_Block_
