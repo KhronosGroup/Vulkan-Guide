@@ -68,8 +68,8 @@ The `nullDescriptor` feature also allows accesses to vertex input bindings where
 
 == VK_EXT_pipeline_robustness
 
-Because for some implementations robustness can come at a performance cost, the `VK_EXT_pipeline_robustness` extension was added to allow a developers to request robustness on a per-pipeline stage basis.
+Because robustness can come at a performance cost for some implementations, the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_pipeline_robustness.html[VK_EXT_pipeline_robustness] extension was added to allow developers to request robustness only where needed.
 
-At `VkPipeline` creation time the `VkPipelineRobustnessBufferBehaviorEXT` and `VkPipelineRobustnessImageBehaviorEXT` can set which robustness for the resources of the pipeline.
+At `VkPipeline` creation time one or more `VkPipelineRobustnessCreateInfoEXT` structures can be passed to specify the desired robustness behavior of accesses to buffer, image, and vertex input resources, either for the pipeline as a whole or on a per-pipeline-stage basis.
 
 This extension also provides `VkPhysicalDevicePipelineRobustnessPropertiesEXT` which queries the implementation for what behavior it provides as default when no robustness features are enabled.
