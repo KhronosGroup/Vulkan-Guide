@@ -65,7 +65,7 @@ There are also other publicly available layers that can be used to help in devel
 
 Debugging something running on a GPU can be incredibly hard, luckily there are tools out there to help.
 
-  * link:https://developer.arm.com/Tools%20and%20Software/Graphics%20Analyzer [Arm Graphics Analyzer]
+  * link:https://developer.arm.com/Tools%20and%20Software/Graphics%20Analyzer[Arm Graphics Analyzer]
   * link:https://github.com/google/gapid[GAPID]
   * link:https://developer.nvidia.com/nsight-graphics[NVIDIA Nsight]
   * link:https://developer.imaginationtech.com[PVRCarbon]
