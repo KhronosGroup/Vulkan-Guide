@@ -179,7 +179,7 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 // include::{chapters}robustness.adoc[]
 
-  * `VK_EXT_image_robustness`, `VK_EXT_robustness2`
+  * `VK_EXT_image_robustness`, `VK_EXT_robustness2`, `VK_EXT_pipeline_robustness`
 
 == xref:{chapters}dynamic_state.adoc[Dynamic State]
 
