@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[wsi]]
 = Window System Integration (WSI)
 
 Since the Vulkan API can be used without displaying results, WSI is provided through the use of link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#wsi[optional Vulkan extensions]. Most implementations will include WSI support. The WSI design was created to abstract each platform's windowing mechanism from the core Vulkan API.
 
-image::images/wsi_setup.png[wsi_setup]
+image::{images}wsi_setup.png[wsi_setup]
 
 == Surface
 
@@ -37,7 +38,7 @@ Once a `VkSurfaceKHR` is created there are various link:https://registry.khronos
 
 The `VkSwapchainKHR` object provides the ability to present rendering results to a surface through an array of `VkImage` objects. The swapchain's various link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VkPresentModeKHR[present modes] determine how the presentation engine is implemented.
 
-image::images/wsi_engine.png[wsi_engine]
+image::{images}wsi_engine.png[wsi_engine]
 
 Khronos' link:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/swapchain_images[sample and tutorial] explain different considerations to make when creating a swapchain and selecting a presentation mode.
 

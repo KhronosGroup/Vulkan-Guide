@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[what-is-spirv]]
 = What is SPIR-V
@@ -36,7 +37,7 @@ Shaderc builds both tools as a standalone command line tool (link:https://github
 
 link:https://github.com/microsoft/DirectXShaderCompiler[DirectXShaderCompiler] also supports link:https://github.com/Microsoft/DirectXShaderCompiler/wiki/SPIR%E2%80%90V-CodeGen[translating HLSL into the SPIR-V].
 
-image::images/what_is_spirv_dxc.png[what_is_spirv_dxc.png]
+image::{images}what_is_spirv_dxc.png[what_is_spirv_dxc.png]
 
 === Clspv
 
@@ -54,7 +55,7 @@ The Khronos link:https://github.com/KhronosGroup/SPIRV-Tools[SPIRV-Tools] projec
 
 The Khronos link:https://github.com/KhronosGroup/SPIRV-Cross[SPIRV-Cross] project is a practical tool and library for performing reflection on SPIR-V and disassembling SPIR-V back to a desired high-level shading language. For more details, link:https://github.com/Themaister[Hans Kristian], the main developer of SPIR-V Cross, has given two great presentations about what it takes to create a tool such as SPIR-V Cross from link:https://www.khronos.org/assets/uploads/developers/library/2018-vulkanised/04-SPIRVCross_Vulkanised2018.pdf[2018 Vulkanised] (link:https://www.youtube.com/watch?v=T5Va6hSGx44[video]) and link:https://www.khronos.org/assets/uploads/developers/library/2019-vulkanised/04-SPIRV-Cross-May19.pdf[2019 Vulkanised] (link:https://www.youtube.com/watch?v=lv-fh_oFJUc[video])
 
-image::images/what_is_spirv_spriv_cross.png[what_is_spirv_spriv_cross.png]
+image::{images}what_is_spirv_spriv_cross.png[what_is_spirv_spriv_cross.png]
 
 === SPIRV-LLVM
 

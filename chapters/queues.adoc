@@ -3,6 +3,7 @@
 
 // Required for both single-page and combined guide xrefs to work
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[queues]]
 = Queues
@@ -47,11 +48,11 @@ The following are the queue operations found in link:https://registry.khronos.or
 
 Each operation in the Vulkan Spec has a "`Supported Queue Types`" section generated from the link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/xml/vk.xml[vk.xml] file. The following is 3 different examples of what it looks like in the Spec:
 
-image::images/queues_cmd_draw.png[queues_cmd_dispatch.png]
+image::{images}queues_cmd_draw.png[queues_cmd_dispatch.png]
 
-image::images/queues_cmd_dispatch.png[queues_cmd_dispatch.png]
+image::{images}queues_cmd_dispatch.png[queues_cmd_dispatch.png]
 
-image::images/queues_cmd_executecommands.png[queues_cmd_dispatch.png]
+image::{images}queues_cmd_executecommands.png[queues_cmd_dispatch.png]
 
 === Querying for Queue Family
 
@@ -82,7 +83,7 @@ Unlike other handles such as `VkDevice`, `VkBuffer`, `VkDeviceMemory`, there is 
 
 The following examples will use the hypothetical implementation which support 3 `VkQueue`&#8203;s from 2 Queue Families:
 
-image::images/queues_hypothetical.png[queues_hypothetical.png]
+image::{images}queues_hypothetical.png[queues_hypothetical.png]
 
 The following is an example how to create all 3 `VkQueue`&#8203;s with the logical device:
 

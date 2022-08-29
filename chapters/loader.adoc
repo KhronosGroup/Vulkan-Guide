@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[loader]]
 = Loader
 
 The loader is responsible for mapping an application to Vulkan layers and Vulkan installable client drivers (ICD).
 
-image::images/loader_overview.png[loader_overview.png]
+image::{images}loader_overview.png[loader_overview.png]
 
 Anyone can create their own Vulkan Loader, as long as they follow the link:https://github.com/KhronosGroup/Vulkan-Loader/blob/master/docs/LoaderInterfaceArchitecture.md[Loader Interface]. One can build the link:https://github.com/KhronosGroup/Vulkan-Loader/blob/master/BUILD.md[reference loader] as well or grab a built version from the link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK] for selected platforms.
 

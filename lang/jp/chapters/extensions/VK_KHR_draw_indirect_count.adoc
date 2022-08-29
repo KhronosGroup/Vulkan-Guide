@@ -20,4 +20,4 @@ Vulkan 1.2でコアに昇格
 
 次の図は、`vkCmdDraw`、`vkCmdDrawIndirect`、`vkCmdDrawIndirectCount` の違いを視覚化したものです。
 
-image::../../../../chapters/extensions/images/VK_KHR_draw_indirect_count_example.png[VK_KHR_draw_indirect_count example]
+image::../../../../chapters/images/extensions/VK_KHR_draw_indirect_count_example.png[VK_KHR_draw_indirect_count example]

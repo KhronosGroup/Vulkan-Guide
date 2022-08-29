@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
 
 [[VK_KHR_draw_indirect_count]]
 = VK_KHR_draw_indirect_count
@@ -20,4 +21,4 @@ The `vkCmdDrawIndirectCount` and `vkCmdDrawIndexedIndirectCount` function can be
 
 The following diagram is to visualize the difference between `vkCmdDraw`, `vkCmdDrawIndirect`, and `vkCmdDrawIndirectCount`.
 
-image::images/VK_KHR_draw_indirect_count_example.png[VK_KHR_draw_indirect_count example]
+image::{images}extensions/VK_KHR_draw_indirect_count_example.png[VK_KHR_draw_indirect_count example]

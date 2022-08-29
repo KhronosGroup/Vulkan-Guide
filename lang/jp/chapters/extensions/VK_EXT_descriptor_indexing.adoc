@@ -37,7 +37,7 @@ Montreal Developer Day の プレゼンテーション (link:https://www.youtube
 
 次のコード例では、バインド後の更新を有効にした場合と、有効にしなかった場合の違いを説明します。
 
-image::../../../../chapters/extensions/images/VK_EXT_descriptor_indexing_update_after_bind.png[VK_EXT_descriptor_indexing_update_after_bind.png]
+image::../../../../chapters/images/extensions/VK_EXT_descriptor_indexing_update_after_bind.png[VK_EXT_descriptor_indexing_update_after_bind.png]
 
 == 部分的バインド
 

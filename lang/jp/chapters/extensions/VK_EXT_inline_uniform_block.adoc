@@ -13,11 +13,11 @@ Vulkan 1.3 でコアに昇格
 
 一般的な実装では、ディスクリプタは、コマンドバッファの記録時にバインドされたデータを間接的に指し示すためのテーブルに過ぎません。問題は、すべてのディスクリプタが同じように作成されるわけではなく、たとえば、ディスクリプタが数 DWORDS のサイズしかない場合があることです。
 
-image::../../../../chapters/extensions/images/VK_EXT_inline_uniform_block_before.png[VK_EXT_inline_uniform_block_before.png]
+image::../../../../chapters/images/extensions/VK_EXT_inline_uniform_block_before.png[VK_EXT_inline_uniform_block_before.png]
 
 `VK_EXT_inline_uniform_block` を使用すると、ユニフォームな値を使用する際に、実装がアクセスするための間接参照の回数を減らすことができます。プッシュ定数とは異なり、このデータは、複数の不連続な描画/ディスパッチセットで再利用することができます。
 
-image::../../../../chapters/extensions/images/VK_EXT_inline_uniform_block_after.png[VK_EXT_inline_uniform_block_after.png]
+image::../../../../chapters/images/extensions/VK_EXT_inline_uniform_block_after.png[VK_EXT_inline_uniform_block_after.png]
 
 == 提案
 

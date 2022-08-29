@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[enabling-extensions]]
 = Enabling Extensions
@@ -14,7 +15,7 @@ There are two groups of extensions, **instance extensions** and **device extensi
 
 This information is documented under the "`Extension Type`" section of each extension reference page. Example below:
 
-image::images/enabling_extensions_instance_extension.png[enabling_extensions_instance_extension.png]
+image::{images}enabling_extensions_instance_extension.png[enabling_extensions_instance_extension.png]
 
 == Check for support
 
@@ -42,7 +43,7 @@ Even if the extension is **supported** by the implementation, it is **undefined 
 
 Here is an example of what is needed to enable an extension such as `VK_KHR_driver_properties`.
 
-image::images/enabling_extensions_driver_properties.png[enabling_extensions_driver_properties.png]
+image::{images}enabling_extensions_driver_properties.png[enabling_extensions_driver_properties.png]
 
 [source,cpp]
 ----
@@ -71,7 +72,7 @@ vkCreateDevice(physicalDevice, &device_create_info, nullptr, &myDevice);
 
 It is important to remember that extensions add the existence of functionality to the Vulkan spec, but this doesn't mean that all features of an extension are available if the extension is **supported**. An example is an extension such as `VK_KHR_8bit_storage`, which has 3 features it exposes in `VkPhysicalDevice8BitStorageFeatures`.
 
-image::images/enabling_extensions_8bit.png[enabling_extensions_8bit.png]
+image::{images}enabling_extensions_8bit.png[enabling_extensions_8bit.png]
 
 This means after enabling the extension, an application will still need to xref:{chapters}enabling_features.adoc#enabling-features[query and enable the features] needed from an extension.
 

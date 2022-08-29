@@ -3,6 +3,7 @@
 
 // Required for both single-page and combined guide xrefs to work
 ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
 
 [[cleanup]]
 = Cleanup Extensions
@@ -64,7 +65,7 @@ Promoted to core in Vulkan 1.2
 
 There are formats that express both the usage of depth and stencil, but there was no way to list a different usage for them. The `VkImageStencilUsageCreateInfo` now lets an application pass in a separate `VkImageUsageFlags` for the stencil usage of an image. The depth usage is the original usage passed into `VkImageCreateInfo::usage` and without using `VkImageStencilUsageCreateInfo` the stencil usage will be the same as well.
 
-A good use case of this is when using the xref:{chapters}VK_KHR_image_format_list.adoc#VK_KHR_image_format_list[VK_KHR_image_format_list] extension. This provides a way for the application to more explicitly describe the possible image views of their `VkImage` at creation time. This allows some implementations to possibly do implementation dependent optimization depending on the usages set.
+A good use case of this is when using the xref:{chapters}extensions/VK_KHR_image_format_list.adoc#VK_KHR_image_format_list[VK_KHR_image_format_list] extension. This provides a way for the application to more explicitly describe the possible image views of their `VkImage` at creation time. This allows some implementations to possibly do implementation dependent optimization depending on the usages set.
 
 [[VK_KHR_dedicated_allocation]]
 == VK_KHR_dedicated_allocation
