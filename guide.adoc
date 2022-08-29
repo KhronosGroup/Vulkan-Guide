@@ -18,6 +18,8 @@ image::images/khronos_logo.png[Khronos logo]
 
 // Switch imagesdir for chapters/ includes so they can also load as single pages
 :imagesdir: chapters
+// Use {images} as base path for images
+:images: images/
 
 // Use {chapters} as base path for individual chapters, to allow single
 // pages to work properly as well. Must have trailing slash.
@@ -132,7 +134,8 @@ include::{chapters}synchronization.adoc[]
 
 // Switch imagesdir for chapters/extensions/ includes so they can also load as single pages,
 // then switch it back again
-:imagesdir: chapters/extensions
+// :imagesdir: chapters/images/extensions
+// :images: images/
 
 include::{chapters}extensions/VK_KHR_synchronization2.adoc[]
 
@@ -210,7 +213,7 @@ These are supplemental references for the various Vulkan Extensions. Please cons
 ====
 
 // Switch imagesdir for chapters/extensions/ includes so they can also load as single pages
-:imagesdir: chapters/extensions
+// :imagesdir: chapters/images/extensions
 
 // == Cleanup Extensions
 

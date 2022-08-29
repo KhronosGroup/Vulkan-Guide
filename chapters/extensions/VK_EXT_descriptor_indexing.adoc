@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
 
 [[VK_EXT_descriptor_indexing]]
 = VK_EXT_descriptor_indexing
@@ -37,7 +38,7 @@ After enabling the desired feature support for updating after bind, an applicati
 
 The following code example gives an idea of the difference between enabling update after bind and without it:
 
-image::images/VK_EXT_descriptor_indexing_update_after_bind.png[VK_EXT_descriptor_indexing_update_after_bind.png]
+image::{images}extensions/VK_EXT_descriptor_indexing_update_after_bind.png[VK_EXT_descriptor_indexing_update_after_bind.png]
 
 == Partially bound
 

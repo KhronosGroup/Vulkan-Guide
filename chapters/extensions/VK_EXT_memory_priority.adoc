@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
 
 [[VK_EXT_memory_priority]]
 = VK_EXT_memory_priority
@@ -10,13 +11,13 @@ Memory management is an important part of Vulkan. The `VK_EXT_memory_priority` e
 
 This extension can be explained with an example of two applications (the main application and another process on the host machine). Over time the applications both attempt to consume the limited device heap memory.
 
-image::images/VK_EXT_memory_priority_overview.png[VK_EXT_memory_priority_overview]
+image::{images}extensions/VK_EXT_memory_priority_overview.png[VK_EXT_memory_priority_overview]
 
 In this situation, the allocation from the main application is still present, just possibly on slower memory (implementation might have moved it to host visible memory until it is needed again).
 
 The decision of **what** memory will get moved is implementation defined. Let's now imagine this is the main application's memory usage
 
-image::images/VK_EXT_memory_priority_app.png[VK_EXT_memory_priority_app]
+image::{images}extensions/VK_EXT_memory_priority_app.png[VK_EXT_memory_priority_app]
 
 As we can see, there was some memory the application felt was more important to always attempt to keep in fast memory.
 

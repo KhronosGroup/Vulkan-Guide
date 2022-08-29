@@ -3,6 +3,7 @@
 
 // Required for both single-page and combined guide xrefs to work
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[mapping-data-to-shaders]]
 = Mapping Data to Shaders
@@ -112,7 +113,7 @@ Descriptors are grouped together in link:https://registry.khronos.org/vulkan/spe
 
 In this example, there are the following 3 descriptor sets:
 
-image::images/mapping_data_to_shaders_descriptor_1.png[mapping_data_to_shaders_descriptor_1.png]
+image::{images}mapping_data_to_shaders_descriptor_1.png[mapping_data_to_shaders_descriptor_1.png]
 
 The GLSL of the shader:
 
@@ -177,7 +178,7 @@ vkEndCommandBuffer();
 
 The following results would look as followed
 
-image::images/mapping_data_to_shaders_descriptor_2.png[mapping_data_to_shaders_descriptor_2.png]
+image::{images}mapping_data_to_shaders_descriptor_2.png[mapping_data_to_shaders_descriptor_2.png]
 
 [[descriptor-types]]
 === Descriptor types

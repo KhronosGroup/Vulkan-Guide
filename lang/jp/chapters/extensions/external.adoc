@@ -81,4 +81,4 @@ ifndef::chapters[:chapters: ../]
 
 Vulkan と、GPU と通信する他の API との間のイベントのタイムラインの図を示します。これは、外部メモリと同期の拡張機能の一般的な使用例を表しています。
 
-image::../../../../chapters/extensions/images/external_example.png[external_example.png]
+image::../../../../chapters/images/extensions/external_example.png[external_example.png]

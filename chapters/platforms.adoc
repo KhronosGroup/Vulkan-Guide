@@ -3,13 +3,14 @@
 
 // Required for both single-page and combined guide xrefs to work
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[platforms]]
 = Platforms
 
 While Vulkan runs on many platforms, each has small variations on how Vulkan is managed.
 
-image::images/platforms_overview.png[platforms_overview.png]
+image::{images}platforms_overview.png[platforms_overview.png]
 
 == Android
 

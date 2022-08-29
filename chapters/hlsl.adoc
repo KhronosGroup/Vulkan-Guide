@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[hlsl-in-vulkan]]
 = HLSL in Vulkan
@@ -13,7 +14,7 @@ One such language is the High Level Shading Language (HLSL) by Microsoft, used b
 
 With link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst#unsupported-hlsl-features[a few exceptions], all Vulkan features and shader stages available with GLSL can be used with HLSL too, including recent Vulkan additions like hardware accelerated ray tracing. On the other hand, HLSL to SPIR-V supports Vulkan exclusive features that are not (yet) available in DirectX.
 
-image::images/what_is_spirv_dxc.png[what_is_spriv_dxc.png]
+image::{images}what_is_spirv_dxc.png[what_is_spriv_dxc.png]
 
 [[applications-pov]]
 == From the application's point-of-view

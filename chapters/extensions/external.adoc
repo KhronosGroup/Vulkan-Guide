@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
 
 [[external-memory]]
 = External Memory and Synchronization
@@ -81,4 +82,4 @@ There is a `VkImport*` function for importing and a `VkGet*` function for export
 
 Here is a simple diagram showing the timeline of events between Vulkan and some other API talking to the GPU. This is used to represent a common use case for these external memory and synchronization extensions.
 
-image::images/external_example.png[external_example.png]
+image::{images}extensions/external_example.png[external_example.png]

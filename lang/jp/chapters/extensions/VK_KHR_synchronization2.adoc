@@ -17,7 +17,7 @@ Vulkan 1.3でコアに昇格
 
 今回の拡張機能での主な変更点は、パイプラインステージとアクセスフラグがメモリバリア構造体で一緒に指定されるようになったことです。これにより、両者の関連性がより明確になりました。
 
-image::../../../../chapters/extensions/images/VK_KHR_synchronization2_stage_access.png[VK_KHR_synchronization2_stage_access]
+image::../../../../chapters/images/extensions/VK_KHR_synchronization2_stage_access.png[VK_KHR_synchronization2_stage_access]
 
 === イベントセットのためのバリア追加
 

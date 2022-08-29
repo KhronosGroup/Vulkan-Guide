@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[robustness]]
 = Robustness
@@ -10,7 +11,7 @@ ifndef::chapters[:chapters:]
 
 When a Vulkan application tries to access (load, store, or perform an atomic on) memory it doesn't have access to, the implementation must react somehow. In the case where there is no robustness, it is undefined behavior and the implementation is even allowed to terminate the program. If robustness is enabled for the type of memory accessed, then the implementation must behave a certain way as defined by the spec.
 
-image::images/robustness_flow.png[robustness_flow.png]
+image::{images}robustness_flow.png[robustness_flow.png]
 
 == When to use
 

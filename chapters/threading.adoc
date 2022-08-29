@@ -3,13 +3,14 @@
 
 // Required for both single-page and combined guide xrefs to work
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[threading]]
 = Threading
 
 One of the big differences between Vulkan and OpenGL is that Vulkan is not limited to a single-threaded state machine system. Before running off to implement threads in an application, it is important to understand how threading works in Vulkan.
 
-The Vulkan Spec link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#fundamentals-threadingbehavior[Threading Behavior section] explains in detail how applications are in charge of managing all _externally synchronized_ elements of Vulkan. It is important to realize that multithreading in Vulkan only provides host-side scaling, as anything interacting with the device still needs to be xref:{chapters}sychronization.adoc#synchronization[synchronized correctly]
+The Vulkan Spec link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#fundamentals-threadingbehavior[Threading Behavior section] explains in detail how applications are in charge of managing all _externally synchronized_ elements of Vulkan. It is important to realize that multithreading in Vulkan only provides host-side scaling, as anything interacting with the device still needs to be xref:{chapters}synchronization.adoc#synchronization[synchronized correctly]
 
 Vulkan implementations are not supposed to introduce any multi-threading, so if an app wants multi-CPU performance, the app is in charge of managing the threading.
 
@@ -19,7 +20,7 @@ link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#commandbuffe
 
 The idea is command buffers can be recorded on multiple threads while having a relatively light thread handle the submissions.
 
-image::images/threading_command_buffers.png[threading_command_buffers.png]
+image::{images}threading_command_buffers.png[threading_command_buffers.png]
 
 Khronos' link:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/command_buffer_usage[sample and tutorial] show in more detail how to record command buffers in parallel.
 

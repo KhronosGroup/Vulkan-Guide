@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
 
 [[VK_KHR_synchronization2]]
 = VK_KHR_synchronization2
@@ -19,7 +20,7 @@ One main change with the extension is to have pipeline stages and access flags n
 
 The only new type of structure needed is `VkDependencyInfoKHR`, which wraps all the barriers into a single location.
 
-image::images/VK_KHR_synchronization2_stage_access.png[VK_KHR_synchronization2_stage_access]
+image::{images}extensions/VK_KHR_synchronization2_stage_access.png[VK_KHR_synchronization2_stage_access]
 
 === Adding barriers for setting events
 
