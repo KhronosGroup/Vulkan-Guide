@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-ruby@v1
         with:
-          ruby-version: '2.7'
+          ruby-version: '3.1.2'
 
       # Run awesome_bot checker
       # Apparently this has trouble parsing one wiki link with () in it, so added to whitelist
