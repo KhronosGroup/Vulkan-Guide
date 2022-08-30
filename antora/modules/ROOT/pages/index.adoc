@@ -1,0 +1,24 @@
+# Copyright 2022-2023 The Khronos Group Inc.
+# SPDX-License-Identifier: CC-BY-4.0
+
+image::vulkan_logo.png[Vulkan Logo]
+image::khronos_logo.png[Khronos logo]
+
+// Extracted from boilerplate at start of guide.adoc
+
+The Vulkan Guide is designed to help developers get up and going with the world of Vulkan. It is aimed to be a light read that leads to many other useful links depending on what a developer is looking for. All information is intended to help better fill the gaps about the many nuances of Vulkan.
+
+// version@component:module:family$resource.ext
+// latest@ - version (from vulkan antora.yml 'version')
+// component - proposals (from vulkan antora.yml 'name')
+// module - proposals (from module directory name)
+// family - page$ or empty, for a page reference
+// resource.ext - relative path to file within the module
+// So: latest@proposals:proposals:
+
+This is a crosslink to the xref:spec::index.adoc[Vulkan Proposals] module.
+
+// This is a crosslink to the xref:latest@proposals:proposals:index.adoc[Vulkan Proposals] module.
+
+// This is an angle-bracket style crosslink to the same
+// <<proposals:proposals::index.adoc, Vulkan Proposals>> module.
