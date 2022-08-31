@@ -438,40 +438,7 @@ OpDecorate %inputAttachment InputAttachmentIndex 0
 
 これらは、少量（数ワード）の頻繁に更新されるデータを、コマンドバッファの記録ごとに更新するように設計されています。
 
-シェーダの観点から見ると、ユニフォームバッファに似ています。
-
-[source,glsl]
-----
-#version 450
-
-layout(push_constant) uniform myPushConstants {
-    vec4 myData;
-} myData;
-----
-
-SPIR-V アセンブリ:
-
-[source,swift]
-----
-MemberDecorate 13(myPushConstants) 0 Offset 0
-Decorate 13(myPushConstants) Block
-----
-
-コマンドバッファの記録中に、プッシュ定数の値が決定されます。
-
-[source,c]
-----
-vkBeginCommandBuffer();
-// ...
-vkCmdBindPipeline();
-
-float someData[4] = {0.0, 1.0, 2.0, 3.0};
-vkCmdPushConstants(sizeof(float) * 4, someData);
-
-vkCmdDraw();
-// ...
-vkEndCommandBuffer();
-----
+詳細は、xref:{chapters}push_constants.adoc[プッシュ定数]の章を参照してください。
 
 [[specialization-constants]]
 == 特殊化定数

@@ -441,40 +441,7 @@ A push constant is a small bank of values accessible in shaders. Push constants 
 
 These are designed for small amount (a few dwords) of high frequency data to be updated per-recording of the command buffer.
 
-From a shader perspective, it is similar to a uniform buffer.
-
-[source,glsl]
-----
-#version 450
-
-layout(push_constant) uniform myPushConstants {
-    vec4 myData;
-} myData;
-----
-
-Resulting SPIR-V assembly:
-
-[source,swift]
-----
-MemberDecorate 13(myPushConstants) 0 Offset 0
-Decorate 13(myPushConstants) Block
-----
-
-While recording the command buffer the values of the push constants are decided.
-
-[source,c]
-----
-vkBeginCommandBuffer();
-// ...
-vkCmdBindPipeline();
-
-float someData[4] = {0.0, 1.0, 2.0, 3.0};
-vkCmdPushConstants(sizeof(float) * 4, someData);
-
-vkCmdDraw();
-// ...
-vkEndCommandBuffer();
-----
+More information can be found in the xref:{chapters}push_constants.adoc[Push Constants] chapter.
 
 [[specialization-constants]]
 == Specialization Constants
