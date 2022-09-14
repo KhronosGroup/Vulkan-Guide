@@ -106,7 +106,7 @@ vkCmdBindDescriptorSets(
 
 image::../../../chapters/images/descriptor_dynamic_offset_example_c.png[descriptor_dynamic_offset_example_c.png]
 
-今回、動的オフセットを適用しようとすると、未定義の振る舞いとなり、link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/2846[検証レイヤでエラーが発生]します。
+今回、動的オフセットを適用しようとすると、未定義の動作となり、link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/2846[検証レイヤでエラーが発生]します。
 
 [source,c]
 ----

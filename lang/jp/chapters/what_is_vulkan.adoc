@@ -11,9 +11,9 @@ Vulkan は、PC やゲーム機、携帯電話、組み込みプラットフォ�
 
 Vulkan は、企業でも言語でもなく、最新の GPU ハードウェアをクロスプラットフォーム、クロスベンダーでプログラミングするための手段です。Khronos Group は、Vulkan の開発と維持を行っている会員制のコンソーシアムです。
 
-== Vulkan のコア
+== Vulkan の中心
 
-Vulkan は適合するハードウェアの実装が従う link:https://www.khronos.org/registry/vulkan/#apispecs[API 仕様]がコアとなっています。公開されている仕様は、Vulkan Specification リポジトリの公式公開コピーの link:https://github.com/KhronosGroup/Vulkan-Docs[Vulkan-Docs] にある link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/xml/vk.xml[./xml/vk.xml] Vulkan Registry ファイルから生成されています。また、link:https://www.khronos.org/registry/vulkan/specs/1.3/registry.html[XML スキーマ]のドキュメントも用意されています。
+本質的に、Vulkan は適合するハードウェアの実装が従う link:https://www.khronos.org/registry/vulkan/#apispecs[API 仕様]です。公開されている仕様は、Vulkan Specification リポジトリの公式公開コピーの link:https://github.com/KhronosGroup/Vulkan-Docs[Vulkan-Docs] にある link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/xml/vk.xml[./xml/vk.xml] Vulkan Registry ファイルから生成されています。また、link:https://www.khronos.org/registry/vulkan/specs/1.3/registry.html[XML スキーマ]のドキュメントも用意されています。
 
 Khronos Group は、Vulkan Specification とともに、link:https://www.khronos.org/registry/vulkan/#apiregistry[API Registry] から生成された http://www.open-std.org/jtc1/sc22/wg14/www/standards[C99] link:https://github.com/KhronosGroup/Vulkan-Headers/tree/main/include/vulkan[ヘッダファイル]を公開しており、Vulkan API のインターフェイスに使用することができます。
 

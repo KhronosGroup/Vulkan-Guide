@@ -44,7 +44,7 @@ link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shad
 ----
 #version 450
 
-// 8ビットストレージがない場合、各ブロック変数は32バイト幅である必要がある
+// 8ビットストレージがない場合、各ブロック変数は32ビット幅である必要がある
 layout (set = 0, binding = 0) readonly buffer StorageBuffer {
     uint data; // 0x0000AABB
 } ssbo;

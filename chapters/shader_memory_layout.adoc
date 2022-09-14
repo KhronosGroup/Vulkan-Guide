@@ -22,7 +22,7 @@ Vulkan has 3 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/
 The spec language for alignment breaks down the rule for each of the following block member types.
 
 - scalar (`float`, `int`, `char`, etc)
-- vector (`float2`, `vec3`, `'uvec4' etc)
+- vector (`float2`, `vec3`, `uvec4`, etc)
 - matrix
 - array
 - struct

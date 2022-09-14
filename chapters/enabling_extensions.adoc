@@ -11,7 +11,7 @@ This section goes over the logistics for enabling extensions.
 
 == Two types of extensions
 
-There are two groups of extensions, **instance extensions** and **device extensions**. Simply put, **instance extensions** are tied to the entire `VkInstance` while **device extensions** are tied to only a single `VkDevice` instance.
+There are two groups of extensions, **instance extensions** and **device extensions**. Simply put, **instance extensions** are tied to the entire `VkInstance` while **device extensions** are tied to only a single `VkDevice` object.
 
 This information is documented under the "`Extension Type`" section of each extension reference page. Example below:
 

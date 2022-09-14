@@ -6,7 +6,7 @@ ifndef::chapters[:chapters:]
 [[loader]]
 = ローダ
 
-ローダは、アプリケーションを Vulkan のレイヤや Vulkan のインストール可能なクライアントドライバ（ICD）にマッピングする役割を担います。
+ローダは、アプリケーションを Vulkan のレイヤや Vulkan のインストール可能なクライアントドライバ（ICD - installable client drivers）にマッピングする役割を担います。
 
 image::../../../chapters/images/loader_overview.png[loader_overview.png]
 

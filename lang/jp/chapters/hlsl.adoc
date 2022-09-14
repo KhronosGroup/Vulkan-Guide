@@ -45,7 +45,7 @@ HLSL を Vulkan に対応させるため、Vulkan 固有の機能に対するイ
 layout (location = 0) in vec3 inPosition;
 layout (location = 1) in vec3 inColor;
 
-layout (binding = 0) uniform UBO 
+layout (binding = 0) uniform UBO
 {
 	mat4 projectionMatrix;
 	mat4 modelMatrix;
@@ -54,7 +54,7 @@ layout (binding = 0) uniform UBO
 
 layout (location = 0) out vec3 outColor;
 
-void main() 
+void main()
 {
 	outColor = inColor * float(gl_VertexIndex);
 	gl_Position = ubo.projectionMatrix * ubo.viewMatrix * ubo.modelMatrix * vec4(inPosition.xyz, 1.0);
@@ -180,7 +180,7 @@ if (idx != std::string::npos) {
 	if (extension == L"frag") {
 		targetProfile = L"ps_6_1";
 	}
-    // 他のファイルタイプのマッピング (cs_x_y, lib_x_y, etc.)
+    // 他のファイルタイプのマッピング (cs_x_y, lib_x_y, 等)
 }
 
 // シェーダをコンパイルする
@@ -190,9 +190,9 @@ hres = compiler->Compile(
 	nullptr,
 	L"main",
 	targetProfile,
-	arguments.data(), 
+	arguments.data(),
 	(uint32_t)arguments.size(),
-	nullptr, 
+	nullptr,
 	0,
 	nullptr,
 	&resultOp);
@@ -255,7 +255,7 @@ DXC で HLSL をコンパイルする場合、ターゲットシェーダプロ�
 | `cs`
 |
 
-|`VK_SHADER_STAGE_RAYGEN_BIT_KHR`, 
+|`VK_SHADER_STAGE_RAYGEN_BIT_KHR`,
 `VK_SHADER_STAGE_ANY_HIT_BIT_KHR`,
 `VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR`,
 `VK_SHADER_STAGE_MISS_BIT_KHR`,
@@ -306,7 +306,7 @@ DirectX と HLSL は、サポートされる機能セットを記述するため
 | ハードウェアアクセラレーテッドレイトレーシング
 
 | link:https://github.com/microsoft/DirectXShaderCompiler/wiki/Shader-Model-6.4[Shader Model 6.4]
-| ✔ 
+| ✔
 | シェーダ整数内積、SV_ShadingRate
 
 | link:https://github.com/microsoft/DirectXShaderCompiler/wiki/Shader-Model-6.5[Shader Model 6.5]

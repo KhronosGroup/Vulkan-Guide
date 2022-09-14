@@ -278,7 +278,7 @@ layout(depth_less) out float gl_FragDepth;
 layout(depth_unchanged) out float gl_FragDepth;
 ----
 
-この条件に違反すると、未定義の振る舞いとなります。
+この条件に違反すると、未定義の動作となります。
 
 [[per-sample-processing-and-coverage-mask]]
 === サンプル毎の処理とカバレッジマスク
