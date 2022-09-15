@@ -11,18 +11,18 @@ Vulkan Spec では、`プッシュ定数` を次のように定義していま�
 
 [NOTE]
 ====
-API 経由で書き込み可能な値の小さなメモリーバンクで、シェーダでアクセス可能です。プッシュ定数を使用すると、アプリケーションは、バッファを作成したり、更新のたびにディスクリプタセットを変更してバインドすることなく、シェーダで使用される値を設定することができます。
+API 経由で値を書き込める小さなメモリ領域で、シェーダからアクセス可能です。プッシュ定数を使用すると、アプリケーションは、バッファを作成したり、更新のたびにディスクリプタセットを変更してバインドすることなく、シェーダで使用される値を設定することができます。
 ====
 
 * <<pc-how-to-us, 使用方法>>
 ** <<pc-shader-code, シェーダコード>>
 ** <<pc-pipeline-layout, パイプラインレイアウト>>
-** <<pc-updating, 記録時に更新します>>
+** <<pc-updating, 記録時に更新する>>
 ** <<pc-offsets, オフセット>>
 * <<pc-pipeline-layout-compatibility, パイプラインレイアウトの互換性>>
 * <<pc-lifetime, プッシュ定数の寿命>>
-** <<pc-binding-descriptor-sets, バインドディスクリプターセットには効果がない>>
-** <<pc-mixing-bind-points, bind pointsを混ぜ合わせる>>
+** <<pc-binding-descriptor-sets, バインディングディスクリプタセットへの影響はない>>
+** <<pc-mixing-bind-points, バインドポイントを混ぜ合わせる>>
 ** <<pc-binding-non-compatible, 非互換性のパイプラインをバインドする>>
 ** <<pc-layout-without, 静的プッシュ定数がないパイプラインレイアウト>>
 ** <<pc-updated-incrementally, 値をインクリメンタルに更新>>
@@ -33,7 +33,7 @@ API 経由で書き込み可能な値の小さなメモリーバンクで、シ�
 [[pc-shader-code]]
 === シェーダコード
 
-シェーダの観点から見ると、プッシュ定数はユニフォームバッファに似ています。VulkanとSPIR-Vの間のlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-pushconst[プッシュ定数インターフェース]は、Specに記載されています。
+シェーダから見ると、プッシュ定数はユニフォームバッファと似ています。VulkanとSPIR-Vの間のlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-pushconst[プッシュ定数インターフェース]は、Specに記載されています。
 
 簡単な GLSLのフラグメントシェーダの例です:
 
@@ -75,7 +75,7 @@ SPIR-Vの逆アセンブル:
 
 `vkCreatePipelineLayout` の呼び出し時に、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPipelineLayoutCreateInfo.html[VkPipelineLayoutCreateInfo]にlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPushConstantRange.html[プッシュ定数範囲]を設定する必要があります。
 
-上記の前作シェーダーを使用した例:
+上記のシェーダを使用した例:
 
 [source,cpp]
 ----
@@ -98,9 +98,9 @@ vkCreatePipelineLayout(device, &create_info, NULL, &pipeline_layout);
 ----
 
 [[pc-updating]]
-=== 記録時に更新します
+=== 記録時に更新する
 
-最後に, プッシュ定数の値は、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdPushConstants.html[vkCmdPushConstants]を使用して更新する必要があります。
+最後に、プッシュ定数の値は、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdPushConstants.html[vkCmdPushConstants]を使用して更新する必要があります。
 
 [source,cpp]
 ----
@@ -110,14 +110,14 @@ float data[4] = {0.0f, 1.0f, 2.0f, 3.0f}; // sizeof(float) == 4バイト
 uint32_t offset = 0;
 uint32_t size = 16;
 vkCmdPushConstants(commandBuffer, pipeline_layout, VK_SHADER_STAGE_FRAGMENT_BIT, offset, size, data);
-// 描画 / ディスパッチ / レイをトレースする / 等c
+// 描画 / ディスパッチ / レイをトレースする など
 // vkEndCommandBuffer()
 ----
 
 [[pc-offsets]]
 === オフセット
 
-上記の前のシェーダーを使用して, 開発者はプッシュ定数のブロックにオフセットを追加することができます。
+上記のシェーダに対して、開発者はプッシュ定数のブロックにオフセットを追加することもできます。
 
 [source,patch]
 ----
@@ -133,7 +133,7 @@ void main() {
 }
 ----
 
-SPIR-Vの逆アセンブルはメンバー修飾が異なるだけである
+SPIR-Vの逆アセンブル結果はメンバー修飾が異なるだけです。
 
 [source,patch]
 ----
@@ -166,7 +166,7 @@ Vulkan Spec では、link:https://www.khronos.org/registry/vulkan/specs/1.3-exte
 パイプラインレイアウトが同じプッシュ定数範囲で作成された場合
 ====
 
-これは、バインドされた link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-bindpoint-commands[パイプラインコマンド]　(`vkCmdDraw`, `vkCmdDispatch`, 等)　が呼ばれる前に、最後の `vkCmdPushConstants` と `vkCmdBindPipeline` (適切な `VkPipelineBindPoint` 用) で使用された `VkPipelineLayout` は、**同じ** `VkPushConstantRange` を持っていなければならなかったことを意味します。
+つまり、バインドされた link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-bindpoint-commands[パイプラインコマンド]　（`vkCmdDraw`、`vkCmdDispatch` など）が呼ばれる直前の `vkCmdPushConstants` と `vkCmdBindPipeline`（適切な `VkPipelineBindPoint` 用）で使用された `VkPipelineLayout` は、**同じ** `VkPushConstantRange` を持っている必要があります。
 
 [[pc-lifetime]]
 == プッシュ定数の寿命
@@ -179,18 +179,18 @@ Vulkan Spec では、link:https://www.khronos.org/registry/vulkan/specs/1.3-exte
 ====
 
 [[pc-binding-descriptor-sets]]
-=== バインドディスクリプターセットには効果がない
+=== バインディングディスクリプタセットへの影響はない
 
 プッシュ定数はディスクリプタに結びつかないので `vkCmdBindDescriptorSets` を使用しても、プッシュ定数の寿命やパイプラインレイアウトの互換性には影響しません。
 
 [[pc-mixing-bind-points]]
-=== bind pointsを混ぜ合わせる
+=== バインドポイントを混ぜ合わせる
 
-シェーダ内でそれぞれ異なるプッシュ定数を持つ2つの異なる `VkPipelineBindPoint` を使用することが可能です。
+2つの異なる `VkPipelineBindPoint` を使用することができ、それぞれのシェーダで異なるプッシュ定数を使えます。
 
 [source,cpp]
 ----
-// プッシュ定数範囲異なるため、パイプラインレイアウトの互換性がない
+// プッシュ定数範囲が異なるため、パイプラインレイアウトの互換性がない
 VkPipelineLayout layout_graphics; // VK_SHADER_STAGE_FRAGMENT_BIT
 VkPipelineLayout layout_compute;  // VK_SHADER_STAGE_COMPUTE_BIT
 
@@ -199,7 +199,7 @@ vkCmdBindPipeline(pipeline_graphics); // layout_graphics
 vkCmdBindPipeline(pipeline_compute);  // layout_compute
 
 vkCmdPushConstants(layout_graphics); // VK_SHADER_STAGE_FRAGMENT_BIT
-// 最後のパイプラインとグラフィックのプッシュ定数に互換性があるため、まだ有効です
+// 最後のパイプラインとグラフィックスのプッシュ定数に互換性があるため有効
 vkCmdDraw();
 
 vkCmdPushConstants(layout_compute); // VK_SHADER_STAGE_COMPUTE_BIT
@@ -210,14 +210,14 @@ vkCmdDispatch(); // 有効
 [[pc-binding-non-compatible]]
 === 非互換性のパイプラインをバインドする
 
-Vulkan Spec では:
+Vulkan Spec では以下のように述べられています:
 
 [NOTE]
 ====
 プッシュ定数レイアウトと互換性のないレイアウトでパイプラインをバインドしても、プッシュ定数の値が乱れることはありません。
 ====
 
-次の例は、このステートメントを説明するのに役立ちます:
+例を示します:
 
 [source,cpp]
 ----
@@ -246,7 +246,7 @@ vkCmdDraw(); // 無効
 [[pc-layout-without]]
 === 静的プッシュ定数がないパイプラインレイアウト
 
-また、パイプラインレイアウトに `VkPushConstantRange` があっても、シェーダにプッシュ定数がない場合も有効です。例えば：or example:
+また、パイプラインレイアウトに `VkPushConstantRange` があるものの、シェーダにプッシュ定数がない場合も有効です。例を示します:
 
 [source,cpp]
 ----
@@ -261,18 +261,18 @@ void main() {
 }
 ----
 
-上記のようなシェーダとパイプラインレイアウトで `VkPipeline` を作成した場合でも、`vkCmdPushConstants` を呼び出すことは**有効**である。
+上記のようなシェーダとパイプラインレイアウトで `VkPipeline` を作成した場合でも、`vkCmdPushConstants` を呼び出すことは**有効**です。
 
-`vkCmdPushConstants` について考えるより良い方法は、`VkPipelineLayout` の使用法と結びついていることです。このため `vkCmdDraw` や `vkCmdDispatch` を呼び出す前に同じである必要があります。
+`vkCmdPushConstants` は、`VkPipelineLayout` の使用法と結びついていると考えることができます。これを踏まえると、`vkCmdDraw` や `vkCmdDispatch` を呼び出す前に、それらが一致している必要があることが理解できます。
 
 シェーダが使用しないディスクリプタセットをバインドすることが可能で、プッシュ定数も同じように動作します。
 
 [[pc-updated-incrementally]]
 === 値をインクリメンタルに更新
 
-プッシュ定数コマンドバッファの有効期間中、インクリメンタルに更新することができる。
+コマンドバッファの有効期間中、プッシュ定数はインクリメンタルに更新できます。
 
-以下は、`vec4`` プッシュ定数の値の例です。
+`vec4` プッシュ定数の例を示します。
 
 [source,cpp]
 ----
