@@ -17,7 +17,7 @@ Vulkan API は、API レベル24（Android Nougat）以降のすべての Androi
 
 Android は link:https://source.android.com/devices/architecture/hal[Hardware Abstraction Layer (HAL)] を使って、link:https://source.android.com/devices/graphics/implement-vulkan#driver_emun[あらかじめ定義されたパス]から Vulkan ドライバを探します。
 
-API レベル29（Android Q）以降で起動するすべての64ビット端末には、Vulkan 1.1ドライバを搭載しているはずです。
+API レベル29（Android Q）以降でリリースされたすべての64ビット端末は、Vulkan 1.1ドライバを搭載している必要があります。
 
 == BSD Unix
 

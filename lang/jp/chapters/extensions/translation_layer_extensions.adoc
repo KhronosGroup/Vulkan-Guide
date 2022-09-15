@@ -21,7 +21,7 @@ Vulkan は、コア仕様で `VkSampler` オブジェクトに透明な黒、不
 [[VK_EXT_border_color_swizzle]]
 == VK_EXT_border_color_swizzle
 
-`VK_EXT_custom_border_color` の公開後、カスタムボーダー色を使用するサンプラと、コンポーネントマッピングが ID マッピングでないイメージビューを組み合わせた場合、一部の実装で未定義の振る舞いが発生することが発見されました。
+`VK_EXT_custom_border_color` の公開後、カスタムボーダー色を使用するサンプラと、コンポーネントマッピングが ID マッピングでないイメージビューを組み合わせた場合、一部の実装で未定義の動作が発生することが発見されました。
 
 [[VK_EXT_depth_clip_enable]]
 == VK_EXT_depth_clip_enable

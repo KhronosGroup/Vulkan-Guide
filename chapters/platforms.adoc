@@ -18,7 +18,7 @@ The Vulkan API is link:https://developer.android.com/ndk/guides/graphics/getting
 
 Android uses its link:https://source.android.com/devices/architecture/hal[Hardware Abstraction Layer (HAL)] to find the Vulkan Driver in a link:https://source.android.com/devices/graphics/implement-vulkan#driver_emun[predefined path].
 
-All 64-bit devices that launch with API level 29 (Android Q) or later must include a Vulkan 1.1 driver.
+All 64-bit devices that were released with API level 29 (Android Q) or later must include a Vulkan 1.1 driver.
 
 == BSD Unix
 

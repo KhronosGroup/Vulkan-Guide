@@ -25,11 +25,11 @@ ifndef::chapters[:chapters:]
 
 有効な使用法は、仕様書の各機能や構造の後に記載されています。たとえば、ある VUID が `VkBindImageMemory` で無効な `VkImage` をチェックする場合、仕様書に記載されている有効な使用法は `VkBindImageMemory` 内にあります。これは、検証レイヤが `VkBindImageMemory` に与えられたすべての情報を知るのが、アプリケーションの実行中だけだからです。
 
-== 未定義の振る舞い
+== 未定義の動作
 
-仕様の有効な使用法に基づいて、アプリケーションが無効な入力をした場合は未定義の振る舞いとなります。この状態では、link:https://raphlinus.github.io/programming/rust/2018/08/17/undefined-behavior.html[未定義の振る舞いではあらゆることが可能]なので、Vulkan は何の保証もしません。
+仕様の有効な使用法に基づいて、アプリケーションが無効な入力をした場合は未定義の動作となります。この状態では、link:https://raphlinus.github.io/programming/rust/2018/08/17/undefined-behavior.html[未定義の動作ではあらゆることが可能]なので、Vulkan は何の保証もしません。
 
-**非常に重要**：未定義の振る舞いは、ある実装ではうまく動くように見えても、別の実装では失敗する可能性が高いです。
+**非常に重要**：未定義の動作は、ある実装ではうまく動くように見えても、別の実装では失敗する可能性が高いです。
 
 == Valid Usage ID (VUID)
 

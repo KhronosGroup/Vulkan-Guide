@@ -45,7 +45,7 @@ The following is an example of using `SPV_KHR_8bit_storage` with the GLSL extens
 ----
 #version 450
 
-// Without 8-bit storage each block variable has to be 32-byte wide
+// Without 8-bit storage each block variable has to be 32-bit wide
 layout (set = 0, binding = 0) readonly buffer StorageBuffer {
     uint data; // 0x0000AABB
 } ssbo;
