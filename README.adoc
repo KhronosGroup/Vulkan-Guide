@@ -175,6 +175,10 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 // include::{chapters}descriptor_dynamic_offset.adoc[]
 
+=== xref:{chapters}push_constants.adoc[Push Constants]
+
+// include::{chapters}push_constants.adoc[]
+
 == xref:{chapters}robustness.adoc[Robustness]
 
 // include::{chapters}robustness.adoc[]
