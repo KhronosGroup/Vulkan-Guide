@@ -21,9 +21,9 @@ API 経由で値を書き込める小さなメモリ領域で、シェーダか�
 ** <<pc-offsets, オフセット>>
 * <<pc-pipeline-layout-compatibility, パイプラインレイアウトの互換性>>
 * <<pc-lifetime, プッシュ定数の寿命>>
-** <<pc-binding-descriptor-sets, バインディングディスクリプタセットへの影響はない>>
+** <<pc-binding-descriptor-sets, ディスクリプタセットのバインドへの影響はない>>
 ** <<pc-mixing-bind-points, バインドポイントを混ぜ合わせる>>
-** <<pc-binding-non-compatible, 非互換性のパイプラインをバインドする>>
+** <<pc-binding-non-compatible, 互換性のないパイプラインをバインドする>>
 ** <<pc-layout-without, 静的プッシュ定数がないパイプラインレイアウト>>
 ** <<pc-updated-incrementally, 値をインクリメンタルに更新>>
 
@@ -179,14 +179,14 @@ Vulkan Spec では、link:https://www.khronos.org/registry/vulkan/specs/1.3-exte
 ====
 
 [[pc-binding-descriptor-sets]]
-=== バインディングディスクリプタセットへの影響はない
+=== ディスクリプタセットのバインドへの影響はない
 
 プッシュ定数はディスクリプタに結びつかないので `vkCmdBindDescriptorSets` を使用しても、プッシュ定数の寿命やパイプラインレイアウトの互換性には影響しません。
 
 [[pc-mixing-bind-points]]
 === バインドポイントを混ぜ合わせる
 
-2つの異なる `VkPipelineBindPoint` を使用することができ、それぞれのシェーダで異なるプッシュ定数を使えます。
+2つの異なる `VkPipelineBindPoint` に対して、それぞれのシェーダで異なるプッシュ定数を使用できます。
 
 [source,cpp]
 ----
@@ -208,7 +208,7 @@ vkCmdDispatch(); // 有効
 ----
 
 [[pc-binding-non-compatible]]
-=== 非互換性のパイプラインをバインドする
+=== 互換性のないパイプラインをバインドする
 
 Vulkan Spec では以下のように述べられています:
 
@@ -223,22 +223,22 @@ Vulkan Spec では以下のように述べられています:
 ----
 // vkBeginCommandBuffer()
 vkCmdPushConstants(layout_0);
-vkCmdBindPipeline(pipeline_b); // layout_0と非互換性
-vkCmdBindPipeline(pipeline_a); // layout_0と互換性
+vkCmdBindPipeline(pipeline_b); // layout_0と互換性なし
+vkCmdBindPipeline(pipeline_a); // layout_0と互換性あり
 vkCmdDraw(); // 有効
 // vkEndCommandBuffer()
 
 // vkBeginCommandBuffer()
-vkCmdBindPipeline(pipeline_b); // layout_0と非互換性
+vkCmdBindPipeline(pipeline_b); // layout_0と互換性なし
 vkCmdPushConstants(layout_0);
-vkCmdBindPipeline(pipeline_a); // layout_0と互換性
+vkCmdBindPipeline(pipeline_a); // layout_0と互換性あり
 vkCmdDraw(); // 有効
 // vkEndCommandBuffer()
 
 // vkBeginCommandBuffer()
 vkCmdPushConstants(layout_0);
-vkCmdBindPipeline(pipeline_a); // layout_0と互換性
-vkCmdBindPipeline(pipeline_b); // layout_0と非互換性
+vkCmdBindPipeline(pipeline_a); // layout_0と互換性あり
+vkCmdBindPipeline(pipeline_b); // layout_0と互換性なし
 vkCmdDraw(); // 無効
 // vkEndCommandBuffer()
 ----
