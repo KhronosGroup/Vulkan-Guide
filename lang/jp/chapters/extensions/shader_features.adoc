@@ -188,6 +188,8 @@ link:https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_shader_viewport_
 
 GLSL では、これらは `gl_ViewportIndex` と `gl_Layer` ビルトインによって表現されます。
 
+Vulkan 1.1以下を使用する場合、`ShaderViewportIndexLayerEXT` SPIR-V 機能が使用されます。Vulkan 1.2 からは `ShaderViewportIndexLayerEXT` 機能は新しい `ShaderViewportIndex` と `ShaderLayer` 機能に分割されます。
+
 [[VK_KHR_shader_draw_parameters]]
 == VK_KHR_shader_draw_parameters
 

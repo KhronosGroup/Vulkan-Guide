@@ -188,6 +188,8 @@ This extension adds the `ViewportIndex`, `Layer` built-in for exporting from ver
 
 In GLSL these are represented by `gl_ViewportIndex` and `gl_Layer` built-ins.
 
+When using Vulkan 1.0 or 1.1 the `ShaderViewportIndexLayerEXT` SPIR-V capability is used. Starting in Vulkan 1.2 the `ShaderViewportIndexLayerEXT` capability is split into the new `ShaderViewportIndex` and `ShaderLayer` capability.
+
 [[VK_KHR_shader_draw_parameters]]
 == VK_KHR_shader_draw_parameters
 
