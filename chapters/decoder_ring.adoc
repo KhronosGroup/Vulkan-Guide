@@ -196,7 +196,7 @@ Not everything will be a perfect 1:1 match, the goal is to give a rough idea whe
 | task shader
             |
                         | amplification shader
-                                    |
+                                    | object shader
 | tessellation control shader
             | tessellation control shader
                         | hull shader
