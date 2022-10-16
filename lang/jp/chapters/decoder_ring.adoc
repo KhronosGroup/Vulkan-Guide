@@ -81,7 +81,7 @@ ifndef::chapters[:chapters:]
                         | pixel shader
                                     | fragment shader or fragment function
 | fragment shader interlock
-            | link:https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_fragment_shader_interlock.txt[GL_ARB_fragment_shader_interlock]
+            | link:https://registry.khronos.org/OpenGL/extensions/ARB/ARB_fragment_shader_interlock.txt[GL_ARB_fragment_shader_interlock]
                         | rasterizer order view (ROV)
                                     | raster order group
 | framebuffer
@@ -109,7 +109,7 @@ ifndef::chapters[:chapters:]
                         | render target view, depth/stencil view, shader resource view, unordered access view
                                     | texture view
 | interface matching (`in`/`out`)
-            | varying (link:https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.20.pdf[removed in GLSL 4.20])
+            | varying (link:https://registry.khronos.org/OpenGL/specs/gl/GLSLangSpec.4.20.pdf[removed in GLSL 4.20])
                         | Matching semantics
                                     |
 | invocation
@@ -125,7 +125,7 @@ ifndef::chapters[:chapters:]
                         | device
                                     | device
 | memory type
-            | automatically managed, link:https://www.khronos.org/registry/OpenGL/extensions/APPLE/APPLE_texture_range.txt[texture storage hint], link:https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_buffer_storage.txt[buffer storage]
+            | automatically managed, link:https://registry.khronos.org/OpenGL/extensions/APPLE/APPLE_texture_range.txt[texture storage hint], link:https://registry.khronos.org/OpenGL/extensions/ARB/ARB_buffer_storage.txt[buffer storage]
                         | heap type, CPU page property
                                     | storage mode, CPU cache mode
 | multiview rendering
@@ -192,6 +192,10 @@ ifndef::chapters[:chapters:]
             | default framebuffer
                         |
                                     | drawable texture
+| task shader
+            |
+                        | amplification shader
+                                    | object shader
 | tessellation control shader
             | tessellation control shader
                         | hull shader
