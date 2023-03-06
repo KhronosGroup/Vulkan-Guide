@@ -576,7 +576,7 @@ With all the above examples it is important to be aware that there are link:http
   ** `maxDescriptorSetSampledImages`
   ** `maxDescriptorSetStorageImages`
   ** `maxDescriptorSetInputAttachments`
-  ** `VkPhysicalDeviceDescriptorIndexingProperties` if using xref:{chapters}extensions/VK_EXT_inline_uniform_block.adoc#VK_EXT_inline_uniform_block[Descriptor Indexing]
+  ** `VkPhysicalDeviceDescriptorIndexingProperties` if using xref:{chapters}extensions/VK_EXT_descriptor_indexing.adoc#VK_EXT_descriptor_indexing[Descriptor Indexing]
   ** `VkPhysicalDeviceInlineUniformBlockPropertiesEXT` if using xref:{chapters}extensions/VK_EXT_inline_uniform_block.adoc#VK_EXT_inline_uniform_block[Inline Uniform Block]
   * Push Constants
   ** `maxPushConstantsSize` - guaranteed at least `128` bytes on all devices
