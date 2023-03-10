@@ -247,9 +247,9 @@ payload structures between all traversal stages, ray attribute structures
 from the traversal control shaders, and callable data structures for callable
 shaders.
 
-All three of these structures consume driver-managed memory, the quantity of
-which may scale based on the size of the structures themselves, and the number
-of concurrently active rays and additional factors such as levels of recursion.   
+All three of these structures consume driver-managed memory, the total quantity of
+which may scale based on the size of the structures themselves, the number
+of concurrently active rays, and additional factors such as levels of recursion.   
 
 Shaders should aim to keep the size of these structures low. 
 
