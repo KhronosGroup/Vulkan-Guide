@@ -1,0 +1,18 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../]
+
+[[VK_KHR_descriptor_update_template]]
+= VK_KHR_descriptor_update_template
+
+[NOTE]
+====
+Vulkan 1.1でコアに昇格
+
+link:https://www.khronos.org/assets/uploads/developers/library/2018-vulkan-devday/11-DescriptorUpdateTemplates.pdf[Presentation from Montreal Developer Day]
+====
+
+この拡張機能は、初期化時に多くの `VkDescriptorSets` を作成し、更新するアプリケーションを想定して設計されています。多くの更新が同じ `VkDescriptorLayout` を持つことになり、同じバインディングが更新される可能性は低くないので、ディスクリプタ更新テンプレートは、更新情報を一度だけ渡すように設計されています。
+
+`VkDescriptorUpdateTemplate` では、ディスクリプタ自体は指定されず、ホストメモリへのポインタのオフセットが指定されます。それが `vkUpdateDescriptorSetWithTemplate`` または `vkCmdPushDescriptorSetWithTemplateKHR` に渡されたポインタに結合されます。これにより、アプリケーションのデータ構造を厳密に定義されたVulkanデータ構造に変換することなく、大きな更新バッチを実行することができます。

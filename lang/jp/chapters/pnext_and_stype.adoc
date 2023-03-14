@@ -1,0 +1,99 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+
+[[pnext-and-stype]]
+= pNext と sType
+
+Vulkan を初めて使う方は、Vulkan Spec のあちこちにある `pNext` と `sType` という変数に気付くと思います。`void* pNext` は、構造体間の Linked List を作成することによって Vulkan Spec を拡張するために使用されます。`VkStructureType sType` は、ローダ、レイヤ、実装が `pNext` で渡された構造体の種類を知るために使用します。
+
+// Vulkan に慣れていない人は、Vulkan Spec のあちこちにある `pNext` と `sType` という変数に気付くと思います。
+
+// `void* pNext` は、構造体間の Linked List を作成することで、Vulkan Spec を拡張するために使用されます。
+// `VkStructureType sType` はローダー、レイヤー、実装が `pNext` から渡された構造体のタイプを知るために使用されます。pNext` は、新しい構造体を公開する拡張機能を扱う際に使用されることがほとんどです。
+// Vulkan Spec の link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#fundamentals-validusage-pNext[pNext の有効な使用法]セクションでは、`pNext` 構造体の2つの異なるバリエーションについて詳しく説明しています。`VkStructureType sType` は、ローダ、レイヤ、および実装で、`pNext` で渡された構造体の型を知るために使用されます。`pNext` は主に、新しい構造体を公開する拡張機能を扱うときに使用されます。
+
+== 2つの基本構造体
+
+Vulkan API は、`VkBaseInStructure` と `VkBaseOutStructure` というlink:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#fundamentals-validusage-pNext[2つの基本構造体を提供]し、構造体ポインタチェーンを辿るために使用されます。
+
+`VkBaseInStructure` の `In` は、`pNext` が `const *` であることを意味し、受け取ったローダ、レイヤ、ドライバでは読み取り専用となります。`VkBaseOutStructure` の `Out` は、`pNext` がアプリケーションにデータを返すために使用されることを指します。
+
+== pNext 構造体の設定例
+
+// アプリケーションの視点から見た `pNext` の使い方を説明するための例です。
+
+[source,cpp]
+----
+// 単純な2つの構造体 "a" と "b" の例
+typedef struct VkA {
+    VkStructureType sType;
+    void* pNext;
+    uint32_t value;
+} VkA;
+
+typedef struct VkB {
+    VkStructureType sType;
+    void* pNext;
+    uint32_t value;
+} VkB;
+
+// 構造体 "a" を引数にとる Vulkan の関数
+// この関数は、値の入力を担当する
+void vkGetValue(VkA* pA);
+
+// "a" と "b" を定義し、それらの sType を設定する
+struct VkB b = {};
+b.sType = VK_STRUCTURE_TYPE_B;
+
+struct VkA a = {};
+a.sType = VK_STRUCTURE_TYPE_A;
+
+// "a" から "b" への pNext ポインタを設定する
+a.pNext = (void*)&b;
+
+// "a" を関数に渡す
+vkGetValue(&a);
+
+// vkGetValue() でセットされた両方の値を使用する
+printf("VkA value = %u \n", a.value);
+printf("VkB value = %u \n", b.value);
+----
+
+== pNext 値を読む例
+
+以上により、ローダ、レイヤ、ドライバは、連鎖した `pNext` 構造を見つけることができるようになりました。ここでは、ローダ、レイヤ、ドライバの観点から、`pNext` をどのように実装**できるか**を説明するための例を示します。
+
+[source,cpp]
+----
+void vkGetValue(VkA* pA) {
+
+    VkA* next = reinterpret_cast<VkA*>(pA->pNext);
+    while (next != nullptr) {
+        switch (next->sType) {
+
+            case VK_STRUCTURE_TYPE_B:
+                VkBaseOutStructure* next = reinterpret_cast<VkBaseOutStructure*>(pA->pNext);
+                // ここで、上記の "b.value" が設定される
+                pB->value = 42;
+                break;
+
+            case VK_STRUCTURE_TYPE_C:
+                // サポートされている限り、多くの構造を連鎖させることができる
+                VkC* pC = reinterpret_cast<VkC*>(next);
+                SomeFunction(pC);
+                break;
+
+            default:
+                LOG("Unsupported sType %d", next->sType);
+        }
+
+        // これが動くのは、連鎖可能な Vulkan 構造体の最初の2つの値が 
+        // "sType" と "pNext" であり、pNext のオフセットが同じであるため
+        next = reinterpret_cast<VkBaseOutStructure*>(next->pNext);
+    }
+
+    // ...
+}
+----

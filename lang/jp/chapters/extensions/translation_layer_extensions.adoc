@@ -1,0 +1,54 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters: ../]
+
+[[translation-layer-extensions]]
+= 変換レイヤ拡張機能
+
+xref:{chapters}portability_initiative.adoc#translation-layer[変換レイヤ]を Vulkan に効率的にマッピングするために作成された拡張機能のクラスがあります。
+
+この拡張機能には、ドライバが効率的に実装することが困難なレガシーな動作の複製も含まれます。この機能は将来を見据えたもの**ではなく**、KHR 拡張またはコア Vulkan に昇格することは **ありません**。
+
+これが変換に必要でない限り、同じ機能を実現する別の手法を使用することを**強くお勧めします**。
+
+[[VK_EXT_custom_border_color]]
+== VK_EXT_custom_border_color
+
+Vulkan は、コア仕様で `VkSampler` オブジェクトに透明な黒、不透明な黒、不透明な白の `VkBorderColor` を提供します。 OpenGL と D3D の両方に、サンプラの境界線をカスタムカラーに設定するオプションがあります。
+
+[[VK_EXT_border_color_swizzle]]
+== VK_EXT_border_color_swizzle
+
+`VK_EXT_custom_border_color` の公開後、カスタムボーダー色を使用するサンプラと、コンポーネントマッピングが ID マッピングでないイメージビューを組み合わせた場合、一部の実装で未定義の動作が発生することが発見されました。
+
+[[VK_EXT_depth_clip_enable]]
+== VK_EXT_depth_clip_enable
+
+深度クリップ有効化機能は、D3D11 と Vulkan で仕様が異なります。`VkPipelineRasterizationStateCreateInfo::depthClampEnable` の代わりに、D3D11 には link:https://docs.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_rasterizer_desc[DepthClipEnable (D3D12_RASTERIZER_DESC)] があり、これはラスタライズ前の深度値のビューポートクリップのみに影響し、D3D11 グラフィックパイプラインの出力マージステージで常に発生する深度クランプには影響しないようになっています。
+
+[[VK_EXT_depth_clip_control]]
+== VK_EXT_depth_clip_control
+
+深度クリップ制御機能により、アプリケーションは NDC で OpenGL の深度範囲を使用することができます。Vulkan のデフォルトである `[0, 1]` に対し、OpenGL では `[-1, 1]` です。クリップ制御の対応は、link:https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_clip_control.txt[ARB_clip_control] 拡張機能を介して OpenGL でサポートされていました。
+
+詳細は xref:{chapters}depth.adoc#user-defined-clipping-and-culling[depth chapter]をご覧ください。
+
+[[VK_EXT_provoking_vertex]]
+== VK_EXT_provoking_vertex
+
+Vulkan のデフォルトでは、provoking vertex の規約は「最初の頂点」であり、OpenGL のデフォルトでは「最後の頂点」となっています。
+
+[[VK_EXT_transform_feedback]]
+== VK_EXT_transform_feedback
+
+変換フィードバックに必要なことはすべて、Vulkan のコンピュートシェーダで行うことができます。また、変換フィードバックを避けるべき理由についてのlink:https://www.jlekstrand.net/jason/blog/2018/10/transform-feedback-is-terrible-so-why/[Jason Ekstrand による素晴らしいブログ]もあります。
+
+[[VK_EXT_image_view_min_lod]]
+== VK_EXT_image_view_min_lod
+
+この拡張機能は、`MinLod` SPIR-V 修飾子の API 側バージョンを提供します。
+新しい値はイメージビューに関連付けられ、D3D12 の SRV ResourceMinLODClamp パラメータと一致するように意図されています。
+MinLod と同様の機能を使用することは、より高い解像度のミップレベルをオンデマンドでページイン/アウトすることができるため、主にスパーステクスチャリングのために用意されています。
+Vulkan で同様のクランプを実現する方法はたくさんあります。`VkImageView` はベースレベルをクランプすることができますが、`MinLod` はフラクショナル LOD にクランプすることもでき、ベーステクスチャの次元を変更する必要がないため、いくつかのアルゴリズムを単純化できるかもしれません。`VkSampler` もフラクショナル LOD にクランプできますが、この目的のために多くのユニークなサンプラーを使用することは現実的ではないかもしれません。

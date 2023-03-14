@@ -1,0 +1,17 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../]
+
+[[VK_KHR_image_format_list]]
+= VK_KHR_image_format_list
+
+[NOTE]
+====
+Vulkan 1.2でコアに昇格
+====
+
+実装によっては、`VkImage` の生成時に `VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT` を設定すると、`VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT` なしで生成した同等の `VkImage` より、`VkImage` へのアクセスのパフォーマンスが悪くなる可能性があります。なぜなら、実装では `VkImage` とペアになる `VkImageView` のフォーマットがわからないからです。
+これは、可逆画像圧縮のような（`VkImageView`）フォーマット固有の最適化が実装で無効になるかもしれません。そこで、`VkImageFormatListCreateInfo` 構造体を用いて、`VkImage` と組み合わせる `VkImageView` フォーマットを明示的にリストアップすれば、実装はフォーマットに依存した最適化を有効にできるかもしれません。
+
+アプリケーションが `VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT` を使用してイメージを作成しない場合は、この拡張機能にこだわる必要はありません。

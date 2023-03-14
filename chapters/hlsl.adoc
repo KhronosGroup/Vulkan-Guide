@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[hlsl-in-vulkan]]
 = HLSL in Vulkan
@@ -13,7 +14,7 @@ One such language is the High Level Shading Language (HLSL) by Microsoft, used b
 
 With link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst#unsupported-hlsl-features[a few exceptions], all Vulkan features and shader stages available with GLSL can be used with HLSL too, including recent Vulkan additions like hardware accelerated ray tracing. On the other hand, HLSL to SPIR-V supports Vulkan exclusive features that are not (yet) available in DirectX.
 
-image::images/what_is_spirv_dxc.png[what_is_spriv_dxc.png]
+image::{images}what_is_spirv_dxc.png[what_is_spriv_dxc.png]
 
 [[applications-pov]]
 == From the application's point-of-view
@@ -147,38 +148,27 @@ if (FAILED(hres)) {
 	throw std::runtime_error("Could not init DXC Library");
 }
 
-// Initialize the DXC compiler
+// Initialize DXC compiler
 CComPtr<IDxcCompiler3> compiler;
 hres = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&compiler));
 if (FAILED(hres)) {
 	throw std::runtime_error("Could not init DXC Compiler");
 }
 
+// Initialize DXC utility
+CComPtr<IDxcUtils> utils;
+hres = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&utils));
+if (FAILED(hres)) {
+	throw std::runtime_error("Could not init DXC Utiliy");
+}
+
 // Load the HLSL text shader from disk
-uint32_t codePage = CP_UTF8;
+uint32_t codePage = DXC_CP_ACP;
 CComPtr<IDxcBlobEncoding> sourceBlob;
-hres = library->CreateBlobFromFile(filename.c_str(), &codePage, &sourceBlob);
+hres = utils->LoadFile(filename.c_str(), &codePage, &sourceBlob);
 if (FAILED(hres)) {
 	throw std::runtime_error("Could not load shader file");
 }
-
-// Set up arguments to be passed to the shader compiler
-
-// Tell the compiler to output SPIR-V
-std::vector<LPCWSTR> arguments;
-arguments.push_back(L"-spirv");
-// nVidia: This allows for the compiler to do a better job at optimizing texture accesses. We have seen frame rate improvements of > 1% when toggling this flag on.
-arguments.push_back(L"-all-resources-bound");
-// VK_KHR_shader_float16_int8
-arguments.push_back(L"-enable-16bit-types");
-// memory layout for resources
-arguments.push_back(L"-fvk-use-dx-layout");
-// Vulkan version
-arguments.push_back(L"-fspv-target-env=vulkan1.1");
-// useful extensions
-arguments.push_back(L"-fspv-extension=SPV_GOOGLE_hlsl_functionality1");
-arguments.push_back(L"-fspv-extension=SPV_GOOGLE_user_type");
-arguments.push_back(L"-fspv-reflect");
 
 // Select target profile based on shader file extension
 LPCWSTR targetProfile{};
@@ -194,28 +184,40 @@ if (idx != std::string::npos) {
 	// Mapping for other file types go here (cs_x_y, lib_x_y, etc.)
 }
 
+// Configure the compiler arguments for compiling the HLSL shader to SPIR-V
+std::vector<LPCWSTR> arguments = {
+	// (Optional) name of the shader file to be displayed e.g. in an error message
+	filename.c_str(),
+	// Shader main entry point
+	L"-E", L"main",
+	// Shader target profile
+	L"-T", targetProfile,
+	// Compile to SPIRV
+	L"-spirv"				
+};
+
 // Compile shader
-CComPtr<IDxcOperationResult> resultOp;
+DxcBuffer buffer{};
+buffer.Encoding = DXC_CP_ACP;
+buffer.Ptr = sourceBlob->GetBufferPointer();
+buffer.Size = sourceBlob->GetBufferSize();
+
+CComPtr<IDxcResult> result{ nullptr };
 hres = compiler->Compile(
-	sourceBlob,
-	nullptr,
-	L"main",
-	targetProfile,
+	&buffer,
 	arguments.data(),
 	(uint32_t)arguments.size(),
 	nullptr,
-	0,
-	nullptr,
-	&resultOp);
+	IID_PPV_ARGS(&result));
 
 if (SUCCEEDED(hres)) {
-	resultOp->GetStatus(&hres);
+	result->GetStatus(&hres);
 }
 
 // Output error if compilation failed
-if (FAILED(hres) && (resultOp)) {
+if (FAILED(hres) && (result)) {
 	CComPtr<IDxcBlobEncoding> errorBlob;
-	hres = resultOp->GetErrorBuffer(&errorBlob);
+	hres = result->GetErrorBuffer(&errorBlob);
 	if (SUCCEEDED(hres) && errorBlob) {
 		std::cerr << "Shader compilation failed :\n\n" << (const char*)errorBlob->GetBufferPointer();
 		throw std::runtime_error("Compilation failed");
@@ -224,7 +226,7 @@ if (FAILED(hres) && (resultOp)) {
 
 // Get compilation result
 CComPtr<IDxcBlob> code;
-resultOp->GetResult(&code);
+result->GetResult(&code);
 
 // Create a Vulkan shader module from the compilation result
 VkShaderModuleCreateInfo shaderModuleCI{};

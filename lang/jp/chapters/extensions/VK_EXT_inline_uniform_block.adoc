@@ -1,0 +1,25 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../]
+
+[[VK_EXT_inline_uniform_block]]
+= VK_EXT_inline_uniform_block
+
+[NOTE]
+====
+Vulkan 1.3 でコアに昇格
+====
+
+一般的な実装では、ディスクリプタは、コマンドバッファの記録時にバインドされたデータを間接的に指し示すためのテーブルに過ぎません。問題は、すべてのディスクリプタが同じように作成されるわけではなく、たとえば、ディスクリプタが数 DWORDS のサイズしかない場合があることです。
+
+image::../../../../chapters/images/extensions/VK_EXT_inline_uniform_block_before.png[VK_EXT_inline_uniform_block_before.png]
+
+`VK_EXT_inline_uniform_block` を使用すると、ユニフォームな値を使用する際に、実装がアクセスするための間接参照の回数を減らすことができます。プッシュ定数とは異なり、このデータは、複数の不連続な描画/ディスパッチセットで再利用することができます。
+
+image::../../../../chapters/images/extensions/VK_EXT_inline_uniform_block_after.png[VK_EXT_inline_uniform_block_after.png]
+
+== 提案
+
+  * `VkPhysicalDeviceInlineUniformBlockPropertiesEXT` 構造体をチェックして、インラインユニフォームブロックの使用に関する実装の制限を確認してください。
+  * インライン化しすぎると、ドライバがバッファに再パックする必要があり、CPUのオーバーヘッドを増加させ、間接参照の利点を失う可能性があるため、数dwords以下を目安にしてください。

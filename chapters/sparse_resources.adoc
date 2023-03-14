@@ -2,15 +2,16 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[sparse-resources]]
 = Sparse Resources
 
-Vulkan link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory[sparse resources] are a way to create `VkBuffer` and `VkImage` objects which can be bound non-contiguously to one or more `VkDeviceMemory` allocations. There are many aspects and features of sparse resources which the link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures[spec] does a good job explaining. As the link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#_sparse_resource_implementation_guidelines[implementation guidelines] point out, most implementations use sparse resources to expose a linear virtual address range of memory to the application while mapping each sparse block to physical pages when bound.
+Vulkan link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory[sparse resources] are a way to create `VkBuffer` and `VkImage` objects which can be bound non-contiguously to one or more `VkDeviceMemory` allocations. There are many aspects and features of sparse resources which the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures[spec] does a good job explaining. As the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#_sparse_resource_implementation_guidelines[implementation guidelines] point out, most implementations use sparse resources to expose a linear virtual address range of memory to the application while mapping each sparse block to physical pages when bound.
 
 == Binding Sparse Memory
 
-Unlike normal resources that call `vkBindBufferMemory()` or `vkBindImageMemory()`, sparse memory is bound via a link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-resource-binding[queue operation] `vkQueueBindSparse()`. The main advantage of this is that an application can rebind memory to a sparse resource throughout its lifetime.
+Unlike normal resources that call `vkBindBufferMemory()` or `vkBindImageMemory()`, sparse memory is bound via a link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-resource-binding[queue operation] `vkQueueBindSparse()`. The main advantage of this is that an application can rebind memory to a sparse resource throughout its lifetime.
 
 It is important to notice that this requires some extra consideration from the application. Applications **must** use synchronization primitives to guarantee that other queues do not access ranges of memory concurrently with a binding change. Also, freeing a `VkDeviceMemory` object with `vkFreeMemory()` will **not** cause resources (or resource regions) bound to the memory object to become unbound. Applications must not access resources bound to memory that has been freed.
 
@@ -26,13 +27,13 @@ Imagine a 256 KB `VkBuffer` where there are 3 parts that an application wants to
 
 The following showcases how the application views the `VkBuffer`:
 
-image::images/sparse_resources_buffer.png[sparse_resources_buffer.png]
+image::{images}sparse_resources_buffer.png[sparse_resources_buffer.png]
 
 === Sparse Images
 
 ==== Mip Tail Regions
 
-Sparse images can be used to update mip levels separately which results in a link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-miptail[mip tail region]. The spec describes the various examples that can occur with diagrams.
+Sparse images can be used to update mip levels separately which results in a link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-miptail[mip tail region]. The spec describes the various examples that can occur with diagrams.
 
 ==== Basic Sparse Resources Example
 

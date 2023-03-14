@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[what-is-vulkan]]
 = What is Vulkan?
@@ -15,9 +16,9 @@ Vulkan is not a company, nor language, but rather a way for developers to progra
 
 == Vulkan at its core
 
-At the core, Vulkan is an link:https://www.khronos.org/registry/vulkan/#apispecs[API Specification] that conformant hardware implementations follow. The public specification is generated from the link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/xml/vk.xml[./xml/vk.xml] Vulkan Registry file in the official public copy of the Vulkan Specification repo found at link:https://github.com/KhronosGroup/Vulkan-Docs[Vulkan-Doc]. Documentation of the link:https://www.khronos.org/registry/vulkan/specs/1.3/registry.html[XML schema] is also available.
+At the core, Vulkan is an link:https://registry.khronos.org/vulkan/#apispecs[API Specification] that conformant hardware implementations follow. The public specification is generated from the link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/xml/vk.xml[./xml/vk.xml] Vulkan Registry file in the official public copy of the Vulkan Specification repo found at link:https://github.com/KhronosGroup/Vulkan-Docs[Vulkan-Doc]. Documentation of the link:https://registry.khronos.org/vulkan/specs/1.3/registry.html[XML schema] is also available.
 
-The Khronos Group, along with the Vulkan Specification, releases link:https://www.open-std.org/jtc1/sc22/wg14/www/standards[C99] link:https://github.com/KhronosGroup/Vulkan-Headers/tree/main/include/vulkan[header files] generated from the link:https://www.khronos.org/registry/vulkan/#apiregistry[API Registry] that developers can use to interface with the Vulkan API.
+The Khronos Group, along with the Vulkan Specification, releases link:https://www.open-std.org/jtc1/sc22/wg14/www/standards[C99] link:https://github.com/KhronosGroup/Vulkan-Headers/tree/main/include/vulkan[header files] generated from the link:https://registry.khronos.org/vulkan/#apiregistry[API Registry] that developers can use to interface with the Vulkan API.
 
 For those who might not work with C code, there are various link:https://github.com/KhronosGroup/Khronosdotorg/blob/main/api/vulkan/resources.md#language-bindings[language] link:https://github.com/vinjn/awesome-vulkan#bindings[bindings] out there.
 
@@ -27,17 +28,17 @@ Some developers might be aware of the other Khronos Group standard link:https://
 
 Khronos' link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples] article on link:https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/vulkan_basics.md["How does Vulkan compare to OpenGL ES? What should you expect when targeting Vulkan?] offers a more detailed comparison between the two APIs.
 
-image::images/what_is_vulkan_compared_to_gl.png[what_is_vulkan_compared_to_gl.png]
+image::{images}what_is_vulkan_compared_to_gl.png[what_is_vulkan_compared_to_gl.png]
 
 Vulkan puts more work and responsibility into the application. Not every developer will want to make that extra investment, but those that do so correctly can find power and performance improvements.
 
-image::images/what_is_vulkan_decision.png[what_is_vulkan_decision.png]
+image::{images}what_is_vulkan_decision.png[what_is_vulkan_decision.png]
 
 == Using helping libraries
 
 While some developers may want to try using Vulkan with no help, it is common to use some lighter libraries in your development flow to help abstract some of the more tedious aspect of Vulkan. Here are some link:https://github.com/KhronosGroup/Khronosdotorg/blob/main/api/vulkan/resources.md#libraries[libraries] to link:https://github.com/vinjn/awesome-vulkan#libraries[help with development]
 
-image::images/what_is_vulkan_layer.png[what_is_vulkan_layer]
+image::{images}what_is_vulkan_layer.png[what_is_vulkan_layer]
 
 == Learning to use Vulkan
 

@@ -3,6 +3,7 @@
 
 // Required for both single-page and combined guide xrefs to work
 ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
 
 [[shader-features]]
 = Shader Features
@@ -44,7 +45,7 @@ The following is an example of using `SPV_KHR_8bit_storage` with the GLSL extens
 ----
 #version 450
 
-// Without 8-bit storage each block variable has to be 32-byte wide
+// Without 8-bit storage each block variable has to be 32-bit wide
 layout (set = 0, binding = 0) readonly buffer StorageBuffer {
     uint data; // 0x0000AABB
 } ssbo;
@@ -107,7 +108,7 @@ Promoted to core in Vulkan 1.1
 link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_storage_buffer_storage_class.html[SPV_KHR_storage_buffer_storage_class]
 ====
 
-Originally SPIR-V combined both UBO and SSBO into the 'Uniform' storage classes and differentiated them only through extra decorations. Because some hardware treats UBO an SSBO as two different storage objects, the SPIR-V wanted to reflect that. This extension serves the purpose of extending SPIR-V to have a new `StorageBuffer` class.
+Originally SPIR-V combined both UBO and SSBO into the 'Uniform' storage classes and differentiated them only through extra decorations. Because some hardware treats UBO and SSBO as two different storage objects, the SPIR-V wanted to reflect that. This extension serves the purpose of extending SPIR-V to have a new `StorageBuffer` class.
 
 An example of this can be seen if you take the following GLSL shader snippet:
 
@@ -169,7 +170,7 @@ Promoted to core in Vulkan 1.2
 link:https://www.khronos.org/blog/comparing-the-vulkan-spir-v-memory-model-to-cs/[Comparing the Vulkan SPIR-V memory model to C's]
 ====
 
-The link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-model[Vulkan Memory Model] formally defines how to synchronize memory accesses to the same memory locations performed by multiple shader invocations and this extension exposes a boolean to let implementations to indicate support for it. This is important because with many things targeting Vulkan/SPIR-V it is important that any memory transfer operations an application might attempt to optimize doesn't break across implementations.
+The link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-model[Vulkan Memory Model] formally defines how to synchronize memory accesses to the same memory locations performed by multiple shader invocations and this extension exposes a boolean to let implementations to indicate support for it. This is important because with many things targeting Vulkan/SPIR-V it is important that any memory transfer operations an application might attempt to optimize doesn't break across implementations.
 
 [[VK_EXT_shader_viewport_index_layer]]
 == VK_EXT_shader_viewport_index_layer
@@ -180,12 +181,14 @@ Promoted to core in Vulkan 1.2
 
 link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_viewport_index_layer.html[SPV_EXT_shader_viewport_index_layer]
 
-link:https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_shader_viewport_layer_array.txt[GLSL - GL_ARB_shader_viewport_layer_array]
+link:https://registry.khronos.org/OpenGL/extensions/ARB/ARB_shader_viewport_layer_array.txt[GLSL - GL_ARB_shader_viewport_layer_array]
 ====
 
 This extension adds the `ViewportIndex`, `Layer` built-in for exporting from vertex or tessellation shaders.
 
 In GLSL these are represented by `gl_ViewportIndex` and `gl_Layer` built-ins.
+
+When using Vulkan 1.0 or 1.1 the `ShaderViewportIndexLayerEXT` SPIR-V capability is used. Starting in Vulkan 1.2 the `ShaderViewportIndexLayerEXT` capability is split into the new `ShaderViewportIndex` and `ShaderLayer` capability.
 
 [[VK_KHR_shader_draw_parameters]]
 == VK_KHR_shader_draw_parameters
@@ -196,7 +199,7 @@ Promoted to core in Vulkan 1.1
 
 link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_draw_parameters.html[SPV_KHR_shader_draw_parameters]
 
-link:https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_shader_draw_parameters.txt[GLSL - GL_ARB_shader_draw_parameters]
+link:https://registry.khronos.org/OpenGL/extensions/ARB/ARB_shader_draw_parameters.txt[GLSL - GL_ARB_shader_draw_parameters]
 ====
 
 This extension adds the `BaseInstance`, `BaseVertex`, and `DrawIndex` built-in for vertex shaders. This was added as there are legitimate use cases for both inclusion and exclusion of the `BaseVertex` or `BaseInstance` parameters in `VertexId` and `InstanceId`, respectively.
@@ -210,7 +213,7 @@ In GLSL these are represented by `gl_BaseInstanceARB`, `gl_BaseVertexARB` and `g
 ====
 link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_stencil_export.html[SPV_EXT_shader_stencil_export]
 
-link:https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_shader_stencil_export.txt[GLSL - GL_ARB_shader_stencil_export]
+link:https://registry.khronos.org/OpenGL/extensions/ARB/ARB_shader_stencil_export.txt[GLSL - GL_ARB_shader_stencil_export]
 ====
 
 This extension allows a shader to generate the stencil reference value per invocation. When stencil testing is enabled, this allows the test to be performed against the value generated in the shader.

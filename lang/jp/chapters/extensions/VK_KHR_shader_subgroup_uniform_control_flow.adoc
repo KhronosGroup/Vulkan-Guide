@@ -1,0 +1,99 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../]
+
+[[VK_KHR_shader_subgroup_uniform_control_flow]]
+= VK_KHR_shader_subgroup_uniform_control_flow
+
+== 概要
+
+link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_shader_subgroup_uniform_control_flow.html[VK_KHR_shader_subgroup_uniform_control_flow] は、シェーダ内の呼び出しの再収束をより強く保証するものです。この拡張機能に対応している場合、シェーダはより強力な保証を提供する新しい属性を含むように修正できます（link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_subgroup_uniform_control_flow.txt[GL_EXT_subgroup_uniform_control_flow] を参照）。この属性は、サブグループ操作をサポートするシェーダステージにのみ適用可能です（`VkPhysicalDeviceSubgroupProperties::supportedStages` と
+`VkPhysicalDeviceVulkan11Properties::subgroupSupportedStages` を確認してください）。
+
+この保証が強化されたことにより、SPIR-V 仕様のユニフォーム制御フロールールが、個々のサブグループにも適用されるようになりました。これらのルールの最も重要な部分は、すべての呼び出しがヘッダブロックへのエントリ時に収束した場合、マージブロックでの再収束を要求することです。これは、シェーダの作者によって暗黙のうちに信頼されていることもありますが、実際にはコア Vulkan 仕様によって保証されていません。
+
+== 例
+
+次の GLSL スニペットは、アトミック操作の数を、呼び出しごとに1つからサブグループごとに1つに減らすことを試みるコンピュートシェーダです。
+
+[source,glsl]
+----
+// free は0に初期化されている必要がある
+layout(set=0, binding=0) buffer BUFFER { uint free; uint data[]; } b;
+void main() {
+  bool needs_space = false;
+  ...
+  if (needs_space) {
+    // gl_SubgroupSize は実際のサブグループサイズより大きい
+    // 可能性があるため、実際のサブグループサイズを計算する
+    uvec4 mask = subgroupBallot(needs_space);
+    uint size = subgroupBallotBitCount(mask);
+    uint base = 0;
+    if (subgroupElect()) {
+      // "free" は書き込みのために次の空きスロットを追跡する
+      // サブグループの最初の呼び出しは、必要なサブグループの
+      // 各呼び出しのためのスペースを確保する
+      base = atomicAdd(b.free, size);
+    }
+
+    // ベースインデックスをサブグループ内の他の呼び出しにブロードキャストする
+    base = subgroupBroadcastFirst(base);
+    // 各呼び出しに対して、"base" からのオフセットを計算する
+    uint offset = subgroupBallotExclusiveBitCount(mask);
+
+    // スペースを要求した各呼び出しに対して、割り当てられたスロットにデータを書き込む
+    b.data[base + offset] = ...;
+  }
+  ...
+}
+----
+
+ここではコードに問題があり、予期せぬ結果になる可能性があります。Vulkan では、if文の後に呼び出しを再収束させる必要があるだけです。これは、ワークグループ内のすべての呼び出しがそのif文の時点で収束している場合にサブグループ選択を実行します。呼び出しが再収束しない場合、ブロードキャストとオフセットの計算が不正確になります。すべての呼び出しが正しいインデックスに結果を書き込むわけではありません。
+
+`VK_KHR_shader_subgroup_uniform_control_flow` を利用することで、ほとんどの場合、シェーダが期待通りの動作をするようになります。次のように書き直した例を考えてみましょう。
+
+[source,glsl]
+----
+// free は0に初期化されている必要がある
+layout(set=0, binding=0) buffer BUFFER { uint free; uint data[]; } b;
+// 新しい属性が追加されていることに注意
+void main() [[subroup_uniform_control_flow]] {
+  bool needs_space = false;
+  ...
+  // 条件の変更に注意
+  if (subgroupAny(needs_space)) {
+    // gl_SubgroupSize は実際のサブグループサイズより大きい
+    // 可能性があるため、実際のサブグループサイズを計算する
+    uvec4 mask = subgroupBallot(needs_space);
+    uint size = subgroupBallotBitCount(mask);
+    uint base = 0;
+    if (subgroupElect()) {
+      // "free" は書き込みのために次の空きスロットを追跡する
+      // サブグループの最初の呼び出しは、必要なサブグループの
+      // 各呼び出しのためのスペースを確保する
+      base = atomicAdd(b.free, size);
+    }
+
+    // ベースインデックスをサブグループ内の他の呼び出しにブロードキャストする
+    base = subgroupBroadcastFirst(base);
+    // 各呼び出しに対して、"base" からのオフセットを計算する
+    uint offset = subgroupBallotExclusiveBitCount(mask);
+
+    if (needs_space) {
+      // スペースを要求した各呼び出しに対して、割り当てられたスロットにデータを書き込む
+      b.data[base + offset] = ...;
+    }
+  }
+  ...
+}
+----
+
+オリジナルのシェーダとの違いは、比較的小さなものです。まず、`subgroup_uniform_control_flow` 属性が追加され、このシェーダではより強い保証が必要であることを実装に通知しています。次に、最初の if 文で needs_space をテストしません。その代わり、サブグループ内のすべての呼び出しは、サブグループ内のいずれかの呼び出しがデータを書き込む必要がある場合、if文に入ります。これにより、サブグループがユニフォームに保たれ、内部サブグループの選択のために強化された保証が利用されます。
+
+この例には、最後の注意点があります。あらゆる状況でシェーダを正しく動作させるためには、最初の if 文の前にサブグループがユニフォーム（収束）である必要があります。
+
+== 関連拡張機能
+
+  * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_subgroup_uniform_control_flow.txt[GL_EXT_subgroup_uniform_control_flow] - 再収束に対するより強い保証が必要であることを実装に通知するために、エントリポイントに GLSL 属性を追加します。これは、SPIR-V エントリポイントにおける新しい実行モードに変換されます。
+  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_subgroup_uniform_control_flow.html[SPV_KHR_subgroup_uniform_control_flow] - より強力な再収束保証の必要性を示すために、エントリポイントに実行モードを追加します。

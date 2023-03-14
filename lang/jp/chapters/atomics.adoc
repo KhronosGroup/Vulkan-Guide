@@ -1,0 +1,161 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[atomics]]
+= アトミック
+
+この章の目的は、Vulkan がアトミック操作のために公開しているさまざまな機能をユーザーが理解できるようにすることです。
+
+== アトミックのバリエーション
+
+さまざまな拡張機能を理解するためには、さまざまな種類のアトミックを知っておくことが重要です。
+
+  * 型
+  ** `float`
+  ** `int`
+  * ビット数
+  ** `16 bit`
+  ** `32 bit`
+  ** `64 bit`
+  * 操作
+  ** loads
+  ** stores
+  ** exchange
+  ** add
+  ** min
+  ** max
+  ** 等
+  * ストレージクラス
+  ** `StorageBuffer` または `Uniform` (バッファ)
+  ** `Workgroup` (共有メモリ)
+  ** `Image` (イメージまたはスパースイメージ)
+
+== 基本サポート
+
+Vulkan 1.0で拡張機能がない場合、アプリケーションはアトミックに `32-bit int` 型を使用することができます。これは、サポートされているすべての SPIR-V 操作（load、store、exchangeなど）に使用できます。SPIR-V には、`Kernel` 機能でガードされ、現在 Vulkan では許可されていないアトミック操作があります。
+
+=== アトミックカウンタ
+
+GLSL と SPIR-V の両方がアトミックカウンタをサポートしていますが、Vulkan は `AtomicCounter` ストレージクラスを使用するために必要な SPIR-V の `AtomicStorage` 機能を**公開していません**。アプリは `OpAtomicIAdd` と `OpAtomicISub` を値 `1` で使用することで、同じ結果を得ることができます。
+
+=== 拡張機能のアトミック対応
+
+アトミックの追加サポートを公開している現在の拡張機能は以下の通りです。
+
+  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_shader_atomic_int64.html[VK_KHR_shader_atomic_int64]
+  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_shader_image_atomic_int64.html[VK_EXT_shader_image_atomic_int64]
+  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_shader_atomic_float.html[VK_EXT_shader_atomic_float]
+  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_shader_atomic_float2.html[VK_EXT_shader_atomic_float2]
+
+それぞれの詳細は以下の通りです。
+
+[[VK_KHR_shader_atomic_int64]]
+== VK_KHR_shader_atomic_int64
+
+[NOTE]
+====
+Vulkan 1.2でコアに昇格
+
+link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shader_atomic_int64.txt[GLSL - GL_EXT_shader_atomic_int64]
+====
+
+この拡張機能により、**バッファ**と**共有メモリ**に対して、`64-bit int` のアトミック操作が可能になります。`INT64Atomics` SPIR-V 機能が宣言されている場合、サポートされているすべての SPIR-V 操作を `64-bit int` で使用することができます。
+
+`shaderBufferInt64Atomics` と `shaderSharedInt64Atomics` の2つの機能ビットは、`64-bit int` アトミックにどのストレージクラスがサポートされているかをクエリするために使用されます。
+
+  * `shaderBufferInt64Atomics` - バッファ
+  * `shaderSharedInt64Atomics` - 共有メモリ
+
+`shaderBufferInt64Atomics` は、Vulkan 1.2以上を使用しているか、拡張機能が公開されている場合には、常に対応が保証されています。
+
+[[VK_EXT_shader_image_atomic_int64]]
+== VK_EXT_shader_image_atomic_int64
+
+[NOTE]
+====
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_image_int64.html[SPV_EXT_shader_image_int64]
+
+link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_shader_image_int64.txt[GLSL_EXT_shader_image_int64]
+====
+
+この拡張機能により、**イメージ**と**スパースイメージ**に対して、`64-bit int` のアトミック操作が可能になります。`Int64Atomics` および `Int64ImageEXT` SPIR-V 機能が宣言されている場合、サポートされているすべての SPIR-V 操作を `64-bit int` でイメージに対して使用することができます。
+
+=== イメージとスパースイメージの対応の比較
+
+この拡張機能では、`shaderImageInt64Atomics` と `sparseImageInt64Atomics` の両方の機能ビットを公開しています。`sparseImage*` 機能は追加の機能ビットであり、`shaderImage*` ビットも有効になっている場合にのみ使用が許可されます。ハードウェアの中には、xref:{chapters}sparse_resources.adoc#sparse-resources[スパースリソース]を持つイメージに対してアトミック操作を行うのが難しいものもあります。そのため、アトミック機能を分割して、実装が公開できる追加機能として**スパースイメージ**を許可しています。
+
+[[VK_EXT_shader_atomic_float]]
+== VK_EXT_shader_atomic_float
+
+[NOTE]
+====
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_atomic_float_add.html[SPV_EXT_shader_atomic_float_add]
+
+link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_shader_atomic_float.txt[GLSL_EXT_shader_atomic_float]
+====
+
+この拡張機能では、**バッファ**、**共有メモリ**、**イメージ**、**スパースイメージ**に対して、`float` 型のアトミック操作を行うことができます。この拡張機能では、`float` 型に対してサポートされている操作のサブセットのみがサポートされています。
+
+この拡張機能では、多くの機能ビットがリストアップされています。それらをグループ化する一つの方法は、 `*Float*Atomics` と `*Float*AtomicAdd` です。
+
+  * `*Float*Atomics` 機能では、`float` 型に対して `OpAtomicStore`、`OpAtomicLoad`、`OpAtomicExchange` を使用することができます。
+  ** `OpAtomicCompareExchange` 操作は、SPIR-V 仕様では `int` 型しか認められていないため、含まれていないことに注意してください。
+  * `*Float*AtomicAdd` 機能では、SPIR-V の 2 つの拡張操作 `AtomicFloat32AddEXT` および `AtomicFloat64AddEXT` を使用することができます。
+
+ここから、残りの機能の組み合わせは、`32-bit float` のサポートというグループに分類されます。
+
+  * `shaderBufferFloat32*` - バッファ
+  * `shaderSharedFloat32*` - 共有メモリ
+  * `shaderImageFloat32*` - イメージ
+  * `sparseImageFloat32*` - スパースイメージ
+
+`64-bit float` のサポートは以下になります。
+
+  * `shaderBufferFloat64*` - バッファ
+  * `shaderSharedFloat64*` - 共有メモリ
+
+[NOTE]
+====
+OpenGL の link:https://www.khronos.org/registry/OpenGL/extensions/OES/OES_shader_image_atomic.txt[OES_shader_image_atomic] では、`imageAtomicExchange` のために `r32f` 上のアトミックの使用が可能でした。移植の際には、アプリケーションは Vulkan でも同じことができるように `shaderImageFloat32Atomics` の対応をチェックする必要があります。
+====
+
+[[VK_EXT_shader_atomic_float2]]
+== VK_EXT_shader_atomic_float2
+
+[NOTE]
+====
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_atomic_float_min_max.html[SPV_EXT_shader_atomic_float_min_max]
+
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_atomic_float16_add.html[SPV_EXT_shader_atomic_float16_add]
+
+link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_shader_atomic_float.txt[GLSL_EXT_shader_atomic_float]
+====
+
+この拡張機能は、`VK_EXT_shader_atomic_float` にはない2つの機能を追加します。
+
+まず、上述の `VK_EXT_shader_atomic_float` と同じ方法で、**バッファ**と**共有メモリ**の両方に `16-bit float` を追加します。
+
+  * `shaderBufferFloat16*` - バッファ
+  * `shaderSharedFloat16*` - 共有メモリ
+
+次に、`min` と `max` のアトミック操作（`OpAtomicFMinEXT` と `OpAtomicFMaxEXT`）に `float` のサポートを追加しました。
+
+`16-bit float` をサポートします（`AtomicFloat16MinMaxEXT` 機能）。
+
+  * `shaderBufferFloat16AtomicMinMax` - バッファ
+  * `shaderSharedFloat16AtomicMinMax` - 共有メモリ
+
+`32-bit float` をサポートします（`AtomicFloat32MinMaxEXT` 機能）。
+
+  * `shaderBufferFloat32AtomicMinMax` - バッファ
+  * `shaderSharedFloat32AtomicMinMax` - 共有メモリ
+  * `shaderImageFloat32AtomicMinMax` - イメージ
+  * `sparseImageFloat32AtomicMinMax` - スパースイメージ
+
+`64-bit float` をサポートします（`AtomicFloat64MinMaxEXT` 機能）。
+
+  * `shaderBufferFloat64AtomicMinMax` - バッファ
+  * `shaderSharedFloat64AtomicMinMax` - 共有メモリ

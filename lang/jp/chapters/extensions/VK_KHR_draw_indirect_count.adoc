@@ -1,0 +1,23 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../]
+
+[[VK_KHR_draw_indirect_count]]
+= VK_KHR_draw_indirect_count
+
+[NOTE]
+====
+Vulkan 1.2でコアに昇格
+====
+
+`vkCmdDraw` を呼び出すたびに、ドローコールを記述するパラメータのセットが消費されます。同じパラメータは `VkDrawIndirectCommand` のブロックとして `VkBuffer` に格納されます。`vkCmdDrawIndirect` を使用すると、 `drawCount` 個の描画を呼び出すことができますが、 `drawCount` は記録時に必要になります。新しい `vkCmdDrawIndirectCount` コールを使用すると、 `drawCount` を `VkBuffer` に格納することもできます。これにより、`drawCount` の値は動的になり、ドローコールが実行されるときに決定されるようになります。
+
+[NOTE]
+====
+`vkCmdDrawIndirectCount` と `vkCmdDrawIndexedIndirectCount` 関数は、拡張機能がサポートされているか、 `VkPhysicalDeviceVulkan12Features::drawIndirectCount` 機能ビットが `true` であれば使用することができます。
+====
+
+次の図は、`vkCmdDraw`、`vkCmdDrawIndirect`、`vkCmdDrawIndirectCount` の違いを視覚化したものです。
+
+image::../../../../chapters/images/extensions/VK_KHR_draw_indirect_count_example.png[VK_KHR_draw_indirect_count example]

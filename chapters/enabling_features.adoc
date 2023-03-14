@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[enabling-features]]
 = Enabling Features
@@ -13,17 +14,17 @@ This section goes over the logistics for enabling features.
 All features in Vulkan can be categorized/found in 3 sections
 
   1. Core 1.0 Features
-  ** These are the set of features that were available from the initial 1.0 release of Vulkan. The list of features can be found in link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VkPhysicalDeviceFeatures[VkPhysicalDeviceFeatures]
+  ** These are the set of features that were available from the initial 1.0 release of Vulkan. The list of features can be found in link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VkPhysicalDeviceFeatures[VkPhysicalDeviceFeatures]
   2. Future Core Version Features
   ** With Vulkan 1.1+ some new features were added to the core version of Vulkan. To keep the size of `VkPhysicalDeviceFeatures` backward compatible, new structs were created to hold the grouping of features.
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VkPhysicalDeviceVulkan11Features[VkPhysicalDeviceVulkan11Features]
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VkPhysicalDeviceVulkan12Features[VkPhysicalDeviceVulkan12Features]
+  ** link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VkPhysicalDeviceVulkan11Features[VkPhysicalDeviceVulkan11Features]
+  ** link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VkPhysicalDeviceVulkan12Features[VkPhysicalDeviceVulkan12Features]
   3. Extension Features
   ** Sometimes extensions contain features in order to enable certain aspects of the extension. These are easily found as they are all labeled as `VkPhysicalDevice[ExtensionName]Features`
 
 == How to Enable the Features
 
-All features must be enabled at `VkDevice` creation time inside the link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VkDeviceCreateInfo[VkDeviceCreateInfo] struct.
+All features must be enabled at `VkDevice` creation time inside the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VkDeviceCreateInfo[VkDeviceCreateInfo] struct.
 
 [NOTE]
 ====

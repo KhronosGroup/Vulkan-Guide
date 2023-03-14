@@ -1,0 +1,136 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../]
+
+[[ray-tracing]]
+= レイトレーシング
+
+相互に関連する5つの拡張機能により、Vulkan API においてレイトレーシングがサポートされています。
+
+  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_acceleration_structure.html[VK_KHR_acceleration_structure]
+  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_ray_tracing_pipeline.html[VK_KHR_ray_tracing_pipeline]
+  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_ray_query.html[VK_KHR_ray_query]
+  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_pipeline_library.html[VK_KHR_pipeline_library]
+  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_deferred_host_operations.html[VK_KHR_deferred_host_operations]
+
+また、SPIR-V や GLSL の拡張機能を追加することで、シェーダに必要なプログラマブルな機能を実現しています。
+
+  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_ray_tracing.html[SPV_KHR_ray_tracing]
+  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_ray_query.html[SPV_KHR_ray_query]
+  * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_tracing.txt[GLSL_EXT_ray_tracing]
+  * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_query.txt[GLSL_EXT_ray_query]
+  * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_flags_primitive_culling.txt[GLSL_EXT_ray_flags_primitive_culling]
+
+[NOTE]
+====
+多くのレイトレーシングアプリケーションは、大きな連続したメモリの割り当てを必要とします。アドレス空間のサイズが限られているため、32ビットシステムではこれが困難な場合があります。実装は32ビットシステム上で自由にレイトレーシング拡張機能を公開することができますが、アプリケーションはフラグメンテーションによるアロケーションの失敗など、メモリ関連の問題に断続的に遭遇する可能性があります。さらに、いくつかの実装では、32ビットドライバ上でレイトレーシング拡張機能を公開しないことを選択する場合があります。
+====
+
+[[VK_KHR_acceleration_structure]]
+== VK_KHR_acceleration_structure
+
+アクセラレーション構造は、レイトレーシングに使用される、実装に依存した幾何学的オブジェクトの不透明な表現です。オブジェクトをアクセラレーション構造としてビルドすることで、レイトレーシングを既知のデータレイアウトに対して、効率的に行うことができます。`VK_KHR_acceleration_structure` 拡張機能は、アクセラレーション構造をビルドしたりコピーしたりする機能と、メモリとの間のシリアル化をサポートする機能を導入します。
+
+アクセラレーション構造は、レイパイプライン（`VK_KHR_ray_tracing_pipeline`）とレイクエリ（`VK_KHR_ray_query`）の両方に必要です。
+
+アクセラレーション構造を作るためには：
+
+  * `VkAccermedStructureBuildGeometryInfoKHR` のインスタンスに、アクセラレーション構造タイプ、ジオメトリタイプ、カウント、および最大サイズを入力します。この時点では、ジオメトリデータを入力する必要はありません。
+  * ビルドを実行するために必要なメモリサイズを取得するには、`vkGetAccloationStructureBuildSizesKHR` を呼び出します。
+  * アクセラレーション構造（`VkAccelerationStructureBuildSizesKHR::accelerationStructureSize`）とビルドスクラッチバッファ（`VkAccelerationStructureBuildSizesKHR::buildScratchSize`）を保持するのに十分なサイズのバッファを割り当てます。
+  * `vkCreateAccelerationStructureKHR` を呼び出して、バッファ内の指定された場所にアクセラレーション構造を作成します。
+  * `vkCmdBuildAccelerationStructuresKHR` を呼び出してアクセラレーション構造をビルドします。ここでは、先に入力した `VkAccelerationStructureBuildGeometryInfoKHR` をパラメータとして使用し、目的のアクセラレーション構造オブジェクト、ビルド用のスクラッチバッファ、ジオメトリデータポインタ （頂点、インデックス、トランスフォーム用） を追加します。
+
+[[VK_KHR_ray_tracing_pipeline]]
+== VK_KHR_ray_tracing_pipeline
+
+`VK_KHR_ray_tracing_pipeline` 拡張機能は、レイトレーシングパイプラインを導入します。この新しい形式のレンダリングパイプラインは、従来のラスタライズパイプラインから独立しています。レイトレーシングパイプラインは、従来のバーテックス/ジオメトリ/フラグメントステージとは異なる、専用のシェーダステージのセットを利用します。レイトレーシングパイプラインは、レンダリング作業を送信するための専用コマンド（`vkCmdTraceRaysKHR` と `vkCmdTraceRaysIndirectKHR`）を利用します。これらのコマンドは、従来のラスタライズパイプラインの描画コマンド（`vkCmdDraw` と `vkCmdDrawIndirect`）にやや類似しています。
+
+レイをトレースするには：
+
+  * `vkCmdBindPipeline` で `VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR` を使用してレイトレーシングパイプラインをバインドします。
+  * `vkCmdTraceRaysKHR` または `vkCmdTraceRaysIndirectKHR` を呼び出します。
+
+レイトレーシングパイプラインは、いくつかの新しいシェーダドメインを導入します。その内容は以下の通りです：
+
+image::https://www.khronos.org/assets/uploads/blogs/2020-The-ray-tracing-mechanism-achieved-through-the-five-shader-stages-2.jpg["Ray Tracing Shaders"]
+
+  * Ray generation シェーダはレイトレーシングの出発点を表します。レイトレーシングコマンド（`vkCmdTraceRaysKHR` と `vkCmdTraceRaysIndirectKHR`）は、コンピュートシェーダと同様に、シェーダの呼び出しのグリッドを起動します。Ray generation シェーダはレイを作成し、traceRayEXT() の呼び出しによってトレースを開始します。さらに、ヒットグループからの結果を処理します。
+  * Closest hit シェーダは、レイが最も近いジオメトリと交差するときに実行されます。アプリケーションは任意の数の Closest hit シェーダを使用できます。これらは通常、ライティング計算を行うために使用され、再帰的に追加のレイをトレースすることができます。
+  * Miss シェーダは、レイがトラバーサル中にどのジオメトリとも交差しなかった場合に、Closest hit シェーダの代わりに実行されます。Miss シェーダの一般的な使用方法は、環境マップをサンプリングすることです。
+  * 組み込みの交差テストはレイ-トライアングルテストです。Intersection シェーダでは、カスタムの交点処理が可能です。
+  * Any-hit シェーダは、Closest hit シェーダと同様に、交点が報告された後に実行されます。違いは、Any-hit シェーダは、レイの原点に最も近いものではなく、[tmin, tmax] で定義されるレイ区間内の任意の交点に対して呼び出されることです。Any-hit シェーダは交点のフィルタリングに使用されるため、アルファテストの実装によく使用されます。
+
+[[VK_KHR_ray_query]]
+== VK_KHR_ray_query
+
+`VK_KHR_ray_query` 拡張機能は、グラフィックス、コンピュート、レイトレーシングパイプラインを含む、すべてのシェーダタイプからのレイのトレースをサポートします。
+
+レイクエリでは、レイトラバーサルコードがシェーダ内に明示的に含まれている必要があります。これは、レイ生成、交差テスト、およびレイ-ジオメトリヒットの処理が別々のシェーダステージとして表現されるレイトレーシングパイプラインとは異なります。その結果、レイクエリは、より広範なシェーダステージからのレイのトレースを可能にする一方で、Vulkan の実装がレイのスケジューリングとトレースに適用できる最適化の範囲を制限します。
+
+この拡張機能は、追加の API エントリポイントを導入するものではありません。関連する SPIR-V と GLSL の拡張機能（`SPV_KHR_ray_query` と `GLSL_EXT_ray_query`）の API サポートを提供するだけです。
+
+`VK_KHR_ray_query` によって提供される機能は、`VK_KHR_ray_tracing_pipeline` によって提供される機能を補完するものであり、この2つの拡張機能は一緒に使用することができます。
+
+[source,glsl]
+----
+rayQueryEXT rq;
+
+rayQueryInitializeEXT(rq, accStruct, gl_RayFlagsNoneEXT, 0, origin, tMin, direction, tMax);
+
+while(rayQueryProceedEXT(rq)) {
+        if (rayQueryGetIntersectionTypeEXT(rq, false) == gl_RayQueryCandidateIntersectionTriangleEXT) {
+                //...
+                rayQueryConfirmIntersectionEXT(rq);
+        }
+}
+
+if (rayQueryGetIntersectionTypeEXT(rq, true) == gl_RayQueryCommittedIntersectionNoneEXT) {
+        //...
+}
+----
+
+[[VK_KHR_pipeline_library]]
+== VK_KHR_pipeline_library
+
+`VK_KHR_pipeline_library` はパイプラインライブラリを導入します。パイプラインライブラリは、`VK_PIPELINE_CREATE_LIBRARY_BIT_KHR` を使って作成された特別なパイプラインで、直接バインドして使用することはできません。その代わりに、他のパイプラインにリンクできるシェーダ、シェーダグループ、関連する状態のコレクションを表します。
+
+`VK_KHR_pipeline_library` は、新しい API 関数を直接導入したり、パイプラインライブラリを作成する方法を定義したりしません。代わりに、この機能は `VK_KHR_pipeline_library` が提供する機能を利用する他の拡張機能に任されています。現在のところ、この唯一の例は `VK_KHR_ray_tracing_pipeline` です。`VK_KHR_pipeline_library` は、レイトレーシング拡張機能への依存性を導入することなく、将来的に他の拡張機能で同じ機能を使用する可能性を考慮して、独立した拡張機能として定義されました。
+
+レイトレーシングパイプラインライブラリを作成するには：
+
+  * `vkCreateRayTracingPipelineKHR` の呼び出し時に、`Vk_PIPELINE_CREATE_LIBRARY_BIT_KHR` を `VkRayTracingPipelineCreateInfoKHR::flags` に設定します。
+
+レイトレーシングパイプラインライブラリをフルパイプラインにリンクするには：
+
+  * `VkRayTracingPipelineCreateInfoKHR::pLibraryInfo` を設定して、`VkPipelineLibraryCreateInfoKHR` のインスタンスを指すようにします。
+  * リンクの入力として使用されるパイプラインライブラリで `VkPipelineLibraryCreateInfoKHR::pLibraries` を入力し、`VkPipelineLibraryCreateInfoKHR::libraryCount` を適切な値に設定します。
+
+[[VK_KHR_deferred_host_operations]]
+== VK_KHR_deferred_host_operations
+
+`VK_KHR_deferred_host_operations` は、高価な CPU タスクを複数のスレッドに分散させるメカニズムを導入します。スレッドプールを Vulkan ドライバに導入するのではなく、アプリケーションがスレッドを作成して管理できるように設計されています。
+
+`VK_KHR_pipeline_library` と同様に、`VK_KHR_deferred_host_operations` は、レイトレーシング拡張機能への依存を導入することなく、将来的に他の拡張機能で同じ機能を使用できる可能性を考慮して、独立した拡張機能として定義されました。
+
+遅延をサポートしていることが明記されている操作のみ、遅延させることができます。現在、遅延をサポートしている操作は、`vkCreateRayTracingPipelinesKHR`、`vkBuildAccelerationStructuresKHR`、`vkCopyAccelerationStructureKHR`、`vkCopyMemoryToAccelerationStructureKHR`、`vkCopyAccelerationStructureToMemoryKHR` のみです。
+
+操作の遅延を要求するには：
+
+  * `vkCreateDeferredOperationKHR` を呼び出して `VkDeferredOperationKHR` オブジェクトを作成します。
+  * 遅延させたい操作に、`VkDeferredOperationKHR` をパラメータとして渡して呼び出します。
+  * 上記の操作で返される `VkResult` を確認します。
+  ** `VK_OPERATION_DEFERRED_KHR` は、操作の遅延が成功したことを示します。
+  ** `VK_OPERATION_NOT_DEFERRED_KHR` は、操作が正常に即時完了したことを示します。
+  ** 任意のエラー値は、エラーが発生したことを示します。
+
+遅延操作に対してスレッドをジョインさせ、操作に CPU 時間を与えるには：
+
+  * 操作に参加させたい各スレッドから `vkDeferredOperationJoinKHR` を呼び出します。
+  * `vkDeferredOperationJoinKHR` が返す `VkResult` を確認します。
+  ** `VK_SUCCESS` は操作が完了したことを示します。
+  ** `VK_THREAD_DONE_KHR` は、呼び出したスレッドに割り当てるべき仕事はもうないものの、他のスレッドには完了すべき追加の仕事が残っている可能性があることを示します。現在のスレッドは、`vkDeferredOperationJoinKHR` を再度呼び出して再参加を試みるべきではありません。
+  ** `VK_THREAD_IDLE_KHR` は、呼び出したスレッドに割り当てるべき仕事が**一時的に**存在しませんが、将来的に追加の仕事が利用可能になる可能性があることを示します。現在のスレッドは、呼び出したスレッドに対して他の有用な作業を行うことができ、後で `vkDeferredOperationJoinKHR` を再度呼び出して再参加できるかもしれません。
+
+操作が完了した後（つまり、`vkDeferredOperationJoinKHR` が `VK_SUCCESS` を返した後）、`vkGetDeferredOperationResultKHR` を呼び出して操作の結果を取得します。

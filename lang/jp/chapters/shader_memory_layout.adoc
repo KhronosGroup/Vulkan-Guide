@@ -1,0 +1,245 @@
+// Copyright 2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[shader-memory-layout]]
+= シェーダメモリレイアウト
+
+実装がインターフェイスからメモリにアクセスするとき、**メモリレイアウト**を知る必要があります。これには、**オフセット**、**ストライド**、 **アライメント**が含まれます。Vulkan Spec には link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-layout[レイアウトのセクション] がありますが、さまざまな拡張機能による複雑化により、理解が困難な場合があります。この章では、いくつかの高レベルシェーディング言語（GLSL）の例を用いて、Vulkan が使用するすべてのメモリレイアウトの概念を説明します。
+
+[[alignment-requirements]]
+== アライメントの要件
+
+Vulkan には、インターフェイスオブジェクトをレイアウトできる3つのlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-alignment-requirements[アライメント要件]があります。
+
+- 拡張アライメント (別名 `std140`)
+- ベースアライメント (別名 `std430`)
+- スカラアライメント
+
+アライメントに関する仕様言語では、以下のブロックメンバ型ごとにルールを分解しています。
+
+- scalar (`float`, `int`, `char`, 等)
+- vector (`float2`, `vec3`, `uvec4`, 等)
+- matrix
+- array
+- struct
+
+[[VK_KHR_uniform_buffer_standard_layout]]
+== VK_KHR_uniform_buffer_standard_layout
+
+[NOTE]
+====
+Vulkan 1.2でコアに昇格
+====
+
+この拡張機能により、UBOで `std430` メモリレイアウトを使用できるようになります。
+link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-standard-layout[Vulkan Standard Buffer Layout Interface]は、このガイドには含まれていません。プッシュ定数や SSBO など、他のストレージアイテムはすでに std430 スタイルのレイアウトが可能なため、これらのメモリレイアウトの変更は `Uniforms` にのみ適用されます。
+
+`UniformBufferStandardLayout` 機能が必要な場合の一例として、アプリケーションが UBO の配列のストライドを `extended alignment` に制限したくない場合があります。
+
+[source,glsl]
+----
+layout(std140, binding = 0) uniform ubo140 {
+   float array140[8];
+};
+
+layout(std430, binding = 1) uniform ubo430 {
+   float array430[8];
+};
+----
+
+SPIR-V では次のようになります。
+
+[source,swift]
+----
+// 配列の拡張アライメントは、16の倍数に切り上げられます。
+OpDecorate %array140 ArrayStride 16
+
+// ベースアライメントは 4 バイト（OpTypeFloat32）
+// uniformBufferStandardLayout 機能が有効な場合のみ有効
+OpDecorate %array430 ArrayStride 4
+----
+
+SPIR-V Validator を実行する際には、必ず `--uniform-buffer-standard-layout` を設定してください。
+
+[[VK_KHR_relaxed_block_layout]]
+== VK_KHR_relaxed_block_layout
+
+[NOTE]
+====
+Vulkan 1.1でコアに昇格
+
+この拡張機能のために機能ビットが追加されることはなかったため、Vulkan 1.1以上のすべてのデバイスがリラックスブロックレイアウトをサポートしています。
+====
+
+この拡張機能により、ブロックの `Offset` 修飾のバリエーションの対応を実装で示すことができます。これは `std430` メモリレイアウトを使用する際に出てくるもので、通常 `vec3` (12バイト) は16バイトのアライメントとして定義されています。リラックスブロックレイアウトでは、アプリケーションは `vec3` の両側に `float` を置くことができ、それらの間の 16 バイトのアライメントを維持することができます。
+
+[source,glsl]
+----
+// リラックスブロックレイアウトを使わない場合の SPIR-V のオフセット
+layout (set = 0, binding = 0) buffer block {
+    float b; // Offset: 0
+    vec3 a;  // Offset: 16
+} ssbo;
+
+// リラックスブロックレイアウトを使う場合の SPIR-V のオフセット
+layout (set = 0, binding = 0) buffer block {
+    float b; // Offset: 0
+    vec3 a;  // Offset: 4
+} ssbo;
+----
+
+`VK_KHR_relaxed_block_layout` は `VK_EXT_scalar_block_layout` のサブセットとみなすこともできます。
+
+[NOTE]
+====
+Vulkan 1.0 環境を使用して SPIR-V Validator を実行する場合は、必ず `--relax-block-layout` を設定してください。
+====
+
+[NOTE]
+====
+現在のところ、GLSL にはリラックスブロックレイアウトを正式に表現する方法はありませんが、`--hlsl-offsets` と `glslang` を使って、希望するオフセットを生成することが可能です。
+====
+
+[[VK_EXT_scalar_block_layout]]
+== VK_EXT_scalar_block_layout
+
+[NOTE]
+====
+Vulkan 1.2でコアに昇格
+
+link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_scalar_block_layout.txt[GLSL - GL_EXT_scalar_block_layout]
+====
+
+この拡張機能により、ほとんどのストレージ型が `scalar alignment` でアライメントされるようになります。大きな違いは、16バイトの境界をまたぐことができることです。
+
+GLSL では、これは `scalar` キーワードと拡張機能で使うことができます。
+
+[source,glsl]
+----
+#extension GL_EXT_scalar_block_layout : enable
+layout (scalar, binding = 0) buffer block { }
+----
+
+[NOTE]
+====
+SPIR-V Validator を実行する際には、必ず `--scalar-block-layout` を設定してください。
+====
+
+[NOTE]
+====
+`Workgroup` ストレージクラスは `VK_EXT_scalar_block_layout` ではサポートされておらず、スカラ対応を有効にするには xref:{chapters}extensions/shader_features.adoc#VK_KHR_workgroup_memory_explicit_layout[VK_KHR_workgroup_memory_explicit_layout] の `workgroupMemoryExplicitLayoutScalarBlockLayout` が必要です。
+====
+
+[[alignment-examples]]
+== アライメントの例
+
+以下は、サポートするアライメントの違いをより理解するための GLSL から SPIR-V への変換例です。
+
+=== アライメントの例1
+
+[source,glsl]
+----
+layout(binding = 0) buffer block {
+    vec2 a[4];
+    vec4 b;
+};
+----
+
+SPIR-V では次のようになります。
+
+[source,swift]
+----
+// 拡張アライメント (std140)
+OpDecorate %vec2array ArrayStride 16
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 64
+
+// スカラアライメントとベースアライメント (std430)
+OpDecorate %vec2array ArrayStride 8
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 32
+----
+
+=== アライメントの例2
+
+[source,glsl]
+----
+layout(binding = 0) buffer block {
+    float a;
+    vec2 b;
+    vec2 c;
+};
+----
+
+SPIR-V では次のようになります。
+
+[source,swift]
+----
+// 拡張アライメント (std140) とベースアライメント (std430)
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 8
+OpMemberDecorate %block 2 Offset 16
+
+// スカラアライメント
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 4
+OpMemberDecorate %block 2 Offset 12
+----
+
+=== アライメントの例3
+
+[source,glsl]
+----
+layout(binding = 0) buffer block {
+    vec3 a;
+    vec2 b;
+    vec4 c;
+};
+----
+
+SPIR-V では次のようになります。
+
+[source,swift]
+----
+// 拡張アライメント (std140) とベースアライメント (std430)
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 16
+OpMemberDecorate %block 2 Offset 32
+
+// スカラアライメント
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 12
+OpMemberDecorate %block 2 Offset 20
+----
+
+=== アライメントの例4
+
+[source,glsl]
+----
+layout (binding = 0) buffer block {
+    vec3 a;
+    vec2 b;
+    vec2 c;
+    vec3 d;
+};
+----
+
+SPIR-V では次のようになります。
+
+[source,swift]
+----
+// 拡張アライメント (std140) とベースアライメント (std430)
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 16
+OpMemberDecorate %block 2 Offset 24
+OpMemberDecorate %block 3 Offset 32
+
+// スカラアライメント
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 12
+OpMemberDecorate %block 2 Offset 20
+OpMemberDecorate %block 3 Offset 28
+----

@@ -14,6 +14,11 @@ The Khronos{regtitle} Vulkan Working Group
 image::images/vulkan_logo.png[Vulkan Logo]
 image::images/khronos_logo.png[Khronos logo]
 
+:lang-jp: lang/jp/
+This document is also available in the following languages: +
+xref:{lang-jp}README-jp.adoc[Japanese]
+
+
 // Use {chapters} as base path for individual chapters, to allow single
 // pages to work properly as well. Must have trailing slash.
 // Implicit {relfileprefix} does not work due to file hierarchy
@@ -170,11 +175,15 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 // include::{chapters}descriptor_dynamic_offset.adoc[]
 
+=== xref:{chapters}push_constants.adoc[Push Constants]
+
+// include::{chapters}push_constants.adoc[]
+
 == xref:{chapters}robustness.adoc[Robustness]
 
 // include::{chapters}robustness.adoc[]
 
-  * `VK_EXT_image_robustness`, `VK_EXT_robustness2`
+  * `VK_EXT_image_robustness`, `VK_EXT_robustness2`, `VK_EXT_pipeline_robustness`
 
 == xref:{chapters}dynamic_state.adoc[Dynamic State]
 

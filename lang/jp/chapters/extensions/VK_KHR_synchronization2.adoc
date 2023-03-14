@@ -1,0 +1,339 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../]
+
+[[VK_KHR_synchronization2]]
+= VK_KHR_synchronization2
+
+[NOTE]
+====
+Vulkan 1.3でコアに昇格
+====
+
+`VK_KHR_synchronization2` 拡張機能では、パイプラインバリア、イベント、イメージレイアウトの移行、キューのサブミットなどが改善されています。このドキュメントでは、オリジナルの Vulkan 同期操作と拡張機能で提供される同期操作の違いを示しています。また、アプリケーションコードをアップデートして拡張機能を利用する方法についても例示しています。
+
+== パイプラインステージとアクセスフラグの再考
+
+今回の拡張機能での主な変更点は、パイプラインステージとアクセスフラグがメモリバリア構造体で一緒に指定されるようになったことです。これにより、両者の関連性がより明確になりました。
+
+image::../../../../chapters/images/extensions/VK_KHR_synchronization2_stage_access.png[VK_KHR_synchronization2_stage_access]
+
+=== イベントセットのためのバリア追加
+
+`VkDependencyInfoKHR` の導入に伴い、`vkCmdSetEvent` とは異なり、`vkCmdSetEvent2KHR` にはバリアを追加する機能があることに注意してください。これは `VkEvent` をより便利にするために追加されました。synchronization2 の `VkEvent` の実装は、Vulkan 1.2 の `VkEvent` とは大幅に異なる可能性があるため、1つの `VkEvent` に対して拡張機能とコアの API 呼び出しを混在させてはいけません。たとえば、`vkCmdSetEvent2KHR()` を呼び出した後、`vkCmdWaitEvents()` を呼び出してはいけません。
+
+== 同じパイプラインステージ名やアクセスフラグ名の再利用
+
+`VkAccessFlag` の 32 ビットが不足していたため、`VkAccessFlags2KHR` 型が 64 ビットの範囲で作成されました。`VkPipelineStageFlags` で同じ問題が発生しないように、`VkPipelineStageFlags2KHR` タイプも64ビットの範囲で作成されました。
+
+64ビットの列挙型はすべての C/C++ コンパイラで利用できないため、新しいフィールドのコードでは列挙型の代わりに `static const` の値を使用しています。この結果、`VkPipelineStageFlagBits` と `VkAccessFlagBits` に相当する型はありません。`vkCmdWriteTimestamp()` などの Vulkan 関数を含む一部のコードでは、呼び出し側が複数のビットのマスクではなく、単一のビット値しか渡せないことを示すために、`Bits` 型を使用していました。`vkCmdWriteTimestamp2KHR()` で行ったように、これらの呼び出しは `Flags` 型を取るように変換し、有効な使用法や独自のコードの適切なコーディング規約によって「only 1-bit」の制限を強制する必要があります。
+
+新しいフラグには、オリジナルの同期フラグと同じビットが含まれており、ベースネームも同じで、値も同じです。古いフラグは、コーディング環境の型キャストの制約を受けることなく、新しい API で直接使用することができます。以下の2つの例は、名前の違いを示しています。
+
+  * `VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT` から `VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR`
+  * `VK_ACCESS_SHADER_READ_BIT` から `VK_ACCESS_2_SHADER_READ_BIT_KHR`
+
+== VkSubpassDependency
+
+`VkSubpassDependency` のパイプラインステージとアクセスフラグの使い方を更新するには、`pNext` に `VkMemoryBarrier2KHR` を渡すことができる `VkSubpassDependency2` を使用します。
+
+例を挙げると、以下のようになります。
+
+[source,cpp]
+----
+// VK_KHR_synchronization2 を使わない場合
+VkSubpassDependency dependency = {
+    .srcSubpass = 0,
+    .dstSubpass = 1,
+    .srcStageMask = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT |
+                    VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
+    .dstStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+    .srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
+    .dstAccessMask = VK_ACCESS_INPUT_ATTACHMENT_READ_BIT,
+    .dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT
+};
+----
+
+これを次のように変えます。
+
+[source,cpp]
+----
+// VK_KHR_synchronization2 を使う場合
+VkMemoryBarrier2KHR memoryBarrier = {
+    .sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR,
+    .pNext = nullptr,
+    .srcStageMask = VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT_KHR |
+                    VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT_KHR,
+    .dstStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR,
+    .srcAccessMask = VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT_KHR,
+    .dstAccessMask = VK_ACCESS_2_INPUT_ATTACHMENT_READ_BIT_KHR
+}
+
+// 設定されていない4つのフィールドは仕様により無視される
+// VkMemoryBarrier2KHR が pNext に渡される場合
+VkSubpassDependency2 dependency = {
+    .sType = VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2,
+    .pNext = &memoryBarrier,
+    .srcSubpass = 0,
+    .dstSubpass = 1,
+    .dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT
+};
+----
+
+== パイプラインステージとアクセスマスクの分割
+
+いくつかの `VkAccessFlags` と `VkPipelineStageFlags` には、ハードウェアで何をターゲットにしているのかが曖昧な値がありました。新しい `VkAccessFlags2KHR` と `VkPipelineStageFlags2KHR` は、保守性のために古い値を残しながら、いくつかのケースでこれらを分割します。
+
+=== VK_PIPELINE_STAGE_VERTEX_INPUT_BIT の分割
+
+`VK_PIPELINE_STAGE_VERTEX_INPUT_BIT`（現在は `VK_PIPELINE_STAGE_2_VERTEX_INPUT_BIT_KHR` ）は、1つのパイプラインステージフラグにまとめられるのではなく、インデックス入力と頂点入力の両方に専用ステージを指定する2つの新しいステージフラグに分割されました。
+
+  * `VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR`
+  * `VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR`
+
+=== VK_PIPELINE_STAGE_ALL_TRANSFER_BIT の分割
+
+`VK_PIPELINE_STAGE_ALL_TRANSFER_BIT`（現在は `VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KHR` ）は、1つのパイプラインステージフラグにまとめられるのではなく、さまざまなステージングコマンドの専用ステージを指定する4つの新しいステージフラグに分割されました。
+
+  * `VK_PIPELINE_STAGE_2_COPY_BIT_KHR`
+  * `VK_PIPELINE_STAGE_2_RESOLVE_BIT_KHR`
+  * `VK_PIPELINE_STAGE_2_BLIT_BIT_KHR`
+  * `VK_PIPELINE_STAGE_2_CLEAR_BIT_KHR`
+
+=== VK_ACCESS_SHADER_READ_BIT の分割
+
+`VK_ACCESS_SHADER_READ_BIT`（現在の `VK_ACCESS_2_SHADER_READ_BIT_KHR` ）は、1つのアクセスフラグにまとめられるのではなく、さまざまなケースに対応した専用のアクセスを指定する3つの新しいアクセスフラグに分割されました。
+
+  * `VK_ACCESS_2_UNIFORM_READ_BIT_KHR`
+  * `VK_ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR`
+  * `VK_ACCESS_2_SHADER_STORAGE_READ_BIT_KHR`
+
+=== ラスタライズの前のシェーダステージの組み合わせ
+
+フラグの分割以外にも、ラスタライズの前に発生するシェーダのステージを1つの便利なフラグにまとめるために、`VK_PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT_KHR` が追加されました。
+
+== VK_ACCESS_SHADER_WRITE_BIT エイリアス
+
+`VK_ACCESS_SHADER_WRITE_BIT`（現在は `VK_ACCESS_2_SHADER_WRITE_BIT_KHR` ）には、アクセスフラグによって記述されるシェーダ内のリソースの範囲をより明確にするために、`VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR` という別名が与えられました。
+
+== TOP_OF_PIPE と BOTTOM_OF_PIPE の非推奨化
+
+`VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT` と `VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT` の使用は現在では非推奨となっており、更新は以下の4つのケースのように、新しい同等のもので簡単に行うことができます。
+
+  * 最初の同期スコープでの `VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT`
++
+[source,cpp]
+----
+// From
+  .srcStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+
+// To
+  .srcStageMask = VK_PIPELINE_STAGE_2_NONE_KHR;
+  .srcAccessMask = VK_ACCESS_2_NONE_KHR;
+----
+
+  * 2番目の同期スコープでの `VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT`
++
+[source,cpp]
+----
+// From
+  .dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+
+// To
+  .dstStageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR;
+  .dstAccessMask = VK_ACCESS_2_NONE_KHR;
+----
+
+  * 最初の同期スコープでの `VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT`
++
+[source,cpp]
+----
+// From
+  .srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+
+// To
+  .srcStageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR;
+  .srcAccessMask = VK_ACCESS_2_NONE_KHR;
+----
+
+  * 2番目の同期スコープでの `VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT`
++
+[source,cpp]
+----
+// From
+  .dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+
+// To
+  .dstStageMask = VK_PIPELINE_STAGE_2_NONE_KHR;
+  .dstAccessMask = VK_ACCESS_2_NONE_KHR;
+----
+
+== 新しいイメージレイアウトの活用
+
+`VK_KHR_synchronization2` では、レイアウトの移行を容易にするために、2つの新しいイメージレイアウト `VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR` と `VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR` を追加しています。
+
+以下では、カラーアタッチメントと深度/ステンシルアタッチメントの両方に書き込む描画を行い、次の描画で両方をサンプリングする例を示します。事前に開発者は、以下のようにレイアウトとアクセスマスクを正しく一致させる必要がありました。
+
+[source,cpp]
+----
+VkImageMemoryBarrier colorImageMemoryBarrier = {
+  .srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+  .dstAccessMask = VK_ACCESS_SHADER_READ_BIT,
+  .oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+  .newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+};
+
+VkImageMemoryBarrier depthStencilImageMemoryBarrier = {
+  .srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,,
+  .dstAccessMask = VK_ACCESS_SHADER_READ_BIT,
+  .oldLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+  .newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+};
+----
+
+しかし、`VK_KHR_synchronization2` ではこれが簡単になります。
+
+[source,cpp]
+----
+VkImageMemoryBarrier colorImageMemoryBarrier = {
+  .srcAccessMask = VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT_KHR,
+  .dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR,
+  .oldLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR, // VK_KHR_synchronization2　による新しいレイアウト
+  .newLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR   // VK_KHR_synchronization2　による新しいレイアウト
+};
+
+VkImageMemoryBarrier depthStencilImageMemoryBarrier = {
+  .srcAccessMask = VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT_KHR,,
+  .dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR,
+  .oldLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR, // VK_KHR_synchronization2　による新しいレイアウト
+  .newLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR   // VK_KHR_synchronization2　による新しいレイアウト
+};
+----
+
+新しいケースでは、`VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR` は、使用されているイメージフォーマットに基づいて、文脈的に自分自身を適用することで動作します。つまり、`colorImageMemoryBarrier` がカラーフォーマットで使用されている限り、`VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR` は `VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL` にマップされます。
+
+さらに、`VK_KHR_synchronization2` では、`oldLayout` と `newLayout` が等しい場合、レイアウトの移行は行われず、イメージの内容が保存されます。 使用するレイアウトはイメージのレイアウトと一致する必要もないので、次のようなバリアが有効です。
+
+[source,cpp]
+----
+VkImageMemoryBarrier depthStencilImageMemoryBarrier = {
+  // その他のフィールドは省略
+  .oldLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+  .newLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+};
+----
+
+== 新しいサブミットの流れ
+
+`VK_KHR_synchronization2` では、`vkQueueSubmit2KHR` コマンドを追加しています。このコマンドの主な目的は、コマンドバッファとセマフォを拡張可能な構造体でラップする関数のシンタックスを整理することです。これには、Vulkan 1.1、`VK_KHR_device_group`、`VK_KHR_timeline_semaphore` からの変更が組み込まれています。
+
+次の例では、通常のキューサブミットの呼び出しを行います。
+
+[source,cpp]
+----
+VkSemaphore waitSemaphore;
+VkSemaphore signalSemaphore;
+VkCommandBuffer commandBuffers[8];
+
+// VK_KHR_timeline_semaphore によって pNext が利用可能
+VkTimelineSemaphoreSubmitInfo timelineSemaphoreSubmitInfo = {
+    // ...
+    .pNext = nullptr
+};
+
+// VK_KHR_device_group によって pNext が利用可能
+VkDeviceGroupSubmitInfo deviceGroupSubmitInfo = {
+    // ...
+    .pNext = &timelineSemaphoreSubmitInfo
+};
+
+// Vulkan 1.1 によって pNext が利用可能
+VkProtectedSubmitInfo = protectedSubmitInfo {
+    // ...
+    .pNext = &deviceGroupSubmitInfo
+};
+
+VkSubmitInfo submitInfo = {
+    .pNext = &protectedSubmitInfo, // 3つの拡張可能な構造をすべて連鎖させる
+    .waitSemaphoreCount = 1,
+    .pWaitSemaphores = &waitSemaphore,
+    .pWaitDstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+    .commandBufferCount = 8,
+    .pCommandBuffers = commandBuffers,
+    .signalSemaphoreCount = 1,
+    .pSignalSemaphores = signalSemaphore
+};
+
+vkQueueSubmit(queue, 1, submitInfo, fence);
+----
+
+これは、次のように `vkQueueSubmit2KHR` に変換することができます。
+
+[source,cpp]
+----
+// 同じセマフォとコマンドバッファのハンドルを使う
+VkSemaphore waitSemaphore;
+VkSemaphore signalSemaphore;
+VkCommandBuffer commandBuffers[8];
+
+VkSemaphoreSubmitInfoKHR waitSemaphoreSubmitInfo = {
+    .semaphore = waitSemaphore,
+    .value = 1, // VkTimelineSemaphoreSubmitInfo を置き換える
+    .stageMask = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR,
+    .deviceIndex = 0, // VkDeviceGroupSubmitInfo  を置き換える
+};
+
+// これはステージがシグナル操作を設定できるようにするため
+VkSemaphoreSubmitInfoKHR signalSemaphoreSubmitInfo = {
+    .semaphore = waitSemaphore,
+    .value = 2, // VkTimelineSemaphoreSubmitInfo を置き換える
+    .stageMask = VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT_KHR, // セマフォにシグナルを送るタイミング
+    .deviceIndex = 0, // VkDeviceGroupSubmitInfo を置き換える
+};
+
+// VkCommandBufferごとに1つ必要
+VkCommandBufferSubmitInfoKHR commandBufferSubmitInfos[8] = {
+    // ...
+    {
+        .commandBuffer = commandBuffers[i],
+        .deviceMask = 0 // VkDeviceGroupSubmitInfo を置き換える
+    },
+};
+
+VkSubmitInfo2KHR submitInfo = {
+    .pNext = nullptr, // 上記の3つの構造体はすべて VkSubmitInfo2KHR に組み込まれている
+    .flags = VK_SUBMIT_PROTECTED_BIT_KHR, // 0でもいい。VkProtectedSubmitInfo を置き換える
+    .waitSemaphoreInfoCount = 1,
+    .pWaitSemaphoreInfos = waitSemaphoreSubmitInfo,
+    .commandBufferInfoCount = 8,
+    .pCommandBufferInfos = commandBufferSubmitInfos,
+    .signalSemaphoreInfoCount = 1,
+    .pSignalSemaphoreInfos = signalSemaphoreSubmitInfo
+}
+
+vkQueueSubmit2KHR(queue, 1, submitInfo, fence);
+----
+
+上の2つのコード例の違いは、`vkQueueSubmit2KHR` は頂点シェーダのステージが完了したときに `VkSemaphore signalSemaphore` にシグナルを送るのに対し、`vkQueueSubmit` の呼び出しはサブミッションの終了まで待つという点です。
+
+`vkQueueSubmit` からのセマフォシグナルと同じ動作を `vkQueueSubmit2KHR` でエミュレートするために、 `stageMask` を `VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT` に設定することができます。
+
+[source,cpp]
+----
+// すべてが完了するまで待つ
+VkSemaphoreSubmitInfoKHR signalSemaphoreSubmitInfo = {
+    // ...
+    .stageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
+    // ...
+};
+----
+
+== エミュレーションレイヤ
+
+この拡張機能をネイティブにサポートしていないデバイスのために、link:https://github.com/KhronosGroup/Vulkan-ExtensionLayer[Vulkan-ExtensionLayer] リポジトリにポータブルな実装があります。このレイヤはあらゆる Vulkan デバイスで動作するはずです。詳細については link:https://github.com/KhronosGroup/Vulkan-ExtensionLayer/blob/master/docs/synchronization2_layer.md[レイヤドキュメント] と link:https://github.com/KhronosGroup/Vulkan-ExtensionLayer/blob/bd8a72b14c67d011561cd795d777fb838c926e0f/tests/synchronization2_tests.cpp#L1243[Sync2Compat.Vulkan10] テストケースをご覧ください。
+
+[NOTE]
+====
+`VK_KHR_synchronization2` の仕様では、`VK_KHR_create_renderpass2` と `VK_KHR_get_phyiscal_device_properties2` を要件として挙げています。そのため、これらの拡張機能を使わずに synchronization2 を使用すると、検証エラーが発生する可能性があります。拡張機能の要件は再評価されており、これが完了すると検証が調整されます。
+====

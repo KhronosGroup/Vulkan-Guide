@@ -1,0 +1,33 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+
+[[memory-allocation]]
+= メモリ割り当て
+
+Vulkan でのデバイスメモリの管理に慣れていない人もいるかもしれませんが、基本を理解しておくことが大切です。
+
+Vulkan のメモリ管理に関する2つの Khronos のプレゼンテーション、link:https://www.khronos.org/assets/uploads/developers/library/2018-vulkan-devday/03-Memory.pdf[Vulkan Dev Day Montreal] (link:https://www.youtube.com/watch?v=rXSdDE7NWmA[video]) と link:https://www.khronos.org/assets/uploads/developers/library/2018-vulkanised/03-Steven-Tovey-VulkanMemoryManagement_Vulkanised2018.pdf[2018 Vulkanised] (link:https://www.youtube.com/watch?v=zSG6dPq57P8[video]) は、主要なコンセプトを学ぶのに最適です。
+
+メモリ管理は簡単ではありません。link:https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator[Vulkan Memory Allocator] などのライブラリを使用するといいでしょう。
+
+== サブ割り当て
+
+サブ割り当ては Vulkan では最も良いアプローチです。また、アプリケーションが同時に使用できるアクティブな割り当て数である link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#limits-maxMemoryAllocationCount[maxMemoryAllocationCount] が存在することも重要です。OS やドライバレベルでのメモリ割り当てと解放は非常に遅くなる可能性があり、これがサブ割り当てのもう一つの理由です。Vulkan アプリは大きな割り当てを作成し、それを自分で管理することを目指すべきです。
+
+image::../../../chapters/images/memory_allocation_sub_allocation.png[memory_allocation_sub_allocation.png]
+
+== 転送
+
+link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#VkPhysicalDeviceType[VkPhysicalDeviceType] では、主にディスクリートと統合型（UMA（ユニファイド・メモリ・アーキテクチャ）とも呼ばれる）の2タイプの GPU を示しています。この2つの違いを理解することは、パフォーマンスにとって重要です。
+
+ディスクリートのグラフィックスカードは、デバイス上に専用のメモリを搭載しています。データはバス（PCIe など）を介して転送されますが、このバスは通常、データ転送の物理的な速度制限のためにボトルネックとなります。一部の物理デバイスは、データ転送専用のキューを可能にする `VK_QUEUE_TRANSFER_BIT` を使用してキューを示します。一般的には、ホストデータをコピーするためのステージングバッファを作成してから、コマンドバッファを経由してデバイスのローカルメモリにコピーします。
+
+UMA システムでは、デバイスとホストの間でメモリを共有しており、これは `VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT｜VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT` の組み合わせで指定されます。デメリットとしては、システムメモリを GPU と共有しなければならないため、メモリの圧迫に注意しなければなりません。主なメリットは、ステージングバッファを作成する必要がなく、転送のオーバーヘッドが大幅に削減されることです。
+
+image::../../../chapters/images/memory_allocation_transfer.png[memory_allocation_transfer.png]
+
+== 遅延メモリ割り当て
+
+タイルベースのアーキテクチャ（事実上すべてのモバイル GPU）では、`LAZILY_ALLOCATED_BIT` メモリタイプは、実際のメモリに一致しません。`LAZILY_ALLOCATED_BIT` は、サブパス間の G-buffer や深度バッファ、マルチサンプルイメージなど、タイルメモリに保持できるアタッチメントに使用できます。これにより、イメージをメモリに書き戻すための大幅な帯域幅コストを削減することができます。詳しい情報は、Khronos のチュートリアルのlink:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/render_passes[レンダーパス]とlink:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/subpasses[サブパス]をご覧ください。

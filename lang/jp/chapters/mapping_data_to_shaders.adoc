@@ -1,0 +1,579 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[mapping-data-to-shaders]]
+= シェーダへのデータマッピング
+
+[NOTE]
+====
+全ての SPIR-V アセンブリは glslangValidator で生成されています。
+====
+
+この章では、データをマッピングするための link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces[Vulkan と SPIR-V のインターフェイス]の方法について説明します。`vkAllocateMemory` から割り当てられた `VkDeviceMemory` オブジェクトを使って、Vulkan からのデータを SPIR-V シェーダが正しく利用できるように適切にマッピングするのは、アプリケーションの責任です。
+
+コア Vulkan では、Vulkan アプリケーションのデータを SPIR-V とのインターフェイスにマッピングするための基本的な方法が5つあります。
+
+  * <<input-attributes, 入力属性>>
+  * <<descriptors, ディスプリプタ>>
+  ** <<descriptor-types, ディスクリプタタイプ>>
+  *** <<storage-image, VK_DESCRIPTOR_TYPE_STORAGE_IMAGE>>
+  *** <<sampler-and-sampled-image, VK_DESCRIPTOR_TYPE_SAMPLER と VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE>>
+  *** <<combined-image-sampler, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER>>
+  *** <<uniform-buffer, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER>>
+  *** <<storage-buffer, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER>>
+  *** <<uniform-texel-buffer, VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER>>
+  *** <<storage-texel-buffer, VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER>>
+  *** <<input-attachment, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT>>
+  * <<push-constants, プッシュ定数>>
+  * <<specialization-constants, 特殊化定数>>
+  * <<physical-storage-buffer, 物理ストレージバッファ>>
+
+[[input-attributes]]
+== 入力属性
+
+コア Vulkan で Vulkan が制御する入力属性を持つシェーダステージは、頂点シェーダステージ（`VK_SHADER_STAGE_VERTEX_BIT`）だけです。これは、`VkPipeline` の作成時にインターフェイスのスロットを宣言し、ドローコールの前に `VkBuffer` にマッピングするデータをバインドします。フラグメントシェーダステージなどは入力属性を持っていますが、その値はその前に実行されたステージから出力されます。
+
+`VkCreateGraphicsPipelines` を呼び出す前に、 `VkPipelineVertexInputStateCreateInfo` 構造体に、シェーダへの `VkVertexInputAttributeDescription` マッピングのリストを入力する必要があります。
+
+GLSL 頂点シェーダの例:
+
+[source,glsl]
+----
+#version 450
+layout(location = 0) in vec3 inPosition;
+
+void main() {
+    gl_Position = vec4(inPosition, 1.0);
+}
+----
+
+位置 0 には1つの入力属性しかありません。これは、生成された SPIR-V アセンブリでも確認できます。
+
+[source,swift]
+----
+                Name 18  "inPosition"
+                Decorate 18(inPosition) Location 0
+
+            17: TypePointer Input 16(fvec3)
+18(inPosition): 17(ptr) Variable Input
+            19: 16(fvec3) Load 18(inPosition)
+----
+
+この例では、`VkVertexInputAttributeDescription` に次のようなものが使えます。
+
+[source,c]
+----
+VkVertexInputAttributeDescription input = {};
+input.location = 0;
+input.binding  = 0;
+input.format   = VK_FORMAT_R32G32B32_SFLOAT; // vec3 へマップ
+input.offset   = 0;
+----
+
+あとは、ドローコールの前に頂点バッファとオプションのインデックスバッファをバインドするだけです。
+
+[NOTE]
+====
+`VkBuffer` の作成時に `VK_BUFFER_USAGE_VERTEX_BUFFER_BIT` を使用することで、「頂点バッファ」となります。
+====
+
+[source,c]
+----
+vkBeginCommandBuffer();
+// ...
+vkCmdBindVertexBuffer();
+vkCmdDraw();
+// ...
+vkCmdBindVertexBuffer();
+vkCmdBindIndexBuffer();
+vkCmdDrawIndexed();
+// ...
+vkEndCommandBuffer();
+----
+
+[NOTE]
+====
+詳細は、xref:{chapters}vertex_input_data_processing.adoc#vertex-input-data-processing[頂点入力データ処理]の章を参照してください。
+====
+
+[[descriptors]]
+== ディスクリプタ
+
+link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets[リソースディスクリプタ]は、ユニフォームバッファ、ストレージバッファ、サンプラなどのデータを Vulkan の任意のシェーダステージにマッピングするためのコアとなる方法です。概念的には、ディスプリプタはシェーダが使用できるメモリへのポインタと考えられます。
+
+Vulkan にはさまざまなlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VkDescriptorType[ディスクリプタタイプ]があり、それぞれが何を許可しているのかlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-types[詳細に説明されています]。
+
+ディスクリプタは、シェーダにバインドされるlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sets[ディスクリプタセット]にまとめられます。ディスクリプタセットの中に1つのディスクリプタしかない場合でも、シェーダにバインドする際には `VkDescriptorSet` 全体が使用されます。
+
+=== 例
+
+この例では、以下の3つのディスクリプタセットがあります。
+
+image::../../../chapters/images/mapping_data_to_shaders_descriptor_1.png[mapping_data_to_shaders_descriptor_1.png]
+
+GLSL シェーダ:
+
+[source,glsl]
+----
+// Note - このシェーダではセット0と2のみが使用される
+
+layout(set = 0, binding = 0) uniform sampler2D myTextureSampler;
+
+layout(set = 0, binding = 2) uniform uniformBuffer0 {
+    float someData;
+} ubo_0;
+
+layout(set = 0, binding = 3) uniform uniformBuffer1 {
+    float moreData;
+} ubo_1;
+
+layout(set = 2, binding = 0) buffer storageBuffer {
+    float myResults;
+} ssbo;
+----
+
+対応する SPIR-V のアセンブリ:
+
+[source,swift]
+----
+Decorate 19(myTextureSampler) DescriptorSet 0
+Decorate 19(myTextureSampler) Binding 0
+
+MemberDecorate 29(uniformBuffer0) 0 Offset 0
+Decorate 29(uniformBuffer0) Block
+Decorate 31(ubo_0) DescriptorSet 0
+Decorate 31(ubo_0) Binding 2
+
+MemberDecorate 38(uniformBuffer1) 0 Offset 0
+Decorate 38(uniformBuffer1) Block
+Decorate 40(ubo_1) DescriptorSet 0
+Decorate 40(ubo_1) Binding 3
+
+MemberDecorate 44(storageBuffer) 0 Offset 0
+Decorate 44(storageBuffer) BufferBlock
+Decorate 46(ssbo) DescriptorSet 2
+Decorate 46(ssbo) Binding 0
+----
+
+ディスクリプタのバインドは、コマンドバッファの記録中に行われます。ディスクリプタは、ドロー/ディスパッチの呼び出し時にバインドされている必要があります。これを表現する疑似コードを以下に示します。
+
+[source,c]
+----
+vkBeginCommandBuffer();
+// ...
+vkCmdBindPipeline(); // シェーダをバインド
+
+// 2つのセットを結合する1つの方法
+vkCmdBindDescriptorSets(firstSet = 0, pDescriptorSets = &descriptor_set_c);
+vkCmdBindDescriptorSets(firstSet = 2, pDescriptorSets = &descriptor_set_b);
+
+vkCmdDraw(); // またはディスパッチ
+// ...
+vkEndCommandBuffer();
+----
+
+以下のような結果になります。
+
+image::../../../chapters/images/mapping_data_to_shaders_descriptor_2.png[mapping_data_to_shaders_descriptor_2.png]
+
+[[descriptor-types]]
+=== ディスクリプタタイプ
+
+Vulkan Spec にはlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-storage-class-correspondence[シェーダリソースとストレージクラスの対応表]があり、SPIR-V で各ディスクリプタタイプをどのようにマッピングするかが記載されています。
+
+link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-types[ディスクリプタタイプ]のそれぞれに GLSL と SPIR-V をマッピングした場合の例を以下に示します。
+
+GLSL については、link:https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf[GLSL Spec - 12.2.4. Vulkan Only: Samplers, Images, Textures, and Buffers] から詳細をご覧いただけます。
+
+[[storage-image]]
+==== ストレージイメージ
+
+`VK_DESCRIPTOR_TYPE_STORAGE_IMAGE`
+
+[source,glsl]
+----
+// VK_FORMAT_R32_UINT
+layout(set = 0, binding = 0, r32ui) uniform uimage2D storageImage;
+
+// GLSLでの読み書きの使用例
+const uvec4 texel = imageLoad(storageImage, ivec2(0, 0));
+imageStore(storageImage, ivec2(1, 1), texel);
+----
+
+[source,swift]
+----
+OpDecorate %storageImage DescriptorSet 0
+OpDecorate %storageImage Binding 0
+
+%r32ui        = OpTypeImage %uint 2D 0 0 0 2 R32ui
+%ptr          = OpTypePointer UniformConstant %r32ui
+%storageImage = OpVariable %ptr UniformConstant
+----
+
+[[sampler-and-sampled-image]]
+==== サンプラとサンプルイメージ
+
+
+`VK_DESCRIPTOR_TYPE_SAMPLER` と `VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE`
+
+[source,glsl]
+----
+layout(set = 0, binding = 0) uniform sampler samplerDescriptor;
+layout(set = 0, binding = 1) uniform texture2D sampledImage;
+
+// GLSL で texture() を使用する例
+vec4 data = texture(sampler2D(sampledImage,  samplerDescriptor), vec2(0.0, 0.0));
+----
+
+[source,swift]
+----
+OpDecorate %sampledImage DescriptorSet 0
+OpDecorate %sampledImage Binding 1
+OpDecorate %samplerDescriptor DescriptorSet 0
+OpDecorate %samplerDescriptor Binding 0
+
+%image        = OpTypeImage %float 2D 0 0 0 1 Unknown
+%imagePtr     = OpTypePointer UniformConstant %image
+%sampledImage = OpVariable %imagePtr UniformConstant
+
+%sampler           = OpTypeSampler
+%samplerPtr        = OpTypePointer UniformConstant %sampler
+%samplerDescriptor = OpVariable %samplerPtr UniformConstant
+
+%imageLoad       = OpLoad %image %sampledImage
+%samplerLoad     = OpLoad %sampler %samplerDescriptor
+
+%sampleImageType = OpTypeSampledImage %image
+%1               = OpSampledImage %sampleImageType %imageLoad %samplerLoad
+
+%textureSampled = OpimagesampleExplicitLod %v4float %1 %coordinate Lod %float_0
+----
+
+[[combined-image-sampler]]
+==== 結合イメージサンプラ
+
+`VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER`
+
+[NOTE]
+====
+実装によっては、ディスクリプタセットに一緒に保存されているサンプラとサンプルイメージの組み合わせを使用して、イメージからサンプリングすると効率的な場合があります。
+====
+
+[source,glsl]
+----
+layout(set = 0, binding = 0) uniform sampler2D combinedimagesampler;
+
+// GLSL で texture() を使用する例
+vec4 data = texture(combinedimagesampler, vec2(0.0, 0.0));
+----
+
+[source,swift]
+----
+OpDecorate %combinedimagesampler DescriptorSet 0
+OpDecorate %combinedimagesampler Binding 0
+
+%imageType            = OpTypeImage %float 2D 0 0 0 1 Unknown
+%sampleImageType      = OpTypeSampledImage imageType
+%ptr                  = OpTypePointer UniformConstant %sampleImageType
+%combinedimagesampler = OpVariable %ptr UniformConstant
+
+%load           = OpLoad %sampleImageType %combinedimagesampler
+%textureSampled = OpimagesampleExplicitLod %v4float %load %coordinate Lod %float_0
+----
+
+[[uniform-buffer]]
+==== ユニフォームバッファ
+
+`VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER`
+
+[NOTE]
+====
+ユニフォームバッファは、バインド時にxref:{chapters}descriptor_dynamic_offset.adoc[動的オフセット]を持つこともできます（VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC）。
+====
+
+[source,glsl]
+----
+layout(set = 0, binding = 0) uniform uniformBuffer {
+    float a;
+    int b;
+} ubo;
+
+// GLSL での UBO からの読み込みの例
+int x = ubo.b + 1;
+vec3 y = vec3(ubo.a);
+----
+
+[source,swift]
+----
+OpMemberDecorate %uniformBuffer 0 Offset 0
+OpMemberDecorate %uniformBuffer 1 Offset 4
+OpDecorate %uniformBuffer Block
+OpDecorate %ubo DescriptorSet 0
+OpDecorate %ubo Binding 0
+
+%uniformBuffer = OpTypeStruct %float %int
+%ptr           = OpTypePointer Uniform %uniformBuffer
+%ubo           = OpVariable %ptr Uniform
+----
+
+==== ストレージバッファ
+
+[NOTE]
+====
+VK_DESCRIPTOR_TYPE_STORAGE_BUFFER
+====
+
+[source,glsl]
+----
+layout(set = 0, binding = 0) buffer storageBuffer {
+    float a;
+    int b;
+} ssbo;
+
+// GLSL で SSBO を読み書きする例
+ssbo.a = ssbo.a + 1.0;
+ssbo.b = ssbo.b + 1;
+----
+
+[NOTE]
+.Important
+====
+`BufferBlock` と `Uniform` は xref:{chapters}extensions/shader_features.adoc#VK_KHR_storage_buffer_storage_class[VK_KHR_storage_buffer_storage_class] よりも前から存在します。
+====
+
+[source,swift]
+----
+OpMemberDecorate %storageBuffer 0 Offset 0
+OpMemberDecorate %storageBuffer 1 Offset 4
+OpDecorate %storageBuffer Block
+OpDecorate %ssbo DescriptorSet 0
+OpDecorate %ssbo Binding 0
+
+%storageBuffer = OpTypeStruct %float %int
+%ptr           = OpTypePointer StorageBuffer %storageBuffer
+%ssbo          = OpVariable %ptr StorageBuffer
+----
+
+[[uniform-texel-buffer]]
+==== ユニフォームテクセルバッファ
+
+`VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER`
+
+[source,glsl]
+----
+layout(set = 0, binding = 0) uniform textureBuffer uniformTexelBuffer;
+
+// GLSL でのテクセルバッファの読み込みの例
+vec4 data = texelFetch(uniformTexelBuffer, 0);
+----
+
+[source,swift]
+----
+OpDecorate %uniformTexelBuffer DescriptorSet 0
+OpDecorate %uniformTexelBuffer Binding 0
+
+%texelBuffer        = OpTypeImage %float Buffer 0 0 0 1 Unknown
+%ptr                = OpTypePointer UniformConstant %texelBuffer
+%uniformTexelBuffer = OpVariable %ptr UniformConstant
+
+----
+
+[[storage-texel-buffer]]
+==== ストレージテクセルバッファ
+
+`VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER`
+
+[source,glsl]
+----
+// VK_FORMAT_R8G8B8A8_UINT
+layout(set = 0, binding = 0, rgba8ui) uniform uimageBuffer storageTexelBuffer;
+
+// GLSL でのテクセルバッファの読み書きの例
+int offset = int(gl_GlobalInvocationID.x);
+vec4 data = imageLoad(storageTexelBuffer, offset);
+imagestore(storageTexelBuffer, offset, uvec4(0));
+----
+
+[source,swift]
+----
+OpDecorate %storageTexelBuffer DescriptorSet 0
+OpDecorate %storageTexelBuffer Binding 0
+
+%rgba8ui            = OpTypeImage %uint Buffer 0 0 0 2 Rgba8ui
+%ptr                = OpTypePointer UniformConstant %rgba8ui
+%storageTexelBuffer = OpVariable %ptr UniformConstant
+----
+
+[[input-attachment]]
+==== 入力アタッチメント
+
+`VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT`
+
+[source,glsl]
+----
+layout (input_attachment_index = 0, set = 0, binding = 0) uniform subpassInput inputAttachment;
+
+// GLSL でのアタッチメントデータの読み込みの例
+vec4 data = subpassLoad(inputAttachment);
+----
+
+[source,swift]
+----
+OpDecorate %inputAttachment DescriptorSet 0
+OpDecorate %inputAttachment Binding 0
+OpDecorate %inputAttachment InputAttachmentIndex 0
+
+%subpass         = OpTypeImage %float SubpassData 0 0 0 2 Unknown
+%ptr             = OpTypePointer UniformConstant %subpass
+%inputAttachment = OpVariable %ptr UniformConstant
+----
+
+[[push-constants]]
+== プッシュ定数
+
+プッシュ定数とは、シェーダでアクセス可能な値の小さな集まりです。プッシュ定数により、アプリケーションは、バッファを作成したり、更新のたびにディスクリプタセットを修正したりバインドしたりすることなく、シェーダで使用される値を設定することができます。
+
+これらは、少量（数ワード）の頻繁に更新されるデータを、コマンドバッファの記録ごとに更新するように設計されています。
+
+詳細は、xref:{chapters}push_constants.adoc[プッシュ定数]の章を参照してください。
+
+[[specialization-constants]]
+== 特殊化定数
+
+link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-specialization-constants[特殊化定数]とは、`VkPipeline` の作成時に SPIR-V の定数値を指定できる仕組みです。これは、高レベルのシェーディング言語（GLSL、HLSLなど）でプリプロセッサマクロを行うという考えを置き換えるもので、強力です。
+
+=== 例
+
+アプリケーションが、それぞれの色の値が異なる `VkPipeline` を作成したい場合、2つのシェーダを用意するのが素朴な方法です。
+
+[source,glsl]
+----
+// shader_a.frag
+#version 450
+layout(location = 0) out vec4 outColor;
+
+void main() {
+    outColor = vec4(0.0);
+}
+----
+
+[source,glsl]
+----
+// shader_b.frag
+#version 450
+layout(location = 0) out vec4 outColor;
+
+void main() {
+    outColor = vec4(1.0);
+}
+----
+
+ですが、特殊化定数を使えば、シェーダをコンパイルするために `vkCreateGraphicsPipelines` を呼び出す際に色を決定することができます。つまり、シェーダは1つあればいいということです。
+
+[source,glsl]
+----
+#version 450
+layout (constant_id = 0) const float myColor = 1.0;
+layout(location = 0) out vec4 outColor;
+
+void main() {
+    outColor = vec4(myColor);
+}
+----
+
+SPIR-V アセンブリ:
+
+[source,swift]
+----
+                      Decorate 9(outColor) Location 0
+                      Decorate 10(myColor) SpecId 0
+
+                      // 0x3f800000 as decimal which is 1.0 for a 32 bit float
+10(myColor): 6(float) SpecConstant 1065353216
+----
+
+特殊化定数では、値はシェーダ内の定数のままですが、たとえば、別の `VkPipeline` が同じシェーダを使用していて、`myColor` の値を `0.5f` に設定したい場合、実行時に設定することができます。
+
+[source,cpp]
+----
+struct myData {
+    float myColor = 1.0f;
+} myData;
+
+VkSpecializationMapEntry mapEntry = {};
+mapEntry.constantID = 0; // GLSL では constant_id、SPIR-V では SpecId に一致します。
+mapEntry.offset     = 0;
+mapEntry.size       = sizeof(float);
+
+VkSpecializationInfo specializationInfo = {};
+specializationInfo.mapEntryCount = 1;
+specializationInfo.pMapEntries   = &mapEntry;
+specializationInfo.dataSize      = sizeof(myData);
+specializationInfo.pData         = &myData;
+
+VkGraphicsPipelineCreateInfo pipelineInfo = {};
+pipelineInfo.pStages[fragIndex].pSpecializationInfo = &specializationInfo;
+
+// myColor を 1.0 とした最初のパイプラインを作成する
+vkCreateGraphicsPipelines(&pipelineInfo);
+
+// 同じシェーダで、異なる値を設定する2つ目のパイプラインを作成する
+myData.myColor = 0.5f;
+vkCreateGraphicsPipelines(&pipelineInfo);
+----
+
+逆アセンブルした2つ目の `VkPipeline` シェーダでは、`myColor` の新しい定数値が `0.5f` となっています。
+
+=== 3種類の特殊化定数の使用法
+
+特殊化定数の典型的な使用例は、3つに分類できます。
+
+  * 機能のトグル
+  ** Vulkan内でサポートする機能は、実行時になるまでわかりません。この特殊化定数の使い方は、2つの別々のシェーダを書かないようにするためのもので、代わりに実行時の決定を定数として埋め込むものです。
+  * バックエンド最適化の改善
+  ** ここでいう「バックエンド」とは、SPIR-V の結果をデバイス上で実行できるように ISA に落とし込む実装のコンパイラのことです。
+  ** 定数値では、link:https://en.wikipedia.org/wiki/Constant_folding[定数たたみ込み]やlink:https://en.wikipedia.org/wiki/Dead_code_elimination[デッドコードの解消]など、一連の最適化が行われます。
+  * タイプやメモリサイズに影響を与える
+  ** 特殊化定数で使用される配列や変数型の長さを設定することが可能です。
+  ** ここで重要なのは、これらのタイプとサイズに応じて、コンパイラがレジスタを割り当てる必要があるということです。つまり、割り当てられるレジスタに大きな差があると、パイプラインキャッシュが失敗する可能性が高くなります。
+
+[[physical-storage-buffer]]
+== 物理ストレージバッファ
+
+Vulkan 1.2で採用された link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_buffer_device_address.html#_description[VK_KHR_buffer_device_address] 拡張により、「シェーダ内のポインタ」を持つ機能が追加されました。SPIR-V の `PhysicalStorageBuffer` ストレージクラスを使って、アプリケーションは `vkGetBufferDeviceAddress` を呼び出し、メモリへの `VkDeviceAddress` を返すことができます。
+
+これはデータをシェーダにマッピングする方法ではありますが、シェーダとのインターフェイスになるわけではありません。たとえば、アプリケーションがユニフォームバッファでこれを使用したい場合、 `VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT` と `VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT` の両方を持つ `VkBuffer` を作成する必要があります。この例では、Vulkan はシェーダとのインターフェイスにディスクリプタを使用しますが、その後、物理ストレージバッファを使用して値を更新することができます。
+
+== 制限
+
+Vulkan には、一度にバインドできるデータ量にlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits[制限]があることが重要です。
+
+  * 入力属性
+  ** `maxVertexInputAttributes`
+  ** `maxVertexInputAttributeOffset`
+  * ディスクリプタ
+  ** `maxBoundDescriptorSets`
+  ** ステージごとの制限
+  ** `maxPerStageDescriptorSamplers`
+  ** `maxPerStageDescriptorUniformBuffers`
+  ** `maxPerStageDescriptorStorageBuffers`
+  ** `maxPerStageDescriptorSampledimages`
+  ** `maxPerStageDescriptorStorageimages`
+  ** `maxPerStageDescriptorInputAttachments`
+  ** 型ごとの制限
+  ** `maxPerStageResources`
+  ** `maxDescriptorSetSamplers`
+  ** `maxDescriptorSetUniformBuffers`
+  ** `maxDescriptorSetUniformBuffersDynamic`
+  ** `maxDescriptorSetStorageBuffers`
+  ** `maxDescriptorSetStorageBuffersDynamic`
+  ** `maxDescriptorSetSampledimages`
+  ** `maxDescriptorSetStorageimages`
+  ** `maxDescriptorSetInputAttachments`
+  ** `VkPhysicalDeviceDescriptorIndexingProperties` xref:{chapters}extensions/VK_EXT_inline_uniform_block.adoc#VK_EXT_inline_uniform_block[Descriptor Indexing] を使う場合
+  ** `VkPhysicalDeviceInlineUniformBlockPropertiesEXT` xref:{chapters}extensions/VK_EXT_inline_uniform_block.adoc#VK_EXT_inline_uniform_block[Inline Uniform Block] を使う場合
+  * プッシュ定数
+  ** `maxPushConstantsSize` - すべてのデバイスで最低でも `128` バイトを保証

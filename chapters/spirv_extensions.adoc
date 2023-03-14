@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 // Required for both single-page and combined guide xrefs to work
-ifndef::chapters[:chapters: ../]
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[spirv-extensions]]
 = Using SPIR-V Extensions
@@ -13,7 +14,7 @@ It is important to remember that SPIR-V is an intermediate language and not an A
 
 == SPIR-V Extension Example
 
-For this example, the link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_shader_atomic_int64.html[VK_KHR_8bit_storage] and link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage] will be used to expose the `UniformAndStorageBuffer8BitAccess` capability. The following is what the SPIR-V disassembled looks like:
+For this example, the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_shader_atomic_int64.html[VK_KHR_8bit_storage] and link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage] will be used to expose the `UniformAndStorageBuffer8BitAccess` capability. The following is what the SPIR-V disassembled looks like:
 
 [source,swift]
 ----
@@ -36,13 +37,13 @@ Breaking down each step in more detail:
 
 Depending on the shader feature there might only be a `OpExtension` or `OpCapability` that is needed. For this example, the `UniformAndStorageBuffer8BitAccess` is part of the link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage] extension.
 
-To check if the SPIR-V extension is supported take a look at the link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-extensions[Supported SPIR-V Extension Table] in the Vulkan Spec.
+To check if the SPIR-V extension is supported take a look at the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-extensions[Supported SPIR-V Extension Table] in the Vulkan Spec.
 
-image::images/spirv_extensions_8bit_extension.png[spirv_extensions_8bit_extension]
+image::{images}spirv_extensions_8bit_extension.png[spirv_extensions_8bit_extension]
 
-Also, take a look at the link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities[Supported SPIR-V Capabilities Table] in the Vulkan Spec.
+Also, take a look at the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities[Supported SPIR-V Capabilities Table] in the Vulkan Spec.
 
-image::images/spirv_extensions_8bit_capability.png[spirv_extensions_8bit_capability]
+image::{images}spirv_extensions_8bit_capability.png[spirv_extensions_8bit_capability]
 
 [NOTE]
 ====

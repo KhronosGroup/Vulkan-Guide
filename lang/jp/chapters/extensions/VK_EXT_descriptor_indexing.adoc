@@ -1,0 +1,111 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../]
+
+[[VK_EXT_descriptor_indexing]]
+= VK_EXT_descriptor_indexing
+
+[NOTE]
+====
+Vulkan 1.2 でコアに昇格
+
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_descriptor_indexing.html[SPV_EXT_descriptor_indexing]
+
+link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_nonuniform_qualifier.txt[GLSL - GL_EXT_nonuniform_qualifier]
+
+Montreal Developer Day の プレゼンテーション (link:https://www.youtube.com/watch?v=tXipcoeuNh4[動画] と link:https://www.khronos.org/assets/uploads/developers/library/2018-vulkan-devday/11-DescriptorUpdateTemplates.pdf[スライド])
+====
+
+この拡張機能は、いくつかの異なる小さな機能に分割され、実装が可能な場合は、各機能の対応を追加できるように設計されています。
+
+== バインド後の更新
+
+この拡張機能がなければ、コマンドバッファの記録と実行の間に、ディスクリプタを更新することができません。この拡張機能により、使用するディスクリプタの種類に応じた `descriptorBinding*UpdateAfterBind` の対応をクエリすることができ、記録と実行の間に更新できるようになります。
+
+[NOTE]
+.Example
+====
+アプリケーションが `StorageBuffer` ディスクリプタを持つ場合、 `descriptorBindingStorageBufferUpdateAfterBind` の対応を問い合わせることになります。
+====
+
+バインド後の更新の機能を有効にした後、バインド後の更新が可能なディスクリプタを使用するために、以下の設定を行う必要があります。
+
+  * ディスクリプタが割り当てられた `VkDescriptorPool` に対する `VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT` フラグ
+  * ディスクリプタが属する `VkDescriptorSetLayout` に対する `VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT` フラグ
+  * ディスクリプタが使用する `VkDescriptorSetLayout` 内の各バインドに対する `VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT` フラグ
+
+次のコード例では、バインド後の更新を有効にした場合と、有効にしなかった場合の違いを説明します。
+
+image::../../../../chapters/images/extensions/VK_EXT_descriptor_indexing_update_after_bind.png[VK_EXT_descriptor_indexing_update_after_bind.png]
+
+== 部分的バインド
+
+`DescriptorBindingPartiallyBound` 機能と `VkDescriptorSetLayoutBindingFlagsCreateInfo::pBindingFlags` の `VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT` を使えば、使用時に全てのディスクリプタを更新する必要はなくなります。
+
+たとえば、アプリケーションの GLSL に以下のコードがあるとき
+
+[source,glsl]
+----
+layout(set = 0, binding = 0) uniform sampler2D textureSampler[64];
+----
+
+ここで、配列の最初の 32 スロットだけをバインドします。これは、配列の未バインドスロットにインデックスを作成しないことをアプリケーションが認識していることにも依存します。
+
+== 動的インデックス
+
+通常、バインドされたディスクリプタの配列にインデックスを付ける場合、コンパイル時にインデックスを知る必要があります。`shader*ArrayDynamicIndexing` 機能により、特定のディスクリプタは、「動的ユニフォーム」整数でインデックスを付けることができます。これは、すでに `VkPhysicalDeviceFeatures` として、ほとんどのディスクリプタでサポートされていましたが、この拡張機能により、 `VkPhysicalDeviceDescriptorIndexingFeatures` 構造体が加わり、入力アタッチメント、ユニフォームテクセルバッファ、ストレージテクセルバッファの動的ユニフォームインデックスの対応も公開できるようになりました。
+
+キーワードは「ユニフォーム」です。つまり、SPIR-V Invocation Group 内のすべての呼び出しは、同じ動的インデックスを使用する必要があるということです。これは、1つの `vkCmdDraw*` コールのすべての呼び出し、または `vkCmdDispatch*` コールの1つのワークグループに変換されます。
+
+GLSL における動的ユニフォームインデックスの一例
+
+[source,glsl]
+----
+layout(set = 0, binding = 0) uniform sampler2D mySampler[64];
+layout(set = 0, binding = 1) uniform UniformBufferObject {
+    int textureId;
+} ubo;
+
+// ...
+
+void main() {
+    // ...
+    vec4 samplerColor = texture(mySampler[ubo.textureId], uvCoords);
+    // ...
+}
+----
+
+この例は、`ubo.textureId` の値が実行時までわからないため、「動的」です。また、このシェーダでは、すべての呼び出しで `ubo.textureId` が使用されるため、「ユニフォーム」 です。
+
+== 動的非ユニフォームインデックス
+
+動的**非ユニフォーム**であるということは、呼び出しがディスクリプタの配列に異なるインデックスを付ける可能性があり、それが実行時まで分からないということです。この拡張機能は、 `VkPhysicalDeviceDescriptorIndexingFeatures` で、 `shader*ArrayNonUniformIndexing` 機能ビットのセットを公開し、実装がどのディスクリプタタイプに対して動的非ユニフォームインデックスをサポートしているかを示します。SPIR-V 拡張は `NonUniform` の修飾を追加し、GLSL で追加された `nonuniformEXT` キーワードによって設定することができます。
+
+GLSLにおける動的非ユニフォームインデックスの例
+
+[source,glsl]
+----
+#version450
+#extension GL_EXT_nonuniform_qualifier : enable
+
+layout(set = 0, binding = 0) uniform sampler2D mySampler[64];
+layout(set = 0, binding = 1) uniform UniformBufferObject {
+    int textureId;
+} ubo;
+
+// ...
+
+void main() {
+    // ...
+    if (uvCoords.x > runtimeThreshold) {
+        index = 0;
+    } else {
+        index = 1;
+    }
+    vec4 samplerColor = texture(mySampler[nonuniformEXT(index)], uvCoords);
+    // ...
+}
+----
+
+この例では、ある呼び出しは `mySampler[0]` を、ある呼び出しは `mySampler[1]` をインデックスにしているので、非ユニフォームです。この場合、 `nonuniformEXT()` が必要です。

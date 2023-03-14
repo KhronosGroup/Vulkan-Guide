@@ -1,0 +1,101 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+
+[[enabling-extensions]]
+= 拡張機能の有効化
+
+ここでは、拡張機能の有効化について説明します。
+
+== 2種類の拡張機能
+
+拡張機能には、**インスタンス拡張機能**と**デバイス拡張機能**の2つのグループがあります。簡単に言えば、**インスタンス拡張機能** は `VkInstance` 全体に結び付けられ、**デバイス拡張機能** は単一の `VkDevice` オブジェクトにのみ結び付けられます。
+
+この情報は、各拡張機能のリファレンスページの「`Extension Type`」セクションに記載されています。以下に例を示します。
+
+image::../../../chapters/images/enabling_extensions_instance_extension.png[enabling_extensions_instance_extension.png]
+
+== 対応の確認
+
+アプリケーションは、まずlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-extensions[物理デバイスにクエリ]し、`vkEnumerateInstanceExtensionProperties` または `vkEnumerateDeviceExtensionProperties` で拡張機能が**サポート**されているかどうかを確認することができます。
+
+[source,cpp]
+----
+// 簡単な例
+uint32_t count = 0;
+vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &count, nullptr);
+std::vector<VkExtensionProperties> extensions(count);
+vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &count, extensions.data());
+
+// VK_KHR_bind_memory2 の対応を確認する
+for (uint32_t i = 0; i < count; i++) {
+    if (strcmp(VK_KHR_BIND_MEMORY_2_EXTENSION_NAME, extensions[i].extensionName) == 0) {
+        break; // VK_KHR_bind_memory2 はサポートされている
+    }
+}
+----
+
+== 拡張機能の有効化
+
+拡張機能が実装で**サポート**されていても、`VkInstance` や `VkDevice` の作成時に**有効化**されていなければ、拡張機能を使用すると**未定義の動作**となります。
+
+ここでは、`VK_KHR_driver_properties` のような拡張機能を有効にするために必要なものの例を示します。
+
+image::../../../chapters/images/enabling_extensions_driver_properties.png[enabling_extensions_driver_properties.png]
+
+[source,cpp]
+----
+// VK_KHR_get_physical_device_properties2 は、VK_KHR_driver_properties を使用するために必要
+// インスタンス拡張機能なので、VkInstance の作成時に有効にしておく必要がある
+std::vector<const char*> instance_extensions;
+instance_extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
+
+VkInstanceCreateInfo instance_create_info  = {};
+instance_create_info.enabledExtensionCount   = static_cast<uint32_t>(instance_extensions.size());
+instance_create_info.ppEnabledExtensionNames = instance_extensions.data();
+vkCreateInstance(&instance_create_info, nullptr, &myInstance));
+
+// ...
+
+std::vector<const char*> device_extensions;
+device_extensions.push_back(VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME);
+
+VkDeviceCreateInfo device_create_info      = {};
+device_create_info.enabledExtensionCount   = static_cast<uint32_t>(device_extensions.size());
+device_create_info.ppEnabledExtensionNames = device_extensions.data();
+vkCreateDevice(physicalDevice, &device_create_info, nullptr, &myDevice);
+----
+
+== 機能ビットの確認
+
+拡張機能は Vulkan 仕様に機能を追加するものですが、拡張機能が**サポート**されていれば、拡張機能のすべての機能が利用できるというわけではないことを覚えておいてください。たとえば、`VK_KHR_8bit_storage` のような拡張機能は、`VkPhysicalDevice8BitStorageFeatures` で公開している3つの機能を持っています。
+
+image::../../../chapters/images/enabling_extensions_8bit.png[enabling_extensions_8bit.png]
+
+つまり、拡張機能を有効にした後、アプリケーションは拡張機能に必要な機能をxref:{chapters}enabling_features.adoc#enabling-features[クエリして有効にする]必要があります。
+
+== 昇格プロセス
+
+Vulkan のマイナーバージョンがリリースされると、仕様書で定義されているように、いくつかの拡張機能がlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-compatibility-promotion[昇格されます]。昇格の目的は、Vulkan ワーキンググループが広くサポートされていると判断した拡張機能を、Vulkan のコア仕様に組み込むことです。Vulkan のバージョンに関する詳細は、xref:{chapters}versions.adoc#versions[バージョン]の章を参照してください。
+
+たとえば、他のほとんどの拡張機能に使用されている `VK_KHR_get_physical_device_properties2` のようなものがあります。Vulkan 1.0では、アプリケーションは `vkGetPhysicalDeviceFeatures2KHR` のような関数を呼び出す前に、`VK_KHR_get_physical_device_properties2` の対応をクエリする必要があります。Vulkan 1.1からは、`vkGetPhysicalDeviceFeatures2` 関数の対応が保証されています。
+
+昇格の別の見方として、`VK_KHR_8bit_storage` を再び例に挙げます。Vulkan 1.0以降、`TextureCompressionASTC_LDR` のようないくつかの機能は、サポートされている必要はありませんが、拡張機能を有効にしなくてもクエリで利用できます。`VK_KHR_8bit_storage` がコアに昇格した Vulkan 1.2からは、`VkPhysicalDevice8BitStorageFeatures` のすべての機能が、`VkPhysicalDeviceVulkan12Features` に含まれるようになりました。
+
+=== 昇格による挙動変更
+
+昇格される**一部の**拡張機能には、微妙な違いがあることが重要です。仕様書では、昇格には拡張機能の「Feature advertisement/enablement」のような小さな変更が含まれることがあるとlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-compatibility-promotion[説明されています]。この微妙な違いを説明するには、`VK_KHR_8bit_storage` をユースケースとして使用することができます。
+
+Vulkan 仕様には、Vulkan 1.2の `VK_KHR_8bit_storage` のlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#_differences_relative_to_vk_khr_8bit_storage[変更点]が以下のように記載されています。
+
+____
+VK_KHR_8bit_storage 拡張機能がサポートされていない場合、シェーダモジュールにおける SPIR-V StorageBuffer8BitAccess 機能の対応はオプションとなります。
+____
+
+ここでいう「サポートされていない」とは、ある実装が Vulkan 1.2以上をサポートしていても、アプリケーションが `vkEnumerateDeviceExtensionProperties` をクエリすると、その結果に `VK_KHR_8bit_storage` が含まれていない可能性があることを意味します。
+
+  * `vkEnumerateDeviceExtensionProperties` で `VK_KHR_8bit_storage` が見つかった場合、`storageBuffer8BitAccess` 機能がサポートされていることが**保証**されます。
+  * `vkEnumerateDeviceExtensionProperties` で `VK_KHR_8bit_storage` が**見つからない**場合は、`storageBuffer8BitAccess` 機能が**サポートされているかもしれず** 、`VkPhysicalDeviceVulkan12Features::storageBuffer8BitAccess` をクエリすることで確認できます。
+
+昇格された拡張機能のすべての機能変更のリストは、仕様書のlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#versions[バージョン付録]に記載されています。

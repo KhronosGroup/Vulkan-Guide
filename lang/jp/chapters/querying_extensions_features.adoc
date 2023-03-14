@@ -1,0 +1,62 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+
+[[querying-extensions-features]]
+= プロパティ、拡張機能、機能、制限、フォーマットのクエリ
+
+Vulkan の最大の特徴は、マルチプラットフォーム、マルチデバイスでの開発が可能なことです。これを実現するために、アプリケーションは各物理デバイスの情報をクエリし、その情報に基づいて判断する役割を担っています。
+
+物理デバイスからクエリ可能な項目
+
+  * プロパティ
+  * 機能
+  * 拡張機能
+  * 制限
+  * フォーマット
+
+== プロパティ
+
+その他にも Vulkan にはプロパティと記載されるものが多数存在します。「プロパティ」という言葉は、クエリ可能な読み取り専用のデータの総称です。
+
+== 拡張機能
+
+[NOTE]
+====
+詳しくはxref:{chapters}enabling_extensions.adoc#enabling-extensions[拡張機能の有効化]の章をご覧ください。
+
+利用可能なすべての拡張機能が記載されたlink:https://www.khronos.org/registry/vulkan/#repo-docs[レジストリ]があります。
+====
+
+Vulkan には、現在は存在しない新機能が望まれることが多々あります。拡張機能は新しい機能を追加することができます。拡張機能は新しい Vulkan 関数、列挙型、構造体、または機能ビットを定義することができます。これらの拡張項目はすべて Vulkan Headers にデフォルトで含まれていますが、xref:{chapters}enabling_extensions.adoc#enabling-extensions[拡張機能が有効になっていない]場合、拡張された Vulkan を使用することは**未定義の動作**となります。
+
+== 機能
+
+[NOTE]
+====
+詳しくはxref:{chapters}enabling_features.adoc#enabling-features[機能の有効化]の章をご覧ください。
+====
+
+機能は、一部の実装でサポートされていない機能を表します。機能は、`VkDevice` の作成時にlink:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#vkGetPhysicalDeviceFeatures[クエリ]し、有効にすることができます。link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#features[すべての機能のリスト]に加えて、より新しい Vulkan バージョンや拡張機能の使用により、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-requirements[必須となる機能]があります。
+
+一般的な手法としては、拡張機能が `pNext` に渡すことのできる新しい構造体を公開することで、クエリ可能な機能を増やすことができます。
+
+== 制限
+
+制限とは、アプリケーションが注意しなければならない実装依存の最小値、最大値、その他のデバイス特性のことです。link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#limits[すべての制限のリスト]に加えて、いくつかの制限には Vulkan の実装で保証されるlink:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#limits-minmax[最小/最大の必要な値]があります。
+
+== フォーマット
+
+Vulkan は多くの `VkFormat` を提供しています。それらは、さまざまな link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkFormatFeatureFlagBits.html[VkFormatFeatureFlagBits] ビットマスクを保持する複数の `VkFormatFlags` を持ち、クエリすることができます。
+
+詳しくは xref:{chapters}formats.adoc#feature-support [フォーマットの章] をご覧ください。
+
+== ツール
+
+すべての情報を素早く、人間が読める形式で得るために役立つツールがいくつかあります。
+
+`vulkaninfo` は、Windows、Linux、および macOS 用のコマンドラインユーティリティで、GPU について上記の利用可能な項目をすべて確認することができます。Vulkan SDK の link:https://vulkan.lunarg.com/doc/sdk/latest/windows/vulkaninfo.html[Vulkaninfo ドキュメント]を参照してください。
+
+Sascha Willems 氏が開発した link:https://play.google.com/store/apps/details?id=de.saschawillems.vulkancapsviewer&hl=en_US[Vulkan Hardware Capability Viewer] は、Vulkan をサポートするデバイスのすべての詳細を表示する Android アプリです。

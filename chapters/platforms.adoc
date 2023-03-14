@@ -3,13 +3,14 @@
 
 // Required for both single-page and combined guide xrefs to work
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[platforms]]
 = Platforms
 
 While Vulkan runs on many platforms, each has small variations on how Vulkan is managed.
 
-image::images/platforms_overview.png[platforms_overview.png]
+image::{images}platforms_overview.png[platforms_overview.png]
 
 == Android
 
@@ -17,7 +18,7 @@ The Vulkan API is link:https://developer.android.com/ndk/guides/graphics/getting
 
 Android uses its link:https://source.android.com/devices/architecture/hal[Hardware Abstraction Layer (HAL)] to find the Vulkan Driver in a link:https://source.android.com/devices/graphics/implement-vulkan#driver_emun[predefined path].
 
-All 64-bit devices that launch with API level 29 (Android Q) or later must include a Vulkan 1.1 driver.
+All 64-bit devices that were released with API level 29 (Android Q) or later must include a Vulkan 1.1 driver.
 
 == BSD Unix
 
@@ -57,4 +58,4 @@ Vulkan is supported on Windows 7, Windows 8, Windows 10, and Windows 11.
 
 == Others
 
-Some embedded systems support Vulkan by allowing presentation link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#display[directly-to-display].
+Some embedded systems support Vulkan by allowing presentation link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#display[directly-to-display].
