@@ -255,7 +255,7 @@ Shaders should aim to keep the size of these structures low.
 
 === Prefer Device-Local Memory
 
-Whilst acceleration structures can be built on any Vulkan memory heap,
+While acceleration structures can be built on any Vulkan memory heap,
 tracing rays on accelerations structures located in device-local memory should
 be expected to deliver the best performance, and should be preferred. The use of
 host-local memory (i.e. GPU accessible system memory) may be necessary in
