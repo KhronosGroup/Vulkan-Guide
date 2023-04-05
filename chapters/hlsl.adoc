@@ -277,11 +277,11 @@ When compiling HLSL with DXC you need to select a target shader profile. The nam
 | `lib`
 | All raytracing related shaders are built using the `lib` shader target profile and must use at least shader model 6.3 (e.g. `lib_6_3`).
 
-| `VK_SHADER_STAGE_TASK_BIT_NV`
+| `VK_SHADER_STAGE_TASK_BIT`
 | `as`
 | Amplification shader in HLSL terminology. Must use at least shader model 6.5 (e.g. `as_6_5`).
 
-| `VK_SHADER_STAGE_MESH_BIT_NV`
+| `VK_SHADER_STAGE_MESH_BIT`
 | `ms`
 | Must use at least shader model 6.5 (e.g. `ms_6_5`).
 
