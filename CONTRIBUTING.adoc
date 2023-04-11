@@ -29,9 +29,18 @@ the repository root README.adoc, or to generate a single document containing
 each chapter using 'make guide.html' with the 'asciidoctor' command-line
 tool installed.
 
+We have added experimental support for the Antora site generator under the
+`antora/` directory.
+See https://github.com/KhronosGroup/Vulkan-Site for details and links to a
+site incorporating the Vulkan specification, proposals, and this guide.
+
 When adding new chapters, or adding cross-references to existing chapters,
 it's necessary to take these steps:
 
+  . Links to new chapters must be added at the appropriate place in
+    `README.adoc` and the corresponding place in
+    `antora/modules/ROOT/nav.adoc`, using the existing conventions of each
+    file.
   . For each chapter `chapters/page.adoc` which contains internal
     cross-references, add this boilerplate at the top of the document:
 +
