@@ -264,11 +264,11 @@ DXC で HLSL をコンパイルする場合、ターゲットシェーダプロ�
 | `lib`
 | レイトレーシング関連のシェーダはすべて `lib` シェーダターゲットプロファイルを使ってビルドされ、少なくともシェーダモデル 6.3 (例: `lib_6_3`) を使う必要があります。
 
-| `VK_SHADER_STAGE_TASK_BIT_NV`
+| `VK_SHADER_STAGE_TASK_BIT`
 | `as`
 | HLSL における Amplification シェーダ。少なくともシェーダモデル 6.5 (例: `as_6_5`) を使う必要があります。
 
-| `VK_SHADER_STAGE_MESH_BIT_NV`
+| `VK_SHADER_STAGE_MESH_BIT`
 | `ms`
 | 少なくともシェーダモデル 6.5 (例: `as_6_5`) を使う必要があります。
 
