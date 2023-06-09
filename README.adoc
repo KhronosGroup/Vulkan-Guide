@@ -189,7 +189,7 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 // include::{chapters}dynamic_state.adoc[]
 
-  * `VK_EXT_extended_dynamic_state`, `VK_EXT_extended_dynamic_state2`, `VK_EXT_vertex_input_dynamic_state`, `VK_EXT_color_write_enable`
+  * `VK_EXT_extended_dynamic_state`, `VK_EXT_extended_dynamic_state2`, `VK_EXT_extended_dynamic_state3`, `VK_EXT_vertex_input_dynamic_state`, `VK_EXT_color_write_enable`, `VK_EXT_attachment_feedback_loop_dynamic_state`
 
 == xref:{chapters}subgroups.adoc[Subgroups]
 
