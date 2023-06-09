@@ -146,20 +146,22 @@ vkCreateSampler(device, &samplerInfo, nullptr, &mySampler));
 
 たとえば、2つのディスクリプタと、multi-planar フォーマット用の不変のサンプラで、それぞれ `VkSamplerYcbcrConversionImageFormatProperties::combinedImageSamplerDescriptorCount` 値が `2` と `3` であるディスクリプタセットのレイアウトバインディングを考えてみます。バインディングには2つのディスクリプタがあり、 `combinedImageSamplerDescriptorCount` の最大値は `3` なので、このレイアウトを持つディスクリプタセットは、ディスクリプタプールから `6` 個のディスクリプタを消費します。このレイアウトで `4` 個のディスクリプタセットを確保できるディスクリプタプールを作成するには、 `descriptorCount` は最低でも `24` でなければいけません。
 
+現在のところ、`combinedImageSamplerDescriptorCount` の最大値をlink:https://github.com/KhronosGroup/Vulkan-Docs/issues/2139[知る方法はありません]。実際には、この値は3であるが、アルファ成分を含むいくつかの外部フォーマットを使用する場合は4となる。
+
 `combinedImageSamplerDescriptorCount` をクエリする擬似コードです。
 ``
 
 [source,cpp]
 ----
-VkSamplerYcbcrConversionImageFormatProperties samplerYcbcrConversionImageFormatProperties = {};
+VkSamplerYcbcrConversionImageFormatProperties samplerYcbcrConversionImageFormatProperties = { /* ... */ };
 
-VkImageFormatProperties imageFormatProperties   = {};
-VkImageFormatProperties2 imageFormatProperties2 = {};
+VkImageFormatProperties imageFormatProperties   = { /* ... */ };
+VkImageFormatProperties2 imageFormatProperties2 = { /* ... */ };
 // ...
 imageFormatProperties2.pNext                 = &samplerYcbcrConversionImageFormatProperties;
 imageFormatProperties2.imageFormatProperties = imageFormatProperties;
 
-VkPhysicalDeviceImageFormatInfo2 imageFormatInfo = {};
+VkPhysicalDeviceImageFormatInfo2 imageFormatInfo = { /* ... */ };
 // ...
 imageFormatInfo.format = formatToQuery;
 vkGetPhysicalDeviceImageFormatProperties2(physicalDevice, &imageFormatInfo, &imageFormatProperties2));
