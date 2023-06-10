@@ -194,6 +194,73 @@ VSOutput main(VSInput input) {
 }
 ----
 
+=== Push constants
+
+==== GLSL
+
+layout (push_constant) uniform __structure type__ { __members__ } __name__
+
+Example:
+[source,glsl]
+----
+layout (push_constant) uniform PushConsts {
+	mat4 matrix;
+} pushConsts;
+----
+
+==== HLSL
+
+[[vk::push_constant]] __structure type__ pushConsts;
+
+[source,hlsl]
+----
+struct PushConsts {
+    float4x4 matrix;
+};
+[[vk::push_constant]] PushConsts pushConsts;
+----
+
+=== Specialization constants
+
+==== GLSL
+
+layout (constant_id = __spec const index__) const int __name__ = __default value__;
+
+Example:
+[source,glsl]
+----
+layout (constant_id = 0) const int SPEC_CONST = 0;
+----
+
+==== HLSL
+
+[[vk::constant_id(__spec const index__)]] const int __name__ = __default value__;
+
+Example:
+[source,hlsl]
+----
+[[vk::constant_id(0)]] const int SPEC_CONST = 0;
+----
+
+=== Sub passes
+
+==== GLSL
+
+layout (input_attachment_index = __input attachment index__, binding = __binding index__) uniform subpassInput __name__;
+
+Example:
+[source,glsl]
+----
+layout (input_attachment_index = 0, binding = 0) uniform subpassInput input0;
+----
+
+==== HLSL
+
+Example:
+[source,hlsl]
+----
+----
+
 == Built-ins and functions mapping
 // @todo: change caption
 
@@ -211,14 +278,14 @@ VSOutput main(VSInput input) {
 | hitAttributeEXT (storage qualifier) | Last argument of ReportHit()
 | callableDataEXT (storage qualifier) | Last argument of CallShader()
 | callableDataInEXT (storage qualifier) | First argument for main entry of callabe stage
-| shaderRecordEXT (decorated buffer) | @todo
+| shaderRecordEXT (decorated buffer) | [[vk::shader_record_ext]] annotation for a ConstantBuffer
 | gl_LaunchIDEXT | DispatchRaysIndex
 | gl_LaunchSizeEXT | DispatchRaysDimensions
 | gl_PrimitiveID | PrimitiveIndex
 | gl_InstanceID | InstanceIndex
 | gl_InstanceCustomIndexEXT | InstanceID
 | gl_GeometryIndexEXT | GeometryIndex
-| gl_VertexIndex | SV_VertexID |
+| gl_VertexIndex | SV_VertexID
 | gl_WorldRayOriginEXT | WorldRayOrigin
 | gl_WorldRayDirectionEXT | WorldRayDirection
 | gl_ObjectRayOriginEXT | ObjectRayOrigin
@@ -255,4 +322,16 @@ VSOutput main(VSInput input) {
 | SetMeshOutputsEXT | SetMeshOutputCounts
 | EmitVertex | TriangleStream<T>.Append
 | EndPrimitive | TriangleStream<T>.RestartStrip
+|====
+
+=== Misc
+// @todo: rename, split
+|====
+| *GLSL*  | *HLSL* | *Note*
+| gl_PointSize | [[vk::builtin("PointSize")]] | Vulkan only, not direct HLSL equivalent
+| gl_BaseVertexARB | [[vk::builtin("BaseVertex")]] | Vulkan only, not direct HLSL equivalent
+| gl_BaseInstanceARB | [[vk::builtin("PoBaseInstanceintSize")]] | Vulkan only, not direct HLSL equivalent
+| gl_DrawIDARB | [[vk::builtin("DrawIndex")]] | Vulkan only, not direct HLSL equivalent
+| gl_DeviceIndex | [[vk::builtin("DeviceIndex")]] | Vulkan only, not direct HLSL equivalent
+| subpassLoad | <SubPassInput>.SubpassLoad
 |====
