@@ -1,0 +1,258 @@
+// Copyright 2019-2023 Sascha Willems
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[shader-decoder-ring]]
+= Vulkan High Level Shader Language Decoder Ring
+
+While Vulkan itself consumes shaders as xref:{chapters}what_is_spirv.adoc[SPIR-V] shaders are usually written in a high level language. This section provides a mapping between shader functionality for the most common ones used with Vulkan: GLSL and HLSL. This is mostly aimed at people wanting to migrate from one high level shader language to another. It's meant as a starting point and not as a complete porting guide to one language from another
+
+// @todo: maybe also add SPIR-V
+
+[TIP]
+====
+For more details on using HLSL with Vulkan, visit xref:{chapters}hlsl.adoc[this chapter].
+====
+
+[NOTE]
+====
+The following listings are by no means complete, and mappings for newer extensions may be missing. Also note that concepts do not always map 1:1 between GLSL and HLSL. E.g. there are no semantic in GLSL while some newer GLSL functionality may not (yet) be available in HLSL.
+====
+
+== Data types
+
+[NOTE]
+====
+Types work similar in GLSL and HLSL. But where GLSL e.g. has explicit vector or matrix types, HLSL uses basic types. On the other hand HLSL offers advanced type features like C++ templates. This paragraph contains a basic summary with some examples to show type differences between the two languages.
+====
+
+[options="header"]
+|====
+| *GLSL* | *HLSL* | *Example*
+| vec__n__ | float__n__ | vec4 -> float4
+| ivec__n__ | int__n__ | ivec3 --> int3
+| mat__nxm__ or shorthand mat__n__ | float__nxm__ | mat4 -> float4x4
+|====
+
+* link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-data-types[HLSL data types (Microsoft)]
+* link:https://www.khronos.org/opengl/wiki/Data_Type_(GLSL)[GLSL data types (OpenGL wiki)]
+
+== Shader interface
+
+[NOTE]
+====
+Shader interfaces greatly differ between GLSL and HLSL. Vulkan concepts not directly available in HLSL use the link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst#the-implicit-vk-namespace)[implicit vk namespace].
+====
+
+=== Uniforms
+
+==== GLSL
+
+layout (set = __<set index>__, binding = __<binding index>__) uniform __<type>__ __<name>__
+
+Examples:
+[source,glsl]
+----
+// Uniform buffer
+layout (set = 0, binding = 0) uniform UBO 
+{
+    mat4 projection;
+} ubo;
+
+// Combined image sampler
+layout (set = 0, binding = 1) uniform sampler2D samplerColor;
+----
+
+==== HLSL
+
+__<type>__ __<name>__ : register(__<register type><binding index>__, space__<set index>__)
+
+Examples:
+[source,hlsl]
+----
+// Uniform buffer
+struct UBO
+{
+    float4x4 projection;
+};
+cbuffer ubo : register(b0, space0) { UBO ubo; };
+
+// Combined image sampler
+Texture2D textureColor : register(t1);
+SamplerState samplerColor : register(s1);
+----
+
+`+<register type>+` can be:
+
+[options="header"]
+|====
+| *Type* | *Register Description* | *Vulkan resource*
+| b | Constant buffer | Uniform buffer
+| t | Texture and texture buffer | same
+| c | Buffer offset | n.a.
+| s | Sampler | same
+| u | Unordered Access View | Shader storage buffer
+|====
+
+=== Shader inputs
+
+==== GLSL
+
+layout (location = __<location index>__) in __<type>__ __<name>__;
+
+Example:
+[source,glsl]
+----
+layout (location = 0) in vec3 inPos;
+layout (location = 1) in vec3 inNormal;
+layout (location = 2) in vec2 inUV0;
+layout (location = 3) in vec2 inUV1;
+----
+
+==== HLSL
+
+[[vk::location(__<location index>__)]] __<type>__ __<name>__ : __<semantic type>__;
+
+Example:
+[source,hlsl]
+----
+struct VSInput
+{
+[[vk::location(0)]] float3 Pos : POSITION;
+[[vk::location(1)]] float3 Normal : NORMAL;
+[[vk::location(2)]] float2 UV0 : TEXCOORD0;
+[[vk::location(3)]] float2 UV1 : TEXCOORD1;
+};
+
+VSOutput main(VSInput input) {
+}
+----
+
+`+<semantic type>+` can be
+[options="header"]
+|====
+| *Semantic* | *Description* | *Type*
+| BINORMAL[n] | Binormal | float4
+| BLENDINDICES[n] | Blend indices | uint
+| BLENDWEIGHT[n] | Blend weights | float
+| COLOR[n] | Diffuse and specular color | float4
+| NORMAL[n] | Normal vector | float4
+| POSITION[n] | Vertex position in object space. | float4
+| POSITIONT	Transformed vertex position | float4
+| PSIZE[n] | Point size | float
+| TANGENT[n] | Tangent | float4
+| TEXCOORD[n] | Texture coordinates | float4
+|====
+
+`+n+` is an optional integer between 0 and the number of resources supported.
+
+link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics[source]
+
+=== Shader outputs
+
+==== GLSL
+
+layout (location = __<location index>__) out __<type>__ __<name>__;
+
+Example:
+[source,glsl]
+----
+layout (location = 0) out vec3 outNormal;
+layout (location = 1) out vec3 outColor;
+layout (location = 2) out vec2 outUV;
+layout (location = 3) out vec3 outViewVec;
+
+void main() {
+    gl_Position = vec4(inPos, 1.0);
+    outNormal = inNormal;
+}
+----
+
+==== HLSL
+
+[[vk::location(__<location index>__)]] __<type>__ __<name>__ : __<semantic type>__;
+
+Example:
+[source,hlsl]
+----
+struct VSOutput
+{
+	float4 Pos : SV_POSITION;
+[[vk::location(0)]] float3 Normal : NORMAL;
+[[vk::location(1)]] float3 Color : COLOR;
+[[vk::location(2)]] float2 UV : TEXCOORD0;
+[[vk::location(3)]] float3 ViewVec : TEXCOORD1;
+}
+
+VSOutput main(VSInput input) {
+    VSOutput output = (VSOutput)0;
+    output.Pos = float4(input.Pos.xyz, 1.0);
+    output.Normal = input.Normal;
+    return output;
+}
+----
+
+== Built-ins and functions mapping
+// @todo: change caption
+
+=== Raytracing
+|====
+| *GLSL*  | *HLSL*
+| accelerationStructureEXT | RaytracingAccelerationStructure
+| executeCallableEXT | CallShader
+| ignoreIntersectionEXT | IgnoreHit
+| reportIntersectionEXT | ReportHit
+| terminateRayEXT | AcceptHitAndEndSearch
+| traceRayEXT | TraceRay
+| rayPayloadEXT (storage qualifier) | Last argument of TraceRay()
+| rayPayloadInEXT (storage qualifier) | First argument for main entry of any hit, closest hit and miss stage
+| hitAttributeEXT (storage qualifier) | Last argument of ReportHit()
+| callableDataEXT (storage qualifier) | Last argument of CallShader()
+| callableDataInEXT (storage qualifier) | First argument for main entry of callabe stage
+| shaderRecordEXT (decorated buffer) | @todo
+| gl_LaunchIDEXT | DispatchRaysIndex
+| gl_LaunchSizeEXT | DispatchRaysDimensions
+| gl_PrimitiveID | PrimitiveIndex
+| gl_InstanceID | InstanceIndex
+| gl_InstanceCustomIndexEXT | InstanceID
+| gl_GeometryIndexEXT | GeometryIndex
+| gl_VertexIndex | SV_VertexID |
+| gl_WorldRayOriginEXT | WorldRayOrigin
+| gl_WorldRayDirectionEXT | WorldRayDirection
+| gl_ObjectRayOriginEXT | ObjectRayOrigin
+| gl_ObjectRayDirectionEXT | ObjectRayDirection	
+| gl_RayTminEXT | RayTMin
+| gl_RayTmaxEXT | RayTCurrent
+| gl_IncomingRayFlagsEXT | RayFlags
+| gl_HitTEXT | RayTCurrent
+| gl_HitKindEXT | HitKind
+| gl_ObjectToWorldEXT | ObjectToWorld4x3
+| gl_WorldToObjectEXT | WorldToObject4x3 
+| gl_WorldToObject3x4EXT | WorldToObject3x4
+| gl_ObjectToWorld3x4EXT | ObjectToWorld3x4
+| gl_RayFlagsNoneEXT | RAY_FLAG_NONE 
+| gl_RayFlagsOpaqueEXT | RAY_FLAG_FORCE_OPAQUE
+| gl_RayFlagsNoOpaqueEXT | AY_FLAG_FORCE_NON_OPAQUE
+| gl_RayFlagsTerminateOnFirstHitEXT | RAY_FLAG_ACCEPT_FIRST_HIT_AND_END_SEARCH
+| gl_RayFlagsSkipClosestHitShaderEXT | RAY_FLAG_SKIP_CLOSEST_HIT_SHADER
+| gl_RayFlagsCullBackFacingTrianglesEXT | RAY_FLAG_CULL_BACK_FACING_TRIANGLES
+| gl_RayFlagsCullFrontFacingTrianglesEXT | RAY_FLAG_CULL_FRONT_FACING_TRIANGLES 
+| gl_RayFlagsCullOpaqueEXT | RAY_FLAG_CULL_OPAQUE
+| gl_RayFlagsCullNoOpaqueEXT | RAY_FLAG_CULL_NON_OPAQUE
+| @todo | RAY_FLAG_SKIP_TRIANGLES
+| @todo | RAY_FLAG_SKIP_PROCEDURAL_PRIMITIVES
+| gl_HitKindFrontFacingTriangleEXT | HIT_KIND_TRIANGLE_FRONT_FACE 
+| gl_HitKindBackFacingTriangleEXT | HIT_KIND_TRIANGLE_BACK_FACE 
+| shadercallcoherent | @todo
+|====
+
+=== Mesh shader
+|====
+| *GLSL*  | *HLSL*
+| EmitMeshTasksEXT | DispatchMesh
+| SetMeshOutputsEXT | SetMeshOutputCounts
+| EmitVertex | TriangleStream<T>.Append
+| EndPrimitive | TriangleStream<T>.RestartStrip
+|====
