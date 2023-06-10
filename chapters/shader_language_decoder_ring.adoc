@@ -265,6 +265,29 @@ Example:
 [[vk::input_attachment_index(0)]][[vk::binding(0)]] SubpassInput input0;
 ----
 
+=== Compute local size
+
+==== GLSL
+
+layout (local_size_x = __local size x__, local_size_y = __local size y__, local_size_z = __local size z__) in;
+
+Example:
+[source,glsl]
+----
+layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+----
+
+==== HLSL
+
+[numthreads(__local size x__, __local size y__, __local size z__)] +
+
+Example:
+[source,hlsl]
+----
+[numthreads(1, 1, 1)]
+void main() {}
+----
+
 == Built-ins and functions mapping
 // @todo: change caption
 
