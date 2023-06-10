@@ -257,9 +257,12 @@ layout (input_attachment_index = 0, binding = 0) uniform subpassInput input0;
 
 ==== HLSL
 
+[[vk::input_attachment_index(__input attachment index__)]][[vk::binding(__binding index__)]] SubpassInput __name__;
+
 Example:
 [source,hlsl]
 ----
+[[vk::input_attachment_index(0)]][[vk::binding(0)]] SubpassInput input0;
 ----
 
 == Built-ins and functions mapping
