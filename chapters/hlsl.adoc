@@ -23,7 +23,7 @@ From the application's point-of-view, using HLSL is exactly the same as using GL
 
 [[hlsl-spirv-mapping-manual]]
 == HLSL to SPIR-V feature mapping manual
-A great starting point on using HLSL in Vulkan via SPIR-V is the link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst[HLSL to SPIR-V feature mapping manual]. It contains detailed information on semantics, syntax, supported features and extensions and much more and is a must-read. The xref:{chapters}decoder_ring.adoc[decoder ring] also has a translation table for concepts and terms used in Vulkan an DirectX.
+A great starting point on using HLSL in Vulkan via SPIR-V is the link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst[HLSL to SPIR-V feature mapping manual]. It contains detailed information on semantics, syntax, supported features and extensions and much more and is a must-read. The xref:{chapters}decoder_ring.adoc[decoder ring] also has a translation table for concepts and terms used in Vulkan and DirectX.
 
 [[vk-namespace]]
 == The Vulkan HLSL namespace
