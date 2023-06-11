@@ -131,6 +131,8 @@ VSOutput main(VSInput input) {
 }
 ----
 
+// @todo: add general note on input semantics, e.g. for other stuff like compute where you need to use input semantics instead of built-ins
+
 `+<semantic type>+` can be
 [options="header"]
 |====
@@ -153,9 +155,13 @@ link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hl
 
 === Shader outputs
 
-==== GLSL
+==== Passing data between stages
 
-layout (location = __<location index>__) out __<type>__ __<name>__;
+E.g. for vertex and tessellations shaders.
+
+===== GLSL
+
+layout (location = __<location index>__) out/in __<type>__ __<name>__;
 
 Example:
 [source,glsl]
@@ -171,7 +177,7 @@ void main() {
 }
 ----
 
-==== HLSL
+===== HLSL
 
 [[vk::location(__<location index>__)]] __<type>__ __<name>__ : __<semantic type>__;
 
@@ -191,6 +197,50 @@ VSOutput main(VSInput input) {
     VSOutput output = (VSOutput)0;
     output.Pos = float4(input.Pos.xyz, 1.0);
     output.Normal = input.Normal;
+    return output;
+}
+----
+
+==== Writing attachments
+
+For fragment shaders.
+
+===== GLSL
+
+layout (location = __<attachment index>__) out/in __<type>__ __<name>__;
+
+Example:
+[source,glsl]
+----
+layout (location = 0) out vec4 outPosition;
+layout (location = 1) out vec4 outNormal;
+layout (location = 2) out vec4 outAlbedo;
+
+void main() {
+    outPosition = ...
+    outNormal = ...
+    outAlbedo = ...
+}
+----
+
+===== HLSL
+
+__<type>__ __<name>__ : SV_TARGET__<attachment index>__;
+
+Example:
+[source,hlsl]
+----
+struct FSOutput
+{
+	float4 Position : SV_TARGET0;
+	float4 Normal : SV_TARGET1;
+	float4 Albedo : SV_TARGET2;
+};
+
+FSOutput main(VSOutput input) {
+    output.Position = ...
+    output.Normal = ...
+    output.Albedo = ...
     return output;
 }
 ----
@@ -288,10 +338,53 @@ Example:
 void main() {}
 ----
 
+=== Texture reads
+
+[NOTE]
+====
+Where GLSL uses global functions to access images, HLSL uses member functions of the texture object.
+====
+
+Example:
+
+GLSL:
+[source,glsl]
+----
+layout (binding = 0, set = 0) uniform sampler2D sampler0;
+
+void main() {
+    vec4 color = texture(sampler0, inUV);
+}
+----
+
+HLSL:
+[source,hlsl]
+----
+Texture2D texture0 : register(t0, space0);
+SamplerState sampler0 : register(s0, space0);
+
+float4 main(VSOutput input) : SV_TARGET {
+    float4 color = texture0.Sample(sampler0, input.UV);
+}
+----
+
+[options="header"]
+|====
+| *GLSL*  | *HLSL*
+| texture | Sample
+| textureGrad | SampleGrad
+| textureLod | SampleLevel
+| textureSize | GetDimensions
+| textureProj | n.a.
+| texelFetch | Load
+| sparseTexelsResidentARB | SampleLevel
+|====
+
 == Built-ins and functions mapping
-// @todo: change caption
+// @todo: change caption or maybe remove completely
 
 === Raytracing
+[options="header"]
 |====
 | *GLSL*  | *HLSL*
 | accelerationStructureEXT | RaytracingAccelerationStructure
@@ -342,23 +435,88 @@ void main() {}
 | shadercallcoherent | @todo
 |====
 
-=== Mesh shader
+=== Compute
+
+[options="header"]
+|====
+| *GLSL*  | *HLSL*
+| shared | groupshared
+| gl_GlobalInvocationID | SV_DispatchThreadID semantic
+| gl_LocalInvocationID | SV_GroupThreadID semantic
+| gl_WorkGroupSize | n.a.
+|====
+
+==== Barriers
+
+[NOTE]
+====
+Barriers heavily differ between GLSL and HLSL. With one exception there is no direct mapping. To match HLSL in GLSL you often need to call multiple different barrier types in glsl.
+====
+
+Example:
+
+GLSL:
+[source,glsl]
+----
+groupMemoryBarrier();
+barrier();
+for (int j = 0; j < 256; j++) {
+    doSomething();
+}
+groupMemoryBarrier();
+barrier();
+----
+
+HLSL:
+[source,hlsl]
+----
+GroupMemoryBarrierWithGroupSync();
+for (int j = 0; j < 256; j++) {
+    doSomething();
+}
+GroupMemoryBarrierWithGroupSync();
+----
+
+|====
+| *GLSL*  | *HLSL*
+| groupMemoryBarrier | GroupMemoryBarrier
+| groupMemoryBarrier + barrier | GroupMemoryBarrierWithGroupSync
+| memoryBarrier + memoryBarrierImage + memoryBarrierImage | DeviceMemoryBarrier
+| memoryBarrier + memoryBarrierImage + memoryBarrierImage + barrier | DeviceMemoryBarrierWithGroupSync
+| All above barriers + barrier | AllMemoryBarrierWithGroupSync
+| All above barriers | AllMemoryBarrier
+| memoryBarrierShared (only) | n.a.
+|====
+
+=== Mesh, task (amplification) and geometry shaders
+
+These shader stages share several functions and built-ins
+
+[options="header"]
 |====
 | *GLSL*  | *HLSL*
 | EmitMeshTasksEXT | DispatchMesh
 | SetMeshOutputsEXT | SetMeshOutputCounts
-| EmitVertex | TriangleStream<T>.Append
-| EndPrimitive | TriangleStream<T>.RestartStrip
+| EmitVertex | __StreamType__<__Name__>.Append (e.g. +{TriangleStream<MSOutput>}+)
+| EndPrimitive | __StreamType__<__Name__>.RestartStrip
+| gl_in | Array argument for main entry (e.g. +{triangle VSInput input[3]}+)
 |====
 
 === Misc
 // @todo: rename, split
+[options="header"]
 |====
 | *GLSL*  | *HLSL* | *Note*
-| gl_PointSize | [[vk::builtin("PointSize")]] | Vulkan only, not direct HLSL equivalent
-| gl_BaseVertexARB | [[vk::builtin("BaseVertex")]] | Vulkan only, not direct HLSL equivalent
-| gl_BaseInstanceARB | [[vk::builtin("PoBaseInstanceintSize")]] | Vulkan only, not direct HLSL equivalent
-| gl_DrawIDARB | [[vk::builtin("DrawIndex")]] | Vulkan only, not direct HLSL equivalent
-| gl_DeviceIndex | [[vk::builtin("DeviceIndex")]] | Vulkan only, not direct HLSL equivalent
-| subpassLoad | <SubPassInput>.SubpassLoad
+| gl_PointSize | [[vk::builtin("PointSize")]] | Vulkan only, no direct HLSL equivalent
+| gl_BaseVertexARB | [[vk::builtin("BaseVertex")]] | Vulkan only, no direct HLSL equivalent
+| gl_BaseInstanceARB | [[vk::builtin("PoBaseInstanceintSize")]] | Vulkan only, no direct HLSL equivalent
+| gl_DrawIDARB | [[vk::builtin("DrawIndex")]] | Vulkan only, no direct HLSL equivalent
+| gl_DeviceIndex | [[vk::builtin("DeviceIndex")]] | Vulkan only, no direct HLSL equivalent
+| gl_ViewIndex | SV_ViewID semantic
+| subpassLoad | <SubPassInput>.SubpassLoad |
+| imageLoad | RWTexture1D/2D/3D<T>[] |
+| imageStore | RWTexture1D/2D/3D<T>[] |
+| atomicAdd | InterlockedAdd |
+| atomicCompSwap | InterlockedCompareExchange |
+| imageAtomicExchange | InterlockedExchange |
 |====
