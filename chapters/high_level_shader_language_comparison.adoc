@@ -8,7 +8,7 @@ ifndef::images[:images: images/]
 = Vulkan High Level Shader Language Comparison
 :toc:
 
-While Vulkan itself consumes shaders as xref:{chapters}what_is_spirv.adoc[SPIR-V] shaders are usually written in a high level language. This section provides a mapping between shader functionality for the most common ones used with Vulkan: GLSL and HLSL. This is mostly aimed at people wanting to migrate from one high level shader language to another. It's meant as a starting point and not as a complete porting guide to one language from another
+While Vulkan itself consumes shader in a binary format called xref:{chapters}what_is_spirv.adoc[SPIR-V], shaders are usually written in a high level language. This section provides a mapping between shader functionality for the most common ones used with Vulkan: GLSL and HLSL. This is mostly aimed at people wanting to migrate from one high level shader language to another. It's meant as a starting point and not as a complete porting guide to one language from another
 
 // @todo: maybe also add SPIR-V
 
@@ -512,7 +512,7 @@ These shader stages share several functions and built-ins
 | gl_BaseInstanceARB | [[vk::builtin("PoBaseInstanceintSize")]] | Vulkan only, no direct HLSL equivalent
 | gl_DrawIDARB | [[vk::builtin("DrawIndex")]] | Vulkan only, no direct HLSL equivalent
 | gl_DeviceIndex | [[vk::builtin("DeviceIndex")]] | Vulkan only, no direct HLSL equivalent
-| gl_ViewIndex | SV_ViewID semantic
+| gl_ViewIndex | SV_ViewID semantic |
 | subpassLoad | <SubPassInput>.SubpassLoad |
 | imageLoad | RWTexture1D/2D/3D<T>[] |
 | imageStore | RWTexture1D/2D/3D<T>[] |
