@@ -44,6 +44,76 @@ Types work similar in GLSL and HLSL. But where GLSL e.g. has explicit vector or 
 * link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-data-types[HLSL data types (Microsoft)]
 * link:https://www.khronos.org/opengl/wiki/Data_Type_(GLSL)[GLSL data types (OpenGL wiki)]
 
+
+== Built-ins vs. Semantics
+
+[NOTE]
+====
+While GLSL makes heavy use of input and output variables built into the languages called "built-ins", there is no such concept in HLSL. HLSL instead uses link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics[semantics], strings that are attached to inputs or inputs that contain information about the intended use of that variable. In HLSL semantics are also used in the shader interface.
+====
+
+=== Examples
+
+Writing positions from the vertex shader:
+
+GLSL:
+[source,glsl]
+----
+layout (location = 0) in vec4 inPos;
+
+void main() {
+    // The vertex output position is written to the gl_Position built-in
+    gl_Position = ubo.projectionMatrix * ubo.viewMatrix * ubo.modelMatrix * inPos.xyz;
+}
+----
+
+HLSL
+[source,hlsl]
+----
+struct VSOutput
+{
+    // The SV_POSITION semantic declares the Pos member as the vertex output position 
+	float4 Pos : SV_POSITION;
+};
+
+VSOutput main(VSInput input)
+{
+	VSOutput output = (VSOutput)0;
+	output.Pos = mul(ubo.projectionMatrix, mul(ubo.viewMatrix, mul(ubo.modelMatrix, input.Pos)));
+	return output;
+}
+----
+
+Reading the vertex index:
+
+GLSL:
+[source,glsl]
+----
+void main() 
+{
+    // The vertex index is stored in the gl_VertexIndex built-in
+	outUV = vec2((gl_VertexIndex << 1) & 2, gl_VertexIndex & 2);
+}
+----
+
+HLSL
+[source,hlsl]
+----
+struct VSInput
+{
+    // The SV_VertexID semantic declares the VertexIndex member as the vertex index input
+	uint VertexIndex : SV_VertexID
+};
+
+VSOutput main(VSInput input)
+{
+	VSOutput output = (VSOutput)0;
+	output.UV = float2((input.VertexIndex << 1) & 2, input.VertexIndex & 2);
+	return output;
+}
+----
+
+
 == Shader interface
 
 [NOTE]
