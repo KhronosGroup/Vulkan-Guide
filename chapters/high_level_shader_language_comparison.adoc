@@ -49,7 +49,7 @@ Types work similar in GLSL and HLSL. But where GLSL e.g. has explicit vector or 
 
 [NOTE]
 ====
-While GLSL makes heavy use of input and output variables built into the languages called "built-ins", there is no such concept in HLSL. HLSL instead uses link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics[semantics], strings that are attached to inputs or inputs that contain information about the intended use of that variable. In HLSL semantics are also used in the shader interface.
+While GLSL makes heavy use of input and output variables built into the languages called "built-ins", there is no such concept in HLSL. HLSL instead uses link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics[semantics], strings that are attached to inputs or inputs that contain information about the intended use of that variable. They are prefixed with `SV_`.
 ====
 
 === Examples
@@ -92,7 +92,7 @@ GLSL:
 void main() 
 {
     // The vertex index is stored in the gl_VertexIndex built-in
-	outUV = vec2((gl_VertexIndex << 1) & 2, gl_VertexIndex & 2);
+    outUV = vec2((gl_VertexIndex << 1) & 2, gl_VertexIndex & 2);
 }
 ----
 
@@ -102,7 +102,7 @@ HLSL
 struct VSInput
 {
     // The SV_VertexID semantic declares the VertexIndex member as the vertex index input
-	uint VertexIndex : SV_VertexID
+    uint VertexIndex : SV_VertexID
 };
 
 VSOutput main(VSInput input)
@@ -458,6 +458,7 @@ float4 main(VSOutput input) : SV_TARGET {
 // @todo: change caption or maybe remove completely
 
 === Raytracing
+// @todo: some of the stuff in here is used across different stages (e.g. gl_PrimitiveID)
 [options="header"]
 |====
 | *GLSL*  | *HLSL*
@@ -515,8 +516,11 @@ float4 main(VSOutput input) : SV_TARGET {
 |====
 | *GLSL*  | *HLSL*
 | shared | groupshared
-| gl_GlobalInvocationID | SV_DispatchThreadID semantic
-| gl_LocalInvocationID | SV_GroupThreadID semantic
+| gl_GlobalInvocationID | SV_DispatchThreadID
+| gl_LocalInvocationID | SV_GroupThreadID
+| gl_WorkGroupID | SV_GroupID
+| gl_LocalInvocationIndex | SV_GroupIndex
+| gl_NumWorkGroups | n.a.
 | gl_WorkGroupSize | n.a.
 |====
 
@@ -573,7 +577,21 @@ These shader stages share several functions and built-ins
 | SetMeshOutputsEXT | SetMeshOutputCounts
 | EmitVertex | __StreamType__<__Name__>.Append (e.g. +{TriangleStream<MSOutput>}+)
 | EndPrimitive | __StreamType__<__Name__>.RestartStrip
+// @todo: check these
+| gl_PrimitiveShadingRateEXT | SV_ShadingRate
+| gl_CullPrimitiveEXT | SV_CullPrimitive
 | gl_in | Array argument for main entry (e.g. +{triangle VSInput input[3]}+)
+|====
+
+=== Tessellation shaders
+
+[options="header"]
+|====
+| *GLSL* | *HLSL*
+| gl_InvocationID | SV_OutputControlPointID
+| gl_TessLevelInner | SV_InsideTessFactor
+| gl_TessLevelOuter | SV_TessFactor
+| gl_TessCoord | SV_DomainLocation
 |====
 
 === Misc
@@ -584,9 +602,13 @@ These shader stages share several functions and built-ins
 | gl_PointSize | [[vk::builtin("PointSize")]] | Vulkan only, no direct HLSL equivalent
 | gl_BaseVertexARB | [[vk::builtin("BaseVertex")]] | Vulkan only, no direct HLSL equivalent
 | gl_BaseInstanceARB | [[vk::builtin("PoBaseInstanceintSize")]] | Vulkan only, no direct HLSL equivalent
-| gl_DrawIDARB | [[vk::builtin("DrawIndex")]] | Vulkan only, no direct HLSL equivalent
+| gl_DrawID | [[vk::builtin("DrawIndex")]] | Vulkan only, no direct HLSL equivalent
 | gl_DeviceIndex | [[vk::builtin("DeviceIndex")]] | Vulkan only, no direct HLSL equivalent
-| gl_ViewIndex | SV_ViewID semantic |
+| gl_ViewIndex | SV_ViewID |
+| gl_ClipDistance | SV_ClipDistance |
+| gl_CullDistance | SV_CullDistance |
+| gl_ViewportIndex | SV_ViewportArrayIndex |
+| gl_Layer | SV_RenderTargetArrayIndex |
 | subpassLoad | <SubPassInput>.SubpassLoad |
 | imageLoad | RWTexture1D/2D/3D<T>[] |
 | imageStore | RWTexture1D/2D/3D<T>[] |
