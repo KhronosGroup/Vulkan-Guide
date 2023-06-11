@@ -22,6 +22,10 @@ For more details on using HLSL with Vulkan, visit xref:{chapters}hlsl.adoc[this 
 The following listings are by no means complete, and mappings for newer extensions may be missing. Also note that concepts do not always map 1:1 between GLSL and HLSL. E.g. there are no semantic in GLSL while some newer GLSL functionality may not (yet) be available in HLSL.
 ====
 
+== Extensions
+
+In GLSL extensions need to be explicitly enabled using the `#extension` directive. This is **not** necessary in HLSL. The compiler will automatically select suitable SPIR-V extensions. If required one can use `-fspv-extension` arguments to explicitly select extensions.
+
 == Data types
 
 [NOTE]
