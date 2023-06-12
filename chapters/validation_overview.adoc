@@ -50,7 +50,7 @@ The Khronos Validation Layer used to consist of multiple layers but now has been
 
 === Getting Validation Layers
 
-The Validation Layers are constantly being updated and improved so it is always possible to grab the source and link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/master/BUILD.md[build it yourself]. In case you want a prebuit version there are various options for all supported platforms:
+The Validation Layers are constantly being updated and improved so it is always possible to grab the source and link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/master/BUILD.md[build it yourself]. In case you want a prebuilt version there are various options for all supported platforms:
 
   * **Android** - Binaries are link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/releases[released on GitHub] with most up to date version. The NDK will also comes with the Validation Layers built and link:https://developer.android.com/ndk/guides/graphics/validation-layer[information on how to use them].
   * **Linux** - The link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK] comes with the Validation Layers built and instructions on how to use them on link:https://vulkan.lunarg.com/doc/sdk/latest/linux/validation_layers.html[Linux].
