@@ -143,11 +143,11 @@ if (rayQueryGetIntersectionTypeEXT(rq, true) == gl_RayQueryCommittedIntersection
   * レイトレーシングパイプラインでシェーダバインディングテーブルにアクセスするには、
     `VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR` と、
     `VK_ACCESS_SHADER_READ_BIT` または `VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR` のいずれかを使用します。
-  * アクセラレーション構造(AS)をビルドするには、`VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR` と、
+  * アクセラレーション構造（AS）をビルドするには、`VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR` と、
     アクセスされるリソースに対応するアクセスビットを使用します：
 
   ** 書きこみ対象のASには `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR`
-  ** 読み込み対象のAS(例：更新用)には、`VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR`
+  ** 読み込み対象のAS（例：更新用）には、`VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR`
   ** スクラッチバッファには `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR`
      と `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR` の両方
   ** 頂点/インデックス/インスタンス/トランスフォームバッファには `VK_ACCESS_SHADER_READ_BIT`
