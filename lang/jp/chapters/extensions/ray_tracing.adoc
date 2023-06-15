@@ -187,18 +187,6 @@ if (rayQueryGetIntersectionTypeEXT(rq, true) == gl_RayQueryCommittedIntersection
   ** 書きこみ対象のバッファには `VK_ACCESS_TRANSFER_WRITE_BIT`
   ** 読み込み対象のバッファには `VK_ACCESS_TRANSFER_READ_BIT`
 
-// Note: 
-// 他のコピー操作とは異なり、`VK_PIPELINE_STAGE_TRANSFER_BIT`
-// はアクセラレーション構造のコピーには使用できません。
-
-// `VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR`/
-// `VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR` の使用には、
-// `VK_KHR_ray_tracing_maintenance1` が必要です。
-
-// `VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT`/
-// `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT`/
-// `VK_ACCESS_2_MICROMAP_READ_BIT_EXT` の使用には、`VK_EXT_opacity_micromap` が必要です。
-
 [NOTE]
 ====
 他のコピー操作とは異なり、`VK_PIPELINE_STAGE_TRANSFER_BIT`
