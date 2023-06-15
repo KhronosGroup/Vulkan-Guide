@@ -278,14 +278,19 @@ operation.
   ** Destination buffer uses `VK_ACCESS_TRANSFER_WRITE_BIT`
   ** Source buffer uses `VK_ACCESS_TRANSFER_READ_BIT`
 
-Note: unlike other copy operations, `VK_PIPELINE_STAGE_TRANSFER_BIT` does not
-work for acceleration structure copies
+[NOTE]
+====
+Unlike other copy operations, `VK_PIPELINE_STAGE_TRANSFER_BIT` does not
+work for acceleration structure copies.
+
 Use of `VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR`/
 `VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR` requires
-`VK_KHR_ray_tracing_maintenance1`
+`VK_KHR_ray_tracing_maintenance1`.
+
 Use of `VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT`/
 `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT`/`VK_ACCESS_2_MICROMAP_READ_BIT_EXT`
-requires `VK_EXT_opacity_micromap`
+requires `VK_EXT_opacity_micromap`.
+====
 
 [[ray-tracing-best-practices]]
 == Ray Tracing Best Practices
