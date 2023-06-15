@@ -136,6 +136,83 @@ if (rayQueryGetIntersectionTypeEXT(rq, true) == gl_RayQueryCommittedIntersection
 操作が完了した後（つまり、`vkDeferredOperationJoinKHR` が `VK_SUCCESS` を返した後）、`vkGetDeferredOperationResultKHR` を呼び出して操作の結果を取得します。
 
 
+[[ray-tracing-synchronization]]
+== レイトレーシングに関する同期
+
+  * シェーダー内でトレースやクエリを呼び出すには、関連するシェーダステージでアクセラレーション構造に対して
+    `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR` を使用します。
+  * レイトレーシングパイプラインでシェーダバインディングテーブルにアクセスするには、
+    `VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR` と、
+    `VK_ACCESS_SHADER_READ_BIT` または `VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR` のいずれかを使用します。
+  * アクセラレーション構造(AS)をビルドするには、`VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR` と、
+    アクセスされるリソースに対応するアクセスビットを使用します：
+
+  ** 書きこみ対象のASには `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR`
+  ** 読み込み対象のAS(例：更新用)には、`VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR`
+  ** スクラッチバッファには `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR`
+     と `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR` の両方
+  ** 頂点/インデックス/インスタンス/トランスフォームバッファには `VK_ACCESS_SHADER_READ_BIT`
+
+  * アクセラレーション構造のコピーコマンドには、
+    `VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR` または
+    `VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR` を使用し、
+    ソースに応じたアクセスフラグを使用します：
+
+  ** 書きこみ対象のASには `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR`
+  ** 読み込み対象のASには `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR`
+  ** 書きこみ対象のバッファには `VK_ACCESS_TRANSFER_WRITE_BIT`
+  ** 読み込み対象のバッファには `VK_ACCESS_TRANSFER_READ_BIT`
+
+  * 間接トレース呼び出しをするには、間接バッファに対して
+    `VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT` と
+    `VK_ACCESS_INDIRECT_COMMAND_READ_BIT` を使用します。
+  * アクセラレーション構造の間接ビルドには、間接バッファに対して
+    `VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR` と
+    `VK_ACCESS_INDIRECT_COMMAND_READ_BIT` を使用します。
+  * マイクロマップのビルドには、
+    `VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT` と、
+    アクセスされるリソースに対応するアクセスビットを使用します：
+
+  ** 書きこみ対象のマイクロマップには `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT`
+  ** スクラッチバッファには `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT` と
+     `VK_ACCESS_2_MICROMAP_READ_BIT_EXT` の両方
+  ** 入力バッファには `VK_ACCESS_SHADER_READ_BIT`
+
+  * マイクロマップのコピーコマンドには、
+    `VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT` を使用し、
+    ソースに応じたアクセスフラグを使用します：
+
+  ** 書きこみ対象のマイクロマップには `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT`
+  ** 読み込み対象のマイクロマップには `VK_ACCESS_2_MICROMAP_READ_BIT_EXT`
+  ** 書きこみ対象のバッファには `VK_ACCESS_TRANSFER_WRITE_BIT`
+  ** 読み込み対象のバッファには `VK_ACCESS_TRANSFER_READ_BIT`
+
+// Note: 
+// 他のコピー操作とは異なり、`VK_PIPELINE_STAGE_TRANSFER_BIT`
+// はアクセラレーション構造のコピーには使用できません。
+
+// `VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR`/
+// `VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR` の使用には、
+// `VK_KHR_ray_tracing_maintenance1` が必要です。
+
+// `VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT`/
+// `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT`/
+// `VK_ACCESS_2_MICROMAP_READ_BIT_EXT` の使用には、`VK_EXT_opacity_micromap` が必要です。
+
+[NOTE]
+====
+他のコピー操作とは異なり、`VK_PIPELINE_STAGE_TRANSFER_BIT`
+はアクセラレーション構造のコピーには使用できません。
+
+`VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR`/
+`VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR` の使用には、
+`VK_KHR_ray_tracing_maintenance1` が必要です。
+
+`VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT`/
+`VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT`/
+`VK_ACCESS_2_MICROMAP_READ_BIT_EXT` の使用には、`VK_EXT_opacity_micromap` が必要です。
+====
+
 [[ray-tracing-best-practices]]
 == レイトレーシングのベストプラクティス
 
