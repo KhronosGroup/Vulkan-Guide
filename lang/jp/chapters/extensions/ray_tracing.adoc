@@ -135,7 +135,6 @@ if (rayQueryGetIntersectionTypeEXT(rq, true) == gl_RayQueryCommittedIntersection
 
 操作が完了した後（つまり、`vkDeferredOperationJoinKHR` が `VK_SUCCESS` を返した後）、`vkGetDeferredOperationResultKHR` を呼び出して操作の結果を取得します。
 
-
 [[ray-tracing-synchronization]]
 == レイトレーシングに関する同期
 
