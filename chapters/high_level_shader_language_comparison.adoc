@@ -1,4 +1,4 @@
-// Copyright 2019-2023 Sascha Willems
+// Copyright 2023 Sascha Willems
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
@@ -468,10 +468,10 @@ float4 main(VSOutput input) : SV_TARGET {
 | reportIntersectionEXT | ReportHit
 | terminateRayEXT | AcceptHitAndEndSearch
 | traceRayEXT | TraceRay
-| rayPayloadEXT (storage qualifier) | Last argument of TraceRay()
+| rayPayloadEXT (storage qualifier) | Last argument of TraceRay
 | rayPayloadInEXT (storage qualifier) | First argument for main entry of any hit, closest hit and miss stage
-| hitAttributeEXT (storage qualifier) | Last argument of ReportHit()
-| callableDataEXT (storage qualifier) | Last argument of CallShader()
+| hitAttributeEXT (storage qualifier) | Last argument of ReportHit
+| callableDataEXT (storage qualifier) | Last argument of CallShader
 | callableDataInEXT (storage qualifier) | First argument for main entry of callabe stage
 | shaderRecordEXT (decorated buffer) | [[vk::shader_record_ext]] annotation for a ConstantBuffer
 | gl_LaunchIDEXT | DispatchRaysIndex
@@ -536,23 +536,23 @@ Example:
 GLSL:
 [source,glsl]
 ----
-groupMemoryBarrier();
-barrier();
+groupMemoryBarrier;
+barrier;
 for (int j = 0; j < 256; j++) {
-    doSomething();
+    doSomething;
 }
-groupMemoryBarrier();
-barrier();
+groupMemoryBarrier;
+barrier;
 ----
 
 HLSL:
 [source,hlsl]
 ----
-GroupMemoryBarrierWithGroupSync();
+GroupMemoryBarrierWithGroupSync;
 for (int j = 0; j < 256; j++) {
-    doSomething();
+    doSomething;
 }
-GroupMemoryBarrierWithGroupSync();
+GroupMemoryBarrierWithGroupSync;
 ----
 
 |====
@@ -609,6 +609,8 @@ These shader stages share several functions and built-ins
 | gl_CullDistance | SV_CullDistance |
 | gl_ViewportIndex | SV_ViewportArrayIndex |
 | gl_Layer | SV_RenderTargetArrayIndex |
+| gl_SampleID | SV_SampleIndex |
+| gl_SamplePosition | EvaluateAttributeAtSample |
 | subpassLoad | <SubPassInput>.SubpassLoad |
 | imageLoad | RWTexture1D/2D/3D<T>[] |
 | imageStore | RWTexture1D/2D/3D<T>[] |
@@ -616,3 +618,62 @@ These shader stages share several functions and built-ins
 | atomicCompSwap | InterlockedCompareExchange |
 | imageAtomicExchange | InterlockedExchange |
 |====
+
+=== Subgroups
+// @todo: not sure, maybe rename or split into others
+[options="header"]
+|====
+| *GLSL* | *HLSL*
+| gl_HelperInvocation | WaveIsHelperLane
+| n.a. | WaveOnce
+| readFirstInvocationARB | WaveReadFirstLane
+| readInvocationARB | WaveReadLaneAt
+| anyInvocationARB | WaveAnyTrue
+| allInvocationsARB | WaveAllTrue
+| allInvocationsEqualARB | WaveAllEqual
+| ballotARB | WaveBallot
+| gl_NumSubgroups | NumSubgroups decorated OpVariable
+| gl_SubgroupID | SubgroupId decorated OpVariable
+| gl_SubGroupSize | WaveGetLaneCount
+| gl_SubgroupInvocationID | WaveGetLaneIndex
+| gl_SubgroupEqMask | n.a.
+| gl_SubgroupGeMask | n.a.
+| gl_SubgroupGtMask | n.a.
+| gl_SubgroupLeMask | n.a.
+| gl_SubgroupLtMask | SubgroupLtMask decorated OpVariablen.a.
+| WaveIsFirstLane | subgroupElect
+| WaveActiveAnyTrue | subgroupAny
+| WaveActiveAllTrue | subgroupAll
+| WaveActiveBallot | subgroupBallot
+| WaveActiveAllEqual | subgroupAllEqual
+| WaveActiveCountBits | subgroupBallotBitCount   
+| WaveActiveBitAdd | subgroupAnd
+| WaveActiveBitOr | subgroupOr
+| WaveActiveBitXor | subgroupXor
+| WaveActiveSum | subgroupAdd
+| WaveActiveProduct | subgroupMul
+| WaveActiveMin | subgroupMin
+| WaveActiveMax | subgroupMax
+| WavePrefixSum | subgroupExclusiveAdd
+| WavePrefixProduct | subgroupExclusiveMul
+| WavePrefixCountBits | subgroupBallotExclusiveBitCount
+| WaveReadLaneAt | subgroupBroadcast
+| WaveReadLaneFirst | subgroupBroadcastFirst
+| QuadReadAcrossX | subgroupQuadSwapHorizontal
+| QuadReadAcrossY | subgroupQuadSwapVertical
+| QuadReadAcrossDiagonal | subgroupQuadSwapDiagonal	 
+| QuadReadLaneAt | subgroupQuadBroadcast
+|====
+
+@todo:
+gl_InstanceIndex
+gl_PatchVerticesIn
+gl_PrimitiveIDIn
+gl_FragCoord
+gl_FrontFacing
+gl_PointCoord
+
+
+gl_FragDepth
+gl_SampleMaskIn
+gl_SampleMask
