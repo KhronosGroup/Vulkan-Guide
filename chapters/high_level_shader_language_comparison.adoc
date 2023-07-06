@@ -594,31 +594,6 @@ These shader stages share several functions and built-ins
 | gl_TessCoord | SV_DomainLocation
 |====
 
-=== Misc
-// @todo: rename, split
-[options="header"]
-|====
-| *GLSL*  | *HLSL* | *Note*
-| gl_PointSize | [[vk::builtin("PointSize")]] | Vulkan only, no direct HLSL equivalent
-| gl_BaseVertexARB | [[vk::builtin("BaseVertex")]] | Vulkan only, no direct HLSL equivalent
-| gl_BaseInstanceARB | [[vk::builtin("PoBaseInstanceintSize")]] | Vulkan only, no direct HLSL equivalent
-| gl_DrawID | [[vk::builtin("DrawIndex")]] | Vulkan only, no direct HLSL equivalent
-| gl_DeviceIndex | [[vk::builtin("DeviceIndex")]] | Vulkan only, no direct HLSL equivalent
-| gl_ViewIndex | SV_ViewID |
-| gl_ClipDistance | SV_ClipDistance |
-| gl_CullDistance | SV_CullDistance |
-| gl_ViewportIndex | SV_ViewportArrayIndex |
-| gl_Layer | SV_RenderTargetArrayIndex |
-| gl_SampleID | SV_SampleIndex |
-| gl_SamplePosition | EvaluateAttributeAtSample |
-| subpassLoad | <SubPassInput>.SubpassLoad |
-| imageLoad | RWTexture1D/2D/3D<T>[] |
-| imageStore | RWTexture1D/2D/3D<T>[] |
-| atomicAdd | InterlockedAdd |
-| atomicCompSwap | InterlockedCompareExchange |
-| imageAtomicExchange | InterlockedExchange |
-|====
-
 === Subgroups
 // @todo: not sure, maybe rename or split into others
 [options="header"]
@@ -665,15 +640,43 @@ These shader stages share several functions and built-ins
 | QuadReadLaneAt | subgroupQuadBroadcast
 |====
 
+=== Misc
+// @todo: rename, split
+[options="header"]
+|====
+| *GLSL*  | *HLSL* | *Note*
+| gl_PointSize | [[vk::builtin("PointSize")]] | Vulkan only, no direct HLSL equivalent
+| gl_BaseVertexARB | [[vk::builtin("BaseVertex")]] | Vulkan only, no direct HLSL equivalent
+| gl_BaseInstanceARB | [[vk::builtin("PoBaseInstanceintSize")]] | Vulkan only, no direct HLSL equivalent
+| gl_DrawID | [[vk::builtin("DrawIndex")]] | Vulkan only, no direct HLSL equivalent
+| gl_DeviceIndex | [[vk::builtin("DeviceIndex")]] | Vulkan only, no direct HLSL equivalent
+| gl_FragCoord | SV_Position |
+| gl_FragDepth | SV_Depth |
+| gl_FrontFacing | SV_IsFrontFace |
+| gl_InstanceIndex | SV_InstanceID |
+| gl_ViewIndex | SV_ViewID |
+| gl_ClipDistance | SV_ClipDistance |
+| gl_CullDistance | SV_CullDistance |
+| gl_PointCoord | SV_Position |
+| gl_Position | SV_Position |
+| gl_PrimitiveID | SV_PrimitiveID |
+| gl_ViewportIndex | SV_ViewportArrayIndex |
+| gl_Layer | SV_RenderTargetArrayIndex |
+| gl_SampleID | SV_SampleIndex |
+| gl_SamplePosition | EvaluateAttributeAtSample |
+| subpassLoad | <SubPassInput>.SubpassLoad |
+| imageLoad | RWTexture1D/2D/3D<T>[] |
+| imageStore | RWTexture1D/2D/3D<T>[] |
+| atomicAdd | InterlockedAdd |
+| atomicCompSwap | InterlockedCompareExchange |
+| imageAtomicExchange | InterlockedExchange |
+| nonuniformEXT | NonUniformResourceIndex |
+|====
+
 @todo:
-gl_InstanceIndex
 gl_PatchVerticesIn
-gl_PrimitiveIDIn
-gl_FragCoord
-gl_FrontFacing
-gl_PointCoord
 
-
-gl_FragDepth
 gl_SampleMaskIn
 gl_SampleMask
+
+@todo: precision types
