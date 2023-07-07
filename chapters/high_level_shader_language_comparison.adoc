@@ -460,7 +460,7 @@ float4 main(VSOutput input) : SV_TARGET {
 
 [source,glsl,subs=+quotes]
 ----
-layout (set = `<set index>`, binding = `image binding index`, `image format`) uniform `optional attribute` `image type` `name``;
+layout (set = <set index>, binding = <image binding index>, <image format>) uniform <optional attribute> <image type> <name>;
 ----
 
 Example:
