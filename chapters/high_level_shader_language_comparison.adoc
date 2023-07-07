@@ -521,7 +521,7 @@ layout (set = 0, binding = 0, rgba8) uniform writeonly image2D outputImage;
 
 [source,hlsl]
 ----
-[[vk::image_format(`image format`)]]
+[[vk::image_format(<image-format>)]]
 RWTexture2D<image-components> <name> : register(<register-type><binding-index>, space<set-index>);
 ----
 
