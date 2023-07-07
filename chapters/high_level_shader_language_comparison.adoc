@@ -125,7 +125,10 @@ Shader interfaces greatly differ between GLSL and HLSL. Vulkan concepts not dire
 
 ==== GLSL
 
-layout (set = __<set index>__, binding = __<binding index>__) uniform __<type>__ __<name>__
+[source,glsl]
+----
+layout (set = <set-index>, binding = <binding-index>) uniform <type> <name>
+----
 
 Examples:
 [source,glsl]
@@ -142,7 +145,10 @@ layout (set = 0, binding = 1) uniform sampler2D samplerColor;
 
 ==== HLSL
 
-__<type>__ __<name>__ : register(__<register type><binding index>__, space__<set index>__)
+[source,hlsl]
+----
+<type> <name> : register(<register-type><binding-index>, space<set-index>)
+----
 
 Examples:
 [source,hlsl]
@@ -175,7 +181,10 @@ SamplerState samplerColor : register(s1);
 
 ==== GLSL
 
-layout (location = __<location index>__) in __<type>__ __<name>__;
+[source,glsl]
+----
+layout (location = <location-index>) in <type> <name>;
+----
 
 Example:
 [source,glsl]
@@ -188,7 +197,10 @@ layout (location = 3) in vec2 inUV1;
 
 ==== HLSL
 
-[[vk::location(__<location index>__)]] __<type>__ __<name>__ : __<semantic type>__;
+[source,hlsl]
+----
+[[vk::location(<location-index>)]] <type> <name> : <semantic-type>;
+----
 
 Example:
 [source,hlsl]
@@ -235,7 +247,10 @@ E.g. for vertex and tessellations shaders.
 
 ===== GLSL
 
-layout (location = __<location index>__) out/in __<type>__ __<name>__;
+[source,glsl]
+----
+layout (location = <location-index>) out/in <type> <name>;
+----
 
 Example:
 [source,glsl]
@@ -253,7 +268,10 @@ void main() {
 
 ===== HLSL
 
-[[vk::location(`<location index>`)]] `<type>` `<name>` : `<semantic type>`;
+[source,hlsl]
+----
+[[vk::location(<location-index>)]] <type> <name> : <semantic-type>;
+----
 
 Example:
 [source,hlsl]
@@ -281,7 +299,10 @@ For fragment shaders.
 
 ===== GLSL
 
-layout (location = __<attachment index>__) out/in __<type>__ __<name>__;
+[source,glsl]
+----
+layout (location = <attachment-index>) out/in <type> <name>;
+----
 
 Example:
 [source,glsl]
@@ -299,7 +320,10 @@ void main() {
 
 ===== HLSL
 
-__<type>__ __<name>__ : SV_TARGET__<attachment index>__;
+[source,hlsl]
+----
+<type> <name> : SV_TARGET<attachment-index>;
+----
 
 Example:
 [source,hlsl]
@@ -323,7 +347,10 @@ FSOutput main(VSOutput input) {
 
 ==== GLSL
 
-layout (push_constant) uniform __structure type__ { __members__ } __name__
+[source,glsl]
+----
+layout (push_constant) uniform <structure-type> { <members> } <name>
+----
 
 Example:
 [source,glsl]
@@ -335,7 +362,10 @@ layout (push_constant) uniform PushConsts {
 
 ==== HLSL
 
-[[vk::push_constant]] __structure type__ pushConsts;
+[source,hlsl]
+----
+[[vk::push_constant]] <structure-type> <name>;
+----
 
 [source,hlsl]
 ----
@@ -349,7 +379,10 @@ struct PushConsts {
 
 ==== GLSL
 
-layout (constant_id = __spec const index__) const int __name__ = __default value__;
+[source,glsl]
+----
+layout (constant_id = <specialization-constant-index>) const int <name> = <default-value>;
+----
 
 Example:
 [source,glsl]
@@ -359,7 +392,10 @@ layout (constant_id = 0) const int SPEC_CONST = 0;
 
 ==== HLSL
 
-[[vk::constant_id(__spec const index__)]] const int __name__ = __default value__;
+[source,hlsl]
+----
+[[vk::constant_id(<specialization-constant-index>)]] const int <name> = <default-value>;
+----
 
 Example:
 [source,hlsl]
@@ -371,7 +407,10 @@ Example:
 
 ==== GLSL
 
-layout (input_attachment_index = __input attachment index__, binding = __binding index__) uniform subpassInput __name__;
+[source,glsl]
+----
+layout (input_attachment_index = <input-attachment-index>, binding = <binding-index>) uniform subpassInput <name>;
+----
 
 Example:
 [source,glsl]
@@ -381,7 +420,10 @@ layout (input_attachment_index = 0, binding = 0) uniform subpassInput input0;
 
 ==== HLSL
 
-[[vk::input_attachment_index(__input attachment index__)]][[vk::binding(__binding index__)]] SubpassInput __name__;
+[source,hlsl]
+----
+[[vk::input_attachment_index(<input-attachment-index>)]][[vk::binding(<binding-index>)]] SubpassInput <name>;
+----
 
 Example:
 [source,hlsl]
@@ -393,7 +435,10 @@ Example:
 
 ==== GLSL
 
+[source,glsl]
+----
 layout (local_size_x = `local size x`, local_size_y = `local size y`, local_size_z = `local size z`) in;
+----
 
 Example:
 [source,glsl]
@@ -403,7 +448,10 @@ layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 
 ==== HLSL
 
+[source,hlsl]
+----
 [numthreads(`local size x`, `local size y`, `local size z`)] +
+----
 
 Example:
 [source,hlsl]
@@ -458,7 +506,7 @@ float4 main(VSOutput input) : SV_TARGET {
 
 ==== GLSL
 
-[source,glsl,subs=+quotes]
+[source,glsl]
 ----
 layout (set = <set-index>, binding = <image-binding-index>, <image-format>) uniform <memory-qualifier> <image-type> <name>;
 ----
@@ -471,10 +519,10 @@ layout (set = 0, binding = 0, rgba8) uniform writeonly image2D outputImage;
 
 ==== HLSL
 
-[source,hlsl,subs=+quotes]
+[source,hlsl]
 ----
 [[vk::image_format(`image format`)]]
-RWTexture2D<`image components`> `name` : register(`<register type><binding index>`, space`<set index>`);
+RWTexture2D<image-components> <name> : register(<register-type><binding-index>, space<set-index>);
 ----
 
 Example:
