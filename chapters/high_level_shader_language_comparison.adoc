@@ -24,7 +24,7 @@ The following listings are by no means complete, and mappings for newer extensio
 
 == Extensions
 
-In GLSL extensions need to be explicitly enabled using the `#extension` directive. This is **not** necessary in HLSL. The compiler will automatically select suitable SPIR-V extensions. If required one can use `-fspv-extension` arguments to explicitly select extensions.
+In GLSL extensions need to be explicitly enabled using the `#extension` directive. This is **not** necessary in HLSL. The compiler will implicitly select suitable SPIR-V extensions based on the shader. If required one can use `-fspv-extension` arguments to explicitly select extensions.
 
 == Data types
 
@@ -457,7 +457,48 @@ float4 main(VSOutput input) : SV_TARGET {
 == Built-ins and functions mapping
 // @todo: change caption or maybe remove completely
 
+=== Buffer device address
+
+[NOTE]
+====
+Currently, HLSL only supports a link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst#rawbufferload-and-rawbufferstore[subset] of VK_KHR_buffer_device_address.
+====
+
+==== GLSL
+
+Example:
+[source,glsl]
+----
+layout(push_constant) uniform PushConstants {
+	uint64_t bufferAddress;
+} pushConstants;
+
+layout(buffer_reference, scalar) buffer Data {vec4 f[]; };
+
+void main() {
+    Data data = Data(pushConstants.bufferAddress);
+}
+----
+
+==== HLSL
+
+Example:
+[source,hlsl]
+----
+struct PushConstants {
+	uint64_t bufferAddress;
+};
+[[vk::push_constant]] PushConstants pushConstants;
+
+void main() {
+  float4 data = vk::RawBufferLoad<float4>(pushConstants.bufferAddress);
+}
+----
+
 === Raytracing
+
+==== Built-Ins
+
 // @todo: some of the stuff in here is used across different stages (e.g. gl_PrimitiveID)
 [options="header"]
 |====
@@ -511,6 +552,8 @@ float4 main(VSOutput input) : SV_TARGET {
 |====
 
 === Compute
+
+==== Built-Ins
 
 [options="header"]
 |====
