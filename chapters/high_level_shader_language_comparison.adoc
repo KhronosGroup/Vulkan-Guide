@@ -458,7 +458,10 @@ float4 main(VSOutput input) : SV_TARGET {
 
 ==== GLSL
 
-layout (set = __<set index>__, binding = __image binding index__, __image format__) uniform __optional attribute__ __image type__ __name__;
+[source,glsl,subs=+quotes]
+----
+layout (set = `<set index>`, binding = `image binding index`, `image format`) uniform `optional attribute` `image type` `name``;
+----
 
 Example:
 [source,glsl]
@@ -468,8 +471,11 @@ layout (set = 0, binding = 0, rgba8) uniform writeonly image2D outputImage;
 
 ==== HLSL
 
-[[vk::image_format(__image format__)]]
-RWTexture2D<__image components__> __name__ : register(__<register type><binding index>__, space__<set index>__);
+[source,hlsl,subs=+quotes]
+----
+[[vk::image_format(`image format`)]]
+RWTexture2D<`image components`> `name` : register(`<register type><binding index>`, space`<set index>`);
+----
 
 Example:
 [source,hlsl]
