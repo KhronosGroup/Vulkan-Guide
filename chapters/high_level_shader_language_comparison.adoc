@@ -253,14 +253,14 @@ void main() {
 
 ===== HLSL
 
-[[vk::location(__<location index>__)]] __<type>__ __<name>__ : __<semantic type>__;
+[[vk::location(`<location index>`)]] `<type>` `<name>` : `<semantic type>`;
 
 Example:
 [source,hlsl]
 ----
 struct VSOutput
 {
-	float4 Pos : SV_POSITION;
+	                float4 Pos : SV_POSITION;
 [[vk::location(0)]] float3 Normal : NORMAL;
 [[vk::location(1)]] float3 Color : COLOR;
 [[vk::location(2)]] float2 UV : TEXCOORD0;
@@ -393,7 +393,7 @@ Example:
 
 ==== GLSL
 
-layout (local_size_x = __local size x__, local_size_y = __local size y__, local_size_z = __local size z__) in;
+layout (local_size_x = `local size x`, local_size_y = `local size y`, local_size_z = `local size z`) in;
 
 Example:
 [source,glsl]
@@ -403,7 +403,7 @@ layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 
 ==== HLSL
 
-[numthreads(__local size x__, __local size y__, __local size z__)] +
+[numthreads(`local size x`, `local size y`, `local size z`)] +
 
 Example:
 [source,hlsl]
