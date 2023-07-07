@@ -454,6 +454,30 @@ float4 main(VSOutput input) : SV_TARGET {
 | sparseTexelsResidentARB | SampleLevel
 |====
 
+=== Image formats
+
+==== GLSL
+
+layout (set = __<set index>__, binding = __image binding index__, __image format__) uniform __optional attribute__ __image type__ __name__;
+
+Example:
+[source,glsl]
+----
+layout (set = 0, binding = 0, rgba8) uniform writeonly image2D outputImage;
+----
+
+==== HLSL
+
+[[vk::image_format(__image format__)]]
+RWTexture2D<__image components__> __name__ : register(__<register type><binding index>__, space__<set index>__);
+
+Example:
+[source,hlsl]
+----
+[[vk::image_format("rgba8")]]
+RWTexture2D<float4> resultImage : register(u0, space0);
+----
+
 == Built-ins and functions mapping
 // @todo: change caption or maybe remove completely
 
