@@ -113,7 +113,6 @@ VSOutput main(VSInput input)
 }
 ----
 
-
 == Shader interface
 
 [NOTE]
@@ -575,6 +574,44 @@ void main() {
 
 === Raytracing
 
+==== Shader stage selection
+
+While GLSL implicitly detects the shader stage (for raytracing) via file extension (or explicitly via compiler arguments), for HLSL raytracing shaders need to be marked by the `[shader("stage")]` semantic:
+
+Example:
+[source,hlsl]
+----
+[shader("closesthit")]
+void main(inout RayPayload rayPayload, in float2 attribs) {
+}
+----
+
+Stage names match GLSL: `raygeneration`, `intersection`, `anyhit`, `closesthit`, `miss`, `callable`
+
+==== Shader record buffer
+
+==== GLSL
+
+Example:
+[source,glsl]
+----
+layout(shaderRecordEXT, std430) buffer SBT {
+  float data;
+};
+----
+
+==== HLSL
+
+Example:
+[source,hlsl]
+----
+struct SBT {
+  float data;
+};
+[[vk::shader_record_ext]]
+ConstantBuffer<SBT> sbt;
+----
+
 ==== Built-Ins
 
 // @todo: some of the stuff in here is used across different stages (e.g. gl_PrimitiveID)
@@ -592,7 +629,6 @@ void main() {
 | hitAttributeEXT (storage qualifier) | Last argument of ReportHit
 | callableDataEXT (storage qualifier) | Last argument of CallShader
 | callableDataInEXT (storage qualifier) | First argument for main entry of callabe stage
-| shaderRecordEXT (decorated buffer) | [[vk::shader_record_ext]] annotation for a ConstantBuffer
 | gl_LaunchIDEXT | DispatchRaysIndex
 | gl_LaunchSizeEXT | DispatchRaysDimensions
 | gl_PrimitiveID | PrimitiveIndex
