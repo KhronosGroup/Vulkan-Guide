@@ -49,7 +49,7 @@ Types work similar in GLSL and HLSL. But where GLSL e.g. has explicit vector or 
 
 [NOTE]
 ====
-While GLSL makes heavy use of input and output variables built into the languages called "built-ins", there is no such concept in HLSL. HLSL instead uses link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics[semantics], strings that are attached to inputs or inputs that contain information about the intended use of that variable. They are prefixed with `SV_`.
+While GLSL makes heavy use of input and output variables built into the languages called "built-ins", there is no such concept in HLSL. HLSL instead uses link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics[semantics], strings that are attached to inputs or inputs that contain information about the intended use of that variable. They are prefixed with `SV_`. For HLSL input values are explicit arguments for the main entry point and the shader needs to explicitly return an output.
 ====
 
 === Examples
@@ -666,6 +666,24 @@ ConstantBuffer<SBT> sbt;
 |====
 
 === Compute
+
+==== Shared memory
+
+==== GLSL
+
+Example:
+[source,glsl]
+----
+shared vec4 sharedData[1024];
+----
+
+==== HLSL
+
+Example:
+[source,hlsl]
+----
+groupshared float4 sharedData[1024];
+----
 
 ==== Built-Ins
 
