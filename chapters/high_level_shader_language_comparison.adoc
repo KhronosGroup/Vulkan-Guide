@@ -430,35 +430,6 @@ Example:
 [[vk::input_attachment_index(0)]][[vk::binding(0)]] SubpassInput input0;
 ----
 
-=== Compute local size
-
-==== GLSL
-
-[source,glsl]
-----
-layout (local_size_x = `local size x`, local_size_y = `local size y`, local_size_z = `local size z`) in;
-----
-
-Example:
-[source,glsl]
-----
-layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
-----
-
-==== HLSL
-
-[source,hlsl]
-----
-[numthreads(`local size x`, `local size y`, `local size z`)] +
-----
-
-Example:
-[source,hlsl]
-----
-[numthreads(1, 1, 1)]
-void main() {}
-----
-
 === Texture reads
 
 [NOTE]
@@ -667,9 +638,38 @@ ConstantBuffer<SBT> sbt;
 
 === Compute
 
+==== Local workgroup size
+
+===== GLSL
+
+[source,glsl]
+----
+layout (local_size_x = <local-size-x>, local_size_y = <local-size-y>, local_size_z = <local-size-z>) in;
+----
+
+Example:
+[source,glsl]
+----
+layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+----
+
+===== HLSL
+
+[source,hlsl]
+----
+[numthreads(<local-size-x>, <local-size-y>, <local-size-z>)]
+----
+
+Example:
+[source,hlsl]
+----
+[numthreads(1, 1, 1)]
+void main() {}
+----
+
 ==== Shared memory
 
-==== GLSL
+===== GLSL
 
 Example:
 [source,glsl]
@@ -677,7 +677,7 @@ Example:
 shared vec4 sharedData[1024];
 ----
 
-==== HLSL
+===== HLSL
 
 Example:
 [source,hlsl]
@@ -690,7 +690,6 @@ groupshared float4 sharedData[1024];
 [options="header"]
 |====
 | *GLSL*  | *HLSL*
-| shared | groupshared
 | gl_GlobalInvocationID | SV_DispatchThreadID
 | gl_LocalInvocationID | SV_GroupThreadID
 | gl_WorkGroupID | SV_GroupID
