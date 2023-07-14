@@ -8,7 +8,7 @@ ifndef::images[:images: images/]
 = Vulkan High Level Shader Language Comparison
 :toc:
 
-While Vulkan itself consumes shader in a binary format called xref:{chapters}what_is_spirv.adoc[SPIR-V], shaders are usually written in a high level language. This section provides a mapping between shader functionality for the most common ones used with Vulkan: GLSL and HLSL. This is mostly aimed at people wanting to migrate from one high level shader language to another. It's meant as a starting point and not as a complete porting guide to one language from another
+While Vulkan itself consumes shaders in a binary format called xref:{chapters}what_is_spirv.adoc[SPIR-V], shaders are usually written in a high level language. This section provides a mapping between shader functionality for the most common ones used with Vulkan: GLSL and HLSL. This is mostly aimed at people wanting to migrate from one high level shader language to another. It's meant as a starting point and not as a complete porting guide to one language from another
 
 // @todo: maybe also add SPIR-V
 
@@ -44,6 +44,19 @@ Types work similar in GLSL and HLSL. But where GLSL e.g. has explicit vector or 
 * link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-data-types[HLSL data types (Microsoft)]
 * link:https://www.khronos.org/opengl/wiki/Data_Type_(GLSL)[GLSL data types (OpenGL wiki)]
 
+The syntax for casting types also differs:
+
+GLSL:
+[source,glsl]
+----
+mat4x3 mat = mat4x3(ubo.view);
+----
+
+HLSL:
+[source,hlsl]
+----
+float4x3 mat = (float4x3)(ubo.view);
+----
 
 == Built-ins vs. Semantics
 
