@@ -858,6 +858,8 @@ These shader stages share several functions and built-ins
 | atomicCompSwap | InterlockedCompareExchange |
 | imageAtomicExchange | InterlockedExchange |
 | nonuniformEXT | NonUniformResourceIndex |
+| gl_BaryCoordEXT | SV_Barycentrics |
+| gl_BaryCoordNoPerspEXT | SV_Barycentrics with noperspective | 
 |====
 
 == Functions
@@ -896,6 +898,5 @@ Most GLSL functions are also available in HLSL and vice-versa. This chapter list
 
 // SV_GSInstanceID
 // SV_StencilRef
-// SV_Barycentrics
 // SV_Coverage
 // SV_InnerCoverage
