@@ -189,6 +189,10 @@ include::{chapters}robustness.adoc[]
 
 include::{chapters}dynamic_state.adoc[]
 
+// === Dynamic State Map
+
+include::{chapters}dynamic_state_map.adoc[]
+
 // == Subgroups
 
 include::{chapters}subgroups.adoc[]
