@@ -28,7 +28,7 @@ In core Vulkan, there are 5 fundamental ways to map data from your Vulkan applic
   *** <<uniform-texel-buffer, VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER>>
   *** <<storage-texel-buffer, VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER>>
   *** <<input-attachment, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT>>
-  * <<push-constants, Push Constants>>
+  * <<push-constants-shaders, Push Constants>>
   * <<specialization-constants, Specialization Constants>>
   * <<physical-storage-buffer, Physical Storage Buffer>>
 
@@ -434,14 +434,14 @@ OpDecorate %inputAttachment InputAttachmentIndex 0
 %inputAttachment = OpVariable %ptr UniformConstant
 ----
 
-[[push-constants]]
+[[push-constants-shaders]]
 == Push Constants
 
 A push constant is a small bank of values accessible in shaders. Push constants allow the application to set values used in shaders without creating buffers or modifying and binding descriptor sets for each update.
 
 These are designed for small amount (a few dwords) of high frequency data to be updated per-recording of the command buffer.
 
-More information can be found in the xref:{chapters}push_constants.adoc[Push Constants] chapter.
+More information can be found in the xref:{chapters}push_constants.adoc#push-constants[Push Constants] chapter.
 
 [[specialization-constants]]
 == Specialization Constants
