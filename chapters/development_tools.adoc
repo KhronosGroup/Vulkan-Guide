@@ -53,9 +53,6 @@ Besides the Khronos Layers, the Vulkan SDK included additional useful platform i
 
 There are also other publicly available layers that can be used to help in development.
 
-  * link:https://github.com/ARM-software/perfdoc[`VK_LAYER_ARM_mali_perf_doc`], the ARM PerfDoc layer.
-    Checks Vulkan applications for best practices on Arm Mali devices.
-
   * link:https://github.com/powervr-graphics/perfdoc[`VK_LAYER_IMG_powervr_perf_doc`], the PowerVR PerfDoc layer.
     Checks Vulkan applications for best practices on Imagination Technologies PowerVR devices.
 
