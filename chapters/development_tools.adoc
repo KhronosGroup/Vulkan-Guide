@@ -1,4 +1,4 @@
-// Copyright 2019-2021 The Khronos Group, Inc.
+// Copyright 2019-2023 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
@@ -27,8 +27,17 @@ Layers are optional components that augment the Vulkan system. They can intercep
   ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/debug_printf.html[Shader printf]: Debug shader code by "`printing`" any values of interest to the debug callback or stdout.
   ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html[Best Practices Warnings]: Highlights potential performance issues, questionable usage patterns, common mistakes.
 
-  * link:https://vulkan.lunarg.com/doc/view/latest/windows/synchronization2_layer.html[`VK_LAYER_KHRONOS_synchronization2`], the Khronos Synchronization2 layer.
-    The `VK_LAYER_KHRONOS_synchronization2` layer implements the `VK_KHR_synchronization2` extension. By default, it will disable itself if the underlying driver provides the extension.
+=== Khronos extension layers
+
+Some extensions not available everywhere can be implemented as layers. These layers can be used where the corresponding extension is not available. By default, these layers will disable themselves if the underlying driver provides the extension.
+
+  * link:https://github.com/KhronosGroup/Vulkan-ExtensionLayer/blob/main/docs/synchronization2_layer.md[`VK_LAYER_KHRONOS_synchronization2`]. This layer implements the `VK_KHR_synchronization2` extension. B
+
+  * link:https://github.com/KhronosGroup/Vulkan-ExtensionLayer[`VK_LAYER_KHRONOS_timeline_semaphore`]. This layer implements the `VK_KHR_timeline_semaphore` extension.
+
+  * link:https://github.com/KhronosGroup/Vulkan-ExtensionLayer/blob/main/docs/shader_object_layer.md[`VK_LAYER_KHRONOS_shader_object`]. This layer implements the `VK_EXT_shader_object` extension.
+
+  * link:https://github.com/KhronosGroup/Vulkan-ExtensionLayer/blob/main/docs/memory_decompression_layer.md[`VK_LAYER_KHRONOS_memory_decompression`]. This layer implements the `VK_NV_memory_decompression` extension.
 
 === Vulkan SDK layers
 
