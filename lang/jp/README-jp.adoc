@@ -182,6 +182,10 @@ Vulkan Guide は、`asciidoctor guide.adoc` を使って1つのページとし�
 
   * `VK_EXT_extended_dynamic_state`, `VK_EXT_extended_dynamic_state2`, `VK_EXT_extended_dynamic_state3`, `VK_EXT_vertex_input_dynamic_state`, `VK_EXT_color_write_enable`, `VK_EXT_attachment_feedback_loop_dynamic_state`
 
+=== xref:{chapters}dynamic_state_map.adoc[動的な状態のマップ（Dynamic State Map）]
+
+// include::{chapters}dynamic_state_map.adoc[]
+
 == xref:{chapters}subgroups.adoc[サブグループ]
 
 // include::{chapters}subgroups.adoc[]

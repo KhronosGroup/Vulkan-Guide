@@ -1,0 +1,462 @@
+// Copyright 2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+
+[[dynamic-state-map]]
+= Dynamic State Map
+
+This map is for helping to quickly find which dynamic state goes with other components
+
+[%autowidth.stretch]
+|====
+| *VkDynamicState*  | *Set Command* | *Shader state subsets* | *Ignored* | *Extension*
+| VK_DYNAMIC_STATE_VIEWPORT
+            | vkCmdSetViewport
+                        | Pre-Rasterization
+                                    | VkPipelineViewportStateCreateInfo::pViewports
+                                                |
+| VK_DYNAMIC_STATE_SCISSOR
+            | vkCmdSetScissor
+                        | Pre-Rasterization
+                                    | VkPipelineViewportStateCreateInfo::pScissors
+                                                |
+| VK_DYNAMIC_STATE_LINE_WIDTH
+            | vkCmdSetLineWidth
+                        | Pre-Rasterization
+                                    | VkPipelineRasterizationStateCreateInfo::lineWidth
+                                                |
+| VK_DYNAMIC_STATE_DEPTH_BIAS
+            | vkCmdSetDepthBias
+              vkCmdSetDepthBias2EXT (VK_EXT_depth_bias_control)
+                        | Pre-Rasterization
+                                    | VkPipelineRasterizationStateCreateInfo::depthBiasConstantFactor
+                                      VkPipelineRasterizationStateCreateInfo::depthBiasClamp
+                                      VkPipelineRasterizationStateCreateInfo::depthBiasSlopeFactor
+                                                |
+| VK_DYNAMIC_STATE_BLEND_CONSTANTS
+            | vkCmdSetBlendConstants
+                        | Fragment Output
+                                    | VkPipelineColorBlendStateCreateInfo::blendConstants
+                                                |
+| VK_DYNAMIC_STATE_DEPTH_BOUNDS
+            | vkCmdSetDepthBounds
+                        | Fragment Shader
+                                    | VkPipelineDepthStencilStateCreateInfo::minDepthBounds
+                                      VkPipelineDepthStencilStateCreateInfo::maxDepthBounds
+                                                |
+| VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK
+            | vkCmdSetStencilCompareMask
+                        | Fragment Shader
+                                    | VkStencilOpState::compareMask
+                                                |
+| VK_DYNAMIC_STATE_STENCIL_WRITE_MASK
+            | vkCmdSetStencilWriteMask
+                        | Fragment Shader
+                                    | VkPipelineDepthStencilStateCreateInfo::front
+                                      VkPipelineDepthStencilStateCreateInfo::back
+                                                |
+| VK_DYNAMIC_STATE_STENCIL_REFERENCE
+            | vkCmdSetStencilReference
+                        | Fragment Shader
+                                    | VkPipelineDepthStencilStateCreateInfo::reference
+                                                |
+| VK_DYNAMIC_STATE_CULL_MODE
+            | vkCmdSetCullMode
+                        | Pre-Rasterization
+                                    | VkPipelineRasterizationStateCreateInfo::cullMode
+                                                | VK_EXT_extended_dynamic_state
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_FRONT_FACE
+            | vkCmdSetFrontFace
+                        | Pre-Rasterization
+                                    | VkPipelineRasterizationStateCreateInfo::frontFace
+                                                | VK_EXT_extended_dynamic_state
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_PRIMITIVE_TOPOLOGY
+            | vkCmdSetPrimitiveTopology
+                        | Vertex Input
+                                    | VkPipelineInputAssemblyStateCreateInfo::topology
+                                                | VK_EXT_extended_dynamic_state
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_VIEWPORT_WITH_COUNT
+            | vkCmdSetViewportWithCount
+                        | Pre-Rasterization
+                                    | VkPipelineViewportStateCreateInfo::viewportCount
+                                      VkPipelineViewportStateCreateInfo::pViewports
+                                                | VK_EXT_extended_dynamic_state
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_SCISSOR_WITH_COUNT
+            | vkCmdSetScissorWithCount
+                        | Pre-Rasterization
+                                    | VkPipelineViewportStateCreateInfo::scissorCount
+                                      VkPipelineViewportStateCreateInfo::pScissors
+                                                | VK_EXT_extended_dynamic_state
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE
+            | vkCmdBindVertexBuffers2
+                        | Vertex Input
+                                    | VkVertexInputBindingDescription::stride
+                                                | VK_EXT_extended_dynamic_state
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE
+            | vkCmdSetDepthTestEnable
+                        | Fragment Shader
+                                    | VkPipelineDepthStencilStateCreateInfo::depthTestEnable
+                                                | VK_EXT_extended_dynamic_state
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE
+            | vkCmdSetDepthWriteEnable
+                        | Fragment Shader
+                                    | VkPipelineDepthStencilStateCreateInfo::depthWriteEnable
+                                                | VK_EXT_extended_dynamic_state
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_DEPTH_COMPARE_OP
+            | vkCmdSetDepthCompareOp
+                        | Fragment Shader
+                                    | VkPipelineDepthStencilStateCreateInfo::depthCompareOp
+                                                | VK_EXT_extended_dynamic_state
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE
+            | vkCmdSetDepthBoundsTestEnable
+                        | Fragment Shader
+                                    | VkPipelineDepthStencilStateCreateInfo::depthBoundsTestEnable
+                                                | VK_EXT_extended_dynamic_state
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_STENCIL_TEST_ENABLE
+            | vkCmdSetStencilTestEnable
+                        | Fragment Shader
+                                    | VkPipelineDepthStencilStateCreateInfo::stencilTestEnable
+                                                | VK_EXT_extended_dynamic_state
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_STENCIL_OP
+            | vkCmdSetStencilOp
+                        | Fragment Shader
+                                    | VkPipelineDepthStencilStateCreateInfo::failOp
+                                      VkPipelineDepthStencilStateCreateInfo::passOp
+                                      VkPipelineDepthStencilStateCreateInfo::depthFailOp
+                                      VkPipelineDepthStencilStateCreateInfo::compareOp
+                                                | VK_EXT_extended_dynamic_state
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE
+            | vkCmdSetRasterizerDiscardEnable
+                        | Pre-Rasterization
+                                    | VkPipelineRasterizationStateCreateInfo::rasterizerDiscardEnable
+                                                | VK_EXT_extended_dynamic_state2
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_DEPTH_BIAS_ENABLE
+            | vkCmdSetDepthBiasEnable
+                        | Pre-Rasterization
+                                    | VkPipelineRasterizationStateCreateInfo::depthBiasEnable
+                                                | VK_EXT_extended_dynamic_state2
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE
+            | vkCmdSetPrimitiveRestartEnable
+                        | Vertex Input
+                                    | VkPipelineInputAssemblyStateCreateInfo::primitiveRestartEnable
+                                                | VK_EXT_extended_dynamic_state2
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV
+            | vkCmdSetViewportWScalingNV
+                        | Pre-Rasterization
+                                    | VkPipelineViewportWScalingStateCreateInfoNV::pViewportWScalings
+                                                | VK_NV_clip_space_w_scaling
+| VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT
+            | vkCmdSetDiscardRectangleEXT
+                        | Pre-Rasterization
+                                    | VkPipelineDiscardRectangleStateCreateInfoEXT::pDiscardRectangles
+                                                | VK_EXT_discard_rectangles
+| VK_DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT
+            | vkCmdSetDiscardRectangleEnableEXT
+                        | Pre-Rasterization
+                                    | VkPipelineDiscardRectangleStateCreateInfoEXT::discardRectangleCount
+                                                | VK_EXT_discard_rectangles
+| VK_DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT
+            | vkCmdSetDiscardRectangleModeEXT
+                        | Pre-Rasterization
+                                    | VkPipelineDiscardRectangleStateCreateInfoEXT::discardRectangleMode
+                                                | VK_EXT_discard_rectangles
+| VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT
+            | vkCmdSetSampleLocationsEXT
+                        | Fragement Shader
+                          Fragment Output
+                                    | VkPipelineSampleLocationsStateCreateInfoEXT::sampleLocationsInfo
+                                                | VK_EXT_sample_locations
+| VK_DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV
+            | vkCmdSetViewportShadingRatePaletteNV
+                        | Pre-Rasterization
+                                    | VkPipelineViewportShadingRateImageStateCreateInfoNV::pShadingRatePalettes
+                                                | VK_NV_shading_rate_image
+| VK_DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV
+            | vkCmdSetCoarseSampleOrderNV
+                        | Pre-Rasterization
+                                    | VkPipelineViewportCoarseSampleOrderStateCreateInfoNV
+                                                | VK_NV_shading_rate_image
+| VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_ENABLE_NV
+            | vkCmdSetExclusiveScissorEnableNV
+                        | Pre-Rasterization
+                                    | VkPipelineViewportExclusiveScissorStateCreateInfoNV::exclusiveScissorCount
+                                                | VK_NV_scissor_exclusive
+| VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV
+            | vkCmdSetExclusiveScissorNV
+                        | Pre-Rasterization
+                                    | VkPipelineViewportExclusiveScissorStateCreateInfoNV::pExclusiveScissors
+                                                | VK_NV_scissor_exclusive
+| VK_DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR
+            | vkCmdSetFragmentShadingRateKHR
+              vkCmdSetFragmentShadingRateEnumNV (VK_NV_fragment_shading_rate_enums)
+                        | Pre-Rasterization
+                          Fragment Shader
+                                    | VkPipelineFragmentShadingRateStateCreateInfoKHR
+                                                | VK_KHR_fragment_shading_rate
+| VK_DYNAMIC_STATE_LINE_STIPPLE_EXT
+            | vkCmdSetLineStippleEXT
+                        | Pre-Rasterization
+                                    | VkPipelineRasterizationLineStateCreateInfoEXT::lineStippleFactor
+                                      VkPipelineRasterizationLineStateCreateInfoEXT::lineStipplePattern
+                                                | VK_EXT_line_rasterization
+| VK_DYNAMIC_STATE_VERTEX_INPUT_EXT
+            | vkCmdSetVertexInputEXT
+                        | Vertex Input
+                                    | VkPipelineVertexInputStateCreateInfo
+                                                | VK_EXT_vertex_input_dynamic_state
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT
+            | vkCmdSetPatchControlPointsEXT
+                        | Pre-Rasterization
+                                    | VkPipelineTessellationStateCreateInfo::patchControlPoints
+                                                | VK_EXT_extended_dynamic_state2
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_LOGIC_OP_EXT
+            | vkCmdSetLogicOpEXT
+                        | Fragment Output
+                                    | VkPipelineColorBlendStateCreateInfo::logicOp
+                                                | VK_EXT_extended_dynamic_state2
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT
+            | vkCmdSetColorWriteEnableEXT
+                        | Fragment Output
+                                    | VkPipelineColorWriteCreateInfoEXT::pColorWriteEnables
+                                                | VK_EXT_color_write_enable
+| VK_DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT
+            | vkCmdSetTessellationDomainOriginEXT
+                        | Pre-Rasterization
+                                    | VkPipelineTessellationDomainOriginStateCreateInfo::domainOrigin
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT
+            | vkCmdSetDepthClampEnableEXT
+                        | Pre-Rasterization
+                                    | VkPipelineRasterizationStateCreateInfo::depthClampEnable
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_POLYGON_MODE_EXT
+            | vkCmdSetPolygonModeEXT
+                        | Pre-Rasterization
+                                    | VkPipelineRasterizationStateCreateInfo::polygonMode
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT
+            | vkCmdSetRasterizationSamplesEXT
+                        | Fragement Shader
+                          Fragment Output
+                                    | VkPipelineMultisampleStateCreateInfo::rasterizationSamples
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_SAMPLE_MASK_EXT
+            | vkCmdSetSampleMaskEXT
+                        | Fragement Shader
+                          Fragment Output
+                                    | VkPipelineMultisampleStateCreateInfo::pSampleMask
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT
+            | vkCmdSetAlphaToCoverageEnableEXT
+                        | Fragement Shader
+                          Fragment Output
+                                    | VkPipelineMultisampleStateCreateInfo::alphaToCoverageEnable
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT
+            | vkCmdSetAlphaToOneEnableEXT
+                        | Fragement Shader
+                          Fragment Output
+                                    | VkPipelineMultisampleStateCreateInfo::alphaToOneEnable
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT
+            | vkCmdSetLogicOpEnableEXT
+                        | Fragment Output
+                                    | VkPipelineColorBlendStateCreateInfo::logicOpEnable
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT
+            | vkCmdSetColorBlendEnableEXT
+                        | Fragment Output
+                                    | VkPipelineColorBlendAttachmentState::blendEnable
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT
+            | vkCmdSetColorBlendEquationEXT
+                        | Fragment Output
+                                    | VkPipelineColorBlendAttachmentState::srcColorBlendFactor
+                                      VkPipelineColorBlendAttachmentState::dstColorBlendFactor
+                                      VkPipelineColorBlendAttachmentState::colorBlendOp
+                                      VkPipelineColorBlendAttachmentState::srcAlphaBlendFactor
+                                      VkPipelineColorBlendAttachmentState::dstAlphaBlendFactor
+                                      VkPipelineColorBlendAttachmentState::alphaBlendOp
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_COLOR_WRITE_MASK_EXT
+            | vkCmdSetColorWriteMaskEXT
+                        | Fragment Output
+                                    | VkPipelineColorBlendAttachmentState::colorWriteMask
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_RASTERIZATION_STREAM_EXT
+            | vkCmdSetRasterizationStreamEXT
+                        | Pre-Rasterization
+                                    | VkPipelineRasterizationStateStreamCreateInfoEXT::rasterizationStream
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT
+            | vkCmdSetConservativeRasterizationModeEXT
+                        | Pre-Rasterization
+                                    | VkPipelineRasterizationConservativeStateCreateInfoEXT::conservativeRasterizationMode
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT
+            | vkCmdSetExtraPrimitiveOverestimationSizeEXT
+                        | Pre-Rasterization
+                                    | VkPipelineRasterizationConservativeStateCreateInfoEXT::extraPrimitiveOverestimationSize
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT
+            | vkCmdSetDepthClipEnableEXT
+                        | Pre-Rasterization
+                                    | VkPipelineRasterizationDepthClipStateCreateInfoEXT::depthClipEnable
+                                      (VkPipelineRasterizationStateCreateInfo::depthClampEnable*)
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT
+            | vkCmdSetSampleLocationsEnableEXT
+                        | Fragement Shader
+                          Fragment Output
+                                    | VkPipelineSampleLocationsStateCreateInfoEXT::sampleLocationsEnable
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT
+            | vkCmdSetColorBlendAdvancedEXT
+                        | Fragment Output
+                                    | VkPipelineColorBlendAdvancedStateCreateInfoEXT::srcPremultiplied
+                                      VkPipelineColorBlendAdvancedStateCreateInfoEXT::dstPremultiplied
+                                      VkPipelineColorBlendAdvancedStateCreateInfoEXT::blendOverlap
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_PROVOKING_VERTEX_MODE_EXT
+            | vkCmdSetProvokingVertexModeEXT
+                        | Pre-Rasterization
+                                    | VkPipelineRasterizationProvokingVertexStateCreateInfoEXT::provokingVertexMode
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT
+            | vkCmdSetLineRasterizationModeEXT
+                        | Pre-Rasterization
+                                    | VkPipelineRasterizationLineStateCreateInfoEXT::lineRasterizationMode
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT
+            | vkCmdSetLineStippleEnableEXT
+                        | Pre-Rasterization
+                                    | VkPipelineRasterizationLineStateCreateInfoEXT::stippledLineEnable
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT
+            | vkCmdSetDepthClipNegativeOneToOneEXT
+                        | Pre-Rasterization
+                                    | VkPipelineViewportDepthClipControlCreateInfoEXT::negativeOneToOne
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV
+            | vkCmdSetViewportWScalingEnableNV
+                        | Pre-Rasterization
+                                    | VkPipelineViewportWScalingStateCreateInfoNV::viewportWScalingEnable
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV
+            | vkCmdSetViewportSwizzleNV
+                        | Pre-Rasterization
+                                    | VkPipelineViewportSwizzleStateCreateInfoNV::viewportCount
+                                      VkPipelineViewportSwizzleStateCreateInfoNV::pViewportSwizzles
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV
+            | vkCmdSetCoverageToColorEnableNV
+                        | Fragement Shader
+                          Fragment Output
+                                    | VkPipelineCoverageToColorStateCreateInfoNV::coverageToColorEnable
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_COVERAGE_TO_COLOR_LOCATION_NV
+            | vkCmdSetCoverageToColorLocationNV
+                        | Fragement Shader
+                          Fragment Output
+                                    | VkPipelineCoverageToColorStateCreateInfoNV::coverageToColorLocation
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV
+            | vkCmdSetCoverageModulationModeNV
+                        | Fragement Shader
+                          Fragment Output
+                                    | VkPipelineCoverageModulationStateCreateInfoNV::coverageModulationMode
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV
+            | vkCmdSetCoverageModulationTableEnableNV
+                        | Fragement Shader
+                          Fragment Output
+                                    | VkPipelineCoverageModulationStateCreateInfoNV::coverageModulationTableEnable
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV
+            | vkCmdSetCoverageModulationTableNV
+                        | Fragement Shader
+                          Fragment Output
+                                    | VkPipelineCoverageModulationStateCreateInfoNV::coverageModulationTableCount
+                                      VkPipelineCoverageModulationStateCreateInfoNV::pCoverageModulationTable
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_SHADING_RATE_IMAGE_ENABLE_NV
+            | vkCmdSetShadingRateImageEnableNV
+                        | Pre-Rasterization
+                                    | VkPipelineViewportShadingRateImageStateCreateInfoNV::shadingRateImageEnable
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV
+            | vkCmdSetRepresentativeFragmentTestEnableNV
+                        | Fragement Shader
+                                    | VkPipelineRepresentativeFragmentTestStateCreateInfoNV::representativeFragmentTestEnable
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV
+            | vkCmdSetCoverageReductionModeNV
+                        | Fragement Shader
+                          Fragment Output
+                                    | VkPipelineCoverageReductionStateCreateInfoNV::coverageReductionMode
+                                                | VK_EXT_extended_dynamic_state3
+                                                  VK_EXT_shader_object
+| VK_DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT
+            | vkCmdSetAttachmentFeedbackLoopEnableEXT
+                        | Pre-Rasterization
+                          Fragement Shader
+                          Fragment Output
+                                    |
+                                                | VK_EXT_attachment_feedback_loop_dynamic_state
+| VK_DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR
+            | vkCmdSetRayTracingPipelineStackSizeKHR
+                        | Ray Tracing
+                                    |
+                                                | VK_KHR_ray_tracing_pipeline
+|====
+
+
