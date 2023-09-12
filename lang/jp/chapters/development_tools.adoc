@@ -1,4 +1,4 @@
-// Copyright 2019-2021 The Khronos Group, Inc.
+// Copyright 2019-2023 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
@@ -26,9 +26,6 @@ LunarG は、Vulkan エコシステムのコンポーネントを開発・維持
   ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/debug_printf.html[シェーダ printf]：興味のある値をデバッグコールバックや標準出力に「プリント」して、シェーダコードをデバッグします。
   ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html[ベストプラクティス警告]：潜在的なパフォーマンスの問題、疑わしい使用パターン、よくある間違いなどをハイライトします。
 
-  * link:https://vulkan.lunarg.com/doc/view/latest/windows/synchronization2_layer.html[`VK_LAYER_KHRONOS_synchronization2`] は、Khronos Synchronization2 レイヤのことです。
-    `VK_LAYER_KHRONOS_synchronization2` レイヤは、`VK_KHR_synchronization2` 拡張機能を実装します。デフォルトでは、基礎となるドライバがこの拡張機能を提供している場合、このレイヤは自分自身を無効にします。
-
 === Vulkan SDK レイヤ
 
 Khronos レイヤの他にも、Vulkan SDK にはプラットフォームに依存しない便利なレイヤが含まれています。
@@ -48,12 +45,13 @@ Khronos レイヤの他にも、Vulkan SDK にはプラットフォームに依�
   * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/monitor_layer.html[`VK_LAYER_LUNARG_monitor`]は、フレームレートモニターレイヤです。
     Vulkan アプリケーションの FPS をウィンドウのタイトルバーに表示して、パフォーマンスのヒントにします。
 
+=== Vulkan 拡張機能のレイヤ
+
+link:https://github.com/KhronosGroup/Vulkan-ExtensionLayer/[`Vulkan Extension Layer`]　は、 どこでも利用できるわけではない拡張機能を実装するレイヤーの集まりである。ドライバが拡張機能を提供する場合、レイヤーはオフになります。
+
 === Vulkan サードパーティレイヤ
 
 他にも開発に役立つレイヤが公開されています。
-
-  * link:https://github.com/ARM-software/perfdoc[`VK_LAYER_ARM_mali_perf_doc`] は、ARM PerfDoc レイヤです。
-    Arm Mali デバイス上の Vulkan アプリケーションのベストプラクティスをチェックします。
 
   * link:https://github.com/powervr-graphics/perfdoc[`VK_LAYER_IMG_powervr_perf_doc`] は、PowerVR PerfDoc レイヤです。
     Imagination Technologies PowerVR デバイス上の Vulkan アプリケーションのベストプラクティスをチェックします。
