@@ -1,5 +1,5 @@
-// Copyright 2021 The Khronos Group, Inc.
-// Copyright 2021 Sascha Willems
+// Copyright 2021-2023 The Khronos Group, Inc.
+// Copyright 2021-2023 Sascha Willems
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
@@ -15,6 +15,11 @@ One such language is the High Level Shading Language (HLSL) by Microsoft, used b
 With link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst#unsupported-hlsl-features[a few exceptions], all Vulkan features and shader stages available with GLSL can be used with HLSL too, including recent Vulkan additions like hardware accelerated ray tracing. On the other hand, HLSL to SPIR-V supports Vulkan exclusive features that are not (yet) available in DirectX.
 
 image::{images}what_is_spirv_dxc.png[what_is_spriv_dxc.png]
+
+[[educational-resources]]
+== Educational resources
+
+If you are new to HLSL, a good starting point are the HLSL resources over at link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl[Microsoft Learn]. Another great source is the link:https://microsoft.github.io/DirectX-Specs/[DirectX-Specs document]. It contains valuable information on recent shader features and HLSL's shader models.
 
 [[applications-pov]]
 == From the application's point-of-view
