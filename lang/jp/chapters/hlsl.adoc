@@ -15,6 +15,11 @@ link:https://github.com/microsoft/DirectXShaderCompiler/blob/master/docs/SPIR-V.
 
 image::../../../chapters/images/what_is_spirv_dxc.png[what_is_spriv_dxc.png]
 
+[[educational-resources]]
+== 教育リソース
+
+link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl[Microsoft Learn]には、HLSLを初めて使う人のために、HLSLに関する素晴らしい情報が掲載されています。また、link:https://microsoft.github.io/DirectX-Specs/[DirectX-Specs のドキュメント]も素晴らしく、最近のシェーダー機能と HLSL のシェーダーモデルに関する貴重な情報が掲載されています。
+
 [[applications-pov]]
 == アプリケーションから見た場合
 
