@@ -262,7 +262,7 @@ When using `OpTypeImage` in SPIR-V the `Depth` operand is ignored in Vulkan
 [[conservative-depth]]
 ==== Conservative depth
 
-The `DepthGreater`, `DepthLess`, and `DepthUnchanged` Executation Mode allow for a possible optimization for implementations that link:https://registry.khronos.org/OpenGL/extensions/ARB/ARB_conservative_depth.txt[relies on an early depth test to be run before the fragment]. This can be easily done in GLSL by declaring `gl_FragDepth` with the proper layout qualifier.
+The `DepthGreater`, `DepthLess`, and `DepthUnchanged` Execution Mode allow for a possible optimization for implementations that link:https://registry.khronos.org/OpenGL/extensions/ARB/ARB_conservative_depth.txt[relies on an early depth test to be run before the fragment]. This can be easily done in GLSL by declaring `gl_FragDepth` with the proper layout qualifier.
 
 [source,glsl]
 ----
