@@ -10,7 +10,7 @@ ifndef::chapters[:chapters: ../]
 
 == Extension breakdown
 
-`VK_KHR_external_*` 拡張子がたくさんあるように見えるかもしれないが、実際にはうまく分離されている。
+`VK_KHR_external_*` 拡張機能がたくさんあるように見えますが、実際にはうまく分離されています。
 
 == メモリ vs 同期
 
