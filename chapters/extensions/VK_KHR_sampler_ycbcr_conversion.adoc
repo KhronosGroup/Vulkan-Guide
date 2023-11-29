@@ -55,7 +55,7 @@ vkGetImageMemoryRequirements2(device, &imageMemoryRequirementsInfo2, &memoryRequ
 // Allocate plane 0 memory
 VkMemoryAllocateInfo memoryAllocateInfo = {};
 memoryAllocateInfo.allocationSize       = memoryRequirements2.memoryRequirements.size;
-vkAllocateMemory(device, &memoryAllocateInfo, nullptr, &disjointMemoryPlane0));
+vkAllocateMemory(device, &memoryAllocateInfo, nullptr, &disjointMemoryPlane0);
 
 // Allocate the same for each plane
 
@@ -70,7 +70,7 @@ bindImageMemoryInfo.memory       = disjointMemoryPlane0;
 
 // Bind the same for each plane
 
-vkBindImageMemory2(device, bindImageMemoryInfoSize, bindImageMemoryInfoArray));
+vkBindImageMemory2(device, bindImageMemoryInfoSize, bindImageMemoryInfoArray);
 ----
 
 == Copying memory to each plane
@@ -121,7 +121,7 @@ Here is some pseudo code to help give an idea of how to use it from the API poin
 VkSamplerYcbcrConversion samplerYcbcrConversion;
 VkSamplerYcbcrConversionCreateInfo samplerYcbcrConversionCreateInfo = {};
 // ...
-vkCreateSamplerYcbcrConversion(device, &samplerYcbcrConversionCreateInfo, nullptr, &samplerYcbcrConversion));
+vkCreateSamplerYcbcrConversion(device, &samplerYcbcrConversionCreateInfo, nullptr, &samplerYcbcrConversion);
 
 VkSamplerYcbcrConversionInfo samplerYcbcrConversionInfo = {};
 samplerYcbcrConversionInfo.conversion = samplerYcbcrConversion;
@@ -130,13 +130,13 @@ samplerYcbcrConversionInfo.conversion = samplerYcbcrConversion;
 VkImageViewCreateInfo imageViewInfo = {};
 imageViewInfo.pNext = &samplerYcbcrConversionInfo;
 // ...
-vkCreateImageView(device, &imageViewInfo, nullptr, &myImageView));
+vkCreateImageView(device, &imageViewInfo, nullptr, &myImageView);
 
 // Create a sampler with conversion
 VkSamplerCreateInfo samplerInfo = {};
 samplerInfo.pNext = &samplerYcbcrConversionInfo;
 // ...
-vkCreateSampler(device, &samplerInfo, nullptr, &mySampler));
+vkCreateSampler(device, &samplerInfo, nullptr, &mySampler);
 ----
 
 == combinedImageSamplerDescriptorCount

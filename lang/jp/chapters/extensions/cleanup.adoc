@@ -197,7 +197,7 @@ VkBindImagePlaneMemoryInfo plane_info[2];
 plane_info[0] = {VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO, NULL, VK_IMAGE_ASPECT_PLANE_0_BIT};
 plane_info[1] = {VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO, NULL, VK_IMAGE_ASPECT_PLANE_1_BIT};
 
-// vkBindImagemMemory() で欠落した pNext に他の拡張機能の構造体を渡せるようになりました。
+// vkBindImageMemory() で欠落した pNext に他の拡張機能の構造体を渡せるようになりました。
 VkBindImageMemoryInfo infos[2];
 infos[0] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, &plane_info[0], image, memories[0], 0};
 infos[1] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, &plane_info[1], image, memories[1], 0};
@@ -239,8 +239,8 @@ void vkBindImageMemory(VkDevice device,
 }
 
 void vkBindImageMemory2(VkDevice device,
-                        uint32_t bindInfoCount, const
-                        VkBindImageMemoryInfo* pBindInfos)
+                        uint32_t bindInfoCount, 
+                        const VkBindImageMemoryInfo* pBindInfos)
 {
     for (uint32_t i = 0; i < bindInfoCount; i++) {
         HandleVkBindImageMemoryInfo(pBindInfos[i]);
