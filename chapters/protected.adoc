@@ -99,7 +99,7 @@ Using the protected `VkQueue`, an application can also use `VK_COMMAND_POOL_CREA
 VkCommandPoolCreateInfo info = {};
 info.flags            = VK_COMMAND_POOL_CREATE_PROTECTED_BIT;
 info.queueFamilyIndex = queueFamilyFound; // protected queue
-vkCreateCommandPool(deviceHandle, &info, nullptr, &protectedCommandPool));
+vkCreateCommandPool(deviceHandle, &info, nullptr, &protectedCommandPool);
 ----
 
 All command buffers allocated from the protected command pool become "`protected command buffers`"

@@ -54,7 +54,7 @@ vkGetImageMemoryRequirements2(device, &imageMemoryRequirementsInfo2, &memoryRequ
 // 平面0のメモリを割り当てる
 VkMemoryAllocateInfo memoryAllocateInfo = {};
 memoryAllocateInfo.allocationSize       = memoryRequirements2.memoryRequirements.size;
-vkAllocateMemory(device, &memoryAllocateInfo, nullptr, &disjointMemoryPlane0));
+vkAllocateMemory(device, &memoryAllocateInfo, nullptr, &disjointMemoryPlane0);
 
 // 各平面で同じように割り当てる
 
@@ -69,7 +69,7 @@ bindImageMemoryInfo.memory       = disjointMemoryPlane0;
 
 // 各平面で同じようにバインドする
 
-vkBindImageMemory2(device, bindImageMemoryInfoSize, bindImageMemoryInfoArray));
+vkBindImageMemory2(device, bindImageMemoryInfoSize, bindImageMemoryInfoArray);
 ----
 
 == メモリを各平面にコピーする
@@ -120,7 +120,7 @@ vkCmdCopyBufferToImage(...)
 VkSamplerYcbcrConversion samplerYcbcrConversion;
 VkSamplerYcbcrConversionCreateInfo samplerYcbcrConversionCreateInfo = {};
 // ...
-vkCreateSamplerYcbcrConversion(device, &samplerYcbcrConversionCreateInfo, nullptr, &samplerYcbcrConversion));
+vkCreateSamplerYcbcrConversion(device, &samplerYcbcrConversionCreateInfo, nullptr, &samplerYcbcrConversion);
 
 VkSamplerYcbcrConversionInfo samplerYcbcrConversionInfo = {};
 samplerYcbcrConversionInfo.conversion = samplerYcbcrConversion;
@@ -129,13 +129,13 @@ samplerYcbcrConversionInfo.conversion = samplerYcbcrConversion;
 VkImageViewCreateInfo imageViewInfo = {};
 imageViewInfo.pNext = &samplerYcbcrConversionInfo;
 // ...
-vkCreateImageView(device, &imageViewInfo, nullptr, &myImageView));
+vkCreateImageView(device, &imageViewInfo, nullptr, &myImageView);
 
 // 変換を伴うサンプラを作成する
 VkSamplerCreateInfo samplerInfo = {};
 samplerInfo.pNext = &samplerYcbcrConversionInfo;
 // ...
-vkCreateSampler(device, &samplerInfo, nullptr, &mySampler));
+vkCreateSampler(device, &samplerInfo, nullptr, &mySampler);
 ----
 
 == combinedImageSamplerDescriptorCount

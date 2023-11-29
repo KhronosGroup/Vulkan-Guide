@@ -164,7 +164,7 @@ VkBool32 DebugReportCallbackEXT(/* ... */ const char* pMessage /* ... */)
     // pMessage に "specialuse-extension" が含まれている場合は終了
     if(strstr(pMessage, "specialuse-extension") != NULL) {
         return VK_FALSE;
-    };
+    }
 
     // 残りの検証メッセージを処理
 }
@@ -179,7 +179,7 @@ VkBool32 DebugUtilsMessengerCallbackEXT(/* ... */ const VkDebugUtilsMessengerCal
     // pMessageIdName に "specialuse-extension" が含まれている場合は終了
     if(strstr(pCallbackData->pMessageIdName, "specialuse-extension") != NULL) {
         return VK_FALSE;
-    };
+    }
 
     // 残りの検証メッセージを処理
 }

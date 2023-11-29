@@ -54,7 +54,7 @@ instance_extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_
 VkInstanceCreateInfo instance_create_info  = {};
 instance_create_info.enabledExtensionCount   = static_cast<uint32_t>(instance_extensions.size());
 instance_create_info.ppEnabledExtensionNames = instance_extensions.data();
-vkCreateInstance(&instance_create_info, nullptr, &myInstance));
+vkCreateInstance(&instance_create_info, nullptr, &myInstance);
 
 // ...
 

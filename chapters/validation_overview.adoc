@@ -165,7 +165,7 @@ VkBool32 DebugReportCallbackEXT(/* ... */ const char* pMessage /* ... */)
     // If pMessage contains "specialuse-extension", then exit
     if(strstr(pMessage, "specialuse-extension") != NULL) {
         return VK_FALSE;
-    };
+    }
 
     // Handle remaining validation messages
 }
@@ -180,7 +180,7 @@ VkBool32 DebugUtilsMessengerCallbackEXT(/* ... */ const VkDebugUtilsMessengerCal
     // If pMessageIdName contains "specialuse-extension", then exit
     if(strstr(pCallbackData->pMessageIdName, "specialuse-extension") != NULL) {
         return VK_FALSE;
-    };
+    }
 
     // Handle remaining validation messages
 }
