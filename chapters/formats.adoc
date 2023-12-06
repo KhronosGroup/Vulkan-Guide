@@ -14,7 +14,7 @@ The most common use case for a `VkFormat` is when creating a `VkImage`. Because 
 [[feature-support]]
 == Feature Support
 
-It is important to understand that "format support" is not a single binary value per format, but rather each format has a set of link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFormatFeatureFlagBits.html[VkFormatFeatureFlagBits] that each describes with features are supported for a format.
+It is important to understand that "format support" is not a single binary value per format, but rather each format has a set of link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFormatFeatureFlagBits.html[VkFormatFeatureFlagBits] that each describes which features are supported for a format.
 
 The supported formats may vary across implementations, but a link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#features-required-format-support[minimum set of format features are guaranteed]. An application can link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#formats-properties[query] for the supported format properties.
 
