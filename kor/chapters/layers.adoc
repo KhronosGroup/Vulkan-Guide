@@ -1,0 +1,57 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[layers]]
+= 레이어(Layers)
+
+레이어는 Vulkan 시스템을 보강하는 옵션 요소입니다. 레이어는 애플리케이션에서 하드웨어에 이르기까지 기존의 Vulkan 함수를 가로채고, 평가하고, 수정할 수 있습니다. 레이어 속성은 애플리케이션에서 link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#vkEnumerateInstanceLayerProperties[vkEnumerateInstanceLayerProperties]를 사용하여 쿼리할 수 있습니다.
+
+== 레이어 사용
+
+레이어는 공유 라이브러리로 패키지화되어 있으며, 로더에 의해 동적으로 읽혀 로더와 애플리케이션 사이에 삽입됩니다. 레이어를 사용하는 데 필요한 두 가지 요소는 바이너리 파일의 위치와 활성화할 레이어입니다. 사용할 레이어는 애플리케이션에서 명시적으로 활성화하거나 로더에 레이어를 사용하도록 지시하여 암시적으로 활성화할 수 있습니다. 암시적 명시적 레이어에 대한 자세한 내용은 link:https://github.com/KhronosGroup/Vulkan-Loader/blob/master/loader/LoaderAndLayerInterface.md#implicit-vs-explicit-layers[로더 및 레이어 인터페이스]에서 확인할 수 있습니다.
+
+link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK]에는 각 플랫폼에서 레이어를 검색하고 구성하는 방법에 대해 매우 구체적으로 설명하는 link:https://vulkan.lunarg.com/doc/sdk/latest/windows/layer_configuration.html[레이어 구성 문서]가 포함되어 있습니다.
+
+== Vulkan 구성 도구(Configurator Tool)
+
+Windows, Linux, macOS의 개발자들은 Vulkan Configurator인 vkconfig를 사용하여 명시적 레이어를 활성화하고 암시적 레이어를 비활성화하고 그래픽 사용자 인터페이스에서 레이어 설정을 변경할 수 있습니다.
+Vulkan Configurator 사용에 대한 자세한 내용은 link:https://vulkan.lunarg.com/doc/sdk/latest/windows/vkconfig.html[Vulkan Configurator 문서]를 참조하세요.
+
+== 장치 레이어 사용 중단(Device Layers Deprecation)
+
+예전에는 인스턴스 레이어와 장치 레이어가 모두 있었지만, 디바이스 레이어는 Vulkan 초기에 link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#extendingvulkan-layers-devicelayerdeprecation[사용 중단]되어있으므로 피해야 합니다.
+
+== 레이어 작성
+
+로더와 레이어가 서로 통신하기로 합의하는 방식인 link:https://github.com/KhronosGroup/Vulkan-Loader/blob/master/loader/LoaderAndLayerInterface.md#loader-and-layer-interface[로더-레이어 인터페이스]를 따르기만 하면 누구나 레이어를 만들 수 있습니다.
+
+LunarG는 새로운 레이어를 개발하는 데 도움이 되는 link:https://github.com/LunarG/VulkanTools/tree/master/layer_factory[Layer Factory]라는 레이어 생성 프레임워크를 제공합니다(link:https://www.youtube.com/watch?v=gVT7nyXz6M8&t=5m22s[동영상 프레젠테이션]).
+layer factory는 로더-레이어 인터페이스, 레이어 상용구, 설정 및 초기화, 레이어 개발의 복잡성 대부분을 숨깁니다.
+애플리케이션 개발 시 애플리케이션 디버깅에 도움이 되는 레이어를 쉽게 생성할 수 있는 기능이 유용할 수 있습니다. 자세한 내용은 link:https://github.com/LunarG/VulkanTools/blob/master/layer_factory/README.md[Vulkan Layer Factory 문서]를 참조하세요.
+
+== 다양한 플랫폼
+
+레이어를 암시적으로 로드하는 방법은 로더와 플랫폼에 따라 다릅니다.
+
+=== Android
+
+Android P (Android 9 / API level 28) 기준, 기기가 디버깅 가능한 상태(예: `getprop ro.debuggable` 이 link:hhttps://cs.android.com/android/platform/superproject/+/android-9.0.0_r1:frameworks/native/vulkan/libvulkan/layers_extensions.cpp;l=454[1을 반환])인 경우, 로더는 link:https://cs.android.com/android/platform/superproject/+/android-9.0.0_r1:frameworks/native/vulkan/libvulkan/layers_extensions.cpp;l=67[/data/local/debug/vulkan]을 찾게 됩니다.
+
+Android P (Android 9 / API level 28)부터는 애플리케이션이 디버그 모드로 빌드되어있다면, 암시적 레이어는 link:https://developer.android.com/ndk/guides/graphics/validation-layer#vl-adb[ADB를 사용하여 푸시]할 수 있습니다.
+
+위의 옵션 외에는 암시적 레이어를 사용할 수 있는 방법이 없습니다.
+
+=== Linux
+
+link:https://vulkan.lunarg.com/doc/sdk/latest/linux/layer_configuration.html[Vulkan SDK]에서는 Linux에서 암시적 레이어를 사용하는 방법을 설명합니다.
+
+=== MacOS
+
+link:https://vulkan.lunarg.com/doc/sdk/latest/mac/layer_configuration.html[Vulkan SDK]에서는 MaxOS에서 암시적 레이어를 사용하는 방법을 설명합니다.
+
+=== Windows
+
+link:https://vulkan.lunarg.com/doc/sdk/latest/windows/layer_configuration.html[Vulkan SDK]에서는 Windows에서 암시적 레이어를 사용하는 방법을 설명합니다.

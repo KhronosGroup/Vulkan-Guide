@@ -1,0 +1,321 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Vulkan^®^ Guide
+:regtitle: pass:q,r[^®^]
+The Khronos{regtitle} Vulkan Working Group
+:data-uri:
+:icons: font
+:max-width: 100%
+:numbered:
+:source-highlighter: rouge
+:rouge-style: github
+
+image::../../images/vulkan_logo.png[Vulkan Logo]
+image::../../images/khronos_logo.png[Khronos logo]
+
+// Use {chapters} as base path for individual chapters, to allow single
+// pages to work properly as well. Must have trailing slash.
+// Implicit {relfileprefix} does not work due to file hierarchy
+:chapters: chapters/
+
+Vulkan Guide는 개발자가 Vulkan의 세계를 시작하는 데 도움을 주기 위해 작성되었습니다. 이 가이드는 개발자가 원하는 내용에 따라 다른 유용한 링크로 연결되는 가벼운 읽기를 목표로 합니다. 모든 정보는 Vulkan의 다양한 뉘앙스를 더 잘 이해할 수 있도록 돕기 위한 것입니다.
+
+[NOTE]
+====
+Vulkan Guide는 `asciidoctor guide.adoc` 를 사용해 하나의 페이지로서 빌드할 수 있습니다.
+====
+[NOTE]
+====
+Vulkan에서 사용하는 특수한 용어에 대한 혼란을 막기 위해 명령과 연관된 경우 번역하지 않고 용어 발음을 그대로 사용하였습니다.
+`Attachment` 첨부 - (주로 이미지) 버퍼 데이터를 원하는 용도로 장치가 사용할 수 있게 제공합니다.
+`Binding` 바인딩 - 장치, 데이터 등을 원하는 참조에 연결하는 동작
+`Device` 장치 - 일반적으로 GPU 처리 장치를 의미
+`Extension` 확장판, 확장기능 - 표준에 정의돼 있지 않으나 특별한 기능을 제공하기 위해 제공되는 확장 기능으로, 크로노스 그룹의 공식 확장판과 각 기업이 추가한 벤더 확장판이 있음
+`Expose` 노출/공개 - (드라이버가 애플리케이션이) 사용할 수 있도록 정보를 노출한다는 의미
+`Layer` 레이어 - 특정한 (주로 검증) 목적을 위해 구성된 Vulkan 소프트웨어 계층
+`Layout` 레이아웃 - 데이터(주로 이미지)의 형식이나 종류를 의미
+`Render Pass` 렌더패스 - 실제 그리는 동작을 규정하는 하나의 작업 단위를 정의
+`Sparse Memory` 희소 메모리 - 큰 크기의 이미지로 정의하지만, 실제로는 작은 부분의 이미지만을 사용하는 메모리 관리 방식
+`State` 스테이트 - 파이프 라인 스테이트 변수를 의미
+`Stage` 스테이지 - 파이프라인의 처리 단계를 의미
+====
+
+:leveloffset: 1
+
+= 개요(Logistics Overview)
+
+== xref:{chapters}what_is_vulkan.adoc[Vulkan 이란?]
+
+// include::{chapters}what_is_vulkan.adoc[]
+
+== xref:{chapters}what_vulkan_can_do.adoc[Vulkan으로 할 수 있는 일]
+
+// include::{chapters}what_vulkan_can_do.adoc[]
+
+== xref:{chapters}vulkan_spec.adoc[Vulkan Spec]
+
+// include::{chapters}vulkan_spec.adoc[]
+
+== xref:{chapters}platforms.adoc[플랫폼]
+
+// include::{chapters}platforms.adoc[]
+
+== xref:{chapters}checking_for_support.adoc[지원 여부 확인]
+
+// include::{chapters}checking_for_support.adoc[]
+
+== xref:{chapters}versions.adoc[Versions]
+
+// include::{chapters}versions.adoc[]
+
+== xref:{chapters}vulkan_release_summary.adoc[Vulkan Release Summary]
+
+// include::{chapters}vulkan_release_summary.adoc[]
+
+== xref:{chapters}what_is_spirv.adoc[SPIR-V 란?]
+
+// include::{chapters}what_is_spirv.adoc[]
+
+== xref:{chapters}portability_initiative.adoc[이식성 프로젝트]
+
+// include::{chapters}portability_initiative.adoc[]
+
+== xref:{chapters}vulkan_cts.adoc[Vulkan CTS]
+
+// include::{chapters}vulkan_cts.adoc[]
+
+== xref:{chapters}development_tools.adoc[Vulkan 개발 도구]
+
+// include::{chapters}development_tools.adoc[]
+
+== xref:{chapters}validation_overview.adoc[Vulkan 유효성 검사 개요]
+
+// include::{chapters}validation_overview.adoc[]
+
+== xref:{chapters}decoder_ring.adoc[Vulkan에서 사용되는 용어의 대응표 (GL, GLES, DirectX, and Metal)]
+
+// include::{chapters}decoder_ring.adoc[]
+
+= Vulkan 사용법
+
+== xref:{chapters}loader.adoc[로더(Loader)]
+
+// include::{chapters}loader.adoc[]
+
+== xref:{chapters}layers.adoc[레이어(Layers)]
+
+// include::{chapters}layers.adoc[]
+
+== xref:{chapters}querying_extensions_features.adoc[속성(Properties), 확장 기능(Extensions), 기능(Features), 제한(Limits), 포맷(Formats) 쿼리하기]
+
+// include::{chapters}querying_extensions_features.adoc[]
+
+=== xref:{chapters}enabling_extensions.adoc[Vulkan 확장 기능 사용하기]
+
+// include::{chapters}enabling_extensions.adoc[]
+
+=== xref:{chapters}enabling_features.adoc[Vulkan 기능 사용하기]
+
+// include::{chapters}enabling_features.adoc[]
+
+=== xref:{chapters}spirv_extensions.adoc[SPIR-V 확장 기능 사용하기]
+
+// include::{chapters}spirv_extensions.adoc[]
+
+=== xref:{chapters}formats.adoc[포맷(Formats)]
+
+// include::{chapters}formats.adoc[]
+
+== xref:{chapters}queues.adoc[큐와 큐 패밀리]
+
+// include::{chapters}queues.adoc[]
+
+== xref:{chapters}wsi.adoc[WSI]
+
+// include::{chapters}wsi.adoc[]
+
+== xref:{chapters}pnext_and_stype.adoc[pNext와 sType]
+
+// include::{chapters}pnext_and_stype.adoc[]
+
+== xref:{chapters}synchronization.adoc[동기화(Synchronization)]
+
+// include::{chapters}synchronization.adoc[]
+
+=== xref:{chapters}extensions/VK_KHR_synchronization2.adoc[VK_KHR_synchronization2로의 이식]
+
+// include::{chapters}extensions/VK_KHR_synchronization2.adoc[]
+
+== xref:{chapters}memory_allocation.adoc[메모리 할당 전략]
+
+// include::{chapters}memory_allocation.adoc[]
+
+=== xref:{chapters}sparse_resources.adoc[희소 리소스(Sparse Resources)]
+
+// include::{chapters}sparse_resources.adoc[]
+
+=== xref:{chapters}protected.adoc[보호 메모리(Protected Memory)]
+
+// include::{chapters}protected.adoc[]
+
+== xref:{chapters}pipeline_cache.adoc[파이프라인 캐싱/파생]
+
+// include::{chapters}pipeline_cache.adoc[]
+
+== xref:{chapters}threading.adoc[스레딩(Threading)]
+
+// include::{chapters}threading.adoc[]
+
+== xref:{chapters}depth.adoc[깊이(Depth)]
+
+// include::{chapters}depth.adoc[]
+
+  * `VK_EXT_depth_range_unrestricted`, `VK_EXT_depth_clip_enable`, `VK_EXT_depth_clip_control`
+
+== xref:{chapters}mapping_data_to_shaders.adoc[쉐이더에 대한 데이터 매핑]
+
+// include::{chapters}mapping_data_to_shaders.adoc[]
+
+=== xref:{chapters}vertex_input_data_processing.adoc[정점 입력 데이터 처리]
+
+// include::{chapters}vertex_input_data_processing.adoc[]
+
+=== xref:{chapters}descriptor_dynamic_offset.adoc[디스크립터 동적 오프셋]
+
+// include::{chapters}descriptor_dynamic_offset.adoc[]
+
+=== xref:{chapters}push_constants.adoc[푸시 상수(Push Constants)]
+
+// include::{chapters}push_constants.adoc[]
+
+== xref:{chapters}robustness.adoc[견고성(Robustness)]
+
+// include::{chapters}robustness.adoc[]
+
+  * `VK_EXT_image_robustness`, `VK_EXT_robustness2`, `VK_EXT_pipeline_robustness`
+
+== xref:{chapters}dynamic_state.adoc[동적 스테이트]
+
+// include::{chapters}dynamic_state.adoc[]
+
+  * `VK_EXT_extended_dynamic_state`, `VK_EXT_extended_dynamic_state2`, `VK_EXT_extended_dynamic_state3`, `VK_EXT_vertex_input_dynamic_state`, `VK_EXT_color_write_enable`, `VK_EXT_attachment_feedback_loop_dynamic_state`
+
+=== xref:{chapters}dynamic_state_map.adoc[동적 스테이트 지도]
+
+// include::{chapters}dynamic_state_map.adoc[]
+
+== xref:{chapters}subgroups.adoc[서브그룹(Subgroups)]
+
+// include::{chapters}subgroups.adoc[]
+
+  * `VK_EXT_subgroup_size_control`, `VK_KHR_shader_subgroup_extended_types`, `VK_EXT_shader_subgroup_ballot`, `VK_EXT_shader_subgroup_vote`
+
+== xref:{chapters}shader_memory_layout.adoc[쉐이더 메모리 레이아웃]
+
+// include::{chapters}shader_memory_layout.adoc[]
+
+  * `VK_KHR_uniform_buffer_standard_layout`, `VK_KHR_relaxed_block_layout`, `VK_EXT_scalar_block_layout`
+
+== xref:{chapters}atomics.adoc[아토믹(Atomics)]
+
+// include::{chapters}atomics.adoc[]
+
+  * `VK_KHR_shader_atomic_int64`, `VK_EXT_shader_image_atomic_int64`, `VK_EXT_shader_atomic_float`, `VK_EXT_shader_atomic_float2`
+
+== xref:{chapters}common_pitfalls.adoc[흔히하는 함정/실수]
+
+// include::{chapters}common_pitfalls.adoc[]
+
+== xref:{chapters}hlsl.adoc[HLSL 쉐이더 사용하기]
+
+// include::{chapters}hlsl.adoc[]
+
+= 확장 기능을 사용하응 시점과 이유
+
+[NOTE]
+====
+다음은 다양한 Vulkan 확장 기능에 대한 추가 참조 자료입니다. 확장 기능에 대한 자세한 내용은 Vulkan 사양서를 참조하세요
+====
+
+== xref:{chapters}extensions/cleanup.adoc[정리(Cleanup) 확장 기능]
+
+  * `VK_EXT_4444_formats`, `VK_KHR_bind_memory2`, `VK_KHR_create_renderpass2`, `VK_KHR_dedicated_allocation`, `VK_KHR_driver_properties`, `VK_KHR_get_memory_requirements2`, `VK_KHR_get_physical_device_properties2`, `VK_EXT_host_query_reset`, `VK_KHR_maintenance1`, `VK_KHR_maintenance2`, `VK_KHR_maintenance3`, `VK_KHR_maintenance4`, `VK_KHR_separate_depth_stencil_layouts`, `VK_KHR_depth_stencil_resolve`, `VK_EXT_separate_stencil_usage`, `VK_EXT_sampler_filter_minmax`, `VK_KHR_sampler_mirror_clamp_to_edge`, `VK_EXT_ycbcr_2plane_444_formats`, `VK_KHR_format_feature_flags2`, `VK_EXT_rgba10x6_formats`, `VK_KHR_copy_commands2`
+
+// include::{chapters}extensions/cleanup.adoc[]
+
+== xref:{chapters}extensions/device_groups.adoc[장치 그룹(Device Groups)]
+
+  * `VK_KHR_device_group`, `VK_KHR_device_group_creation`
+
+// include::{chapters}extensions/device_groups.adoc[]
+
+== xref:{chapters}extensions/external.adoc[외부 메모리와 동기화]
+
+  * `VK_KHR_external_fence`, `VK_KHR_external_memory`, `VK_KHR_external_semaphore`
+
+// include::{chapters}extensions/external.adoc[]
+
+== xref:{chapters}extensions/ray_tracing.adoc[레이 트레이싱(Ray Tracing)]
+
+  * `VK_KHR_acceleration_structure`, `VK_KHR_ray_tracing_pipeline`, `VK_KHR_ray_query`, `VK_KHR_pipeline_library`, `VK_KHR_deferred_host_operations`
+
+// include::{chapters}extensions/ray_tracing.adoc[]
+
+== xref:{chapters}extensions/shader_features.adoc[쉐이더 기능]
+
+  * `VK_KHR_8bit_storage`, `VK_KHR_16bit_storage`, `VK_KHR_shader_clock`, `VK_EXT_shader_demote_to_helper_invocation`, `VK_KHR_shader_draw_parameters`, `VK_KHR_shader_float16_int8`, `VK_KHR_shader_float_controls`, `VK_KHR_shader_non_semantic_info`, `VK_EXT_shader_stencil_export`, `VK_KHR_shader_terminate_invocation`, `VK_EXT_shader_viewport_index_layer`, `VK_KHR_spirv_1_4`, `VK_KHR_storage_buffer_storage_class`, `VK_KHR_variable_pointers`, `VK_KHR_vulkan_memory_model`, `VK_KHR_workgroup_memory_explicit_layout`, `VK_KHR_zero_initialize_workgroup_memory`
+
+// include::{chapters}extensions/shader_features.adoc[]
+
+== xref:{chapters}extensions/translation_layer_extensions.adoc[Translation Layer Extensions]
+
+  * `VK_EXT_custom_border_color`, `VK_EXT_border_color_swizzle`, `VK_EXT_depth_clip_enable`, `VK_EXT_depth_clip_control`, `VK_EXT_provoking_vertex`, `VK_EXT_transform_feedback`, `VK_EXT_image_view_min_lod`
+
+// include::{chapters}extensions/translation_layer_extensions.adoc[]
+
+== xref:{chapters}extensions/VK_EXT_descriptor_indexing.adoc[VK_EXT_descriptor_indexing]
+
+// include::{chapters}extensions/VK_EXT_descriptor_indexing.adoc[]
+
+== xref:{chapters}extensions/VK_EXT_inline_uniform_block.adoc[VK_EXT_inline_uniform_block]
+
+// include::{chapters}extensions/VK_EXT_inline_uniform_block.adoc[]
+
+== xref:{chapters}extensions/VK_EXT_memory_priority.adoc[VK_EXT_memory_priority]
+
+// include::{chapters}extensions/VK_EXT_memory_priority.adoc[]
+
+== xref:{chapters}extensions/VK_KHR_descriptor_update_template.adoc[VK_KHR_descriptor_update_template]
+
+// include::{chapters}extensions/VK_KHR_descriptor_update_template.adoc[]
+
+== xref:{chapters}extensions/VK_KHR_draw_indirect_count.adoc[VK_KHR_draw_indirect_count]
+
+// include::{chapters}extensions/VK_KHR_draw_indirect_count.adoc[]
+
+== xref:{chapters}extensions/VK_KHR_image_format_list.adoc[VK_KHR_image_format_list]
+
+// include::{chapters}extensions/VK_KHR_image_format_list.adoc[]
+
+== xref:{chapters}extensions/VK_KHR_imageless_framebuffer.adoc[VK_KHR_imageless_framebuffer]
+
+// include::{chapters}extensions/VK_KHR_imageless_framebuffer.adoc[]
+
+== xref:{chapters}extensions/VK_KHR_sampler_ycbcr_conversion.adoc[VK_KHR_sampler_ycbcr_conversion]
+
+// include::{chapters}extensions/VK_KHR_sampler_ycbcr_conversion.adoc[]
+
+== link:https://www.khronos.org/blog/vulkan-timeline-semaphores[VK_KHR_timeline_semaphore]
+
+== link:https://www.khronos.org/blog/streamlining-render-passes[VK_KHR_dynamic_rendering]
+
+== xref:{chapters}extensions/VK_KHR_shader_subgroup_uniform_control_flow.adoc[VK_KHR_shader_subgroup_uniform_control_flow]
+
+// include::{chapters}extensions/VK_KHR_shader_subgroup_uniform_control_flow.adoc[]
+
+= link:CONTRIBUTING.adoc[Contributing]
+
+= link:LICENSE[License]
+
+= link:CODE_OF_CONDUCT.adoc[Code of conduct]

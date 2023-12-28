@@ -1,0 +1,29 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[threading]]
+= 스레딩
+
+Vulkan과 OpenGL의 가장 큰 차이점 중 하나는 Vulkan이 단일 스레드 상태 머신 시스템에 국한되지 않는다는 점입니다. 애플리케이션에서 스레드를 구현하기 전에 먼저 Vulkan에서 스레드가 어떻게 작동하는지 이해하는 것이 중요합니다.
+
+Vulkan 사양서의 link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#fundamentals-threadingbehavior[스레딩 동작 섹션]에서는 애플리케이션이 Vulkan의 모든 _외부적으로 동기화된_ 요소를 관리하는 방법을 자세히 설명합니다. Vulkan의 멀티스레딩은 호스트 측 스케일링만 제공하므로, 장치와 상호작용하는 모든 것이 여전히 xref:{chapters}synchronization.adoc#synchronization[올바르게 동기화된] 상태여야 한다는 점이 중요합니다.
+
+Vulkan 구현에서는 멀티스레드를 도입하는 것은 예상되지 않기 때문에 앱이 멀티 CPU 성능을 요구하는 경우 앱이 스레드 관리를 담당하게 됩니다.
+
+== 커맨드 풀
+
+link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#commandbuffers-pools[커맨드 풀]은 여러 스레드에 걸쳐 커맨드 버퍼를 기록할 수 있는 시스템입니다. 하나의 커맨드 풀은 _외부적으로 동기화_ 되어야 하며 여러 스레드에서 동시에 접근해서는 안 됩니다. 호스트 스레드마다 독립적인 커맨드 풀을 사용함으로써 애플리케이션은 비용이 많이 드는 잠금 장치 없이 여러 커맨드 버퍼를 병렬로 생성할 수 있습니다.
+
+상대적으로 가벼운 스레드가 제출을 처리하면 커맨드 버퍼를 여러 스레드에 기록할 수 있다는 아이디어 입니다.
+
+image::../../../chapters/images/threading_command_buffers.png[threading_command_buffers.png]
+
+크로노스의 link:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/command_buffer_usage[샘플 및 튜토리얼]에서는 커맨드 버퍼를 병렬로 기록하는 방법을 자세히 설명합니다.
+
+== 디스크립터 풀
+
+link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#VkDescriptorPool[디스크립터 풀]은 디스크립터 세트를 할당, 해제, 재설정 및 업데이트하는 데 사용됩니다. 여러 개의 디스크립터 풀을 만들면 각 애플리케이션 호스트 스레드가 각 디스크립터 풀의 디스크립터 세트를 동시에 관리할 수 있습니다.

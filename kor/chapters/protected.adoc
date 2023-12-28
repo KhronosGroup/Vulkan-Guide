@@ -1,0 +1,138 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[protected]]
+= 보호 메모리(Protected Memory)
+
+보호 메모리는 장치 메모리를 "`보호 장치 메모리`" 와 "`비보호 장치 메모리`"로 나눕니다.
+
+대부분의 OS는 명시적으로 공유하지 않는 한 애플리케이션이 다른 애플리케이션의 GPU 메모리에 접근하는 것을 허용하지 않습니다(예: xref:{chapters}extensions/external.adoc#external-memory[외부 메모리]). 보호 메모리의 일반적인 예는 DRM 콘텐츠를 저장하는 것으로, 프로세스에서 수정할 수 있지만(예: 이미지 필터링 또는 재생 컨트롤과 자막 합성) 비보호 메모리로 추출할 수 없어야 합니다. 데이터는 암호화된 상태로 전송되고 디스플레이의 픽셀에 도달할 때까지 암호화된 상태로 유지됩니다.
+
+Vulkan 사양서는 "`보호 장치 메모리`"가 무엇을 강제하는지 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-protected-memory[자세히 설명하고 있습니다]. 다음은 보호 메모리를 사용하여 암호화된 전송을 올바르게 활성화하기 위해 필요한 사항에 대한 분석입니다.
+
+== 지원 여부 확인
+
+보호 메모리는 Vulkan 1.1에 추가되었으며 이전에는 확장 기능이 없었습니다. 즉, 모든 Vulakn 1.0 장치는 보호 메모리를 지원하지 않습니다. 지원 여부를 확인하려면 애플리케이션에서 `VkPhysicalDeviceProtectedMemoryFeatures::protectedMemory` 필드를 xref:{chapters}enabling_features.adoc#enabling-features[쿼리하고 활성화]해야 합니다.
+
+== 보호 큐(Protected queues)
+
+보호된 큐는 보호 메모리와 비보호 메모리를 모두 읽을 수 있지만 보호 메모리에만 쓸 수 있습니다. 큐가 비보호 메모리에 쓰기가 가능한 경우, 보호 메모리에서 읽기도 불가능합니다.
+
+[NOTE]
+====
+사이드 채널 공격을 막기 위해 보호 큐의 경우 성능 카운터 및 기타 타이밍 측정 시스템이 비활성화되거나 정확도가 떨어지는 경우가 많습니다.
+====
+
+애플리케이션은 `vkGetPhysicalDeviceQueueFamilyProperties` 를 사용하여 각 큐의 `VkQueueFlags` 를 가져와서 `VK_QUEUE_PROTECTED_BIT` 플래그가 공개되어 있는 큐 패밀리를 찾을 수 있습니다. 이것은 해당 큐 패밀리가 항상 보호된다는 것을 의미하는 것이 **아니라**, 해당 큐가 보호 큐가 **될 수 있다**는 것을 의미합니다.
+
+드라이버가 `VkQueue` 를 보호하도록 하려면 `vkCreateDevice` 중 `VkDeviceQueueCreateInfo` 에 `VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT` 를 입력해야 합니다.
+
+다음 의사 코드는 애플리케이션이 동일한 큐 패밀리에서 2개의 보호된 `VkQueue` 객체를 생성하도록 요청할 수 있는 방법입니다:
+
+[source,cpp]
+----
+VkDeviceQueueCreateInfo queueCreateInfo[1];
+queueCreateInfo[0].flags             = VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT;
+queueCreateInfo[0].queueFamilyIndex  = queueFamilyFound;
+queueCreateInfo[0].queueCount        = 2; // 2개의 큐가 큐 패밀리에 있다고 가정
+
+VkDeviceCreateInfo deviceCreateInfo   = {};
+deviceCreateInfo.pQueueCreateInfos    = queueCreateInfo;
+deviceCreateInfo.queueCreateInfoCount = 1;
+vkCreateDevice(physicalDevice, &deviceCreateInfo, nullptr, &deviceHandle);
+----
+
+또한 큐 패밀리의 큐를 분할하여 일부는 보호하고 일부는 보호하지 않도록 할 수도 있습니다. 다음 의사 코드는 애플리케이션이 동일한 큐 패밀리에서 보호된 `VkQueue` 1개와 보호되지 않은 `VkQueue` 1개 객체를 생성하도록 요청하는 방법입니다:
+
+[source,cpp]
+----
+VkDeviceQueueCreateInfo queueCreateInfo[2];
+queueCreateInfo[0].flags             = VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT;
+queueCreateInfo[0].queueFamilyIndex  = queueFamilyFound;
+queueCreateInfo[0].queueCount        = 1;
+
+queueCreateInfo[1].flags             = 0; // 보호 플래그가 설정되지 않아 보호되지 않음
+queueCreateInfo[1].queueFamilyIndex  = queueFamilyFound;
+queueCreateInfo[1].queueCount        = 1;
+
+VkDeviceCreateInfo deviceCreateInfo   = {};
+deviceCreateInfo.pQueueCreateInfos    = queueCreateInfo;
+deviceCreateInfo.queueCreateInfoCount = 2;
+vkCreateDevice(physicalDevice, &deviceCreateInfo, nullptr, &deviceHandle);
+----
+
+이제 애플리케이션은 `vkGetDeviceQueue` 를 사용하는 대신 `vkGetDeviceQueue2` 를 사용하여 `VkQueue` 핸들을 가져올 때 `VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT` 플래그를 전달해야 합니다.
+
+[source,cpp]
+----
+VkDeviceQueueInfo2 info = {};
+info.queueFamilyIndex = queueFamilyFound;
+info.queueIndex       = 0;
+info.flags            = VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT;
+vkGetDeviceQueue2(deviceHandle, &info, &protectedQueue);
+----
+
+== 보호 리소스(Protected resources)
+
+`VkImage` 또는 `VkBuffer` 를 생성할 때 보호되도록 설정하는 방법은 간단하게 각각 `VK_IMAGE_CREATE_PROTECTED_BIT` 및 `VK_BUFFER_CREATE_PROTECTED_BIT` 를 설정하면 됩니다.
+
+보호된 리소스에 메모리를 바인딩할 때, `VkDeviceMemory` 는 `VK_MEMORY_PROPERTY_PROTECTED_BIT` 비트를 가진 `VkMemoryType` 에서 할당된 것이어야 합니다.
+
+== 보호 스왑체인(Protected swapchain)
+
+스왑 체인을 생성할 때 `VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR` 비트는 보호된 스왑체인을 만드는 데 사용됩니다.
+
+보호된 스왑체인을 사용하는 `vkGetSwapchainImagesKHR` 의 모든 `VkImage` 는 `VK_IMAGE_CREATE_PROTECTED_BIT` 으로 이미지를 생성한 것과 동일합니다.
+
+가끔씩 `VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR` 플래그가 설정된 상태에서 스왑체인을 생성할 수 있는지 여부를 알 수 없는 경우가 있습니다. link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_surface_protected_capabilities.html[VK_KHR_surface_protected_capabilities] 확장 기능은 이것을 알 수 없는 플랫폼에 공개되어 있습니다.
+
+== 보호 커맨트 버퍼(Protected command buffer)
+
+보호된 `VkQueue` 를 사용하여 애플리케이션은 `VkCommandPool` 을 생성할 때 `VK_COMMAND_POOL_CREATE_PROTECTED_BIT` 을 사용할 수도 있습니다.
+
+[source,cpp]
+----
+VkCommandPoolCreateInfo info = {};
+info.flags            = VK_COMMAND_POOL_CREATE_PROTECTED_BIT;
+info.queueFamilyIndex = queueFamilyFound; // 보호된 큐
+vkCreateCommandPool(deviceHandle, &info, nullptr, &protectedCommandPool);
+----
+
+보호된 커맨드 풀에서 할당된 모든 커맨드 버퍼는 "`보호된 커맨드 버퍼`"가 됩니다.
+
+[source,cpp]
+----
+VkCommandBufferAllocateInfo info = {};
+info.commandPool = protectedCommandPool;
+vkAllocateCommandBuffers(deviceHandle, &info, &protectedCommandBuffers);
+----
+
+== 보호된 작업 제출(Submitting protected work)
+
+보호 대상 작업을 제출할 때, 제출된 모든 `VkCommandBuffer` 도 보호해야 합니다.
+
+[source,cpp]
+----
+VkProtectedSubmitInfo protectedSubmitInfo = {};
+protectedSubmitInfo.protectedSubmit       = true;
+
+VkSubmitInfo submitInfo                  = {};
+submitInfo.pNext                         = &protectedSubmitInfo;
+submitInfo.pCommandBuffers               = protectedCommandBuffers;
+
+vkQueueSubmit(protectedQueue, 1, &submitInfo, fence));
+----
+
+아니면 xref:{chapters}extensions/VK_KHR_synchronization2.adoc#VK_KHR_synchronization2[VK_KHR_synchronization2]를 사용하세요.
+
+[source,cpp]
+----
+VkSubmitInfo2KHR submitInfo = {}
+submitInfo.flags = VK_SUBMIT_PROTECTED_BIT_KHR;
+
+vkQueueSubmit2KHR(protectedQueue, 1, submitInfo, fence);
+----

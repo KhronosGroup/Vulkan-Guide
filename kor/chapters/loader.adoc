@@ -1,0 +1,53 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[loader]]
+= 로더(Loader)
+
+로더는 애플리케이션을 Vulkan 레이어와 Vulkan 설치형 클라이언트 드라이버(ICD)에 매핑하는 작업을 담당합니다.
+
+image::../../../chapters/images/loader_overview.png[loader_overview.png]
+
+link:https://github.com/KhronosGroup/Vulkan-Loader/blob/master/docs/LoaderInterfaceArchitecture.md[로더 인터페이스]를 따르기만 하면 누구나 자신만의 Vulkan 로더를 만들 수 있습니다. link:https://github.com/KhronosGroup/Vulkan-Loader/blob/master/BUILD.md[레퍼런스 로더]를 빌드하거나 선택한 플랫폼용 link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK]에서 빌드된 버전을 가져올 수도 있습니다.
+
+== 로더 링크
+
+link:https://github.com/KhronosGroup/Vulkan-Headers[Vulkan 헤더]는 Vulkan 함수 프로토타입만 제공합니다. Vulkan 애플리케이션을 빌드할 때 로더에 연결해야 하며, 그렇지 않으면 Vulkan 함수에 대한 정의되지 않은 참조에 대한 오류가 발생합니다. 로더를 연결하는 방법에는 link:https://github.com/KhronosGroup/Vulkan-Loader/blob/master/loader/LoaderAndLayerInterface.md#directly-linking-to-the-loader[직접] 및 link:https://github.com/KhronosGroup/Vulkan-Loader/blob/master/loader/LoaderAndLayerInterface.md#indirectly-linking-to-the-loader[간접] 두 가지가 있으며, 이를 "`정적 및 동적 연결`" 과 혼동해서는 안 됩니다.
+
+  * 컴파일 시 link:https://github.com/KhronosGroup/Vulkan-Loader/blob/master/loader/LoaderAndLayerInterface.md#directly-linking-to-the-loader[직접 링크]
+  ** 이를 위해서는 빌드 시스템이 찾을 수 있는 (정적 또는 동적 라이브러리로) 빌드된 Vulkan 로더가 있어야 합니다.
+  ** 빌드 시스템(Visual Studio, CMake 등)에는 라이브러리에 링크하는 방법에 대한 문서가 있습니다. 온라인에서 "`(InsertBuildSystem) link to external library`" 를 검색해 보세요.
+  * 런타임 시 link:https://github.com/KhronosGroup/Vulkan-Loader/blob/master/loader/LoaderAndLayerInterface.md#indirectly-linking-to-the-loader[간접 링크]
+  ** 동적 심볼 룩업( `dlsym` 및 `dlopen` 과 같은 시스템 호출을 통해)을 사용하여, 애플리케이션은 독자적인 디스패치 테이블을 초기화할 수 있습니다. 그러면 로더를 찾을 수 없는 경우 애플리케이션이 정상적으로 종료될 수 있습니다. 또한 애플리케이션이 Vulkan 함수를 호출하는 가장 빠른 메커니즘을 제공합니다.
+  ** link:https://github.com/zeux/volk/[Volk]는 이 프로세스를 간소화하는 데 도움이 되는 메타로더의 오픈 소스 구현입니다.
+
+== 다양한 플랫폼
+
+각 플랫폼마다 Vulkan 로더를 적용하는 방법에 대한 자체 규칙을 설정할 수 있습니다.
+
+=== Android
+
+Vulkan을 지원하는 Android 기기에는 이미 OS에 link:https://source.android.com/devices/graphics/implement-vulkan#vulkan_loader[Vulkan 로더]가 내장되어 있습니다.
+
+Android NDK에는 간접 링크를 위한 link:https://developer.android.com/ndk/guides/graphics/getting-started#using[vulkan_wrapper.c/h] 파일이 준비되어 있습니다. 이것이 필요한 이유는 Vulkan 로더가 제조사와 OEM 기기마다 다를 수 있기 때문입니다.
+
+=== Linux
+
+link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK]는 Linux용 사전 빌드 로더를 제공합니다.
+
+Vulkan SDK의 link:https://vulkan.lunarg.com/doc/sdk/latest/linux/getting_started.html[Getting Started] 페이지에서는 Linux에서 로더를 찾는 방법을 설명합니다.
+
+=== MacOS
+
+link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK]는 MacOS용 사전 빌드 로더를 제공합니다.
+
+Vulkan SDK의 link:https://vulkan.lunarg.com/doc/sdk/latest/mac/getting_started.html[Getting Started] 페이지에서는 MaxOS에서 로더를 찾는 방법을 설명합니다.
+
+=== Windows
+
+link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK]는 Windows용 사전 빌드 로더를 제공합니다.
+
+Vulkan SDK의 link:https://vulkan.lunarg.com/doc/sdk/latest/mac/getting_started.html[Getting Started] 페이지에서는 Windows에서 로더를 찾는 방법을 설명합니다.
