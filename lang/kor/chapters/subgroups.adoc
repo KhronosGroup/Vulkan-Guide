@@ -1,0 +1,98 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[subgroups]]
+= 서브그룹(subgroups, 하위 집합)
+
+Vulkan 사양서에서는 하위그룹을 다음과 같이 정의하고 있습니다:
+
+[NOTE]
+====
+데이터를 효율적으로 동기화하고 서로 공유할 수 있는 쉐이더 호출 집합입니다. 컴퓨트 쉐이더에서 로컬 작업 그룹은 서브그룹의 상위 집합입니다.
+====
+
+많은 구현에서 서브그룹은 동일한 명령을 한 번에 실행하는 호출 그룹을 말합니다. 하위 그룹을 사용하면 쉐이더 작성자가 단일 워크그룹보다 더 세밀한 단위로 작업할 수 있습니다.
+
+== 리소스
+
+서브그룹에 대한 자세한 내용은 link:https://www.khronos.org/blog/vulkan-subgroup-tutorial[크로노스 그룹 블로그 게시물]과 Vulkan Developer Day 2018의 프레젠테이션(link:https://www.khronos.org/assets/uploads/developers/library/2018-vulkan-devday/06-subgroups.pdf[slides] 및 link:https://www.youtube.com/watch?v=8MyqQLu_tW0[video])을 참조하세요. GLSL 지원은 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/khr/GL_KHR_shader_subgroup.txt[GL_KHR_shader_subgroup] 확장 기능에서 확인할 수 있습니다.
+
+
+== 서브그룹 크기
+
+서브그룹의 크기가 구현에 따라 동적으로 변화할 수 있는 것도 중요합니다. 구현에따라서 서브그룹마다 다른 서브그룹 크기로 쉐이더를 디스패치할 수 있습니다. 그 결과, 큰 서브그룹을 더 작은 서브그룹으로 암시적으로 분할하거나 작은 서브그룹을 더 큰 서브그룹으로 나타낼 수 있으며, 일부 호출은 실행 시 비활성화될 수 있습니다.
+
+[[VK_EXT_subgroup_size_control]]
+=== VK_EXT_subgroup_size_control
+
+[NOTE]
+====
+Vulkan 1.3에서 코어로 승격됨
+====
+
+이 확장 기능은 일부 구현이 두 개 이상의 서브그룹 크기를 갖지만 Vulkan은 원래 단일 서브그룹 크기만 공개한다는 이유로 만들어졌습니다.
+
+예를 들어, `4` 와 `16` 크기의 서브그룹을 모두 지원하는 구현의 경우 이전에는 한 가지 크기만 공개해야 했지만 이제는 두 가지 크기를 모두 공개할 수 있습니다. 이를 통해 애플리케이션은 여러 서브그룹 크기를 공개하는 구현에 대해 잠재적으로 더 세밀한 단위로 하드웨어를 제어할 수 있습니다. 장치가 이 확장 기능을 지원하지 않는다면 공개할 수 있는 서브그룹 크기가 하나만 지원된다는 의미일 가능성이 높습니다.
+
+== 지원 여부 확인
+
+Vulkan 1.1에서 서브그룹에 대한 모든 정보는  `VkPhysicalDeviceSubgroupProperties` 에서 찾을 수 있습니다.
+
+[source,cpp]
+----
+VkPhysicalDeviceSubgroupProperties subgroupProperties;
+
+VkPhysicalDeviceProperties2KHR deviceProperties2;
+deviceProperties2.sType      = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
+deviceProperties2.pNext      = &subgroupProperties;
+vkGetPhysicalDeviceProperties2(physicalDevice, &deviceProperties2);
+
+// 프래그먼트 쉐이더에서 지원 여부 확인 예시
+if ((subgroupProperties.supportedStages & VK_SHADER_STAGE_FRAGMENT_BIT) != 0) {
+    // 프래그먼트 쉐이더 지원
+}
+
+// ballot 지원 여부 확인 예시
+if ((subgroupProperties.supportedOperations & VK_SUBGROUP_FEATURE_BALLOT_BIT) != 0) {
+    // ballot 서브그룹 작업 지원
+}
+----
+
+=== 지원 보장
+
+지원되는 스테이지의 경우, Vulkan 사양서에서 다음과 같은 지원을 보증하고 있습니다:
+
+[NOTE]
+====
+**supportedStages** 는 물리적 장치 큐에 **VK_QUEUE_COMPUTE_BIT** 이 지원되는 경우 **VK_SHADER_STAGE_COMPUTE_BIT** 비트가 설정됩니다.
+====
+
+지원되는 작업의 경우, Vulkan 사양서에서 다음과 같은 지원을 보증하고 있습니다:
+
+[NOTE]
+====
+**supportedOperations** 는 물리적 장치 큐 중 하나가 **VK_QUEUE_GRAPHICS_BIT** 또는 **VK_QUEUE_COMPUTE_BIT** 를 지원하는 경우 **VK_SUBGROUP_FEATURE_BASIC_BIT** 비트가 설정됩니다.
+====
+
+[[VK_KHR_shader_subgroup_extended_types]]
+== VK_KHR_shader_subgroup_extended_types
+
+[NOTE]
+====
+Vulkan 1.2에서 코어로 승격됨
+
+link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_shader_subgroup_extended_types.txt[GLSL_EXT_shader_subgroup_extended_types]
+====
+
+이 확장 기능을 사용하면 구현에서 이미 해당 타입을 지원하는 경우 서브그룹 범위의 그룹 연산에서 8비트 정수, 16비트 정수, 64비트 정수, 16비트 부동소수점 및 이러한 타입의 벡터를 사용할 수 있습니다.
+
+예를 들어, 구현이 8비트 정수를 지원하는 경우 애플리케이션은 이제 SPIR-V에서 `OpGroupNonUniformFAdd` 에 매핑되는 GLSL `genI8Type subgroupAdd(genI8Type 값);` 호출을 사용할 수 있습니다.
+
+[[VK_EXT_shader_subgroup_ballot-and-VK_EXT_shader_subgroup_vote]]
+== VK_EXT_shader_subgroup_ballot and VK_EXT_shader_subgroup_vote
+
+`VK_EXT_shader_subgroup_ballot` 와 `VK_EXT_shader_subgroup_vote` 는 Vulkan에서 서브그룹을 공개하기 위한 최초의 작업물 입니다. 애플리케이션이 Vulkan 1.1 이상을 사용하는 경우 이러한 확장 기능을 사용할 필요가 없으며, 대신 코어 API를 사용하여 서브그룹 지원을 쿼리해야 합니다.

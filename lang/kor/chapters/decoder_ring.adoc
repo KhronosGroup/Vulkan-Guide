@@ -1,0 +1,224 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[decoder-ring]]
+= Vulkan에서 사용되는 용어의 대응표
+
+이 섹션에서는 다양한 개념에 대한 Vulkan 용어와 다른 API에서 사용되는 용어 간의 매핑을 제공합니다. 아래 표는 Vulkan 용어의 알파벳 순서로 정리되어 있습니다. 알고 있는 API에서 사용되는 개념에 해당하는 Vulkan 용어를 찾고 싶다면, 이 목록에서 알고 있는 용어를 검색한 다음 xref:{chapters}vulkan_spec.adoc#vulkan-spec[Vulkan specification] 에서 해당 Vulkan 용어를 찾을 수 있습니다.
+
+[NOTE]
+====
+모든 것이 완벽하게 1:1로 일치하는 것은 아니며, 사양서의 어디서부터 살펴봐야 할지 대략적인 아이디어를 제공하는 것이 목적입니다.
+====
+
+[options="header"]
+|====
+| *Vulkan*  | *GL,GLES* | *DirectX* | *Metal*
+| buffer device address
+            |
+                        | GPU virtual address
+                                    |
+| buffer view, texel buffer
+            | texture buffer
+                        | typed buffer SRV, typed buffer UAV
+                                    | texture buffer
+| color attachments
+            | color attachments
+                        | render target
+                                    | color attachments or render target
+| command buffer
+            | part of context, display list, NV_command_list
+                        | command list
+                                    | command buffer
+| command pool
+            | part of context
+                        | command allocator
+                                    | command queue
+| conditional rendering
+            | conditional rendering
+                        | predication
+                                    |
+| depth/stencil attachment
+            | depth Attachment and stencil Attachment
+                        | depth/stencil view
+                                    | depth attachment and stencil attachment, depth render target and stencil render target
+| descriptor
+            |
+                        | descriptor
+                                    | argument
+| descriptor pool
+            |
+                        | descriptor heap
+                                    | heap
+| descriptor set
+            |
+                        | descriptor table
+                                    | argument buffer
+| descriptor set layout binding, push descriptor
+            |
+                        | root parameter
+                                    | argument in shader parameter list
+| device group
+            | implicit (E.g. SLI,CrossFire)
+                        | multi-adapter device
+                                    | peer group
+| device memory
+            |
+                        | heap
+                                    | placement heap
+| event
+            |
+                        | split barrier
+                                    |
+| fence
+            | fence, sync
+                        | `ID3D12Fence::SetEventOnCompletion`
+                                    | completed handler, `-[MTLCommandBuffer waitUntilComplete]`
+| fragment shader
+            | fragment shader
+                        | pixel shader
+                                    | fragment shader or fragment function
+| fragment shader interlock
+            | link:https://registry.khronos.org/OpenGL/extensions/ARB/ARB_fragment_shader_interlock.txt[GL_ARB_fragment_shader_interlock]
+                        | rasterizer order view (ROV)
+                                    | raster order group
+| framebuffer
+            | framebuffer object
+                        | collection of resources
+                                    | MTLRenderPassDescriptor
+| heap
+            |
+                        | ID3D12Heap
+                                    | MTLHeap
+| image
+            | texture and renderbuffer
+                        | texture
+                                    | texture
+| image layout
+            |
+                        | resource state
+                                    |
+| image tiling
+            |
+                        | image layout, swizzle
+                                    |
+| image view
+            | texture view
+                        | render target view, depth/stencil view, shader resource view, unordered access view
+                                    | texture view
+| interface matching (`in`/`out`)
+            | varying (link:https://registry.khronos.org/OpenGL/specs/gl/GLSLangSpec.4.20.pdf[removed in GLSL 4.20])
+                        | Matching semantics
+                                    | Pervertex input attributes [[stage_in]]
+| invocation
+            | invocation
+                        | thread, lane
+                                    | thread, lane
+| layer
+            |
+                        | slice
+                                    | slice
+| logical device
+            | context
+                        | device
+                                    | device
+| memory type
+            | automatically managed, link:https://registry.khronos.org/OpenGL/extensions/APPLE/APPLE_texture_range.txt[texture storage hint], link:https://registry.khronos.org/OpenGL/extensions/ARB/ARB_buffer_storage.txt[buffer storage]
+                        | heap type, CPU page property
+                                    | storage mode, CPU cache mode
+| multiview rendering
+            | multiview rendering
+                        | view instancing
+                                    | vertex amplification
+| physical device
+            |
+                        | adapter, node
+                                    | device
+| pipeline
+            | state and program or program pipeline
+                        | pipeline state
+                                    | pipeline state
+| pipeline barrier, memory barrier
+            | texture barrier, memory barrier
+                        | resource barrier
+                                    | texture barrier, memory barrier
+| pipeline layout
+            |
+                        | root signature
+                                    |
+| queue
+            | part of context
+                        | command queue
+                                    | command queue
+| semaphore
+            | fence, sync
+                        | fence
+                                    | fence, event
+| shader module
+            | shader object
+                        | resulting `ID3DBlob` from `D3DCompileFromFile`
+                                    | shader library
+| shading rate attachment
+            |
+                        | shading rate image
+                                    | rasterization rate map
+| sparse block
+            | sparse block
+                        | tile
+                                    | sparse tile
+| sparse image
+            | sparse texture
+                        | reserved resource (D12), tiled resource (D11)
+                                    | sparse texture
+| storage buffer
+            | shader storage buffer
+                        | raw or structured buffer UAV
+                                    | buffer in `device` address space
+| subgroup
+            | subgroup
+                        | wave
+                                    | SIMD-group, quadgroup
+| surface
+            | HDC, GLXDrawable, EGLSurface
+                        | window
+                                    | layer
+| swapchain
+            | Part of HDC, GLXDrawable, EGLSurface
+                        | swapchain
+                                    | layer
+| swapchain image
+            | default framebuffer
+                        |
+                                    | drawable texture
+| task shader
+            |
+                        | amplification shader
+                                    | object shader
+| tessellation control shader
+            | tessellation control shader
+                        | hull shader
+                                    | tessellation compute kernel
+| tessellation evaluation shader
+            | tessellation evaluation shader
+                        | domain shader
+                                    | post-tessellation vertex shader
+| timeline semaphore
+            |
+                        | D3D12 fence
+                                    | event
+| transform feedback
+            | transform feedback
+                        | stream-out
+                                    |
+| uniform buffer
+            | uniform buffer
+                        | constant buffer views (CBV)
+                                    | buffer in `constant` address space
+| workgroup
+            | workgroup
+                        | threadgroup
+                                    | threadgroup
+|====

@@ -1,0 +1,75 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[what-vulkan-can-do]]
+= Vulkan으로 할 수 있는 일
+
+Vulkan은 다양한 사용 사례를 위한 애플리케이션을 개발하는 데 사용할 수 있습니다. Vulkan 애플리케이션은 아래에 설명된 기능 중 일부만 사용하도록 선택할 수 있지만, 개발자가 단일 API에서 모든 기능을 사용할 수 있도록 설계되었습니다.
+
+[NOTE]
+====
+Vulkan은 도구 집합체이며 작업을 수행하는 여러 가지 방법이 있다는 점을 이해하는 것이 중요합니다.
+====
+
+== 그래픽스
+
+Vulkan API는 주로 2D와 3D 그래픽스를 위해 설계되었습니다. Vulkan은 개발자가 하드웨어 가속 그래픽 애플리케이션을 만들 수 있도록 설계되었습니다.
+
+[NOTE]
+====
+모든 Vulkan 구현은 그래픽스를 지원해야 하지만, xref:{chapters}wsi.adoc#wsi[WSI] 시스템은 필요하지 않습니다.
+====
+
+== Compute
+
+link:https://en.wikipedia.org/wiki/General-purpose_computing_on_graphics_processing_units[GPGPU]라고 불리는 새로운 프로그래밍 스타일을 사용하여 GPU 병렬성을 계산 작업에 활용할 수 있습니다. Vulkan은 일반 연산에 사용할 수 있도록 `VkQueues`, `VkPipelines` 등의 연산 변형을 지원합니다.
+
+[NOTE]
+====
+모든 Vulkan 구현은 Compute를 지원해야 합니다.
+====
+
+== 레이 트레이싱(Ray Tracing)
+
+레이 트레이싱은 빛의 물리적 동작을 시뮬레이션하는 개념을 기반으로 하는 대체 렌더링 기법입니다.
+
+레이 트레이싱에 대한 크로스 벤더 API 지원이 1.2.162 사양에서 확장 기능 세트가 Vulkan에 추가되었습니다. 주로 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline[`VK_KHR_ray_tracing_pipeline`], link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_ray_query[`VK_KHR_ray_query`], link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_acceleration_structure[`VK_KHR_acceleration_structure`]가 이에 해당합니다.
+
+[NOTE]
+====
+레이 트레이싱 구현을 공개하는 이전 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_ray_tracing[NVIDIA 벤더 확장 기능]도 있습니다. 이 확장 기능은 제조사 간 확장 기능보다 먼저 출시되었습니다. 신규 개발의 경우 최신 KHR 확장 기능을 사용하는 것이 좋습니다.
+====
+
+== Video
+
+link:https://www.khronos.org/blog/khronos-finalizes-vulkan-video-extensions-for-accelerated-h.264-and-h.265-decode[Vulkan Video 확장 기능]을 통해 개발자는 하드웨어 가속 비디오 디코딩 기능을 실시간으로 사용할 수 있습니다. 이 기능은 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_video_queue.html[VK_KHR_video_queue], link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_video_decode_queue.html[VK_KHR_video_decode_queue], link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_video_decode_h264.html[VK_KHR_video_decode_h264], link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_video_decode_h265.html[VK_KHR_video_decode_h265] 확장 기능을 통해 공개됩니다.
+
+Vulkan Video는 애플리케이션에 비디오 처리 스케줄링, 동기화 및 메모리 활용에 대한 유연하고 세밀한 제어 기능을 제공한다는 Vulkan의 철학을 고수합니다.
+
+[NOTE]
+====
+동영상 인코딩을 위한 임시 확장 기능이 이미 준비 중이며, link:https://github.com/KhronosGroup/Vulkan-Docs/issues/1694[피드백(feedback)]을 환영합니다.
+====
+
+== 머신 러닝(Machine Learning)
+
+현재 Vulkan 워킹 그룹은 Vulkan을 최신 GPU ML 연산 기능을 제공하기 위한 최고 수준의 API로 만드는 방법을 연구하고 있습니다. 자세한 내용은 link:https://www.youtube.com/watch?v=_57aiwJISCI&feature=youtu.be&t=5007[Siggraph 2019]에서 발표되었습니다.
+
+[NOTE]
+====
+현재로서는 머신러닝을 위한 공개 Vulkan API는 존재하지 않습니다.
+====
+
+== Safety Critical
+
+Vulkan SC ("Safety Critical")는 자동차, 항공전자, 산업 및 의료 분야의 안전이 중요한 시스템에 최신 GPU의 그래픽 및 컴퓨팅 기능을 제공하는 것을 목표로 합니다. link:https://www.khronos.org/news/press/khronos-releases-vulkan-safety-critical-1.0-specification-to-deliver-safety-critical-graphics-compute[2022년 3월 1일에 공개적으로 출시되었으며] 사양은 link:https://www.khronos.org/vulkansc/[여기]에서 확인할 수 있습니다.
+
+[NOTE]
+====
+Vulkan SC는 Vulkan 1.2를 기반으로 하지만 안전이 중요한 시장에 필요하지 않은 기능을 제거하고, 무시된 매개변수와 정의되지 않은 동작을 제거하여 사양의 견고성을 높였으며, 런타임 결함의 탐지, 보고, 수정 기능을 강화했습니다.
+====
+

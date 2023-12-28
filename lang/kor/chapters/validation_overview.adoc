@@ -1,0 +1,187 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[validation-overview]]
+= Vulkan 유효성 검사 개요
+
+[NOTE]
+====
+이 섹션의 목적은 Vulkan이 API의  __유효한 사용__ 을 처리하는 방법에 대한 전체 개요를 제공하는 것입니다.
+====
+
+== 유효한 사용(Valid Usage: VU)
+
+**VU**는 명시적으로 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-validusage[Vulkan 사양서에서 다음과 같이 정의됩니다]:
+
+[NOTE]
+====
+애플리케이션에서 잘 정의된 런타임 동작을 달성하기 위해 **반드시** 충족해야 하는 조건 집합입니다.
+====
+
+명시적 API인 Vulkan의 주요 장점 중 하나는 구현(드라이버)이 유효한 입력을 검사하는 데 시간을 낭비하지 않는다는 점입니다. OpenGL에서는 구현이 항상 유효한 사용법을 확인해야 하므로 눈에 띄는 오버헤드가 추가됩니다. Vulkan에는 이에 상응하는 link:https://www.khronos.org/opengl/wiki/OpenGL_Error[glGetError]가 없습니다.
+
+유효한 사용법은 사양서의 각 기능이나 구조 뒤에 기재되어 있습니다.예를 들어, 어떤 VUID가 `VkBindImageMemory` 에서 유효하지 않은 `VkImage` 를 확인하는 경우, 사양서에 기재되어 있는 유효한 사용법은 `VkBindImageMemory` 안에서 찾을 수 있습니다. 이는 유효성 검사 레이어가 애플리케이션을 실행하는 동안 `VkBindImageMemory` 의 모든 정보에 대해서만 알 수 있기 때문입니다.
+
+== 정의되지 않은 동작
+
+애플리케이션이 사양서의 유효한 사용법에 따라 유효하지 않은 입력을 제공하면 결과는 __정의되지 않은 동작__이 됩니다. 이 상태에서는 link:https://raphlinus.github.io/programming/rust/2018/08/17/undefined-behavior.html[정의되지 않은 동작으로 모든 것이 가능하므로] Vulkan은 어떠한 것도 보장 하지 않습니다.
+
+**매우 중요**: 정의되지 않은 동작이 어느 한 구현에서는 작동하는 것처럼 보일 수 있지만, 다른 구현에서는 실패할 가능성이 높습니다.
+
+== 유효한 사용법 ID (VUID)
+
+`VUID` 는 각 유효한 사용 사례에 부여된 고유 ID입니다. 이를 통해 사양서에서 유효한 사용법을 쉽게 찾을 수 있습니다.
+
+`VUID-vkBindImageMemory-memoryOffset-01046` 을 예로 들면, HTML 버전의 사양서(link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VUID-vkBindImageMemory-memoryOffset-01046[vkspec.html#VUID-vkBindImageMemory-memoryOffset-01046])에서 앵커에 VUID를 추가하는 것만큼 간단하며 바로 VUID로 이동할 수 있습니다.
+
+[[khronos-validation-layer]]
+== 크로노스 유효성 검사 레이어
+
+Vulkan은 오류 검사를 수행하지 않으므로, 개발 시 link:https://github.com/KhronosGroup/Vulkan-ValidationLayers[유효성 검사 레이어]를 즉시 활성화하여 유효하지않은 동작을 포착하는 것이 **매우 중요합니다**. 또한 유효성 검사 레이어는 성능을 현저히 저하시키며 개발 단계용으로 설계되었으므로 애플리케이션과 함께 제공하지 않아야 합니다.
+
+[NOTE]
+====
+크로노스 유효성 검사 레이어는 여러 개의 레이어로 구성되었으나 현재는 단일 `VK_LAYER_KHRONOS_validition` 레이어로 통합되었습니다. link:https://www.lunarg.com/wp-content/uploads/2019/04/UberLayer_V3.pdf[자세한 내용은 LunarG의 백서(whitepaper)에서 확인할 수 있습니다].
+====
+
+=== 유효성 검사 레이어 가져오기
+
+유효성 검사 레이어는 지속적으로 업데이트되고 있으므로 언제든지 소스를 가져와서 link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/master/BUILD.md[직접 빌드]할 수 있습니다. 미리 빌드된 버전을 원하는 경우, 지원되는 모든 플랫폼에 대한 다양한 옵션이 있습니다:
+
+  * **Android** - 바이너리는 대부분 최신 버전으로 link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/releases[GitHub에 릴리즈]되어 있습니다. NDK에는 유효성 검사 레이어가 빌드되어 있으며 link:https://developer.android.com/ndk/guides/graphics/validation-layer[사용 방법에 대한 정보]도 함께 제공됩니다.
+  * **Linux** - link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK]에는 유효성 검사 레이어가 빌드되어 있으며 link:https://vulkan.lunarg.com/doc/sdk/latest/linux/validation_layers.html[Linux]에서 이를 사용하는 방법에 대한 가이드가 함께 제공됩니다.
+  * **MacOS** - link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK]에는 유효성 검사 레이어가 빌드되어 있으며 link:https://vulkan.lunarg.com/doc/sdk/latest/mac/validation_layers.html[MacOS]에서 이를 사용하는 방법에 대한 가이드가 함께 제공됩니다.
+  * **Windows** - link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK]에는 유효성 검사 레이어가 빌드되어 있으며 link:https://vulkan.lunarg.com/doc/sdk/latest/windows/validation_layers.html[Windows]에서 이를 사용하는 방법에 대한 가이드가 함께 제공됩니다.
+
+== 유효성 검사 오류 메시지 분석
+
+유효성 검사 레이어는 오류가 발생할 때 가능한 한 많은 유용한 정보를 제공하려고 시도합니다. 다음 예제는 유효성 검사 레이어에서 최대한 많은 정보를 얻는 방법을 보여주기 위한 것입니다.
+
+=== 예제 1 - 암시적 유효한 사용법
+
+이 예제는 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-implicit-validity[암시적 VU]가 트리거되는 경우를 보여줍니다. VUID 끝에는 숫자가 없습니다.
+
+[source]
+----
+Validation Error: [ VUID-vkBindBufferMemory-memory-parameter ] Object 0: handle =
+0x20c8650, type = VK_OBJECT_TYPE_INSTANCE; | MessageID = 0xe9199965 | Invalid
+VkDeviceMemory Object 0x60000000006. The Vulkan spec states: memory must be a valid
+VkDeviceMemory handle (https://registry.khronos.org/vulkan/specs/1.1-extensions/
+html/vkspec.html#VUID-vkBindBufferMemory-memory-parameter)
+----
+
+  * 가장 먼저 눈에 띄는 것은 메시지에서 VUID가 가장 먼저 나열된다는 점입니다(`VUID-vkBindBufferMemory-memory-parameter`)
+  ** 메시지 말미에 사양서에 있는 VUID로 연결되는 링크도 있습니다
+  * `The Vulkan spec states:` 은 사양서에서 인용한 VUID 입니다.
+  * The `VK_OBJECT_TYPE_INSTANCE` 는 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#_debugging[VkObjectType] 입니다
+  * `Invalid VkDeviceMemory Object 0x60000000006` 는 어떤 `VkDeviceMemory` 핸들이 오류의 원인인지 보여주는 데 도움을 주는 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-objectmodel-overview[디스패치 가능한 핸들] 입니다.
+
+=== 예제 2 - 명시적 유효한 사용법
+
+이 예제는 일부 `VkImage` 가 서로 다른 2개의 `VkDeviceMemory` 객체에 바인딩하려고 할 때 발생하는 오류를 보여줍니다
+
+[source]
+----
+Validation Error: [ VUID-vkBindImageMemory-image-01044 ] Object 0: handle =
+0x90000000009, name = myTextureMemory, type = VK_OBJECT_TYPE_DEVICE_MEMORY; Object 1:
+handle = 0x70000000007, type = VK_OBJECT_TYPE_IMAGE; Object 2: handle = 0x90000000006,
+name = myIconMemory, type = VK_OBJECT_TYPE_DEVICE_MEMORY; | MessageID = 0x6f3eac96 |
+In vkBindImageMemory(), attempting to bind VkDeviceMemory 0x90000000009[myTextureMemory]
+to VkImage 0x70000000007[] which has already been bound to VkDeviceMemory
+0x90000000006[myIconMemory]. The Vulkan spec states: image must not already be
+backed by a memory object (https://registry.khronos.org/vulkan/specs/1.1-extensions/
+html/vkspec.html#VUID-vkBindImageMemory-image-01044)
+----
+
+  * 예제 2는 예제 1과 거의 동일하지만 객체에 첨부된 `name` (`name = myTextureMemory`) 이 다릅니다. 이것은 link:https://www.lunarg.com/new-tutorial-for-vulkan-debug-utilities-extension/[VK_EXT_debug_util] 확장 기능을 사용하였습니다(link:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/extensions/debug_utils[확장 기능 사용 방법 샘플]). link:https://www.saschawillems.de/blog/2016/05/28/tutorial-on-using-vulkans-vk_ext_debug_marker-with-renderdoc/[VK_EXT_debug_report]를 지원하지 않는 레거시 디바이스에서는 이전 방식인 `VK_EXT_debug_util` 를 사용해야 할 수도 있습니다.
+  * 이 오류의 원인에는 3개의 객체가 관련되어 있습니다.
+  ** 객체 0 은 `myTextureMemory` 라는 이름의 `VkDeviceMemory` 입니다
+  ** 객체 1 은 이름없는 `VkImage` 입니다
+  ** 객체 2 은 `myIconMemory` 라는 이름의 `VkDeviceMemory` 입니다
+  * 이름을 보면 "` `vkBindImageMemory()` 에서 `myTextureMemory` 메모리가 `myIconMemory` 메모리에 이미 바인딩된 이미지에 바인딩하려고 시도했다`" 라는 것을 쉽게 알 수 있습니다.
+
+오류 메시지마다 일정한 로깅 패턴이 포함되어 있습니다. 따라서 어떤 오류에서든 정보를 쉽게 찾을 수 있습니다. 패턴은 다음과 같습니다:
+
+  * 로그 상태 (ex. `Error:`, `Warning:`, etc)
+  * VUID
+  * 관련된 객체 배열
+  ** 배열의 인덱스
+  ** 디스패치 핸들 값
+  ** 옵션 이름
+  ** 객체 타입
+  * 오류가 발생한 함수 또는 구조체
+  * 문제를 설명하기 위해 레이어가 작성한 메시지
+  * 사양서에 기재된 유효한 사용법 전문
+  * 유효한 사용법 링크
+
+== 다중 VUID
+
+[NOTE]
+====
+다음은 이상적인 방법이 아니며, 보다 간단하게 만드는 방법을 검토하고 있습니다
+====
+
+현재 사양서는 xref:{chapters}vulkan_spec.adoc#vulkan-spec-variations[빌드된 버전과 확장 기능]에 따라 VUID만 표시하도록 설계되어 있습니다. 간단히 말해서, 확장 기능이나 버전 추가로 인해 VU가 (새로운 API 항목이 추가되어) 변경되어 다른 VUID가 생성될 수 있습니다.
+
+link:https://github.com/KhronosGroup/Vulkan-Docs[Vulkan-Docs]에서 xref:{chapters}vulkan_spec.adoc#vulkan-spec[사양서가 생성된 곳]을 예로 들어 설명합니다
+
+[source,c]
+----
+ifndef::VK_VERSION_1_2,VK_EXT_descriptor_indexing[]
+  * [[VUID-VkPipelineLayoutCreateInfo-pSetLayouts-00287]]
+    ...
+endif::VK_VERSION_1_2,VK_EXT_descriptor_indexing[]
+ifdef::VK_VERSION_1_2,VK_EXT_descriptor_indexing[]
+  * [[VUID-VkPipelineLayoutCreateInfo-descriptorType-03016]]
+    ...
+endif::VK_VERSION_1_2,VK_EXT_descriptor_indexing[]
+----
+
+이렇게 하면 매우 유사한 두 개의 VUID가 생성됩니다.
+
+이 예제에서 두 VUID는 매우 유사하며 유일한 차이점은 `VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT` 가 한쪽에서 참조되고 다른 한쪽에서는 참조되지 않는다는 것입니다. 이것은 Vulkan 1.2의 일부인 `VK_EXT_descriptor_indexing` 의 추가에 따라 열거형이 추가되었기 때문입니다.
+
+즉, 2개의 유효한 xref:{chapters}vulkan_spec.adoc#html-full[사양서에 대한 HTML 링크]는 다음과 같습니다
+
+  * `1.1/html/vkspec.html#VUID-VkPipelineLayoutCreateInfo-pSetLayouts-00287`
+  * `1.2/html/vkspec.html#VUID-VkPipelineLayoutCreateInfo-descriptorType-03016`
+
+유효성 검사 레이어는 애플리케이션의 장치 속성을 사용하여 어느쪽을 표시할지 결정합니다. 따라서 이 사례의 경우 Vulkan 1.2 구현이나 `VK_EXT_descriptor_indexing` 을 지원하는 기기에서 동작하고 있으면, VUID `03016` 이 표시됩니다.
+
+== 특수 용도 태그
+
+link:https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html[레이어 모범 사례]는 애플리케이션이 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse[특수 용도 태그]가 있는 확장 기능을 사용하려고 할 때 경고를 표시합니다. 이러한 확장 기능의 예로서 에뮬레이션 레이어 전용으로 설계된 xref:{chapters}extensions/translation_layer_extensions.adoc#vk_ext_transform_feedback[VK_EXT_transform_feedback]이 있습니다. 애플리케이션의 사용 목적이 특수 용도에 해당하는 경우 아래와 같은 접근 방식을 사용하면 경고를 무시할 수 있습니다.
+
+`VK_EXT_debug_report` 로 특수 용도 경고 무시하기
+
+[source,cpp]
+----
+VkBool32 DebugReportCallbackEXT(/* ... */ const char* pMessage /* ... */)
+{
+    // pMessage에 "specialuse-extension"이 포함되어 있으면 종료합니다
+    if(strstr(pMessage, "specialuse-extension") != NULL) {
+        return VK_FALSE;
+    }
+
+    // 남은 유효성 검사 메시지 처리
+}
+----
+
+`VK_EXT_debug_utils` 로 특수 용도 경고 무시하기
+
+[source,cpp]
+----
+VkBool32 DebugUtilsMessengerCallbackEXT(/* ... */ const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData /* ... */)
+{
+    // pMessageIdName에 "specialuse-extension"이 포함되어 있으면 종료합니다
+    if(strstr(pCallbackData->pMessageIdName, "specialuse-extension") != NULL) {
+        return VK_FALSE;
+    }
+
+    // 남은 유효성 검사 메시지 처리
+}
+----
