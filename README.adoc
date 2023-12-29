@@ -15,9 +15,10 @@ image::images/vulkan_logo.png[Vulkan Logo]
 image::images/khronos_logo.png[Khronos logo]
 
 :lang-jp: lang/jp/
+:lang-kor: lang/kor/
 This document is also available in the following languages: +
 xref:{lang-jp}README-jp.adoc[Japanese]
-
+xref:{lang-kor}README-kor.adoc[Korean]
 
 // Use {chapters} as base path for individual chapters, to allow single
 // pages to work properly as well. Must have trailing slash.
