@@ -1,0 +1,128 @@
+// Copyright 2021-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[formats]]
+= 포맷(Formats)
+
+Vulkan 포맷은 메모리 배치 방식을 설명하는 데 사용됩니다. 이 장에서는 Vulkan의 다양한 형식에 대한 개괄적인(high-level) 개요와 형식 사용 방법에 대한 몇가지 로지스틱(logistical) 정보를 제공하는 것을 목표로 합니다. 모든 세부 사항은 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats[Vulkan 사양서 포맷 챕터]와 link:https://registry.khronos.org/DataFormat/specs/1.3/dataformat.1.3.html[크로노스 그룹 데이터 포맷 사양]에 이미 잘 명시되어 있습니다.
+
+`VkFormat` 의 가장 일반적인 사용 사례는 `VkImage` 를 생성할 때입니다. `VkFormat`&#8203;은 잘 정의되어 있기 때문에 `VkBufferView` , xref:{chapters}vertex_input_data_processing.adoc#input-attribute-format[정점 입력 속성], link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-image-formats[SPIR-V 이미지 포맷 매핑], link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkAccelerationStructureGeometryTrianglesDataKHR.html[하위 단계 가속 구조(BLAS)에서 삼각형 지오메트리 생성], 기타 등등의 메모리 레이아웃을 설명할 때에도 사용됩니다.
+
+[[feature-support]]
+== 기능 지원
+
+"포맷 지원"은 포맷당 단일 바이너리 값이 아니라 각 포맷에 대해 지원되는 기능을 설명하는 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFormatFeatureFlagBits.html[VkFormatFeatureFlagBits] 집합이 있다는 점을 이해하는 것이 중요합니다.
+
+지원되는 포맷은 구현에 따라 다를 수 있지만 link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#features-required-format-support[최소한의 포맷 기능 세트는 보장됩니다]. 애플리케이션은 지원되는 포맷 속성을 link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#formats-properties[쿼리(query)]할 수 있습니다.
+
+[NOTE]
+====
+link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_get_physical_device_properties2.html[VK_KHR_get_physical_device_properties2] 와 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_format_feature_flags2.html[VK_KHR_format_feature_flags2]는 모두 포맷 기능을 쿼리하기 위한 또 다른 방법을 공개합니다.
+====
+
+=== 포맷 기능 쿼리 예제
+
+이 예제는 `VK_FORMAT_R8_UNORM` 포맷이 `VkImageCreateInfo::tiling` 용으로 `VK_IMAGE_TILING_LINEAR` 로 작성된 `VkImage` 로부터 샘플링을 지원하는지 확인하는 코드입니다. 이를 위해 `VK_FORMAT_R8_UNORM` 의 `linearTilingFeatures` 플래그를 쿼리하고 `VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT` 가 구현에서 지원되는지 확인합니다.
+
+[source,cpp]
+----
+// Using core Vulkan 1.0
+VkFormatProperties formatProperties;
+vkGetPhysicalDeviceFormatProperties(physicalDevice, VK_FORMAT_R8_UNORM, &formatProperties);
+if ((formatProperties.linearTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT) != 0) {
+    // 지원함
+} else {
+    // 지원하지 않음
+}
+----
+
+[source,cpp]
+----
+// Vulkan 1.1 핵심 또는 VK_KHR_get_physical_device_properties2 사용
+VkFormatProperties2 formatProperties2;
+formatProperties2.sType = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2;
+formatProperties2.pNext = nullptr; // 확장 기능을 위해 사용됨
+
+vkGetPhysicalDeviceFormatProperties2(physicalDevice, VK_FORMAT_R8_UNORM, &formatProperties2);
+if ((formatProperties2.formatProperties.linearTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT) != 0) {
+    // 지원함
+} else {
+    // 지원하지 않음
+}
+----
+
+[source,cpp]
+----
+// VK_KHR_format_feature_flags2 사용
+VkFormatProperties3KHR formatProperties3;
+formatProperties3.sType = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_3_KHR;
+formatProperties3.pNext = nullptr;
+
+VkFormatProperties2 formatProperties2;
+formatProperties2.sType = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2;
+formatProperties2.pNext = &formatProperties3;
+
+vkGetPhysicalDeviceFormatProperties2(physicalDevice, VK_FORMAT_R8_UNORM, &formatProperties2);
+if ((formatProperties3.linearTilingFeatures & VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT_KHR) != 0) {
+    // 지원함
+} else {
+    // 지원하지 않음
+}
+----
+
+== 포맷의 변형(Variations of Formats)
+
+포맷에는 다양한 변형이 있으며, 대부분은 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#_identification_of_formats[포맷 이름]으로 그룹화되어 있습니다. 이미지를 다루는 경우 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageAspectFlagBits.html[VkImageAspectFlagBits] 값은 클리어나 복사와 같은 작업을 위해 데이터의 어느 부분에 액세스하고 있는지를 나타내는 데 사용됩니다.
+
+=== 색상(Color)
+
+`R`, `G`, `B` 또는 `A` 성분을 가진 포맷으로 `VK_IMAGE_ASPECT_COLOR_BIT` 로 액세스합니다.
+
+=== 깊이와 스텐실(Depth and Stencil)
+
+`D` 또는 `S` 성분을 가진 포맷. 이러한 포맷은 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-depth-stencil[불투명하다고 간주되며], 깊이/스텐실 이미지와의 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VkBufferImageCopy[복사]에 관해 특별한 규칙이 있습니다.
+
+일부 포맷은 깊이와 스텐실 성분을 모두 가지고 있으며, `VK_IMAGE_ASPECT_DEPTH_BIT` 와 `VK_IMAGE_ASPECT_STENCIL_BIT` 로 각각 따로 접근할 수 있습니다.
+
+[NOTE]
+====
+Vulkan 1.2에서 승격된 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_separate_depth_stencil_layouts.html[VK_KHR_separate_depth_stencil_layouts] 와 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_separate_stencil_usage.html[VK_EXT_separate_stencil_usage]를 사용하면 깊이와 스텐실 성분 간에 보다 세밀하게 제어할 수 있습니다.
+====
+
+깊이 포맷에 대한 자세한 내용은 xref:{chapters}depth.adoc#depth-formats[깊이 챕터]에서도 확인할 수 있습니다.
+
+=== 압축(Compressed)
+
+link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#compressed_image_formats[압축 이미지 포맷]은 한 영역 내에 여러 화소를 상호 의존적으로 인코딩하여 표현하는 포맷입니다.
+
+.Vulkan 압축 이미지 포맷
+[options="header"]
+|===
+|포맷| 활성화 방법
+|link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#appendix-compressedtex-bc[BC (Block-Compressed)] |`VkPhysicalDeviceFeatures::textureCompressionBC`
+|link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#appendix-compressedtex-etc2[ETC2 and EAC] |`VkPhysicalDeviceFeatures::textureCompressionETC2`
+|link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#appendix-compressedtex-astc[ASTC LDR] |`VkPhysicalDeviceFeatures::textureCompressionASTC_LDR`
+|link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#appendix-compressedtex-astc[ASTC HDR] |link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_texture_compression_astc_hdr.html[VK_EXT_texture_compression_astc_hdr]
+|link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#appendix-compressedtex-pvrtc[PVRTC] | link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_IMG_format_pvrtc.html[VK_IMG_format_pvrtc]
+|===
+
+=== 평면(Planar)
+
+link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_sampler_ycbcr_conversion.html[VK_KHR_sampler_ycbcr_conversion] 와 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_ycbcr_2plane_444_formats.html[VK_EXT_ycbcr_2plane_444_formats]은 xref:{chapters}extensions/VK_KHR_sampler_ycbcr_conversion.adoc#multi-planar-formats[다중 평면 포맷]을 Vulakn에 추가하였습니다. `VK_IMAGE_ASPECT_PLANE_0_BIT`, `VK_IMAGE_ASPECT_PLANE_1_BIT`, `VK_IMAGE_ASPECT_PLANE_2_BIT` 로 각 평면에 개별적으로 접근할 수 있습니다.
+
+=== 팩(Packed)
+
+link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-packed[패킹된 포맷]은 주소 정렬을 위한 것입니다. 예를 들어, `VK_FORMAT_A8B8G8R8_UNORM_PACK32` 와 `VK_FORMAT_R8G8B8A8_UNORM` 은 매우 비슷해 보이지만 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input-extraction[사양서의 정점 입력 추출 섹션]의 공식을 사용하면 달라집니다.
+
+____
+attribAddress = bufferBindingAddress + vertexOffset + attribDesc.offset;
+____
+
+`VK_FORMAT_R8G8B8A8_UNORM` 의 경우 `attribAddress` 는 성분 크기(8비트)의 배수여야 하며, `VK_FORMAT_A8B8G8R8_UNORM_PACK32` 에서는 패킹된 크기(32비트)의 배수여야 합니다.
+
+=== 외부(External)
+
+현재 `VK_ANDROID_external_memory_android_hardware_buffer` 확장 기능으로만 지원되고 있습니다. 이 확장 기능을 사용하면 안드로이드 애플리케이션이 구현에서 정의된 외부 포맷을 가져와서 xref:{chapters}extensions/VK_KHR_sampler_ycbcr_conversion.adoc[VkSamplerYcbcrConversion]과 함께 사용할 수 있습니다. 이러한 외부 포맷에는 허용되는 많은 제한 사항이 있으며, 이는 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats[사양서에 기재되어] 있습니다.

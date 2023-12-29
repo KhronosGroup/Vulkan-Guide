@@ -1,0 +1,92 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[pnext-and-stype]]
+= pNext 와 sType
+
+Vulkan을 처음 접하는 사람들은 Vulkan 사양서 곳곳에서 `pNext` 와 `sType` 변수를 발견할 수 있을 것입니다. `void* pNext` 는 구조체 간에 Linked List를 작성함으로써 Vulkan 사양을 확장하는 데 사용됩니다. `VkStructureType sType` 은 로더, 레이어, 구현이 `pNext` 로 전달된 구조체 유형을 파악하는 데 사용됩니다. `pNext` 는 주로 새로운 구조체를 공개하는 확장 기능을 다룰 때 사용됩니다.
+
+== 기본 구조체 2가지
+
+Vulkan API는 `VkBaseInStructure` 와 `VkBaseOutStructure` 라는 link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#fundamentals-validusage-pNext[두 가지 기본 구조체를 제공]하여, 구조체 포인터 체인을 반복하는 편리한 방법으로 사용됩니다.
+
+`VkBaseInStructure` 의 `In` 은 `pNext` 가 `const *` 이며 이를 수신하는 로더, 레이어 및 드라이버에 대해 읽기 전용이라는 사실을 나타냅니다. `VkBaseOutStructure`의 `Out` 은 데이터를 애플리케이션에 다시 반환하는 데 사용되는 `pNext` 를 나타냅니다.
+
+== pNext 구조체 설정 예제
+
+[source,cpp]
+----
+// 단순한 2개의 구조체structures, "a" and "b"
+typedef struct VkA {
+    VkStructureType sType;
+    void* pNext;
+    uint32_t value;
+} VkA;
+
+typedef struct VkB {
+    VkStructureType sType;
+    void* pNext;
+    uint32_t value;
+} VkB;
+
+// 구조체 "a"를 인자로 받는 Vulkan 함수
+// 값 채우기를 담당하는 함수
+void vkGetValue(VkA* pA);
+
+// "a" 와 "b"를 정의하고 해당 sType을 설정
+struct VkB b = {};
+b.sType = VK_STRUCTURE_TYPE_B;
+
+struct VkA a = {};
+a.sType = VK_STRUCTURE_TYPE_A;
+
+// pNext 포인터를 "a"에서 "b"로 설정
+a.pNext = (void*)&b;
+
+// 함수에 "a"를 전달
+vkGetValue(&a);
+
+// vkGetValue()에서 설정한 값을 모두 사용
+printf("VkA value = %u \n", a.value);
+printf("VkB value = %u \n", b.value);
+----
+
+== pNext 값 읽기 예제
+
+이제 그 아래에서 로더, 레이어, 드라이버는 연결된 `pNext` 구조체를 찾을 수 있습니다. 다음은 로더, 레이어, 드라이버 관점에서 `pNext` 를 어떻게 구현**할 수 있는지** 설명하는 데 도움이 되는 예시입니다.
+
+[source,cpp]
+----
+void vkGetValue(VkA* pA) {
+
+    VkBaseOutStructure* next = reinterpret_cast<VkBaseOutStructure*>(pA->pNext);
+    while (next != nullptr) {
+        switch (next->sType) {
+
+            case VK_STRUCTURE_TYPE_B:
+                VkB* pB = reinterpret_cast<VkB*>(next);
+                // 위의 "b.value"가 설정된 곳
+                pB->value = 42;
+                break;
+
+            case VK_STRUCTURE_TYPE_C:
+                // 지원되는 구조체 수만큼 연결 가능
+                VkC* pC = reinterpret_cast<VkC*>(next);
+                SomeFunction(pC);
+                break;
+
+            default:
+                LOG("Unsupported sType %d", next->sType);
+        }
+
+        // 이것이 작동되는 것은 모든 연결 가능한 Vulkan 구조체의 처음 두 값이
+        // "sType"과 "pNext"이며 pNext 오프셋이 같기 때문입니다
+        next = reinterpret_cast<VkBaseOutStructure*>(next->pNext);
+    }
+
+    // ...
+}
+----

@@ -1,0 +1,93 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[dynamic-state]]
+= 파이프라인 동적 스테이트(Pipeline Dynamic State)
+
+[NOTE]
+====
+link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-dynamic-state[Vulkan Spec chapter]
+====
+
+== Overview
+
+그래픽의 `VkPipeline` 객체를 만들 때 상태를 설정하기 위한 로직 흐름은 다음과 같습니다:
+
+[source,cpp]
+----
+// 뷰포트 상태를 예시로 듬
+VkViewport viewport = {0.0, 0.0, 32.0, 32.0, 0.0, 1.0};
+
+// 상태 값 설정
+VkPipelineViewportStateCreateInfo viewportStateCreateInfo;
+viewportStateCreateInfo.pViewports = &viewport;
+viewportStateCreateInfo.viewportCount = 1;
+
+// 상태 값이 설정된 파이프라인을 작성
+VkGraphicsPipelineCreateInfo pipelineCreateInfo;
+pipelineCreateInfo.pViewportState = &viewportStateCreateInfo;
+vkCreateGraphicsPipelines(pipelineCreateInfo, &pipeline);
+
+vkBeginCommandBuffer();
+// 파이프라인을 선택하고 상태의 정적인 값으로 그리기
+vkCmdBindPipeline(pipeline);
+vkCmdDraw();
+vkEndCommandBuffer();
+----
+
+`VkPipeline` 가 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-dynamic-state[동적인 상태]를 사용하고 있는 경우, 일부 파이프라인 정보를 작성할 때 생략하는 대신 커맨드 버퍼를 기록하는 동안 설정할 수 있습니다. 새로운 로직 흐름은 다음과 같습니다:
+
+[source,cpp]
+----
+// 뷰포트 상태를 예시로 설명
+VkViewport viewport = {0.0, 0.0, 32.0, 32.0, 0.0, 1.0};
+VkDynamicState dynamicState = VK_DYNAMIC_STATE_VIEWPORT;
+
+// 지금은 미사용
+VkPipelineViewportStateCreateInfo viewportStateCreateInfo;
+viewportStateCreateInfo.pViewports = nullptr;
+// 여기서는 사용할 뷰포트의 수를 지정해야 함
+viewportStateCreateInfo.viewportCount = 1;
+
+// 상태를 동적으로 설정
+VkPipelineDynamicStateCreateInfo dynamicStateCreateInfo;
+dynamicStateCreateInfo.dynamicStateCount = 1;
+dynamicStateCreateInfo.pDynamicStates = &dynamicState;
+
+// 상태 값을 알 수 없는 상태에서 파이프라인을 작성
+VkGraphicsPipelineCreateInfo pipelineCreateInfo;
+pipelineCreateInfo.pViewportState = &viewportStateCreateInfo;
+pipelineCreateInfo.pDynamicState = &dynamicStateCreateInfo;
+vkCreateGraphicsPipelines(pipelineCreateInfo, &pipeline);
+
+vkBeginCommandBuffer();
+vkCmdBindPipeline(pipeline);
+// 기록 시 파이프라인 상태를 설정
+vkCmdSetViewport(viewport);
+vkCmdDraw();
+viewport.height = 64.0;
+// 그리기 사이에 새 상태의 값을 설정
+vkCmdSetViewport(viewport);
+vkCmdDraw();
+vkEndCommandBuffer();
+----
+
+== 동적인 상태를 사용할 때
+
+[NOTE]
+====
+Vulkan은 대부분의 도구가 그렇듯이 하나의 정답이 있는 것은 아닙니다.
+====
+
+구현에 따라서 `VkDynamicState` 상태를 사용하면 정적인 값을 사용하는 것보다 성능이 저하되는 경우가 있습니다. 그러나 동적인 상태로 만들면 파이프라인 객체의 변형을 대량으로 만들 필요가 없어집니다. 애플리케이션에 따라서는 이것이더 유용할 수도 있습니다.
+
+[[states-that-are-dynamic]]
+== 동적인 상태란
+
+동적으로 할 수 있는 상태 목록은 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VkDynamicState[VkDynamicState]에 있습니다.
+
+The `VK_EXT_extended_dynamic_state`, `VK_EXT_extended_dynamic_state2`, `VK_EXT_extended_dynamic_state3`, `VK_EXT_vertex_input_dynamic_state`, `VK_EXT_attachment_feedback_loop_dynamic_state` and `VK_EXT_color_write_enable`
+확장 기능은 컴파일하고 바인드하는 파이프라인 상태 객체의 수를 줄이기 위해 추가되었습니다.

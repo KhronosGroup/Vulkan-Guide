@@ -1,0 +1,247 @@
+// Copyright 2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[shader-memory-layout]]
+= 쉐이더 메모리 레이아웃
+
+구현이 인터페이스에서 메모리로 접근할 때, **메모리 레이아웃**이 어떻게 구성되는지 알아야 합니다. 여기에는 **오프셋**, **스트라이드(stride)**, **정렬(alignments)**와 같은 것들이 포함됩니다. Vulkan 사양서에는 이에 대한 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-layout[전용 섹션]이 있지만, 사양서 언어에 복잡성을 더하는 다양한 확장으로 인해 파싱하기가 어려울 수 있습니다. 이 장에서는 Vulkan이 사용하는 모든 메모리 레이아웃 개념을 몇 가지 고수준 쉐이더 언어(GLSL) 예제와 함께 설명합니다.
+
+// stride : 사전적 정의는 보폭으로 연속된 정점 간의 바이트 오프셋을 의미
+
+[[alignment-requirements]]
+== 정렬 요건(Alignment Requirements)
+
+Vulkan에는 인터페이스 객체를 배치할 수 있는 3가지 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-alignment-requirements[정렬 요건]이 있습니다.
+
+- 확장 정렬 (`std140` 이라고도 함)
+- 기본 정렬 (`std430` 이라고도 함)
+- 스칼라 정렬
+
+정렬에 대한 사양 언어에서는 다음 블록 멤버형 마다 규칙을 세분화합니다.
+
+- scalar (`float`, `int`, `char`, etc)
+- vector (`float2`, `vec3`, `uvec4`, etc)
+- matrix
+- array
+- struct
+
+[[VK_KHR_uniform_buffer_standard_layout]]
+== VK_KHR_uniform_buffer_standard_layout
+
+[NOTE]
+====
+Vulkan 1.2에서 코어 승격
+====
+
+이 확장을 통해 UBO에서 `std430` 메모리 레이아웃을 사용할 수 있습니다. link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-standard-layout[Vulkan 표준 버퍼 레이아웃 인터페이스]는 이 가이드 외부에서 확인할 수 있습니다. 이러한 메모리 레이아웃 변경은 푸시 상수 및 SSBO와 같은 다른 저장소 항목에서 이미 std430 스타일 레이아웃을 허용하므로 `Uniforms` 에만 적용됩니다.
+
+`uniformBufferStandardLayout` 기능이 필요한 경우의 일례로 애플리케이션이 UBO 배열의 스트라이드를 `확장 정렬` 로 제한하고 싶지 않을 때입니다.
+
+[source,glsl]
+----
+layout(std140, binding = 0) uniform ubo140 {
+   float array140[8];
+};
+
+layout(std430, binding = 1) uniform ubo430 {
+   float array430[8];
+};
+----
+
+SPIR-V에서는 다음과 같습니다
+
+[source,swift]
+----
+// 배열의 확장 정렬은 16의 배수로 반올림됩니다.
+OpDecorate %array140 ArrayStride 16
+
+// 기본 정렬은 4 바이트(OpTypeFloat 32) 입니다.
+// uniformBufferStandardLayout 기능이 활성화된 경우에만 유효
+OpDecorate %array430 ArrayStride 4
+----
+
+SPIR-V 유효성 검사기를 실행할 때 `--uniform-buffer-standard-layout` 을 설정해야 합니다.
+
+[[VK_KHR_relaxed_block_layout]]
+== VK_KHR_relaxed_block_layout
+
+[NOTE]
+====
+Vulkan 1.1에서 코어로 승격됨
+
+이 확장을 위한 기능 비트가 추가되지 않았기 때문에 모든 Vulkan 1.1+ 장치는 완화된 블록 레이아웃을 지원합니다.
+====
+
+이 확장 기능을 통해 블록의 `오프셋` 수식에 더 많은 변형을 지원할 수 있음을 나타낼 수 있습니다. 이 문제는 `std430` 메모리 레이아웃을 사용할 때 발생하는데, `vec3` (12바이트)가 여전히 16바이트 정렬로 정의되어 있습니다. 블록 레이아웃을 완화하면 애플리케이션은 `vec3` 의 양쪽에 `float` 를 배치하고 그 사이에 16바이트 정렬을 유지할 수 있습니다.
+
+[source,glsl]
+----
+// 릴랙스 블록 레이아웃을 사용하지 않는 경우의 SPIR-V 오프셋
+layout (set = 0, binding = 0) buffer block {
+    float b; // Offset: 0
+    vec3 a;  // Offset: 16
+} ssbo;
+
+// 릴랙스 블록 레이아웃을 사용하는 경우의 SPIR-V 오프셋
+layout (set = 0, binding = 0) buffer block {
+    float b; // Offset: 0
+    vec3 a;  // Offset: 4
+} ssbo;
+----
+
+`VK_KHR_relaxed_block_layout` 은 `VK_EXT_scalar_block_layout` 의 하위 집합으로 볼 수도 있습니다
+
+[NOTE]
+====
+SPIR-V 유효성 검사기를 실행하고 Vulkan 1.0 환경을 사용할 때 `--relax-block-layout` 을 설정해야 합니다.
+====
+
+[NOTE]
+====
+현재 GLSL에는 릴랙스 블록 레이아웃을 공식적으로 표현하는 방법이 없지만, 개발자가 `--hlsl-offsets` 과 `glslang` 을 함께 사용하여 원하는 오프셋을 생성할 수 있습니다.
+====
+
+[[VK_EXT_scalar_block_layout]]
+== VK_EXT_scalar_block_layout
+
+[NOTE]
+====
+Vulkan 1.2에서 코어로 승격됨
+
+link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_scalar_block_layout.txt[GLSL - GL_EXT_scalar_block_layout]
+====
+
+이 확장 기능을 사용하면 대부분의 스토리지 유형을 `스칼라 정렬`로 정렬할 수 있습니다. 가장 큰 차이점은 16바이트 경계를 넘나들 수 있다는 점입니다.
+
+GLSL에서는 `scalar` 키워드 및 확장자와 함께 사용할 수 있습니다
+
+[source,glsl]
+----
+#extension GL_EXT_scalar_block_layout : enable
+layout (scalar, binding = 0) buffer block { }
+----
+
+[NOTE]
+====
+SPIR-V 유효성 검사기를 실행할 때 `--scalar-block-layout` 을 설정해야 합니다.
+====
+
+[NOTE]
+====
+`Workgroup` 스토리지 클래스는 `VK_EXT_scalar_block_layout` 에서는 지원되지 않으며, 스칼라 지원을 활성화하려면 xref:{chapters}extensions/shader_features.adoc#VK_KHR_workgroup_memory_explicit_layout[VK_KHR_workgroup_memory_explicit_layout]의 `workgroupMemoryExplicitLayoutScalarBlockLayout` 이 필요합니다.
+====
+
+[[alignment-examples]]
+== 정렬 예제
+
+다음은 지원되는 정렬의 차이를 더 잘 이해하는 데 도움이 되는 몇 가지 GLSL과 SPIR-V의 예제입니다.
+
+=== 정렬 예제 1
+
+[source,glsl]
+----
+layout(binding = 0) buffer block {
+    vec2 a[4];
+    vec4 b;
+};
+----
+
+SPIR-V에서는 다음과 같습니다
+
+[source,swift]
+----
+// 확장 정렬 (std140)
+OpDecorate %vec2array ArrayStride 16
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 64
+
+// 스칼라 정렬과 기본 정렬 (std430)
+OpDecorate %vec2array ArrayStride 8
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 32
+----
+
+=== 정렬 예제 2
+
+[source,glsl]
+----
+layout(binding = 0) buffer block {
+    float a;
+    vec2 b;
+    vec2 c;
+};
+----
+
+SPIR-V에서는 다음과 같습니다
+
+[source,swift]
+----
+// 확장 정렬 (std140) 과 기본 정렬 (std430)
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 8
+OpMemberDecorate %block 2 Offset 16
+
+// 스칼라 정렬
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 4
+OpMemberDecorate %block 2 Offset 12
+----
+
+=== 정렬 예제 3
+
+[source,glsl]
+----
+layout(binding = 0) buffer block {
+    vec3 a;
+    vec2 b;
+    vec4 c;
+};
+----
+
+SPIR-V에서는 다음과 같습니다
+
+[source,swift]
+----
+// 확장 정렬 (std140) 과 기본 정렬 (std430)
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 16
+OpMemberDecorate %block 2 Offset 32
+
+// 스칼라 정렬
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 12
+OpMemberDecorate %block 2 Offset 20
+----
+
+=== 정렬 예제 4
+
+[source,glsl]
+----
+layout (binding = 0) buffer block {
+    vec3 a;
+    vec2 b;
+    vec2 c;
+    vec3 d;
+};
+----
+
+SPIR-V에서는 다음과 같습니다
+
+[source,swift]
+----
+// 확장 정렬 (std140) 과 기본 정렬 (std430)
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 16
+OpMemberDecorate %block 2 Offset 24
+OpMemberDecorate %block 3 Offset 32
+
+// 스칼라 정렬
+OpMemberDecorate %block 0 Offset 0
+OpMemberDecorate %block 1 Offset 12
+OpMemberDecorate %block 2 Offset 20
+OpMemberDecorate %block 3 Offset 28
+----
