@@ -133,6 +133,70 @@ VSOutput main(VSInput input)
 Shader interfaces greatly differ between GLSL and HLSL. Vulkan concepts not directly available in HLSL use the link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst#the-implicit-vk-namespace)[implicit vk namespace].
 ====
 
+=== Descriptor bindings
+
+==== GLSL
+
+[source,glsl]
+----
+layout (set = <set-index>, binding = <binding-index>) uniform <type> <name>
+----
+
+There are two options for defining descriptor set and binding indices in HLSL when using Vulkan.
+
+==== HLSL way
+
+[source,hlsl]
+----
+<type> <name> : register(<register-type><binding-index>, space<set-index>)
+----
+
+Using this syntax, descriptor set and binding indices will be implicitly assigned from the set and binding index.
+
+==== Vulkan namespace
+
+[source,hlsl]
+----
+[[vk::binding(binding-index, set-index)]]
+<type> <name>
+----
+
+With this option, descriptor set and binding indices are explicitly set using `vk::binding`.
+
+[NOTE]
+====
+It's possible to use both the `vk::binding[]` and `register()` syntax for one descriptor. This can be useful if a shader is used for both Vulkan and DirectX.
+====
+
+==== Examples
+
+===== GLSL
+
+[source, glsl]
+----
+layout (set = 1, binding = 0) uniform Node {
+	mat4 matrix;
+} node;
+----
+
+===== HLSL
+----
+struct Node {
+	float4x4 transform;
+};
+
+// HLSL style
+cbuffer NodeBuf : register(b0, space1) { Node node; }
+
+// Vulkan style
+[[vk::binding(0, 1)]]
+cbuffer NodeBuf { Node node; }
+
+// Combined
+[[vk::binding(0, 1)]]
+cbuffer NodeBuf : register(b0, space1) { Node node; }
+----
+
 === Uniforms
 
 ==== GLSL
@@ -161,6 +225,12 @@ layout (set = 0, binding = 1) uniform sampler2D samplerColor;
 ----
 <type> <name> : register(<register-type><binding-index>, space<set-index>)
 ----
+or
+[source,hlsl]
+----
+[[vk::binding(binding-index, set-index)]]
+<type> <name>
+----
 
 Examples:
 [source,hlsl]
@@ -177,7 +247,7 @@ Texture2D textureColor : register(t1);
 SamplerState samplerColor : register(s1);
 ----
 
-`+<register type>+` can be:
+If using the HLSL descriptor binding syntax `+<register type>+` can be:
 
 [options="header"]
 |====
