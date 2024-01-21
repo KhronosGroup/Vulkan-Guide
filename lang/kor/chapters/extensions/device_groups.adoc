@@ -1,0 +1,21 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
+
+[[device-groups]]
+= 디바이스 그룹(Device Groups)
+
+[NOTE]
+====
+Vulkan 1.1에서 코어로 승격됨
+
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_device_group.html[SPV_KHR_device_group]
+
+link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_device_group.txt[GLSL - GL_EXT_device_group]
+====
+
+디바이스 그룹은 여러 개의 물리적 장치(단일 공급업체)를 하나의 논리적 장치로 표현하는 방법입니다. 예를 들어 애플리케이션에 제조사가 제공한 브리지 인터페이스로 연결된 두 개의 동일한 GPU가 단일 시스템에 있는 경우, Vulkan으로 두 개의 논리 장치를 만드는 방법이 있습니다. 여기서 문제는 두 개의 `VkDevice` 객체 간에 공유 및 동기화할 수 있는 항목에 제한이 있다는 것인데, 이는 나쁜 것은 아니지만 애플리케이션이 두 개의 GPU 간에 메모리를 결합하고 싶은 경우가 있을 수 있습니다. 디바이스 그룹은 이러한 사용 사례를 위해 설계된 것으로, 애플리케이션이 단일 `VkDevice` 에 `서브 디바이스` 를 생성하도록 합니다. 디바이스 그룹을 사용하면 `VkCommandBuffers` 및 `VkQueue` 와 같은 객체가 단일 `서브 디바이스` 에 묶이지 않고 드라이버가 어떤 물리적 장치 상에서 실행하는지를 관리합니다. 디바이스 그룹의 또 다른 용도는 모든 프레임이 다른 "`서브 디바이스`" 에 의해 표시되는 대체 프레임 표시 시스템입니다.
+
+`VK_KHR_device_group` 과 `VK_KHR_device_group_creation` 이라는 두 가지 확장 기능이 있습니다. 확장 기능이 두 가지인 이유는 "`인스턴스 레벨 확장`" 이거나 "`디바이스 레벨 확장`" 이기 때문입니다. 디바이스 그룹은 인스턴스 레벨 호출뿐만 아니라 디바이스 수준 호출과도 상호 작용해야 하므로 두 개의 확장 기능이 만들어졌습니다. 쉐이더가 각 논리 장치에 대해 수행할 작업을 제어할 수 있도록 쉐이더에 `DeviceGroup` 범위와 새로운 `DeviceIndex` 내장 유형을 추가하는 일치하는 link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_device_group.html[SPV_KHR_device_group] 확장 기능도 있습니다. GLSL을 사용하는 경우 모든 쉐이더 유형에 대해 `highp int gl_DeviceIndex;` 내장 변수를 도입하는 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_device_group.txt[GL_EXT_device_group] 확장 기능도 있습니다.
