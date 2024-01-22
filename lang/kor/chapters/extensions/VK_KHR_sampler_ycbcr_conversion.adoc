@@ -1,0 +1,171 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
+
+:YCbCr: pass:q[Y′C~B~C~R~]
+
+[[VK_KHR_sampler_ycbcr_conversion]]
+= VK_KHR_sampler_ycbcr_conversion
+
+[NOTE]
+====
+Vulkan 1.1에서 코어로 승격됨
+====
+
+아래의 모든 예시에서는 예시용으로 `4:2:0` 다중 평면(multi-planar) {YCbCr} 형식을 사용합니다.
+
+[[multi-planar-formats]]
+== 다중 평면 포맷
+
+Y' (휘도, luma) 데이터가 평면 0에 저장되고, C~B~ 청색 크로마차분 값("U") 데이터가 평면 1에 저장되며, C~R~ 적색 크로마차분 값("V") 데이터가 평면 2에 저장되는 {YCbCr} 이미지를 표현하려면 애플리케이션에서 `VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM 포맷` 을 사용합니다.
+
+Vulkan 사양에서는 각 다중평면 포맷 표현과 각 색상 성분에 대한 매핑이 별도로 기술되어 있습니다. 매핑과 색상 변환이 형식과 분리되어 있기 때문에, Vulkan은 포맷에서 "`RGB`" 색상 채널 표기법을 사용하며, 변환에서는 채널에서 색상 변환 입력에 대한 매핑이 기술되어 있습니다.
+
+예를 들어 이를 통해 `VK_FORMAT_B8G8R8_UNORM` 이미지가 {YCbCr} 텍셀을 표현할 수 있습니다.
+
+  * `G` == `Y`
+  * `B` == `Cb`
+  * `R` == `Cr`
+
+스위즐(swizzle) 성분을 `RGBA`와 {YCbCr} 포맷 간에 매핑할 때 약간의 주의가 필요할 수 있습니다.
+
+== 불연속(Disjoint)
+
+보통 어플리케이션이 `VkImage` 를 생성할 때 하나의 `VkDeviceMemory` 객체에만 바인딩합니다. 구현이 주어진 포맷에 대해 `VK_FORMAT_FEATURE_DISJOINT_BIT` 을 지원하는 경우, 애플리케이션은 여러 개의 분리된 `VkDeviceMemory` 를 하나의 `VkImage` 에 바인딩할 수 있으며, 여기서 각 `VkDeviceMemory` 는 단일 평면을 나타냅니다.
+
+{YCbCr} 이미지에 대한 이미지 처리 작업은 종종 채널을 개별적으로 처리합니다. 예를 들어, 휘도(luma) 채널에 선명도 작업을 적용하거나 휘도에 노이즈를 선택적으로 제거할 수 있습니다. 평면을 분리하여 따로 처리하거나 최종적으로 변경되지 않은 평면 데이터를 다른 이미지에 재사용할 수 있습니다.
+
+불연속 이미지를 사용하는 것은 몇 가지 새로운 함수를 이용하여 이미지에 메모리를 바인딩하는 일반적인 패턴을 동일하게 따릅니다. 다음은 새로운 워크플로우를 나타내는 몇 가지 의사 코드입니다:
+
+[source,cpp]
+----
+VkImagePlaneMemoryRequirementsInfo imagePlaneMemoryRequirementsInfo = {};
+imagePlaneMemoryRequirementsInfo.planeAspect = VK_IMAGE_ASPECT_PLANE_0_BIT;
+
+VkImageMemoryRequirementsInfo2 imageMemoryRequirementsInfo2 = {};
+imageMemoryRequirementsInfo2.pNext = &imagePlaneMemoryRequirementsInfo;
+imageMemoryRequirementsInfo2.image = myImage;
+
+// 각 평면에 필요한 메모리 가져오기
+VkMemoryRequirements2 memoryRequirements2 = {};
+vkGetImageMemoryRequirements2(device, &imageMemoryRequirementsInfo2, &memoryRequirements2);
+
+// 평면 0에 메모리 할당
+VkMemoryAllocateInfo memoryAllocateInfo = {};
+memoryAllocateInfo.allocationSize       = memoryRequirements2.memoryRequirements.size;
+vkAllocateMemory(device, &memoryAllocateInfo, nullptr, &disjointMemoryPlane0);
+
+// 동일한 방법으로 각 평면마다 메모리 할당
+
+// 평면 0 메모리를 바인딩
+VkBindImagePlaneMemoryInfo bindImagePlaneMemoryInfo = {};
+bindImagePlaneMemoryInfo0.planeAspect               = VK_IMAGE_ASPECT_PLANE_0_BIT;
+
+VkBindImageMemoryInfo bindImageMemoryInfo = {};
+bindImageMemoryInfo.pNext        = &bindImagePlaneMemoryInfo0;
+bindImageMemoryInfo.image        = myImage;
+bindImageMemoryInfo.memory       = disjointMemoryPlane0;
+
+// 동일한 방법으로 각 평면마다 메모리를 바인딩
+
+vkBindImageMemory2(device, bindImageMemoryInfoSize, bindImageMemoryInfoArray);
+----
+
+== 평면마다 메모리 복사하기
+
+애플리케이션이 불연속 메모리를 사용하지 않더라도 각 평면에 데이터를 복사할 때 `VK_IMAGE_ASPECT_PLANE_0_BIT` 을 사용할 필요가 있습니다.
+
+예를 들어, 애플리케이션이 단일 `VkBuffer` 에서 불연속하지(non-disjoint) 않은 단일 `VkImage` 로 데이터를 복사하는 `vkCmdCopyBufferToImage` 를 수행하려는 경우, `YUV420p` 레이아웃의 로직은 부분적으로 다음과 같이 보일 것입니다:
+
+[source,cpp]
+----
+VkBufferImageCopy bufferCopyRegions[3];
+bufferCopyRegions[0].imageSubresource.aspectMask = VK_IMAGE_ASPECT_PLANE_0_BIT;
+bufferCopyRegions[0].imageOffset                 = {0, 0, 0};
+bufferCopyRegions[0].imageExtent.width           = myImage.width;
+bufferCopyRegions[0].imageExtent.height          = myImage.height;
+bufferCopyRegions[0].imageExtent.depth           = 1;
+
+/// ...
+
+// Cb 성분은 높이와 너비가 반으로 줄어듭니다
+bufferCopyRegions[1].imageOffset                  = {0, 0, 0};
+bufferCopyRegions[1].imageExtent.width            = myImage.width / 2;
+bufferCopyRegions[1].imageExtent.height           = myImage.height / 2;
+bufferCopyRegions[1].imageSubresource.aspectMask  = VK_IMAGE_ASPECT_PLANE_1_BIT;
+
+/// ...
+
+// Cr 성분은 높이와 너비가 반으로 줄어듭니다
+bufferCopyRegions[2].imageOffset                  = {0, 0, 0};
+bufferCopyRegions[2].imageExtent.width            = myImage.width / 2;
+bufferCopyRegions[2].imageExtent.height           = myImage.height / 2;
+bufferCopyRegions[2].imageSubresource.aspectMask  = VK_IMAGE_ASPECT_PLANE_2_BIT;
+
+vkCmdCopyBufferToImage(...)
+----
+
+여기서 주목할 점은 `imageOffset` 의 기준이 전체 sname:VkImage가 아닌 평면이기 때문에 0이라는 점입니다. 따라서 `imageOffset` 을 사용할 때는 항상 평면 0이 아닌 평면의 밑변에서 시작해야 합니다.
+
+== VkSamplerYcbcrConversion
+
+`VkSamplerYcbcrConversion` 은 link:https://registry.khronos.org/DataFormat/specs/1.3/dataformat.1.3.html#_introduction_to_color_conversions[크로노스 데이터 포맷 사양]에 설명되어 있는 {YCbCr} 변환의 "여기서 설명할 수 없는" 부분을 모두 부분을 기술하고 있습니다. 여기에 설정된 값은 입력되는 {YCbCr} 데이터와 RGB 색 공간으로 변환하는 방법에 따라 달라집니다.
+
+다음은 API 관점에서 사용하는 방법에 대한 아이디어를 제공하는 몇 가지 의사 코드입니다:
+
+[source,cpp]
+----
+// 변환 객체를 생성하여 구현이 {YCbCr} 변환을 수행하도록 하는 방법을 기술합니다.
+Create conversion object that describes how to have the implementation do the {YCbCr} conversion
+VkSamplerYcbcrConversion samplerYcbcrConversion;
+VkSamplerYcbcrConversionCreateInfo samplerYcbcrConversionCreateInfo = {};
+// ...
+vkCreateSamplerYcbcrConversion(device, &samplerYcbcrConversionCreateInfo, nullptr, &samplerYcbcrConversion);
+
+VkSamplerYcbcrConversionInfo samplerYcbcrConversionInfo = {};
+samplerYcbcrConversionInfo.conversion = samplerYcbcrConversion;
+
+// 변환 기능이 있는 ImageView 만들기
+VkImageViewCreateInfo imageViewInfo = {};
+imageViewInfo.pNext = &samplerYcbcrConversionInfo;
+// ...
+vkCreateImageView(device, &imageViewInfo, nullptr, &myImageView);
+
+// 변환 기능이 있는 sampler 만들기
+VkSamplerCreateInfo samplerInfo = {};
+samplerInfo.pNext = &samplerYcbcrConversionInfo;
+// ...
+vkCreateSampler(device, &samplerInfo, nullptr, &mySampler);
+----
+
+== combinedImageSamplerDescriptorCount
+
+모니터링해야 할 중요한 값은 구현이 각 다중 평면 포맷에 대해 사용하는 디스크립터 수를 설명하는 '결합된 이미지 샘플러 디스크립터 카운트(`combinedImageSamplerDescriptorCount`)'입니다. 즉, `VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM` 의 경우 구현은 사용된 각 결합된 이미지 샘플러에 대해 1개, 2개 또는 3개의 디스크립터를 사용할 수 있습니다.
+
+바인딩 내의 모든 디스크립터는 동일한 최대값 `combinedImageSamplerDescriptorCount` 를 사용하여 구현이 바인딩 내 디스크립터의 동적 인덱싱에 균일한 스트라이드(stride)를 사용할 수 있도록 합니다.
+
+예를 들어, 두 개의 디스크립터와 다중 평면 포맷용 불변(immutable) 샘플러에서 각각 `VkSamplerYcbcrConversionImageFormatProperties::combinedImageSamplerDescriptorCount` 값이 `2`와 `3` 인 디스크립터 세트 레이아웃 바인딩이 있다고 보겠습니다. 바인딩에 두 개의 디스크립터가 있고 `combinedImageSamplerDescriptorCount` 의 최대값은 `3` 이므로 이 레이아웃을 가진 디스크립터 세트는 디스크립터 풀에서 `6` 개의 디스크립터를 사용합니다. 이 레이아웃으로 `4` 개의 디스크립터 세트를 할당할 수 있는 디스크립터 풀을 만들려면 `descriptorCount` 는 최소한 `24` 이상이어야 합니다.
+
+현재로서는 `결합된 이미지 샘플러 디스크립터 수(combinedImageSamplerDescriptorCount)` 최대값을 link:https://github.com/KhronosGroup/Vulkan-Docs/issues/2139[알 수 있는 방법이 없습니다]. 실제로 이 값은 `3` 이지만 알파 성분과 함께 일부 외부 포맷을 사용할 때는 `4` 가 될 수 있습니다.
+
+`combinedImageSamplerDescriptorCount` 를 쿼리하는 방법을 보여주는 의사 코드입니다:
+
+[source,cpp]
+----
+VkSamplerYcbcrConversionImageFormatProperties samplerYcbcrConversionImageFormatProperties = { /* ... */ };
+
+VkImageFormatProperties imageFormatProperties   = { /* ... */ };
+VkImageFormatProperties2 imageFormatProperties2 = { /* ... */ };
+// ...
+imageFormatProperties2.pNext                 = &samplerYcbcrConversionImageFormatProperties;
+imageFormatProperties2.imageFormatProperties = imageFormatProperties;
+
+VkPhysicalDeviceImageFormatInfo2 imageFormatInfo = { /* ... */ };
+// ...
+imageFormatInfo.format = formatToQuery;
+vkGetPhysicalDeviceImageFormatProperties2(physicalDevice, &imageFormatInfo, &imageFormatProperties2));
+
+printf("combinedImageSamplerDescriptorCount = %u\n", samplerYcbcrConversionImageFormatProperties.combinedImageSamplerDescriptorCount);
+----

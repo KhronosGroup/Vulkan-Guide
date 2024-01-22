@@ -1,0 +1,250 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
+
+[[cleanup]]
+= 정리(Cleanup) 확장기능
+
+[NOTE]
+====
+이들은 비공식적으로 "`정리(cleanup) 확장기능`" 이라고 불리는 확장 기능입니다. Vulkan Guide에서는 약간의 기능만 추가하거나 그 목적이 매우 간단하고 자명하기 때문에 정리 확장기능이라고 정의합니다.
+====
+
+[[VK_KHR_driver_properties]]
+== VK_KHR_driver_properties
+
+[NOTE]
+====
+Vulkan 1.2에서 코어로 승격됨
+====
+
+이 확장 기능은 각 구현에 대한 쿼리에 더 많은 정보를 추가합니다. link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VkDriverId[VkDriverId]는 구현에 대해 등록된 제조사의 ID입니다. link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VkConformanceVersion[VkConformanceVersion]은 구현이 xref:{chapters}vulkan_cts.adoc#vulkan-cts[Vulkan 적합성 테스트 제품군(CTS)]을 통과한 버전을 표시합니다.
+
+[[VK_EXT_host_query_reset]]
+== VK_EXT_host_query_reset
+
+[NOTE]
+====
+Vulkan 1.2에서 코어로 승격됨
+====
+
+이 확장 기능을 사용하면 구현에서 메모리에 대한 빠른 쓰기일뿐이므로 애플리케이션이 `vkResetQueryPool` 을 전송하는 로직을 설정할 필요 없이 호스트에서 `vkCmdResetQueryPool` 을 호출할 수 있습니다.
+
+[[VK_KHR_separate_depth_stencil_layouts]]
+== VK_KHR_separate_depth_stencil_layouts
+
+[NOTE]
+====
+Vulkan 1.2에서 코어로 승격됨
+====
+
+이 확장 기능을 사용하면 깊이/스텐실 포맷을 사용하는 애플리케이션에서 깊이와 스텐실 각각에 대해 이미지 변환을 개별적으로 수행할 수 있습니다. Vulkan 1.2부터 이 기능은 모든 구현에서 필수입니다.
+
+[[VK_KHR_depth_stencil_resolve]]
+== VK_KHR_depth_stencil_resolve
+
+[NOTE]
+====
+Vulkan 1.2에서 코어로 승격됨
+====
+
+이 확장 기능에는 색상 첨부와 유사한 방식으로 서브패스에서 멀티샘플링된 깊이/스텐실 첨부를 자동으로 해결하는 기능이 추가되었습니다.
+
+자세한 내용은 GDC 프레젠테이션을 확인하세요. (link:https://www.khronos.org/assets/uploads/developers/presentations/Vulkan-Depth-Stencil-Resolve-GDC-Mar19.pdf[발표자료]와 link:https://www.youtube.com/watch?v=GnnEmJFFC7Q&t=1980s[영상])
+
+[[VK_EXT_separate_stencil_usage]]
+== VK_EXT_separate_stencil_usage
+
+[NOTE]
+====
+Vulkan 1.2에서 코어로 승격됨
+====
+
+깊이와 스텐실 사용량을 모두 표현하는 포맷이지만, 다른 사용량을 나열할 방법이 없었습니다. 이제 `VkImageStencilUsageCreateInfo` 를 통해 애플리케이션이 이미지의 스텐실 사용량에 대해 별도의 `VkImageUsageFlags` 를 전달할 수 있습니다. 깊이 사용량은 `VkImageCreateInfo::usage` 에 전달된 원래 사용량이며, `VkImageStencilUsageCreateInfo` 를 사용하지 않으면 스텐실 사용량도 동일합니다.
+
+xref:{chapters}extensions/VK_KHR_image_format_list.adoc#VK_KHR_image_format_list[VK_KHR_image_format_list] 확장 기능을 사용하는 경우가 좋은 사용 예입니다. 이를 통해 애플리케이션이 생성 시점에 `VkImage` 의 가능한 이미지 뷰를 보다 명시적으로 기술하는 방법을 제공합니다. 이를 통해 일부 구현은 설정된 용도에 따라 구현에 종속적인 최적화를 수행할 수 있습니다.
+
+[[VK_KHR_dedicated_allocation]]
+== VK_KHR_dedicated_allocation
+
+[NOTE]
+====
+Vulkan 1.1에서 코어로 승격됨
+====
+
+일반적으로 애플리케이션은 `VkDeviceMemory` 에 큰 청크를 할당하고 다양한 버퍼와 이미지에 하위 할당합니다. 하지만 `VkImage` 또는 `VkBuffer` 에 전용 할당을 하는 것이 더 나은 경우가 있습니다. 애플리케이션은 `VkMemoryDedicatedRequirements` 를 `vkGetBufferMemoryRequirements2` 또는 `vkGetImageMemoryRequirements2` 에 전달하여 전용 할당이 선호되는지 혹은 필요한지 확인할 수 있습니다. 외부 메모리를 다룰 때는 전용 할당이 필요한 경우가 더 많습니다.
+
+[[VK_EXT_sampler_filter_minmax]]
+== VK_EXT_sampler_filter_minmax
+
+[NOTE]
+====
+Vulkan 1.2에서 코어로 승격됨
+====
+
+기본적으로 선형 필터링을 사용하는 Vulkan 샘플러는 제공된 텍스터 좌표 인근의 텍셀 컬렉션의 가중치 평균을 계산하여 생성된 필터링된 텍셀 값을 반환합니다. 이 확장 기능은 애플리케이션이 일반적으로 평균화할 텍셀의 컴포넌트별 최솟값 (`VK_SAMPLER_REDUCTION_MODE_MIN`) 또는 최댓값 (`VK_SAMPLER_REDUCTION_MODE_MAX`) 을 계산하여 필터링된 텍셀 값을 생성할 수 있는 새로운 샘플러 파라미터를 제공합니다. 이는 link:https://registry.khronos.org/OpenGL/extensions/EXT/EXT_texture_filter_minmax.txt[GL EXT_texture_filter_minmax]와 유사합니다.
+
+[[VK_KHR_sampler_mirror_clamp_to_edge]]
+== VK_KHR_sampler_mirror_clamp_to_edge
+
+[NOTE]
+====
+Vulkan 1.2에서 코어로 승격됨
+====
+
+이 확장 기능에서는 새로운 샘플러 어드레스 모드 (`VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE`) 가 추가되었습니다. 이 모드에서는 원래 이미지의 2배 크기 텍스처 맵을 효과적으로 사용하며, 새로운 이미지의 추가 절반은 원래 이미지의 미러 이미지가 됩니다. 이 새로운 모드에서는 원래 이미지를 사용하여 일치하는 "`미러 이미지`"를 생성함으로써 반대편 가장자리리가 일치하는 이미지를 생성할 필요성이 완화됩니다. 이 모드에서는 텍스처를 음의 `s`, `t`, `r` 방향으로 한 번만 미러링 할 수 있습니다.
+
+[[VK_EXT_4444_formats-and-VK_EXT_ycbcr_2plane_444_formats]]
+== VK_EXT_4444_formats and VK_EXT_ycbcr_2plane_444_formats
+
+[NOTE]
+====
+Vulkan 1.3에서 코어로 승격됨
+====
+
+이러한 확장 기능은 원래 사양에 없던 새로운 `VkFormat` 을 추가합니다.
+
+[[VK_KHR_format_feature_flags2]]
+== VK_KHR_format_feature_flags2
+
+[NOTE]
+====
+Vulkan 1.3에서 코어로 승격됨
+====
+
+이 확장 기능은 31개의 플래그로 제한되어 있는 기존 `VkFormatFeatureFlagBits` 를 확장하기 위해 64비트 포맷 기능 플래그 유형인 `VkFormatFeatureFlagBits2KHR` 을 새로 추가합니다.
+
+[[VK_EXT_rgba10x6_formats]]
+== VK_EXT_rgba10x6_formats
+
+이 확장 기능은 link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/pull/3397[유효성 검사 레이어]에 `VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16` 에 대한 예외를 추가하여 해당 포맷으로 렌더링할 수 있도록 허용합니다.
+
+[[maintenance-extensions]]
+== 유지보수 확장 기능
+
+이 유지보수 확장 기능에는 기존 Vulkan 1.0 릴리즈에서 의도적으로 누락되었거나 간과되었던 사소한 기능들이 추가되었습니다.
+
+현재 4개의 유지보수 확장 기능이 있습니다. 처음 3개는 Vulkan 1.1에 코어로 번들되어 제공되었습니다. 각 확장 기능에 대한 자세한 내용은 확장 부록 페이지에서 잘 정의되어 있습니다.
+
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance1[VK_KHR_maintenance1] - core in Vulkan 1.1
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance2[VK_KHR_maintenance2] - core in Vulkan 1.1
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance3[VK_KHR_maintenance3] - core in Vulkan 1.1
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance4[VK_KHR_maintenance4] - core in Vulkan 1.3
+
+[[pnext-expansions]]
+== pNext 확장 기능
+
+Vulkan 워킹 그룹은 원래 1.0 Vulkan 사양서에서 일부 구조체가 `sType`/`pNext` 가 누락되어 제대로 확장할 수 없다는 사실을 몇 차례 발견했습니다..
+
+버전 간 하위 호환성을 유지하는 것은 매우 중요하므로 가장 좋은 해결책은 실수를 수정하기 위해 확장 기능을 만드는 것이었습니다. 이러한 확장 기능은 주로 새로운 구조체이지만, 새로운 구조체를 활용하기 위해 새로운 함수 진입점을 만들어야 합니다.
+
+현재 이 카테고리에 해당하는 확장 기능 목록은 다음과 같습니다:
+
+  * `VK_KHR_get_memory_requirements2`
+  ** Vulkan 1.1의 코어에 추가됨
+  * `VK_KHR_get_physical_device_properties2`
+  ** Vulkan 1.1의 코어에 추가됨
+  * `VK_KHR_bind_memory2`
+  ** Vulkan 1.1의 코어에 추가됨
+  * `VK_KHR_create_renderpass2`
+  ** Vulkan 1.2의 코어에 추가됨
+  * `VK_KHR_copy_commands2`
+  ** Vulkan 1.3의 코어에 추가됨
+
+이 모든 기능은 매우 간단한 확장 기능으로, 지원을 요청하지 않고도 쉽게 사용할 수 있도록 각 버전에서 코어 기능으로 승격되었습니다.
+
+[NOTE]
+====
+`VK_KHR_get_physical_device_properties2` 에는 확장 기능 및 최신 Vulkan 버전에 대한 기능 지원을 쿼리하는 기능이 추가되었습니다. 이 기능으로 인해 대부분의 다른 Vulkan 확장 기능에 대한 요구 사항이 되었습니다.
+====
+
+=== Example
+
+표준 `VK_KHR_bind_memory2` 를 사용하는 대신, `vkBindImageMemory` 를 예로 들어 보겠습니다.
+
+[source,cpp]
+----
+// VkImage images[3]
+// VkDeviceMemory memories[2];
+
+vkBindImageMemory(myDevice, images[0], memories[0], 0);
+vkBindImageMemory(myDevice, images[1], memories[0], 64);
+vkBindImageMemory(myDevice, images[2], memories[1], 0);
+----
+
+이제 함께 일괄 처리할 수 있습니다.
+
+[source,cpp]
+----
+// VkImage images[3];
+// VkDeviceMemory memories[2];
+
+VkBindImageMemoryInfo infos[3];
+infos[0] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, NULL, images[0], memories[0], 0};
+infos[1] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, NULL, images[1], memories[0], 64};
+infos[2] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, NULL, images[2], memories[1], 0};
+
+vkBindImageMemory2(myDevice, 3, infos);
+----
+
+`VK_KHR_sampler_ycbcr_conversion` 과 같은 일부 확장 기능은 `pNext` 에 전달할 수 있는 구조를 공개합니다.
+
+[source,cpp]
+----
+VkBindImagePlaneMemoryInfo plane_info[2];
+plane_info[0] = {VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO, NULL, VK_IMAGE_ASPECT_PLANE_0_BIT};
+plane_info[1] = {VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO, NULL, VK_IMAGE_ASPECT_PLANE_1_BIT};
+
+// 이제 다른 확장 구조체를 vkBindImageMemory()에서 누락된 pNext에 전달할 수 있습니다
+VkBindImageMemoryInfo infos[2];
+infos[0] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, &plane_info[0], image, memories[0], 0};
+infos[1] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, &plane_info[1], image, memories[1], 0};
+
+vkBindImageMemory2(myDevice, 2, infos);
+----
+
+=== 사용하지 않으셔도 괜찮습니다
+
+애플리케이션이 위의 확장 기능에 의존하는 확장 기능 중 하나를 사용해야 하는 경우가 아니라면 일반적으로 원래 함수/구조체를 그대로 사용해도 괜찮습니다.
+
+이 문제를 처리할 수 있는 한 가지 방법은 다음과 같습니다:
+
+[source,cpp]
+----
+void HandleVkBindImageMemoryInfo(const VkBindImageMemoryInfo* info) {
+    // ...
+}
+
+//
+// 도구/구현을 위한 진입점(Entry points)
+//
+void vkBindImageMemory(VkDevice device,
+                       VkImage image,
+                       VkDeviceMemory memory,
+                       VkDeviceSize memoryOffset)
+{
+    VkBindImageMemoryInfo info;
+    // original call doesn't have a pNext or sType
+    info.sType = VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO;
+    info.pNext = nullptr;
+
+    // Match the rest of struct the same
+    info.image = image;
+    info.memory = memory;
+    info.memoryOffset = memoryOffset;
+
+    HandleVkBindImageMemoryInfo(&info);
+}
+
+void vkBindImageMemory2(VkDevice device,
+                        uint32_t bindInfoCount, 
+                        const VkBindImageMemoryInfo* pBindInfos)
+{
+    for (uint32_t i = 0; i < bindInfoCount; i++) {
+        HandleVkBindImageMemoryInfo(pBindInfos[i]);
+    }
+}
+----

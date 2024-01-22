@@ -1,0 +1,226 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
+
+[[ray-tracing]]
+= 레이 트레이싱(Ray Tracing)
+
+Vulkan API에서 레이 트레이싱을 지원하는 상호 연관된 5가지 확장 기능 세트를 제공합니다.
+
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_acceleration_structure.html[VK_KHR_acceleration_structure]
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_ray_tracing_pipeline.html[VK_KHR_ray_tracing_pipeline]
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_ray_query.html[VK_KHR_ray_query]
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_pipeline_library.html[VK_KHR_pipeline_library]
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_deferred_host_operations.html[VK_KHR_deferred_host_operations]
+
+추가적으로 SPIR-V 및 GLSL 확장 기능도 쉐이더에 필요한 프로그래밍 가능한 기능을 제공합니다:
+
+  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_ray_tracing.html[SPV_KHR_ray_tracing]
+  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_ray_query.html[SPV_KHR_ray_query]
+  * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_tracing.txt[GLSL_EXT_ray_tracing]
+  * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_query.txt[GLSL_EXT_ray_query]
+  * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_flags_primitive_culling.txt[GLSL_EXT_ray_flags_primitive_culling]
+
+[NOTE]
+====
+많은 레이 트레이싱 애플리케이션에는 대량의 연속 메모리 할당이 필요합니다.
+주소 공간의 크기가 제한되어 있기 때문에 32비트 시스템에서는 이 작업이 어려울 수 있습니다.
+32비트 시스템에서 레이 트레이싱 확장 기능을 자유롭게 구현할 수 있지만,
+애플리케이션에서 간헐적으로 메모리 파편화로 인한 할당 실패와 같은 문제가 발생할 수 있습니다.
+또한 일부 구현에서는 32비트 드라이버에서 레이 트레이싱 확장 기능을 공개하지 않도록 선택할 수도 있습니다.
+====
+
+[[VK_KHR_acceleration_structure]]
+== VK_KHR_acceleration_structure
+
+가속 구조는 구현에 따라 달라지는 기하학적 객체의 불투명한 표현으로, 레이 트레이싱에 사용됩니다.
+객체를 가속 구조로 구축하면 알고있는 데이터 레이아웃에 대해 효율적인 방식으로 레이 트레이싱을 수행할 수 있습니다.
+`VK_KHR_acceleration_structure` 확장 기능에는 가속 구조체를 빌드하고 복사하는 기능과 메모리와의 직렬화를 지원하는 기능이 도입되었습니다.
+
+가속 구조는 레이 파이프라인 (`VK_KHR_ray_tracing_pipeline`)과 레이 쿼리 (`VK_KHR_ray_query`) 둘 다 필요합니다.
+
+가속 구조를 만들기 위해서는 아래와 같은 작업이 필요합니다:
+
+  * `VkAccermed Structure Build Geometry InfoKHR`` 인스턴스에 가속 구조 유형, 지오메트리 유형, 갯수 및 최대 크기를 입력합니다.
+    이 시점에서는 지오메트리 데이터를 입력할 필요가 없습니다.
+  * 빌드를 실행하는 데 필요한 메모리 크기를 가져오려면 `vkGetAccloationStructureBuildSizesKHR` 을 호출합니다.
+  * 가속 구조 (`VkAccelerationStructureBuildSizesKHR::accelerationStructureSize`) 와 빌드 스크래치 버퍼 (`VkAccelerationStructureBuildSizesKHR::buildScratchSize`) 를 유지하기에 충분한 크기의 버퍼를 할당합니다.
+  * 버퍼 내 지정된 위치에 가속 구조를 생성하려면 `vkCreateAccelerationStructureKHR` 을 호출합니다.
+  * 가속 구조를 빌드하기 위해 `vkCmdBuildAccelerationStructuresKHR` 를 호출합니다.
+  여기서는 먼저 입력한 `VkAcceleration Structure Build Geometry InfoKHR` 을 파라미터로 사용하여 원하는 가속 구조 객체,
+  빌드용 스크래치 버퍼, 지오메트리 데이터 포인터(정점, 인덱스, 트랜스폼용) 을 추가합니다.
+
+[[VK_KHR_ray_tracing_pipeline]]
+== VK_KHR_ray_tracing_pipeline
+
+`VK_KHR_ray_tracing_pipeline` 확장 기능은 레이 트레이싱 파이프라인을 도입합니다. 이 새로운 형태의 렌더링 파이프라인은 기존의 래스터라이즈 파이프라인과는 독립적입니다. 레이 트레이싱 파이프라인은 기존의 정점/지오메트리/프래그먼트 스테이지와 다른 전용 쉐이더 스테이지 세트를 활용합니다. 레이 트레이싱 파이프라인은 렌더링 작업을 전송하는 전용 명령(`vkCmdTraceRaysKHR` 및 `vkCmdTraceRaysIndirectKHR`)도 활용합니다. 이러한 명령은 기존 래스터라이즈 파이프라인의 그리기 명령(`vkCmdDraw` 및 `vkCmdDrawIndirect`)과 다소 유사하다고 볼 수 있습니다.
+
+레이를 추적하려면:
+
+  * `vkCmdBindPipeline` 와 `VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR` 를 사용하여 레이 트레이싱 파이프라인에 바인딩 합니다.
+  * `vkCmdTraceRaysKHR` 또는 `vkCmdTraceRaysIndirectKHR` 를 호출합니다.
+
+레이 트레이싱 파이프라인에 몇 가지 새로운 쉐이더 도메인이 도입되었습니다. 이에 대한 설명은 다음과 같습니다:
+
+image::https://www.khronos.org/assets/uploads/blogs/2020-The-ray-tracing-mechanism-achieved-through-the-five-shader-stages-2.jpg["Ray Tracing Shaders"]
+
+  * 레이 생성 쉐이더(Ray generation shader)는 레이 트레이싱의 시작점을 나타냅니다. 레이 트레이싱 명령어(`vkCmdTraceRaysKHR` 와 `vkCmdTraceRaysIndirectKHR`) 는 컴퓨트 쉐이더와 마찬가지로 쉐이더 호출 그리드를 기동합니다. 레이 생성 쉐이더는 레이를 만들고 traceRayEXT() 호출에 통해 추적을 시작합니다. 또한 히트 그룹의 결과를 처리합니다.
+
+  * 레이가 가장 가까운 지오메트리와 교차할 때 가장 가까운 히트 쉐이더(Closest hit shader)가 실행됩니다. 애플리케이션은 가장 가까운 히트 쉐이더를 얼마든지 지원할 수 있습니다. 일반적으로 조명 계산을 수행하는 데 사용되며 재귀적으로 추가 레이를 추적할 수 있습니다.
+
+  * 미스 쉐이더(Miss shader)는 레이가 통과하는 동안 지오메트리와 교차하지 않을 때 가장 가까운 히트 셰이더 대신 실행됩니다. 미스 쉐이더의 일반적인 용도는 환경 맵을 샘플링하는 것입니다.
+
+  * 내장된 교차 테스트는 레이-삼각형 테스트입니다. 교차(Intersection) 쉐이더를 사용하면 사용자 정의 교차점 처리가 가능합니다.
+
+  * 임의 히트 쉐이더(Any-hit shader)는 가장 가까운 히트 쉐이더와 마찬가지로 교차점이 보고된 후 실행됩니다. 차이점은 임의 히트 쉐이더는 레이의 원점에서 가장 가까운 레이가 아니라 [tmin, tmax]로 정의된 레이 구간 내의 임의의 교차점에 대해 호출된다는 것입니다. 임의 히트 쉐이더는 교차점 필터링에 사용되므로 알파 테스트 구현에 자주 사용됩니다.
+
+[[VK_KHR_ray_query]]
+== VK_KHR_ray_query
+
+'VK_KHR_ray_query' 확장 기능은 그래픽스, 컴퓨트, 레이 트레이싱 파이프라인을 포함한 모든 쉐이더 유형의 레이 트레이싱을 지원합니다.
+
+레이 쿼리를 사용하려면 레이 통과 코드(ray traversal code)가 쉐이더에 명시적으로 포함되어 있어야 합니다. 이것은 레이 생성, 교차 테스트, 레이-지오메트리 히트 처리가 별도의 쉐이더 스테이지로 표현되는 레이 트레이싱 파이프라인과는 다릅니다. 따라서 레이 쿼리를 사용하면 더 넓은 범위의 쉐이더 스테이지에서 레이를 추적할 수 있지만, Vulkan 구현에서 레이 스케줄링 및 추적에 적용할 수 있는 최적화 범위도 제한됩니다.
+
+이 확장 기능은 추가 API 진입점(entry-points)을 도입하는 것이 아닙니다. 단순히 관련 SPIR-V 및 GLSL 확장(`SPV_KHR_ray_query` 및 `GLSL_EXT_ray_query`)에 대한 API 지원을 제공할 뿐입니다.
+
+`VK_KHR_ray_query` 가 제공하는 기능은 `VK_KHR_ray_tracing_pipeline` 이 제공하는 기능을 보완하는 것으로, 두 확장 기능을 함께 사용할 수 있습니다.
+
+[source,glsl]
+----
+rayQueryEXT rq;
+
+rayQueryInitializeEXT(rq, accStruct, gl_RayFlagsTerminateOnFirstHitEXT, cullMask, origin, tMin, direction, tMax);
+
+// 가속 구조를 가로지르며 첫 번째 교차점(있는 경우)에 대한 정보를 저장
+rayQueryProceedEXT(rq);
+
+if (rayQueryGetIntersectionTypeEXT(rq, true) == gl_RayQueryCommittedIntersectionNoneEXT) {
+    // Not in shadow
+}
+----
+
+[[VK_KHR_pipeline_library]]
+== VK_KHR_pipeline_library
+
+`VK_KHR_pipeline_library` 파이프라인 라이브러리를 도입합니다. 파이프라인 라이브러리는 `VK_PIPELINE_CREATE_LIBRARY_BIT_KHR` 을 사용하여 생성된 특수 파이프라인으로, 직접 바인딩하여 사용할 수 없습니다. 대신 다른 파이프라인에 연결할 수 있는 쉐이더, 쉐이더 그룹 및 관련 상태의 컬렉션을 나타내는 파이프라인입니다.
+
+`VK_KHR_pipeline_library` 는 새로운 API 함수를 직접 도입하거나 파이프라인 라이브러리를 생성하는 방법을 정의하지 않습니다. 대신, 이 기능은 `VK_KHR_pipeline_library` 에서 제공하는 기능을 사용하는 다른 확장 기능에 맡겨져 있습니다.
+현재는 `VK_KHR_ray_tracing_pipeline` 이 유일한 예입니다.
+`VK_KHR_pipeline_library` 는 레이 트레이싱 확장 기능에 대한 의존성을 도입하지 않고 향후 다른 확장 기능에서도 동일한 기능을 사용할 수 있도록 독립적인 확장 기능으로 정의되었습니다.
+
+레이 트레이싱 파이프라인 라이브러리를 만들려면:
+
+  * `vkCreateRayTracingPipelinesKHR` 호출할 때, `VkRayTracingPipelineCreateInfoKHR::flags` 에서 `VK_PIPELINE_CREATE_LIBRARY_BIT_KHR` 을 설정합니다.
+
+레이 트레이싱 파이프라인 라이브러리를 전체 파이프라인에 연결하려면:
+
+  * `VkRayTracingPipelineCreateInfoKHR::pLibraryInfo` 가 `VkPipelineLibraryCreateInfoKHR` 의 인스턴스를 가리키도록 설정합니다.
+  * 링킹(linking) 입력으로 사용할 파이프라인 라이브러리로 `VkPipelineLibraryCreateInfoKHR::pLibraries` 를 입력하고, `VkPipelineLibraryCreateInfoKHR::libraryCount` 를 적절한 값으로 설정합니다.
+
+[[VK_KHR_deferred_host_operations]]
+== VK_KHR_deferred_host_operations
+
+`VK_KHR_deferred_host_operations` 는 고비용 CPU 작업을 여러 스레드에 분산하는 메커니즘을 도입합니다. Vulkan 드라이버에 스레드 풀을 도입하는 대신, `VK_KHR_deferred_host_operations` 는 애플리케이션이 스레드를 생성하고 관리할 수 있도록 설계되었습니다.
+
+`VK_KHR_pipeline_library` 와 마찬가지로 `VK_KHR_deferred_host_operations` 는 레이 트레이싱 확장 기능에 대한 종속성을 도입하지 않고 향후 다른 확장 기능에서 동일한 기능을 사용할 수 있도록 별도의 확장 기능으로 정의했습니다.
+
+지연(deferral)을 지원한다고 구체적으로 명시된 작업만 지연될 수 있습니다.
+현재 디퍼런스를 지원하는 작업은 `vkCreateRayTracingPipelinesKHR`, `vkBuildAccelerationStructuresKHR`, `vkCopyAccelerationStructureKHR`, `vkCopyMemoryToAccelerationStructureKHR`, `vkCopyAccelerationStructureToMemoryKHR` 뿐입니다.
+
+작업 지연을 요청하려면:
+
+  * `vkCreateDeferredOperationKHR` 호출하여 `VkDeferredOperationKHR` 객체를 생성합니다.
+  * 지연시키려는 작업을 호출하여 `VkDeferredOperationKHR` 을 매개변수로 전달합니다.
+  * 위 연산에서 반환된 `VkResult` 를 확인합니다:
+  ** `VK_OPERATION_DEFERRED_KHR` 은 작업이 성공적으로 지연되었음을 나타냅니다.
+  ** `VK_OPERATION_NOT_DEFERRED_KHR` 은 작업이 즉시 성공적으로 완료되었음을 나타냅니다
+  ** 오류가 발생한다면 오류값(error value)을 반환합니다.
+
+스레드를 지연된 작업에 결합하고 작업 진행에 CPU 시간을 주려면:
+
+  * 작업에 참여하려는 각 스레드에서 `vkDeferredOperationJoinKHR` 을 호출합니다.
+  * `vkDeferredOperationJoinKHR` 이 반환한 `VkResult` 를 확인합니다:
+  ** `VK_SUCCESS` 는 작업이 완료되었음을 나타냅니다.
+  ** `VK_THREAD_DONE_KHR` 은 호출한 스레드에 더 이상 할당할 작업이 없지만 다른 스레드에는 아직 완료해야 할 추가 작업이 있을 수 있음을 나타냅니다. 현재 스레드는 `vkDeferredOperationJoinKHR` 을 다시 호출하여 재참여를 시도해서는 안 됩니다.
+  ** `VK_THREAD_IDLE_KHR` 은 호출 스레드에 할당할 작업이 *일시적으로* 없지만 향후 추가 작업을 사용할 수 있게 될 수 있음을 나타냅니다. 현재 스레드가 호출한 스레드에서 다른 유용한 작업을 수행할 수 있으며, 나중에 `vkDeferredOperationJoinKHR` 을 다시 호출하여 재참여할 수도 있습니다.
+
+작업을 완료한 후(즉, `vkDeferredOperationJoinKHR` 이 `VK_SUCCESS` 를 반환한 경우) `vkGetDeferredOperationResultKHR` 을 호출하여 작업 결과를 가져옵니다.
+
+[[ray-tracing-synchronization]]
+== 레이 트레이싱을 위한 동기화
+
+  * 쉐이더 트레이스 또는 쿼리 호출의 경우, 가속 구조에 해당하는 쉐이더 스테이지(들)와 함께
+    `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR` 을 사용하세요.
+  * 레이 트레이싱 파이프라인에서 쉐이더 바인딩 테이블에 액세스하려면,
+    `VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR` 을
+    `VK_ACCESS_SHADER_READ_BIT` 또는 `VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR` 과 함께 사용하세요.
+  * 가속 구조 빌드의 경우, 액세스하는 리소스에 해당하는 액세스 비트(access bits)와 함께
+    `VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR` 을 사용하세요:
+
+  ** 쓰기 대상 AS는 `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR` 을 사용합니다.
+  ** 소스 AS(예: 업데이트용)는 `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR` 을 사용합니다.
+  ** 스크래치 버퍼에는 `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR` 와 `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR` 모두 필요합니다.
+  ** 정점/인덱스/인스턴스/트랜스폼 버퍼는 `VK_ACCESS_SHADER_READ_BIT` 를 사용합니다.
+
+  * 가속 구조의 복사 명령의 경우, 
+    `VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR` 또는
+    `VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR` 를 사용하고 소스에 맞는 액세스 플래그를 사용합니다:
+
+  ** 쓰기 대상 AS는 `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR` 를 사용합니다.
+  ** 소스 AS는 `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR` 를 사용합니다.
+  ** 쓰기 대상 버퍼는 `VK_ACCESS_TRANSFER_WRITE_BIT` 를 사용합니다.
+  ** 소스 버퍼는 `VK_ACCESS_TRANSFER_READ_BIT` 를 사용합니다.
+
+  * 간접 트레이스 호출의 경우, 간접 버퍼는
+    `VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT` 와
+    `VK_ACCESS_INDIRECT_COMMAND_READ_BIT` 입니다.
+  * 간접 가속 구조 빌드의 경우, 간접 버퍼는
+    `VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR` 가 포함된
+    `VK_ACCESS_INDIRECT_COMMAND_READ_BIT` 입니다.
+  * 마이크로맵 빌드의 경우, 액세스 중인 리소스에 해당하는 액세스 비트와 함께 `VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT` 를 사용합니다:
+
+  ** 쓰기 대상 마이크로맵은 `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT` 를 사용합니다.
+  ** 스크래치 버퍼에는 `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT` 와
+      `VK_ACCESS_2_MICROMAP_READ_BIT_EXT` 가 모두 필요합니다.
+  ** 입력 버퍼는 `VK_ACCESS_SHADER_READ_BIT` 를 사용합니다.
+
+  * 마이크로맵 복사 명령의 경우, 소스에 따라 액세스 플래그가 달라지는 `VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT` 를 사용합니다:
+
+  ** 쓰기 대상 마이크로맵은 `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT` 를 사용합니다.
+  ** 소스 마이크로맵은 `VK_ACCESS_2_MICROMAP_READ_BIT_EXT` 를 사용합니다.
+  ** 쓰기 대상 버퍼는 `VK_ACCESS_TRANSFER_WRITE_BIT` 를 사용합니다.
+  ** 소스 버퍼는 `VK_ACCESS_TRANSFER_READ_BIT` 를 사용합니다.
+
+[NOTE]
+====
+다른 복사 작업과 달리 `VK_PIPELINE_STAGE_TRANSFER_BIT` 은 가속 구조 복사에 사용할 수 없습니다.
+
+`VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR`/
+`VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR` 사용하려면
+`VK_KHR_ray_tracing_maintenance1` 가 필요합니다.
+
+`VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT`/
+`VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT`/`VK_ACCESS_2_MICROMAP_READ_BIT_EXT` 를 사용하려면
+`VK_EXT_opacity_micromap` 가 필요합니다.
+====
+
+[[ray-tracing-best-practices]]
+== 레이 트레이싱 모범 사례들
+
+=== 동시에 활성화되는 레이 쿼리 객체 수 최소화
+
+레이 쿼리 객체는 스레드 개인 스토리지 측면에서 비용이 많이 들 수 있으므로 성능을 위해 가능한 한 적게 사용하는 것이 가장 좋습니다. 대부분의 경우 종료된 레이를 추적하더라도 종료된 레이가 새로운 레이를 발행한다면 동일한 레이 쿼리 객체를 사용할 수 있을 것입니다. 동일한 쉐이더의 여러 레이 쿼리가 필요한 것은 여러 개의 트래버스가 동시에 활성화되어야 하는 경우이며, 쉐이더에서는 활성 트래버스의 수를 최소화하도록 설계해야 합니다.
+
+=== 레이 페이로드(Ray Payloads), 히트 속성(Hit Attribute), 호출 가능한 데이터(Callable Data) 크기 최소화
+
+레이 트레이싱 쉐이더 스테이지는 모든 트래버스 스테이지 간의 레이 페이로드 구조체, 트래버스 제어 쉐이더의 히트 속성 구조체, 호출 가능한 쉐이더의 호출 가능한 데이터 구조체를 사용하여 파라미터와 결과를 전달할 수 있습니다.
+
+이 세 가지 구조는 모두 드라이버가 관리하는 메모리를 사용하며, 메모리 총량은 구조체 자체의 크기, 동시 활성화된 레이의 수, 또는 재귀 레벨 등의 추가 요소에 기반하여 증가할 수 있습니다.
+
+쉐이더는 이러한 구조체의 크기를 작게 유지하는 것이 바람직합니다.
+
+=== 장치-로컬 메모리 선호하기
+
+가속 구조는 모든 Vulkan 메모리 힙에 빌드할 수 있지만, 장치-로컬 메모리 상의 가속 구조에 대한 레이 트레이스가 최고의 성능을 기대할 수 있기 때문에 이를 우선시하는 것이 좋습니다. 장치-로컬 메모리 용량이 부족한 경우 호스트-로컬 메모리(즉, GPU 액세스 가능 시스템 메모리)를 사용해야 하지만, 장치-코러 메모리와 동등한 성능을 기대하기는 어렵습니다.

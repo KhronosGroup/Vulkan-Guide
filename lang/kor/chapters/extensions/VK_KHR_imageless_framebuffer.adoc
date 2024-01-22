@@ -1,0 +1,55 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
+
+[[VK_KHR_imageless_framebuffer]]
+= VK_KHR_imageless_framebuffer
+
+[NOTE]
+====
+Vulkan 1.2에서 코어로 승격됨
+====
+
+`VkFramebuffer` 를 생성할 때 일반적으로 `VkFramebufferCreateInfo::pAttachments` 에서 사용 중인 `VkImageView`s`` 를 전달해야 합니다. `VkImageView` 가 필요하면 애플리케이션이 각 스왑체인 이미지에 대한 프레임버퍼를 만들어야 합니다. `VK_KHR_imageless_framebuffer` 를 사용하면 `vkCmdBeginRenderPass` 시점에 `VkImageView` 정보가 대신 제공됩니다. 이는 모든 스왑체인 이미지에 대해 `VkFramebuffer` 하나만 필요하다는 것을 의미합니다. 주의할 점은 스왑체인의 크기가 변경되더라도 `VkFramebuffer`는 `높이(height)`와 `폭(width)`과 같은 정보를 조정하기 위해 다시 생성되어야 한다는 것입니다.
+
+이미지 없는 `VkFramebuffer` 를 이용하려면
+
+  * `VkPhysicalDeviceImagelessFramebufferFeatures::imagelessFramebuffer` 또는 `VkPhysicalDeviceVulkan12Features::imagelessFramebuffer` 를 쿼리하여 구현이 지원되는지 확인합니다.
+  * `VkFramebufferCreateInfo::flags` 에서 `VK_FRAMEBUFFER_CREATE_IMAGELESS_BIT` 를 설정합니다.
+  * `VkFramebufferCreateInfo::pNext`에다가 `VkFramebufferAttachmentsCreateInfo` 구조체를 포함시킵니다.
+  * 렌더 패스를 시작할 때, 호환되는 첨부와 함께 `VkRenderPassAttachmentBeginInfo` 구조체를 `VkRenderPassBeginInfo::pNext` 에 전달합니다.
+
+[source,cpp]
+----
+// 첨부에 관한 정보 채우기
+VkFramebufferAttachmentImageInfo attachments_image_info = {};
+// ...
+
+VkFramebufferAttachmentsCreateInfo attachments_create_info = {};
+// ...
+attachments_create_info.attachmentImageInfoCount = 1;
+attachments_create_info.pAttachmentImageInfos = &attachments_image_info;
+
+// FrameBuffer 를 imageless 상태로 생성
+VkFramebufferCreateInfo framebuffer_info = {};
+framebuffer_info.pNext = &attachments_create_info;
+framebuffer_info.flags |= VK_FRAMEBUFFER_CREATE_IMAGELESS_BIT;
+// ...
+framebffer_info.pAttachments = NULL; // 여기선 pAttachments는 무시됩니다
+
+vkCreateFramebuffer(device, &framebuffer_info, NULL, &framebuffer_object);
+
+// ...
+
+// 커맨드 버퍼 기록 시작
+VkRenderPassAttachmentBeginInfo attachment_begin_info = {};
+// attachment_begin_info.pAttachments 에는 VkImageView 객체가 포함됩니다
+
+VkRenderPassBeginInfo begin_info = {};
+begin_info.pNext = &attachment_begin_info;
+// ...
+
+vkCmdBeginRenderPass(command_buffer, &begin_info, VK_SUBPASS_CONTENTS_INLINE);
+----

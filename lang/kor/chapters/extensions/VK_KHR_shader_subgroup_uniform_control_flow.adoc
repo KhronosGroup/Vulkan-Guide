@@ -1,0 +1,103 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
+
+[[VK_KHR_shader_subgroup_uniform_control_flow]]
+= VK_KHR_shader_subgroup_uniform_control_flow
+
+== 개요
+
+link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_shader_subgroup_uniform_control_flow.html[VK_KHR_shader_subgroup_uniform_control_flow]는 쉐이더에서 호출의 재수렴을 더욱 강력하게 보장합니다.+
+확장이 지원되는 경우 쉐이더를 수정하여 더 강력한 보장을 제공하는 새로운 속성을 포함할 수 있습니다(link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_subgroup_uniform_control_flow.txt[GL_EXT_subgroup_uniform_control_flow] 참조).+
+이 속성은 서브그룹 작업을 지원하는 쉐이더 스테이지에만 적용할 수 있습니다.
+(`VkPhysicalDeviceSubgroupProperties::supportedStages` 또는
+`VkPhysicalDeviceVulkan11Properties::subgroupSupportedStages` 확인하세요).
+
+이 보장이 강화됨에 따라 SPIR-V 사양의 유니폼 제어 흐름 규칙이 개별 하위 그룹에도 적용되게 되었습니다. 이러한 규칙 중 가장 중요한 부분은 모든 호출이 헤더 블록에 진입할 때 수렴된 경우 병합 블록에서 다시 수렴해야 한다는 요구 사항입니다. 이것은 쉐이더 작성자에 암묵적으로 신뢰받고 있기도 하지만, 실제로 코어 Vulkan 사양에서 보장하지는 않습니다.
+
+== 예제
+
+다음 GLSL 스니펫은 아토믹 연산 수를 호출당 1개에서 서브그룹당 1개로 줄이려는 컴퓨팅 쉐이더입니다:
+
+[source,glsl]
+----
+// Free는 0으로 초기화해야 합니다.
+layout(set=0, binding=0) buffer BUFFER { uint free; uint data[]; } b;
+void main() {
+  bool needs_space = false;
+  ...
+  if (needs_space) {
+    // gl_SubgroupSize는 실제 서브그룹 사이즈보다 클 수 있기 때문에
+    // 실제 서브그룹 크기를 계산합니다.
+    uvec4 mask = subgroupBallot(needs_space);
+    uint size = subgroupBallotBitCount(mask);
+    uint base = 0;
+    if (subgroupElect()) {
+      // "free"는 쓰기를 위한 다음 빈 슬롯을 추적합니다.
+      // 서브그룹의 첫 번째 호출은 이를 필요로 하는
+      // 서브그룹의 각 호출에 공간을 할당합니다.
+      base = atomicAdd(b.free, size);
+    }
+
+    // 하위 그룹의 다른 호출에 기본 인덱스를 브로드캐스트합니다.
+    base = subgroupBroadcastFirst(base);
+    // 각 호출에 대해 "base"에서 오프셋을 계산합니다.
+    uint offset = subgroupBallotExclusiveBitCount(mask);
+
+    // 공간을 요청한 각 호출에 대해 할당된 슬롯에 데이터를 씁니다.
+    b.data[base + offset] = ...;
+  }
+  ...
+}
+----
+
+코드에 예기치 않은 결과를 초래할 수 있는 문제가 있습니다. Vulkan에서는 if 문 이후에 호출을 재수렴시켜야 할 뿐입니다. 이것은 __workgroup__의 모든 호출이 해당 if 문에서 수렴되는 경우에만 서브그룹 선택을 수행합니다. 호출이 재수렴되지 않으면 브로드캐스트 및 오프셋 계산이 올바르지 않게 됩니다. 모든 호출이 올바른 인덱스에 결과를 기록하는 것은 아닙니다.
+
+`VK_KHR_shader_subgroup_uniform_control_flow` 를 사용하면 대부분의 경우 쉐이더가 예상대로 동작하도록 할 수 있습니다. 다음과 같이 재작성된 버전의 예제를 살펴보세요:
+
+[source,glsl]
+----
+// Free는 0으로 초기화해야 합니다.
+layout(set=0, binding=0) buffer BUFFER { uint free; uint data[]; } b;
+// 새로운 속성이 추가된 것을 주목하세요.
+void main() [[subroup_uniform_control_flow]] {
+  bool needs_space = false;
+  ...
+  // 조건이 변경된 것을 주의하세요.
+  if (subgroupAny(needs_space)) {
+    // gl_SubgroupSize가 실제 서브그룹 크기보다 클 수 있으므로
+    // 실제 서브그룹 크기를 계산하세요.
+    uvec4 mask = subgroupBallot(needs_space);
+    uint size = subgroupBallotBitCount(mask);
+    uint base = 0;
+    if (subgroupElect()) {
+      // "free"는 쓰기를 위한 다음 빈 슬롯을 추적합니다.
+      // 서브그룹의 첫 번째 호출은 이를 필요로 하는
+      // 서브그룹의 각 호출에 공간을 할당합니다.
+      base = atomicAdd(b.free, size);
+    }
+
+    // 서브그룹의 다른 호출에 기본 인덱스를 브로드캐스트합니다..
+    base = subgroupBroadcastFirst(base);
+    // 각 호출에 대해 "base"에서 오프셋을 계산합니다.
+    uint offset = subgroupBallotExclusiveBitCount(mask);
+
+    if (needs_space) {
+    // 공간을 요청한 각 호출에 대해 할당된 슬롯에 데이터를 씁니다.
+      b.data[base + offset] = ...;
+    }
+  }
+  ...
+}
+----
+
+원본 쉐이더와의 차이점은 비교적 미미합니다. 첫째, `subgroup_uniform_control_flow` 속성이 추가되어 이 쉐이더에 더 강력한 보장이 필요하다는 것을 구현에 알립니다. 둘째, 첫 번째 if 문은 더 이상 needs_space를 테스트하지 않습니다. 대신, 서브그룹의 모든 호출은 서브그룹 내의 하나의 호출이 데이터를 써야 하는 경우 if 문을 들어갑니다. 이렇게 하면 내부 서브그룹 선택에 대한 향상된 보장을 활용할 수 있도록 서브그룹이 유니폼으로 유지됩니다.
+
+이 예제에는 마지막 주의 사항이 있습니다. 쉐이더가 모든 상황에서 올바르게 작동하려면 첫 번째 if 문 앞에 하위 그룹이 유니폼(수렴)해야 합니다.
+
+== 관련 확장 기능
+
+  * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_subgroup_uniform_control_flow.txt[GL_EXT_subgroup_uniform_control_flow] - 재수렴에 대한 더 강력한 보장이 필요하다는 것을 구현에 알리기 위해 진입점(entry point)에 GLSL 속성을 추가합니다. 이는 SPIR-V 진입점에서 새로운 실행 모드로 변환됩니다.
+  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_subgroup_uniform_control_flow.html[SPV_KHR_subgroup_uniform_control_flow] - 진입점에 대한 실행 모드를 추가하여 더 강력한 수렴 보장에 대한 요구 사항을 표시합니다.
