@@ -26,7 +26,7 @@ For those who might not work with C code, there are various link:https://github.
 
 Some developers might be aware of the other Khronos Group standard link:https://www.khronos.org/opengl/[OpenGL] which is also a 3D Graphics API. Vulkan is not a direct replacement for OpenGL, but rather an explicit API that allows for more explicit control of the GPU.
 
-Khronos' link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples] article on link:https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/vulkan_basics.md["How does Vulkan compare to OpenGL ES? What should you expect when targeting Vulkan?] offers a more detailed comparison between the two APIs.
+Khronos' link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples] article on link:https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/vulkan_basics.adoc["How does Vulkan compare to OpenGL ES? What should you expect when targeting Vulkan?] offers a more detailed comparison between the two APIs.
 
 image::{images}what_is_vulkan_compared_to_gl.png[what_is_vulkan_compared_to_gl.png]
 
