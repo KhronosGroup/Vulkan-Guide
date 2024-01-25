@@ -22,7 +22,7 @@ link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#commandbuffe
 
 image::../../../chapters/images/threading_command_buffers.png[threading_command_buffers.png]
 
-크로노스의 link:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/command_buffer_usage[샘플 및 튜토리얼]에서는 커맨드 버퍼를 병렬로 기록하는 방법을 자세히 설명합니다.
+크로노스의 link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/performance/command_buffer_usage[샘플 및 튜토리얼]에서는 커맨드 버퍼를 병렬로 기록하는 방법을 자세히 설명합니다.
 
 == 디스크립터 풀
 

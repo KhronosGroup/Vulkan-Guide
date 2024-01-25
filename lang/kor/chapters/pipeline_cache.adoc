@@ -13,4 +13,4 @@ image::../../../chapters/images/pipeline_cache_cache.png[pipeline_cache_cache.pn
 
 파이프라인 캐시가 중요한 도구이기는 하지만, 이를 위한 강력한 시스템을 구축하는 것도 중요합니다. Arseny Kapoulkine이 자신의 link:https://zeux.io/2019/07/17/serializing-pipeline-cache/[블로그 게시물]에서 이에 대해 이야기 합니다.
 
-성능 향상과 파이프라인 캐시의 레퍼런스 구현을 설명하기 위해 크로노스 그룹에서 제공하는 link:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/pipeline_cache[샘플 및 튜토리얼]을 참조하세요.
+성능 향상과 파이프라인 캐시의 레퍼런스 구현을 설명하기 위해 크로노스 그룹에서 제공하는 link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/performance/pipeline_cache[샘플 및 튜토리얼]을 참조하세요.

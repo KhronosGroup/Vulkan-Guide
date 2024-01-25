@@ -39,10 +39,10 @@ Vulkan Surface をサポートする各プラットフォームは、それぞ�
 
 image::../../../chapters/images/wsi_engine.png[wsi_engine]
 
-Khronos のlink:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/swapchain_images[サンプルとチュートリアル]では、スワップチェーンを作成する際や表示モードを選択する際に考慮すべきさまざまな点を説明しています。
+Khronos のlink:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/performance/swapchain_images[サンプルとチュートリアル]では、スワップチェーンを作成する際や表示モードを選択する際に考慮すべきさまざまな点を説明しています。
 
 == 回転の前にすること
 
 モバイル機器は回転させることができるため、アプリケーションウィンドウの論理的な向きとディスプレイの物理的な向きが一致しないことがあります。アプリケーションは、`portrait` と `landscape` の2つのモードで動作できる必要があります。この2つのモードの違いは、単に解像度の変更だけで簡単に説明できます。しかし、ディスプレイサブシステムの中には、常にディスプレイパネルの「ネイティブ」（または「物理的」）な向きで動作するものがあります。デバイスが回転しているので、望ましい効果を得るためには、アプリケーション出力も回転させる必要があります。
 
-Android などのモバイルプラットフォームで Vulkan を最大限に活用するためには、回転の前にすることを実装することが必須となります。スワップチェーンの作成時に方向を指定してサーフェスの回転を処理する方法については、link:https://android-developers.googleblog.com/2020/02/handling-device-orientation-efficiently.html?m=1[Google のブログ記事]に詳細が記載されており、link:https://github.com/google/vulkan-pre-rotation-demo[スタンドアロンのサンプル]も用意されています。また、link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan-Samples] には、回転の前にすることがなぜ問題になるのか、またシェーダで解決する方法を示すlink:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/surface_rotation[実行サンプル]がlink:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/surface_rotation[公開されています]。Adreno GPU を搭載したデバイスを使用している場合、クアルコムは link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_QCOM_render_pass_transform.html[VK_QCOM_render_pass_transform] 拡張機能を使用して回転の前にすることを実装することを提案しています。
+Android などのモバイルプラットフォームで Vulkan を最大限に活用するためには、回転の前にすることを実装することが必須となります。スワップチェーンの作成時に方向を指定してサーフェスの回転を処理する方法については、link:https://android-developers.googleblog.com/2020/02/handling-device-orientation-efficiently.html?m=1[Google のブログ記事]に詳細が記載されており、link:https://github.com/google/vulkan-pre-rotation-demo[スタンドアロンのサンプル]も用意されています。また、link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan-Samples] には、回転の前にすることがなぜ問題になるのか、またシェーダで解決する方法を示すlink:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/performance/surface_rotation[実行サンプル]がlink:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/performance/surface_rotation[公開されています]。Adreno GPU を搭載したデバイスを使用している場合、クアルコムは link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_QCOM_render_pass_transform.html[VK_QCOM_render_pass_transform] 拡張機能を使用して回転の前にすることを実装することを提案しています。

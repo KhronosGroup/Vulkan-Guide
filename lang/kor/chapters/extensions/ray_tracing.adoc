@@ -17,8 +17,8 @@ Vulkan API에서 레이 트레이싱을 지원하는 상호 연관된 5가지 �
 
 추가적으로 SPIR-V 및 GLSL 확장 기능도 쉐이더에 필요한 프로그래밍 가능한 기능을 제공합니다:
 
-  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_ray_tracing.html[SPV_KHR_ray_tracing]
-  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_ray_query.html[SPV_KHR_ray_query]
+  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_ray_tracing.html[SPV_KHR_ray_tracing]
+  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_ray_query.html[SPV_KHR_ray_query]
   * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_tracing.txt[GLSL_EXT_ray_tracing]
   * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_query.txt[GLSL_EXT_ray_query]
   * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_flags_primitive_culling.txt[GLSL_EXT_ray_flags_primitive_culling]
@@ -164,7 +164,7 @@ if (rayQueryGetIntersectionTypeEXT(rq, true) == gl_RayQueryCommittedIntersection
   ** 스크래치 버퍼에는 `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR` 와 `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR` 모두 필요합니다.
   ** 정점/인덱스/인스턴스/트랜스폼 버퍼는 `VK_ACCESS_SHADER_READ_BIT` 를 사용합니다.
 
-  * 가속 구조의 복사 명령의 경우, 
+  * 가속 구조의 복사 명령의 경우,
     `VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR` 또는
     `VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR` 를 사용하고 소스에 맞는 액세스 플래그를 사용합니다:
 

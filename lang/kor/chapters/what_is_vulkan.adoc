@@ -26,7 +26,7 @@ C 코드로 작업할 수 없는 분들을 위해 다양한 link:https://github.
 
 일부 개발자는 3D 그래픽 API인 또 다른 크로노스 그룹 표준 link:https://www.khronos.org/opengl/[OpenGL]을 알고 있을 것입니다. Vulkan은 OpenGL을 직접적으로 대체하는 것이 아니라 GPU를 보다 명시적으로 제어할 수 있는 명시적 API 입니다.
 
-크로노스 link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples]의 link:https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/vulkan_basics.md["Vulkan은 OpenGL ES와 어떻게 다른가요? Vulkan에게 무엇을 기대할 수 있나요?] 기사에서 두 API를 더 자세히 비교할 수 있습니다.
+크로노스 link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples]의 link:https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/vulkan_basics.adoc["Vulkan은 OpenGL ES와 어떻게 다른가요? Vulkan에게 무엇을 기대할 수 있나요?] 기사에서 두 API를 더 자세히 비교할 수 있습니다.
 
 image::../../../chapters/images/what_is_vulkan_compared_to_gl.png[what_is_vulkan_compared_to_gl.png]
 

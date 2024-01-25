@@ -14,7 +14,7 @@ It is important to remember that SPIR-V is an intermediate language and not an A
 
 == SPIR-V Extension Example
 
-For this example, the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_shader_atomic_int64.html[VK_KHR_8bit_storage] and link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage] will be used to expose the `UniformAndStorageBuffer8BitAccess` capability. The following is what the SPIR-V disassembled looks like:
+For this example, the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_shader_atomic_int64.html[VK_KHR_8bit_storage] and link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage] will be used to expose the `UniformAndStorageBuffer8BitAccess` capability. The following is what the SPIR-V disassembled looks like:
 
 [source,swift]
 ----
@@ -35,7 +35,7 @@ Breaking down each step in more detail:
 
 ==== Check if SPIR-V feature is supported
 
-Depending on the shader feature there might only be a `OpExtension` or `OpCapability` that is needed. For this example, the `UniformAndStorageBuffer8BitAccess` is part of the link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage] extension.
+Depending on the shader feature there might only be a `OpExtension` or `OpCapability` that is needed. For this example, the `UniformAndStorageBuffer8BitAccess` is part of the link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage] extension.
 
 To check if the SPIR-V extension is supported take a look at the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-extensions[Supported SPIR-V Extension Table] in the Vulkan Spec.
 
@@ -50,7 +50,7 @@ image::{images}spirv_extensions_8bit_capability.png[spirv_extensions_8bit_capabi
 while it says `VkPhysicalDeviceVulkan12Features::uniformAndStorageBuffer8BitAccess` in the table, the `VkPhysicalDevice8BitStorageFeatures::uniformAndStorageBuffer8BitAccess` is an alias can be considered the same here.
 ====
 
-Luckily if you forget to check, the Vulkan Validation Layers has an link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/master/layers/generated/spirv_validation_helper.cpp[auto-generated validation] in place. Both the Validation Layers and the Vulkan Spec table are all based on the link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/xml/vk.xml[./xml/vk.xml] file.
+Luckily if you forget to check, the Vulkan Validation Layers has an link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/main/layers/vulkan/generated/spirv_validation_helper.cpp[auto-generated validation] in place. Both the Validation Layers and the Vulkan Spec table are all based on the link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/xml/vk.xml[./xml/vk.xml] file.
 
 [source,xml]
 ----

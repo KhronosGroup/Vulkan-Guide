@@ -30,9 +30,9 @@ Vulkan 1.2에서 코어로 승격됨
 
 [NOTE]
 ====
-link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage]
+link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage]
 
-link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_16bit_storage.html[SPV_KHR_16bit_storage]
+link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_16bit_storage.html[SPV_KHR_16bit_storage]
 
 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shader_16bit_storage.txt[GLSL - GL_EXT_shader_16bit_storage]은 양쪽 모두를 정의하고 있습니다.
 ====
@@ -93,7 +93,7 @@ link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shad
 ====
 Vulkan 1.2에서 코어로 승격됨
 
-link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_float_controls.html[SPV_KHR_float_controls]
+link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_float_controls.html[SPV_KHR_float_controls]
 ====
 
 이 확장 기능을 사용하면 부동소수점의 반올림 처리 방법을 설정할 수 있습니다. `VkPhysicalDeviceFloatControlsProperties` 는 쿼리할 수 있는 기능의 전체 목록을 보여줍니다. 이 기능은 OpenCL 커널을 Vulkan으로 변환할 때 유용합니다.
@@ -105,7 +105,7 @@ link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registr
 ====
 Vulkan 1.1에서 코어로 승격됨
 
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_storage_buffer_storage_class.html[SPV_KHR_storage_buffer_storage_class]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_storage_buffer_storage_class.html[SPV_KHR_storage_buffer_storage_class]
 ====
 
 원래 SPIR-V는 UBO와 SSBO를 모두 'Uniform' 스토리지 클래스로 통합하고 추가 수식을 통해서만 구별했습니다. 일부 하드웨어는 UBO와 SSBO를 서로 다른 두 개의 스토리지 객체로 취급하기 때문에 SPIR-V는 이를 반영하고자 했습니다. 이 확장 기능은 SPIR-V에 새로운 `StorageBuffer` 클래스를 추가하는 것이 목적입니다.
@@ -146,7 +146,7 @@ SPIR-V 1.3에 `SPV_KHR_storage_buffer_storage_class` 가 추가되었으므로, 
 ====
 Vulkan 1.1에서 코어로 승격됨
 
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_variable_pointers.html[SPV_KHR_variable_pointers]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_variable_pointers.html[SPV_KHR_variable_pointers]
 ====
 
 `Variable pointer(가변 포인터)` 는 SPIR-V에서 다음과 같이 정의됩니다.
@@ -179,7 +179,7 @@ The link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.ht
 ====
 Vulkan 1.2에서 코어로 승격됨
 
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_viewport_index_layer.html[SPV_EXT_shader_viewport_index_layer]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/EXT/SPV_EXT_shader_viewport_index_layer.html[SPV_EXT_shader_viewport_index_layer]
 
 link:https://registry.khronos.org/OpenGL/extensions/ARB/ARB_shader_viewport_layer_array.txt[GLSL - GL_ARB_shader_viewport_layer_array]
 ====
@@ -197,7 +197,7 @@ Vulkan 1.0 또는 1.1을 사용할 때는 `ShaderViewportIndexLayerEXT` SPIR-V �
 ====
 Vulkan 1.1에서 코어로 승격됨
 
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_draw_parameters.html[SPV_KHR_shader_draw_parameters]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_shader_draw_parameters.html[SPV_KHR_shader_draw_parameters]
 
 link:https://registry.khronos.org/OpenGL/extensions/ARB/ARB_shader_draw_parameters.txt[GLSL - GL_ARB_shader_draw_parameters]
 ====
@@ -211,7 +211,7 @@ GLSL에서는 `gl_BaseInstanceARB` , `gl_BaseVertexARB` 및 `gl_BaseInstanceARB`
 
 [NOTE]
 ====
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_stencil_export.html[SPV_EXT_shader_stencil_export]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/EXT/SPV_EXT_shader_stencil_export.html[SPV_EXT_shader_stencil_export]
 
 link:https://registry.khronos.org/OpenGL/extensions/ARB/ARB_shader_stencil_export.txt[GLSL - GL_ARB_shader_stencil_export]
 ====
@@ -227,7 +227,7 @@ GLSL에서는 `out int gl_FragStencilRefARB` 내장 함수로 표현됩니다.
 ====
 Vulkan 1.3에서 코어로 승격됨
 
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_demote_to_helper_invocation.html[SPV_EXT_demote_to_helper_invocation]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/EXT/SPV_EXT_demote_to_helper_invocation.html[SPV_EXT_demote_to_helper_invocation]
 
 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_demote_to_helper_invocation.txt[GLSL - GL_EXT_demote_to_helper_invocation]
 ====
@@ -239,7 +239,7 @@ link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_de
 
 [NOTE]
 ====
-link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_clock.html[SPV_KHR_shader_clock]
+link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_shader_clock.html[SPV_KHR_shader_clock]
 
 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shader_realtime_clock.txt[GLSL - GL_EXT_shader_realtime_clock]
 ====
@@ -253,10 +253,10 @@ link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shad
 ====
 Vulkan 1.3에서 코어로 승격됨
 
-link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_clock.html[SPV_KHR_non_semantic_info]
+link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_shader_clock.html[SPV_KHR_non_semantic_info]
 ====
 
-이 확장은 의미론적 영향을 미치지 않고 모듈에서 안전하게 제거할 수 있는 확장 명령어 세트를 선언하는 link:https://github.com/KhronosGroup/SPIRV-Guide/blob/master/chapters/nonsemantic.md[기능을 추가]하는 link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_non_semantic_info.html[SPV_KHR_non_semantic_info]를 공개합니다.
+이 확장은 의미론적 영향을 미치지 않고 모듈에서 안전하게 제거할 수 있는 확장 명령어 세트를 선언하는 link:https://github.com/KhronosGroup/SPIRV-Guide/blob/master/chapters/nonsemantic.md[기능을 추가]하는 link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_non_semantic_info.html[SPV_KHR_non_semantic_info]를 공개합니다.
 
 [[VK_KHR_shader_terminate_invocation]]
 == VK_KHR_shader_terminate_invocation
@@ -265,7 +265,7 @@ link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registr
 ====
 Vulkan 1.3에서 코어로 승격됨
 
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_terminate_invocation.html[SPV_KHR_terminate_invocation]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_terminate_invocation.html[SPV_KHR_terminate_invocation]
 ====
 
 이 확장 기능에서는 새로운 명령어인 `OpTerminateInvocation` 을 추가하여 `OpKill` 명령어보다 더 명확한 기능을 제공합니다.
@@ -275,7 +275,7 @@ link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Regist
 
 [NOTE]
 ====
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_workgroup_memory_explicit_layout.html[SPV_KHR_workgroup_memory_explicit_layout]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_workgroup_memory_explicit_layout.html[SPV_KHR_workgroup_memory_explicit_layout]
 
 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shared_memory_block.txt[GLSL - GL_EXT_shared_memory_block]
 ====

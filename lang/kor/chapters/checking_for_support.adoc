@@ -56,7 +56,7 @@ link:https://vulkan.lunarg.com/sdk/home#windows[Vulkan SDK] 다운로드 하고 
 
 === Null Driver
 
-"`널 드라이버(null driver)`" 란 Vulkan API 호출을 접수하지만 아무 작업도 수행하지 않는 드라이버를 말합니다. 이는 드라이버를 실용적인 구현 없이 드라이버와의 상호작용을 테스트할 때 흔히 사용됩니다. 새로운 기능을 위한 xref:{chapters}vulkan_cts.adoc#vulkan-cts[CTS tests] 작성 및 link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/master/docs/creating_tests.md#running-tests-on-devsim-and-mockicd[testing the Validation Layers] 등 많은 사용 사례는 널 드라이버의 개념에 의존하고 있습니다.
+"`널 드라이버(null driver)`" 란 Vulkan API 호출을 접수하지만 아무 작업도 수행하지 않는 드라이버를 말합니다. 이는 드라이버를 실용적인 구현 없이 드라이버와의 상호작용을 테스트할 때 흔히 사용됩니다. 새로운 기능을 위한 xref:{chapters}vulkan_cts.adoc#vulkan-cts[CTS tests] 작성 및 link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/main/docs/creating_tests.md#running-tests-on-devsim-and-mockicd[testing the Validation Layers] 등 많은 사용 사례는 널 드라이버의 개념에 의존하고 있습니다.
 
 크로노스 그룹은 다양한 플랫폼에서 작동하는 널 드라이버 link:https://github.com/KhronosGroup/Vulkan-Tools/tree/master/icd[Mock ICD] 하나를 제공합니다.
 

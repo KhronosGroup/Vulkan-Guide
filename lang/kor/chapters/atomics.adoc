@@ -77,7 +77,7 @@ link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shad
 
 [NOTE]
 ====
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_image_int64.html[SPV_EXT_shader_image_int64]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/EXT/SPV_EXT_shader_image_int64.html[SPV_EXT_shader_image_int64]
 
 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_shader_image_int64.txt[GLSL_EXT_shader_image_int64]
 ====
@@ -93,7 +93,7 @@ link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_sh
 
 [NOTE]
 ====
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_atomic_float_add.html[SPV_EXT_shader_atomic_float_add]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/EXT/SPV_EXT_shader_atomic_float_add.html[SPV_EXT_shader_atomic_float_add]
 
 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_shader_atomic_float.txt[GLSL_EXT_shader_atomic_float]
 ====
@@ -128,9 +128,9 @@ OpenGLES link:https://registry.khronos.org/OpenGL/extensions/OES/OES_shader_imag
 
 [NOTE]
 ====
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_atomic_float_min_max.html[SPV_EXT_shader_atomic_float_min_max]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/EXT/SPV_EXT_shader_atomic_float_min_max.html[SPV_EXT_shader_atomic_float_min_max]
 
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_atomic_float16_add.html[SPV_EXT_shader_atomic_float16_add]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/EXT/SPV_EXT_shader_atomic_float16_add.html[SPV_EXT_shader_atomic_float16_add]
 
 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_shader_atomic_float.txt[GLSL_EXT_shader_atomic_float]
 ====
