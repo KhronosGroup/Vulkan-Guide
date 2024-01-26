@@ -50,7 +50,7 @@ Vulkan은 오류 검사를 수행하지 않으므로, 개발 시 link:https://gi
 
 === 유효성 검사 레이어 가져오기
 
-유효성 검사 레이어는 지속적으로 업데이트되고 있으므로 언제든지 소스를 가져와서 link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/master/BUILD.md[직접 빌드]할 수 있습니다. 미리 빌드된 버전을 원하는 경우, 지원되는 모든 플랫폼에 대한 다양한 옵션이 있습니다:
+유효성 검사 레이어는 지속적으로 업데이트되고 있으므로 언제든지 소스를 가져와서 link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/main/BUILD.md[직접 빌드]할 수 있습니다. 미리 빌드된 버전을 원하는 경우, 지원되는 모든 플랫폼에 대한 다양한 옵션이 있습니다:
 
   * **Android** - 바이너리는 대부분 최신 버전으로 link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/releases[GitHub에 릴리즈]되어 있습니다. NDK에는 유효성 검사 레이어가 빌드되어 있으며 link:https://developer.android.com/ndk/guides/graphics/validation-layer[사용 방법에 대한 정보]도 함께 제공됩니다.
   * **Linux** - link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK]에는 유효성 검사 레이어가 빌드되어 있으며 link:https://vulkan.lunarg.com/doc/sdk/latest/linux/validation_layers.html[Linux]에서 이를 사용하는 방법에 대한 가이드가 함께 제공됩니다.
@@ -97,7 +97,7 @@ backed by a memory object (https://registry.khronos.org/vulkan/specs/1.1-extensi
 html/vkspec.html#VUID-vkBindImageMemory-image-01044)
 ----
 
-  * 예제 2는 예제 1과 거의 동일하지만 객체에 첨부된 `name` (`name = myTextureMemory`) 이 다릅니다. 이것은 link:https://www.lunarg.com/new-tutorial-for-vulkan-debug-utilities-extension/[VK_EXT_debug_util] 확장 기능을 사용하였습니다(link:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/extensions/debug_utils[확장 기능 사용 방법 샘플]). link:https://www.saschawillems.de/blog/2016/05/28/tutorial-on-using-vulkans-vk_ext_debug_marker-with-renderdoc/[VK_EXT_debug_report]를 지원하지 않는 레거시 디바이스에서는 이전 방식인 `VK_EXT_debug_util` 를 사용해야 할 수도 있습니다.
+  * 예제 2는 예제 1과 거의 동일하지만 객체에 첨부된 `name` (`name = myTextureMemory`) 이 다릅니다. 이것은 link:https://www.lunarg.com/new-tutorial-for-vulkan-debug-utilities-extension/[VK_EXT_debug_util] 확장 기능을 사용하였습니다(link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions/debug_utils[확장 기능 사용 방법 샘플]). link:https://www.saschawillems.de/blog/2016/05/28/tutorial-on-using-vulkans-vk_ext_debug_marker-with-renderdoc/[VK_EXT_debug_report]를 지원하지 않는 레거시 디바이스에서는 이전 방식인 `VK_EXT_debug_util` 를 사용해야 할 수도 있습니다.
   * 이 오류의 원인에는 3개의 객체가 관련되어 있습니다.
   ** 객체 0 은 `myTextureMemory` 라는 이름의 `VkDeviceMemory` 입니다
   ** 객체 1 은 이름없는 `VkImage` 입니다

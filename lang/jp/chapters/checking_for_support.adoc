@@ -55,7 +55,7 @@ link:https://vulkan.lunarg.com/sdk/home#windows[Vulkan SDK] を入手して、li
 
 === ヌルドライバ
 
-「ヌルドライバ」とは、Vulkan の API コールを受け付けるものの、それに対して何もしないドライバのことです。これは、ドライバとのインタラクションをテストする際に、実用的な実装を必要としない場合によく用いられます。新機能のための link:./vulkan_cts.md[CTS テスト]の作成や、link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/master/docs/creating_tests.md#running-tests-on-devsim-and-mockicd[Validation Layers のテスト]など、多くのユースケースがヌルドライバのアイデアに依存しています。
+「ヌルドライバ」とは、Vulkan の API コールを受け付けるものの、それに対して何もしないドライバのことです。これは、ドライバとのインタラクションをテストする際に、実用的な実装を必要としない場合によく用いられます。新機能のための link:./vulkan_cts.md[CTS テスト]の作成や、link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/main/docs/creating_tests.md#running-tests-on-devsim-and-mockicd[Validation Layers のテスト]など、多くのユースケースがヌルドライバのアイデアに依存しています。
 
 Khronos は、さまざまなプラットフォームで動作するヌルドライバのひとつの実装として、link:https://github.com/KhronosGroup/Vulkan-Tools/tree/master/icd[Mock ICD] を提供しています。
 

@@ -31,8 +31,8 @@ Vulkan 1.2でコアに昇格
 
 [NOTE]
 ====
-link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage]
-link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_16bit_storage.html[SPV_KHR_16bit_storage]
+link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage]
+link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_16bit_storage.html[SPV_KHR_16bit_storage]
 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shader_16bit_storage.txt[GLSL - GL_EXT_shader_16bit_storage] は両方を定義しています。
 ====
 
@@ -93,7 +93,7 @@ link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shad
 ====
 Vulkan 1.2でコアに昇格
 
-link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_float_controls.html[SPV_KHR_float_controls]
+link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_float_controls.html[SPV_KHR_float_controls]
 ====
 
 この拡張機能では、浮動小数点数の丸めをどのように処理するかを設定することができます。`VkPhysicalDeviceFloatControlsProperties` では、クエリ可能な機能の全リストが表示されます。これは、OpenCL カーネルを Vulkan に変換する際に便利です。
@@ -105,7 +105,7 @@ link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registr
 ====
 Vulkan 1.1でコアに昇格
 
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_storage_buffer_storage_class.html[SPV_KHR_storage_buffer_storage_class]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_storage_buffer_storage_class.html[SPV_KHR_storage_buffer_storage_class]
 ====
 
 もともと SPIR-V は、UBO と SSBO の両方を「Uniform」ストレージクラスにまとめ、追加の修飾によってのみ区別していました。ハードウェアの中には、UBO と SSBO を2つの異なるストレージオブジェクトとして扱うものがあるため、SPIR-V はそれを反映させたいと考えました。この拡張機能は、SPIR-V を拡張して新しい `StorageBuffer` クラスを追加することを目的としています。
@@ -146,7 +146,7 @@ SPIR-V 1.3 には `SPV_KHR_storage_buffer_storage_class` が追加されたの�
 ====
 Vulkan 1.1でコアに昇格
 
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_variable_pointers.html[SPV_KHR_variable_pointers]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_variable_pointers.html[SPV_KHR_variable_pointers]
 ====
 
 SPIR-V では、「変数ポインタ」を以下のように定義しています。
@@ -179,7 +179,7 @@ link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.ht
 ====
 Vulkan 1.2でコアに昇格
 
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_viewport_index_layer.html[SPV_EXT_shader_viewport_index_layer]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/EXT/SPV_EXT_shader_viewport_index_layer.html[SPV_EXT_shader_viewport_index_layer]
 
 link:https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_shader_viewport_layer_array.txt[GLSL - GL_ARB_shader_viewport_layer_array]
 ====
@@ -197,7 +197,7 @@ Vulkan 1.1以下を使用する場合、`ShaderViewportIndexLayerEXT` SPIR-V 機
 ====
 Vulkan 1.1でコアに昇格
 
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_draw_parameters.html[SPV_KHR_shader_draw_parameters]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_shader_draw_parameters.html[SPV_KHR_shader_draw_parameters]
 
 link:https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_shader_draw_parameters.txt[GLSL - GL_ARB_shader_draw_parameters]
 ====
@@ -211,7 +211,7 @@ GLSL では、これらは `gl_BaseInstanceARB`、`gl_BaseVertexARB`、`gl_BaseI
 
 [NOTE]
 ====
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_stencil_export.html[SPV_EXT_shader_stencil_export]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/EXT/SPV_EXT_shader_stencil_export.html[SPV_EXT_shader_stencil_export]
 
 link:https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_shader_stencil_export.txt[GLSL - GL_ARB_shader_stencil_export]
 ====
@@ -227,7 +227,7 @@ GLSL ではこれを `out int gl_FragStencilRefARB` というビルトインで�
 ====
 Vulkan 1.3でコアに昇格
 
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_demote_to_helper_invocation.html[SPV_EXT_demote_to_helper_invocation]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/EXT/SPV_EXT_demote_to_helper_invocation.html[SPV_EXT_demote_to_helper_invocation]
 
 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_demote_to_helper_invocation.txt[GLSL - GL_EXT_demote_to_helper_invocation]
 ====
@@ -239,7 +239,7 @@ link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_de
 
 [NOTE]
 ====
-link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_clock.html[SPV_KHR_shader_clock]
+link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_shader_clock.html[SPV_KHR_shader_clock]
 
 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shader_realtime_clock.txt[GLSL - GL_EXT_shader_realtime_clock]
 ====
@@ -253,10 +253,10 @@ link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shad
 ====
 Vulkan 1.3でコアに昇格
 
-link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_clock.html[SPV_KHR_non_semantic_info]
+link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_shader_clock.html[SPV_KHR_non_semantic_info]
 ====
 
-この拡張機能は link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_non_semantic_info.html[SPV_KHR_non_semantic_info] を公開し、セマンティックな影響がなく、モジュールから安全に削除できる拡張命令セットを宣言するlink:https://github.com/KhronosGroup/SPIRV-Guide/blob/master/chapters/nonsemantic.md[機能を追加します]。
+この拡張機能は link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_non_semantic_info.html[SPV_KHR_non_semantic_info] を公開し、セマンティックな影響がなく、モジュールから安全に削除できる拡張命令セットを宣言するlink:https://github.com/KhronosGroup/SPIRV-Guide/blob/master/chapters/nonsemantic.md[機能を追加します]。
 
 [[VK_KHR_shader_terminate_invocation]]
 == VK_KHR_shader_terminate_invocation
@@ -265,7 +265,7 @@ link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registr
 ====
 Vulkan 1.3でコアに昇格
 
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_terminate_invocation.html[SPV_KHR_terminate_invocation]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_terminate_invocation.html[SPV_KHR_terminate_invocation]
 ====
 
 この拡張機能では、新しい命令 `OpTerminateInvocation` を追加して、`OpKill` 命令よりも明確な機能を提供します。
@@ -275,7 +275,7 @@ link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Regist
 
 [NOTE]
 ====
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_workgroup_memory_explicit_layout.html[SPV_KHR_workgroup_memory_explicit_layout]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_workgroup_memory_explicit_layout.html[SPV_KHR_workgroup_memory_explicit_layout]
 
 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shared_memory_block.txt[GLSL - GL_EXT_shared_memory_block]
 ====

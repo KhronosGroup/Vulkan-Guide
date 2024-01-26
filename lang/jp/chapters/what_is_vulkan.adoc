@@ -23,7 +23,7 @@ C言語を扱わない人のために、さまざまなlink:https://github.com/K
 
 同じ 3D グラフィックス API である Khronos Group の規格 link:https://www.khronos.org/opengl/[OpenGL] をご存知の方もいるかもしれません。Vulkanは OpenGL を直接置き換えるものではなく、GPU をより明示的に制御するための API です。
 
-Khronos の link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples] の記事link:https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/vulkan_basics.md[「Vulkan と OpenGL ES との比較は？ Vulkan に何を期待するべきか？」] では、2つの API をより詳しく比較しています。
+Khronos の link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples] の記事link:https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/vulkan_basics.adoc[「Vulkan と OpenGL ES との比較は？ Vulkan に何を期待するべきか？」] では、2つの API をより詳しく比較しています。
 
 image::../../../chapters/images/what_is_vulkan_compared_to_gl.png[what_is_vulkan_compared_to_gl.png]
 

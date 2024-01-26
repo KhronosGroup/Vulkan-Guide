@@ -14,7 +14,7 @@ SPIR-V는 중간 언어이지 API가 아니라는 것을 잊어서는 안 됩니
 
 == SPIR-V 확장 기능 예제
 
-이 예제에서는 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_shader_atomic_int64.html[VK_KHR_8bit_storage] 와 link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage]를 사용하여 `UniformAndStorageBuffer8BitAccess` 기능을 공개합니다. 다음은 SPIR-V의 디스어셈블리 모습입니다:
+이 예제에서는 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_shader_atomic_int64.html[VK_KHR_8bit_storage] 와 link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage]를 사용하여 `UniformAndStorageBuffer8BitAccess` 기능을 공개합니다. 다음은 SPIR-V의 디스어셈블리 모습입니다:
 
 [source,swift]
 ----
@@ -35,7 +35,7 @@ OpExtension  "SPV_KHR_8bit_storage"
 
 ==== SPIR-V 기능 지원 여부 확인
 
-쉐이더 기능에 따라 필요한 `OpExtension` 또는 `OpCapability` 가 하나만 있을 수 있습니다. 이 예제에서 `UniformAndStorageBuffer8BitAccess` 는 link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage] 확장 기능의 일부입니다.
+쉐이더 기능에 따라 필요한 `OpExtension` 또는 `OpCapability` 가 하나만 있을 수 있습니다. 이 예제에서 `UniformAndStorageBuffer8BitAccess` 는 link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage] 확장 기능의 일부입니다.
 
 SPIR-V 확장이 지원되는지 확인하려면 Vulkan 사양서에서 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-extensions[지원되는 SPIR-V 확장 기능 표]를 참조하세요.
 
@@ -50,7 +50,7 @@ image::../../../chapters/images/spirv_extensions_8bit_capability.png[spirv_exten
 표에는 `VkPhysicalDeviceVulkan12Features::uniformAndStorageBuffer8BitAccess` 라고 되어 있지만, 여기서는 `VkPhysicalDevice8BitStorageFeatures::uniformAndStorageBuffer8BitAccess` 가 별칭으로 동일하다고 간주합니다.
 ====
 
-다행히도 확인하는 것을 잊어버렸을 때 대비해 Vulkan 유효성 검사 레이어 link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/master/layers/generated/spirv_validation_helper.cpp[자동 생성 유효성 검사]가 있습니다. 유효성 검사 레이어와 Vulkan 사양서 테이블은 모두 link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/xml/vk.xml[./xml/vk.xml] 파일을 기반으로 합니다.
+다행히도 확인하는 것을 잊어버렸을 때 대비해 Vulkan 유효성 검사 레이어 link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/main/layers/vulkan/generated/spirv_validation_helper.cpp[자동 생성 유효성 검사]가 있습니다. 유효성 검사 레이어와 Vulkan 사양서 테이블은 모두 link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/xml/vk.xml[./xml/vk.xml] 파일을 기반으로 합니다.
 
 [source,xml]
 ----

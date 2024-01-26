@@ -96,4 +96,4 @@ void main() [[subroup_uniform_control_flow]] {
 == 関連拡張機能
 
   * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_subgroup_uniform_control_flow.txt[GL_EXT_subgroup_uniform_control_flow] - 再収束に対するより強い保証が必要であることを実装に通知するために、エントリポイントに GLSL 属性を追加します。これは、SPIR-V エントリポイントにおける新しい実行モードに変換されます。
-  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_subgroup_uniform_control_flow.html[SPV_KHR_subgroup_uniform_control_flow] - より強力な再収束保証の必要性を示すために、エントリポイントに実行モードを追加します。
+  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_subgroup_uniform_control_flow.html[SPV_KHR_subgroup_uniform_control_flow] - より強力な再収束保証の必要性を示すために、エントリポイントに実行モードを追加します。

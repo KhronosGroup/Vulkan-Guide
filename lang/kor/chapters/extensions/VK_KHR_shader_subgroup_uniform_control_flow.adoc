@@ -100,4 +100,4 @@ void main() [[subroup_uniform_control_flow]] {
 == 관련 확장 기능
 
   * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_subgroup_uniform_control_flow.txt[GL_EXT_subgroup_uniform_control_flow] - 재수렴에 대한 더 강력한 보장이 필요하다는 것을 구현에 알리기 위해 진입점(entry point)에 GLSL 속성을 추가합니다. 이는 SPIR-V 진입점에서 새로운 실행 모드로 변환됩니다.
-  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_subgroup_uniform_control_flow.html[SPV_KHR_subgroup_uniform_control_flow] - 진입점에 대한 실행 모드를 추가하여 더 강력한 수렴 보장에 대한 요구 사항을 표시합니다.
+  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_subgroup_uniform_control_flow.html[SPV_KHR_subgroup_uniform_control_flow] - 진입점에 대한 실행 모드를 추가하여 더 강력한 수렴 보장에 대한 요구 사항을 표시합니다.

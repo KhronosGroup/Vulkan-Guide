@@ -12,4 +12,4 @@ image::../../../chapters/images/pipeline_cache_cache.png[pipeline_cache_cache.pn
 
 パイプラインキャッシュは重要なツールですが、Arseny Kapoulkine 氏のlink:https://zeux.io/2019/07/17/serializing-pipeline-cache/[ブログ記事]で紹介されているように、堅牢なシステムを構築することが重要です。
 
-パフォーマンスの向上とパイプラインキャッシュのリファレンス実装を説明するために、Khronos はlink:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/pipeline_cache[サンプルとチュートリアル]を提供しています。
+パフォーマンスの向上とパイプラインキャッシュのリファレンス実装を説明するために、Khronos はlink:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/performance/pipeline_cache[サンプルとチュートリアル]を提供しています。
