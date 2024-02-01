@@ -1,4 +1,4 @@
-// Copyright 2023 Sascha Willems
+// Copyright 2024 Sascha Willems
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
@@ -9,8 +9,6 @@ ifndef::images[:images: images/]
 :toc:
 
 While Vulkan itself consumes shaders in a binary format called xref:{chapters}what_is_spirv.adoc[SPIR-V], shaders are usually written in a high level language. This section provides a mapping between shader functionality for the most common ones used with Vulkan: GLSL and HLSL. This is mostly aimed at people wanting to migrate from one high level shader language to another. It's meant as a starting point and not as a complete porting guide to one language from another
-
-// @todo: maybe also add SPIR-V
 
 [TIP]
 ====
@@ -57,6 +55,11 @@ HLSL:
 ----
 float4x3 mat = (float4x3)(ubo.view);
 ----
+
+[NOTE]
+====
+An imporant difference: Matrices in GLSL are column-major, while matrices in HLSL are row-major. This affects things like matrix construction.
+====
 
 == Built-ins vs. Semantics
 
@@ -186,15 +189,15 @@ struct Node {
 };
 
 // HLSL style
-cbuffer NodeBuf : register(b0, space1) { Node node; }
+ConstantBuffer<Node> node : register(b0, space1);
 
 // Vulkan style
 [[vk::binding(0, 1)]]
-cbuffer NodeBuf { Node node; }
+ConstantBuffer<Node> node;
 
 // Combined
 [[vk::binding(0, 1)]]
-cbuffer NodeBuf : register(b0, space1) { Node node; }
+ConstantBuffer<Node> node : register(b0, space1);
 ----
 
 === Uniforms
@@ -240,7 +243,7 @@ struct UBO
 {
     float4x4 projection;
 };
-cbuffer ubo : register(b0, space0) { UBO ubo; };
+ConstantBuffer<UBO> ubo : register(b0, space0);
 
 // Combined image sampler
 Texture2D textureColor : register(t1);
@@ -253,10 +256,10 @@ If using the HLSL descriptor binding syntax `+<register type>+` can be:
 |====
 | *Type* | *Register Description* | *Vulkan resource*
 | b | Constant buffer | Uniform buffer
-| t | Texture and texture buffer | same
-| c | Buffer offset | n.a.
+| t | Texture and texture buffer | Uniform texel buffer and read-only shader storage buffer
+| c | Buffer offset | `layout(offset = N)`
 | s | Sampler | same
-| u | Unordered Access View | Shader storage buffer
+| u | Unordered Access View | Shader storage buffer, storage image and storage texel buffer
 |====
 
 === Shader inputs
@@ -427,6 +430,11 @@ FSOutput main(VSOutput input) {
 
 === Push constants
 
+[NOTE]
+====
+Push constants must be handled through a root signature in D3D.
+====
+
 ==== GLSL
 
 [source,glsl]
@@ -458,6 +466,11 @@ struct PushConsts {
 ----
 
 === Specialization constants
+
+[NOTE]
+====
+Specialization constants are only available in Vulkan, D3D doesn't offer anything similar.
+====
 
 ==== GLSL
 
@@ -550,7 +563,7 @@ float4 main(VSOutput input) : SV_TARGET {
 | textureGrad | SampleGrad
 | textureLod | SampleLevel
 | textureSize | GetDimensions
-| textureProj | n.a.
+| textureProj | n.a., requires manual perspective divide
 | texelFetch | Load
 | sparseTexelsResidentARB | SampleLevel
 |====
@@ -956,17 +969,3 @@ Most GLSL functions are also available in HLSL and vice-versa. This chapter list
 
 * link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-intrinsic-functions[HLSL intrinsic function (Microsoft)]
 * link:https://registry.khronos.org/OpenGL-Refpages/gl4/index.php[OpenGL reference pages]
-
-// @todo:
-// gl_PatchVerticesIn
-
-// gl_SampleMaskIn
-// gl_SampleMask
-
-// precision types
-// buffer types
-
-// SV_GSInstanceID
-// SV_StencilRef
-// SV_Coverage
-// SV_InnerCoverage
