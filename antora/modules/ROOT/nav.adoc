@@ -48,6 +48,7 @@
 ** xref:{chapters}atomics.adoc[]
 ** xref:{chapters}common_pitfalls.adoc[]
 ** xref:{chapters}hlsl.adoc[]
+** xref:{chapters}high_level_shader_language_comparison.adoc[]
 * When and Why to use Extensions
 ** xref:{chapters}extensions/cleanup.adoc[]
 ** xref:{chapters}extensions/device_groups.adoc[]
