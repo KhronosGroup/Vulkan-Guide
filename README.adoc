@@ -222,6 +222,10 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 // include::{chapters}hlsl.adoc[]
 
+== xref:{chapters}high_level_shader_language_comparison.adoc[High Level Shader Language Comparison]
+
+// include::{chapters}high_level_shader_language_comparison.adoc[]
+
 = When and Why to use Extensions
 
 [NOTE]

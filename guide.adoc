@@ -213,6 +213,10 @@ include::{chapters}common_pitfalls.adoc[]
 
 include::{chapters}hlsl.adoc[]
 
+// == High Level Shading Language Comparison
+
+include::{chapters}high_level_shader_language_comparison.adoc[]
+
 = When and Why to use Extensions
 
 [NOTE]
