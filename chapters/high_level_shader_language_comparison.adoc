@@ -61,6 +61,18 @@ float4x3 mat = (float4x3)(ubo.view);
 An imporant difference: Matrices in GLSL are column-major, while matrices in HLSL are row-major. This affects things like matrix construction.
 ====
 
+== SPIR-V macro
+
+When using xref:{chapters}hlsl.adoc#DirectXShaderCompiler[DXC] to compile HLSL to SPIR-V you can use the `\\__spirv__` macro for Vulkan specific code. This is useful if HLSL shaders need to work with both Vulkan and D3D:
+
+[source,hlsl]
+----
+#ifdef __spirv__
+[[vk::binding(0, 1)]]
+#endif
+ConstantBuffer<Node> node : register(b0, space1);
+----
+
 == Built-ins vs. Semantics
 
 [NOTE]
@@ -684,52 +696,52 @@ ConstantBuffer<SBT> sbt;
 // @todo: some of the stuff in here is used across different stages (e.g. gl_PrimitiveID)
 [options="header"]
 |====
-| *GLSL*  | *HLSL*
-| accelerationStructureEXT | RaytracingAccelerationStructure
-| executeCallableEXT | CallShader
-| ignoreIntersectionEXT | IgnoreHit
-| reportIntersectionEXT | ReportHit
-| terminateRayEXT | AcceptHitAndEndSearch
-| traceRayEXT | TraceRay
-| rayPayloadEXT (storage qualifier) | Last argument of TraceRay
-| rayPayloadInEXT (storage qualifier) | First argument for main entry of any hit, closest hit and miss stage
-| hitAttributeEXT (storage qualifier) | Last argument of ReportHit
-| callableDataEXT (storage qualifier) | Last argument of CallShader
-| callableDataInEXT (storage qualifier) | First argument for main entry of callabe stage
-| gl_LaunchIDEXT | DispatchRaysIndex
-| gl_LaunchSizeEXT | DispatchRaysDimensions
-| gl_PrimitiveID | PrimitiveIndex
-| gl_InstanceID | InstanceIndex
-| gl_InstanceCustomIndexEXT | InstanceID
-| gl_GeometryIndexEXT | GeometryIndex
-| gl_VertexIndex | SV_VertexID
-| gl_WorldRayOriginEXT | WorldRayOrigin
-| gl_WorldRayDirectionEXT | WorldRayDirection
-| gl_ObjectRayOriginEXT | ObjectRayOrigin
-| gl_ObjectRayDirectionEXT | ObjectRayDirection	
-| gl_RayTminEXT | RayTMin
-| gl_RayTmaxEXT | RayTCurrent
-| gl_IncomingRayFlagsEXT | RayFlags
-| gl_HitTEXT | RayTCurrent
-| gl_HitKindEXT | HitKind
-| gl_ObjectToWorldEXT | ObjectToWorld4x3
-| gl_WorldToObjectEXT | WorldToObject4x3 
-| gl_WorldToObject3x4EXT | WorldToObject3x4
-| gl_ObjectToWorld3x4EXT | ObjectToWorld3x4
-| gl_RayFlagsNoneEXT | RAY_FLAG_NONE 
-| gl_RayFlagsOpaqueEXT | RAY_FLAG_FORCE_OPAQUE
-| gl_RayFlagsNoOpaqueEXT | AY_FLAG_FORCE_NON_OPAQUE
-| gl_RayFlagsTerminateOnFirstHitEXT | RAY_FLAG_ACCEPT_FIRST_HIT_AND_END_SEARCH
-| gl_RayFlagsSkipClosestHitShaderEXT | RAY_FLAG_SKIP_CLOSEST_HIT_SHADER
-| gl_RayFlagsCullBackFacingTrianglesEXT | RAY_FLAG_CULL_BACK_FACING_TRIANGLES
-| gl_RayFlagsCullFrontFacingTrianglesEXT | RAY_FLAG_CULL_FRONT_FACING_TRIANGLES 
-| gl_RayFlagsCullOpaqueEXT | RAY_FLAG_CULL_OPAQUE
-| gl_RayFlagsCullNoOpaqueEXT | RAY_FLAG_CULL_NON_OPAQUE
-| @todo | RAY_FLAG_SKIP_TRIANGLES
-| @todo | RAY_FLAG_SKIP_PROCEDURAL_PRIMITIVES
-| gl_HitKindFrontFacingTriangleEXT | HIT_KIND_TRIANGLE_FRONT_FACE 
-| gl_HitKindBackFacingTriangleEXT | HIT_KIND_TRIANGLE_BACK_FACE 
-| shadercallcoherent | @todo
+| *GLSL*  | *HLSL* | Note
+| accelerationStructureEXT | RaytracingAccelerationStructure |
+| executeCallableEXT | CallShader |
+| ignoreIntersectionEXT | IgnoreHit |
+| reportIntersectionEXT | ReportHit |
+| terminateRayEXT | AcceptHitAndEndSearch |
+| traceRayEXT | TraceRay |
+| rayPayloadEXT (storage qualifier) | Last argument of TraceRay |
+| rayPayloadInEXT (storage qualifier) | First argument for main entry of any hit, closest hit and miss stage |
+| hitAttributeEXT (storage qualifier) | Last argument of ReportHit |
+| callableDataEXT (storage qualifier) | Last argument of CallShader |
+| callableDataInEXT (storage qualifier) | First argument for main entry of callabe stage |
+| gl_LaunchIDEXT | DispatchRaysIndex |
+| gl_LaunchSizeEXT | DispatchRaysDimensions |
+| gl_PrimitiveID | PrimitiveIndex |
+| gl_InstanceID | InstanceIndex |
+| gl_InstanceCustomIndexEXT | InstanceID |
+| gl_GeometryIndexEXT | GeometryIndex |
+| gl_VertexIndex | SV_VertexID |
+| gl_WorldRayOriginEXT | WorldRayOrigin |
+| gl_WorldRayDirectionEXT | WorldRayDirection |
+| gl_ObjectRayOriginEXT | ObjectRayOrigin |
+| gl_ObjectRayDirectionEXT | ObjectRayDirection	 |
+| gl_RayTminEXT | RayTMin |
+| gl_RayTmaxEXT | RayTCurrent |
+| gl_IncomingRayFlagsEXT | RayFlags |
+| gl_HitTEXT | RayTCurrent |
+| gl_HitKindEXT | HitKind |
+| gl_ObjectToWorldEXT | ObjectToWorld4x3 |
+| gl_WorldToObjectEXT | WorldToObject4x3 |
+| gl_WorldToObject3x4EXT | WorldToObject3x4 |
+| gl_ObjectToWorld3x4EXT | ObjectToWorld3x4 |
+| gl_RayFlagsNoneEXT | RAY_FLAG_NONE  |
+| gl_RayFlagsOpaqueEXT | RAY_FLAG_FORCE_OPAQUE |
+| gl_RayFlagsNoOpaqueEXT | AY_FLAG_FORCE_NON_OPAQUE |
+| gl_RayFlagsTerminateOnFirstHitEXT | RAY_FLAG_ACCEPT_FIRST_HIT_AND_END_SEARCH |
+| gl_RayFlagsSkipClosestHitShaderEXT | RAY_FLAG_SKIP_CLOSEST_HIT_SHADER |
+| gl_RayFlagsCullBackFacingTrianglesEXT | RAY_FLAG_CULL_BACK_FACING_TRIANGLES |
+| gl_RayFlagsCullFrontFacingTrianglesEXT | RAY_FLAG_CULL_FRONT_FACING_TRIANGLES  |
+| gl_RayFlagsCullOpaqueEXT | RAY_FLAG_CULL_OPAQUE |
+| gl_RayFlagsCullNoOpaqueEXT | RAY_FLAG_CULL_NON_OPAQUE | requires `GL_EXT_ray_flags_primitive_culling`
+| gl_RayFlagsSkipTrianglesEXT | RAY_FLAG_SKIP_TRIANGLES | requires `GL_EXT_ray_flags_primitive_culling`
+| gl_RayFlagsSkipAABBEXT  | RAY_FLAG_SKIP_PROCEDURAL_PRIMITIVES |
+| gl_HitKindFrontFacingTriangleEXT | HIT_KIND_TRIANGLE_FRONT_FACE  |
+| gl_HitKindBackFacingTriangleEXT | HIT_KIND_TRIANGLE_BACK_FACE  |
+| shadercallcoherent | n.a.
 |====
 
 === Compute
@@ -917,9 +929,10 @@ These shader stages share several functions and built-ins
 | *GLSL*  | *HLSL* | *Note*
 | gl_PointSize | [[vk::builtin("PointSize")]] | Vulkan only, no direct HLSL equivalent
 | gl_BaseVertexARB | [[vk::builtin("BaseVertex")]] | Vulkan only, no direct HLSL equivalent
-| gl_BaseInstanceARB | [[vk::builtin("PoBaseInstanceintSize")]] | Vulkan only, no direct HLSL equivalent
+| gl_BaseInstanceARB | [[vk::builtin("BaseInstance")]] | Vulkan only, no direct HLSL equivalent
 | gl_DrawID | [[vk::builtin("DrawIndex")]] | Vulkan only, no direct HLSL equivalent
 | gl_DeviceIndex | [[vk::builtin("DeviceIndex")]] | Vulkan only, no direct HLSL equivalent
+| gl_ViewportMask | [[vk::builtin("ViewportMaskNV")]] | Vulkan only, no direct HLSL equivalent
 | gl_FragCoord | SV_Position |
 | gl_FragDepth | SV_Depth |
 | gl_FrontFacing | SV_IsFrontFace |
