@@ -63,7 +63,7 @@ An imporant difference: Matrices in GLSL are column-major, while matrices in HLS
 
 == SPIR-V macro
 
-When using xref:{chapters}hlsl.adoc#DirectXShaderCompiler[DXC] to compile HLSL to SPIR-V you can use the `_spirv__` macro for Vulkan specific code. This is useful if HLSL shaders need to work with both Vulkan and D3D:
+When using xref:{chapters}hlsl.adoc#DirectXShaderCompiler[DXC] to compile HLSL to SPIR-V you can use the `\\__spirv__` macro for Vulkan specific code. This is useful if HLSL shaders need to work with both Vulkan and D3D:
 
 [source,hlsl]
 ----
