@@ -139,6 +139,8 @@ include::{chapters}synchronization.adoc[]
 
 include::{chapters}extensions/VK_KHR_synchronization2.adoc[]
 
+include::{chapters}synchronization_examples.adoc[]
+
 :imagesdir: chapters
 
 // == Memory Allocation Strategy
