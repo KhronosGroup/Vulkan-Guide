@@ -41,6 +41,10 @@ Not everything will be a perfect 1:1 match, the goal is to give a rough idea whe
             | conditional rendering
                         | predication
                                     |
+| cooperative matrix
+            |
+                        | wave matrix
+                                    | SIMD group matrix
 | depth/stencil attachment
             | depth Attachment and stencil Attachment
                         | depth/stencil view

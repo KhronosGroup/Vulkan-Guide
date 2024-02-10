@@ -37,6 +37,10 @@ ifndef::images[:images: images/]
             | part of context
                         | command allocator
                                     | command queue
+| cooperative matrix
+            |
+                        | wave matrix
+                                    | SIMD group matrix
 | conditional rendering
             | conditional rendering
                         | predication
