@@ -1,4 +1,4 @@
-// Copyright 2019-2022 The Khronos Group, Inc.
+// Copyright 2019-2024 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 = Vulkan^®^ Guide
@@ -137,6 +137,10 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 === xref:{chapters}extensions/VK_KHR_synchronization2.adoc[Porting to VK_KHR_synchronization2]
 
 // include::{chapters}extensions/VK_KHR_synchronization2.adoc[]
+
+=== xref:{chapters}synchronization_examples.adoc[Synchronization Examples]
+
+// include::{chapters}extensions/synchronization_examples.adoc[]
 
 == xref:{chapters}memory_allocation.adoc[Memory Allocation Strategy]
 

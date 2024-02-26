@@ -1,0 +1,1596 @@
+// Copyright 2024 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[synchronization-examples]]
+= Synchronization Examples
+
+[NOTE]
+====
+This page hosts examples for the xref:{chapters}extensions/VK_KHR_synchronization2.adoc[VK_KHR_synchronization2] APIs - examples for the original synchronization APIs can be found here: https://github.com/KhronosGroup/Vulkan-Docs/wiki/Synchronization-Examples-(Legacy-synchronization-APIs)[Legacy-synchronization-APIs]
+====
+
+Synchronization in Vulkan can be confusing.
+It takes a lot of time to understand, and even then it's easy to trip up on small details.
+Most common use of Vulkan synchronization can be boiled down to a handful of use cases though, and this page lists a number of examples.
+
+Note that examples are usually expressed as a pipeline barrier, but events or subpass dependencies can be used similarly.
+
+== Compute to Compute Dependencies
+
+=== First dispatch writes to a storage buffer, second dispatch reads from that storage buffer.
+[source, c]
+----
+vkCmdDispatch(...);
+
+VkMemoryBarrier2KHR memoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+  .srcAccessMask = VK_ACCESS_2_SHADER_WRITE_BIT_KHR,
+  .dstStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+  .dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR };
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,              // memoryBarrierCount
+    &memoryBarrier, // pMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+vkCmdDispatch(...);
+----
+
+=== First dispatch reads from a storage buffer, second dispatch writes to that storage buffer.
+
+WAR hazards don't need availability or visibility operations between them - execution dependencies are sufficient.
+A pipeline barrier or event without a any access flags is an execution dependency.
+
+[source, c]
+----
+vkCmdDispatch(...);
+
+VkMemoryBarrier2KHR memoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+  .dstStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR };
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,              // memoryBarrierCount
+    &memoryBarrier, // pMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+vkCmdDispatch(...);
+----
+
+=== First dispatch writes to a storage image, second dispatch reads from that storage image.
+[source, c]
+----
+vkCmdDispatch(...);
+
+// Storage image to storage image dependencies are always in GENERAL layout; no need for a layout transition
+VkMemoryBarrier2KHR memoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+  .srcAccessMask = VK_ACCESS_2_SHADER_WRITE_BIT_KHR,
+  .dstStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+  .dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR};
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,              // memoryBarrierCount
+    &memoryBarrier, // pMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+vkCmdDispatch(...);
+----
+
+=== Three dispatches. First dispatch writes to a storage buffer, second dispatch writes to non-overlapping region of same storage buffer, third dispatch reads both regions.
+[source, c]
+----
+vkCmdDispatch(...);
+vkCmdDispatch(...);
+
+VkMemoryBarrier2KHR memoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+  .srcAccessMask = VK_ACCESS_2_SHADER_WRITE_BIT_KHR,
+  .dstStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+  .dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR };
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,              // memoryBarrierCount
+    &memoryBarrier, // pMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+vkCmdDispatch(...);
+----
+
+=== Three dispatches. First dispatch writes to one storage buffer, second dispatch writes to a different storage buffer, third dispatch reads both.
+
+Identical to previous example - global memory barrier covers all resources.
+Generally considered more efficient to do a global memory barrier than per-resource barriers, per-resource barriers should usually be used for queue ownership transfers and image layout transitions - otherwise use global barriers.
+
+[source, c]
+----
+vkCmdDispatch(...);
+vkCmdDispatch(...);
+
+VkMemoryBarrier2KHR memoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+  .srcAccessMask = VK_ACCESS_2_SHADER_WRITE_BIT_KHR,
+  .dstStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+  .dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR };
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,              // memoryBarrierCount
+    &memoryBarrier, // pMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+vkCmdDispatch(...);
+----
+
+== Compute to Graphics Dependencies
+
+Note that interactions with graphics should ideally be performed by using subpass dependencies (external or otherwise) rather than pipeline barriers, but most of the following examples are still described as pipeline barriers for brevity.
+
+=== Dispatch writes into a storage buffer. Draw consumes that buffer as an index buffer.
+[source, c]
+----
+vkCmdDispatch(...);
+
+VkMemoryBarrier2KHR memoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+  .srcAccessMask = VK_ACCESS_2_SHADER_WRITE_BIT_KHR,
+  .dstStageMask = VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR_KHR,
+  .dstAccessMask = VK_ACCESS_2_MEMORY_READ_BIT_KHR };
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,              // memoryBarrierCount
+    &memoryBarrier, // pMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+... // Render pass setup etc.
+
+vkCmdDraw(...);
+----
+
+=== Dispatch writes into a storage buffer. Draw consumes that buffer as an index buffer. A further compute shader reads from the buffer as a uniform buffer.
+[source, c]
+----
+vkCmdDispatch(...);
+
+// Batch barriers where possible if it doesn't change how synchronization takes place
+VkMemoryBarrier2KHR memoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+  .srcAccessMask = VK_ACCESS_2_SHADER_WRITE_BIT_KHR,
+  .dstStageMask = VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR_KHR | VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+  .dstAccessMask = VK_ACCESS_2_INDEX_READ_BIT_KHR | VK_ACCESS_2_UNIFORM_READ_BIT_KHR};
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,              // memoryBarrierCount
+    &memoryBarrier, // pMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+... // Render pass setup etc.
+
+vkCmdDraw(...);
+
+... // Render pass teardown etc.
+
+vkCmdDispatch(...);
+----
+
+=== Dispatch writes into a storage buffer. Draw consumes that buffer as a draw indirect buffer.
+[source, c]
+----
+vkCmdDispatch(...);
+
+VkMemoryBarrier2KHR memoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+  .srcAccessMask = VK_ACCESS_2_SHADER_WRITE_BIT_KHR,
+  .dstStageMask = VK_PIPELINE_STAGE_2_DRAW_INDIRECT_BIT_KHR,
+  .dstAccessMask = VK_ACCESS_2_MEMORY_READ_BIT_KHR };
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,              // memoryBarrierCount
+    &memoryBarrier, // pMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+... // Render pass setup etc.
+
+vkCmdDrawIndirect(...);
+----
+
+=== Dispatch writes into a storage image. Draw samples that image in a fragment shader.
+[source, c]
+----
+vkCmdDispatch(...);
+
+VkImageMemoryBarrier2KHR imageMemoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+  .srcAccessMask = VK_ACCESS_2_SHADER_WRITE_BIT_KHR,
+  .dstStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR,
+  .dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR,
+  .oldLayout = VK_IMAGE_LAYOUT_GENERAL,
+  .newLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL
+  /* .image and .subresourceRange should identify image subresource accessed */};
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,                      // imageMemoryBarrierCount
+    &imageMemoryBarrier,    // pImageMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+... // Render pass setup etc.
+
+vkCmdDraw(...);
+----
+
+=== Dispatch writes into a storage texel buffer. Draw consumes that buffer as a draw indirect buffer, and then again as a uniform buffer in the fragment shader.
+[source, c]
+----
+vkCmdDispatch(...);
+
+VkMemoryBarrier2KHR memoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+  .srcAccessMask = VK_ACCESS_2_SHADER_WRITE_BIT_KHR,
+  .dstStageMask = VK_PIPELINE_STAGE_2_DRAW_INDIRECT_BIT_KHR | VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR,
+  .dstAccessMask = VK_ACCESS_2_INDIRECT_COMMAND_READ_BIT_KHR | VK_ACCESS_2_UNIFORM_READ_BIT_KHR};
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,              // memoryBarrierCount
+    &memoryBarrier, // pMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+vkCmdDrawIndirect(...);
+----
+
+== Graphics to Compute Dependencies
+
+=== Draw writes to a color attachment. Dispatch samples from that image.
+
+Note that color attachment write is NOT in the fragment shader, it has its own dedicated pipeline stage!
+
+[source, c]
+----
+vkCmdDraw(...);
+
+... // Render pass teardown etc.
+
+VkImageMemoryBarrier2KHR imageMemoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR,
+  .srcAccessMask = VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT_KHR,
+  .dstStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+  .dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR,
+  .oldLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
+  .newLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL
+  /* .image and .subresourceRange should identify image subresource accessed */};
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,                      // imageMemoryBarrierCount
+    &imageMemoryBarrier,    // pImageMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+vkCmdDispatch(...);
+----
+
+=== Draw writes to a depth attachment. Dispatch samples from that image.
+
+Note that depth attachment write is NOT in the fragment shader, it has its own dedicated pipeline stages!
+
+[source, c]
+----
+vkCmdDraw(...);
+
+... // Render pass teardown etc.
+
+VkImageMemoryBarrier2KHR imageMemoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT_KHR | VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT_KHR,
+  .srcAccessMask = VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT_KHR,
+  .dstStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+  .dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR,
+  .oldLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
+  .newLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL
+  /* .image and .subresourceRange should identify image subresource accessed */};
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,                      // imageMemoryBarrierCount
+    &imageMemoryBarrier,    // pImageMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+vkCmdDispatch(...);
+----
+
+== Graphics to Graphics Dependencies
+
+Many graphics to graphics dependencies can be expressed as a subpass dependency within a render pass, which is usually more efficient than a pipeline barrier or event.
+Where this is possible in the below, the example is expressed in terms of a subpass dependency.
+
+=== First draw writes to a depth attachment. Second draw reads from it as an input attachment in the fragment shader.
+
+The transition from VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL to VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL happens automatically as part of executing the render pass.
+
+[source, c]
+----
+// Set this to the index in VkRenderPassCreateInfo::pAttachments where the depth image is described.
+uint32_t depthAttachmentIndex = ...;
+
+VkSubpassDescription subpasses[2];
+
+VkAttachmentReference depthAttachment = {
+    .attachment = depthAttachmentIndex,
+    .layout     = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL};
+
+// Subpass containing first draw
+subpasses[0] = {
+    ...
+    .pDepthStencilAttachment = &depthAttachment,
+    ...};
+
+VkAttachmentReference depthAsInputAttachment = {
+    .attachment = depthAttachmentIndex,
+    .layout     = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL};
+
+// Subpass containing second draw
+subpasses[1] = {
+    ...
+    .inputAttachmentCount = 1,
+    .pInputAttachments = &depthAsInputAttachment,
+    ...};
+
+VkSubpassDependency dependency = {
+    .srcSubpass = 0,
+    .dstSubpass = 1,
+    .srcStageMask = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT |
+                    VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
+    .dstStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+    .srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
+    .dstAccessMask = VK_ACCESS_INPUT_ATTACHMENT_READ_BIT,
+    .dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT};
+
+// If initialLayout does not match the layout of the attachment reference in the first subpass, there will be an implicit transition before starting the render pass.
+// If finalLayout does not match the layout of the attachment reference in the last subpass, there will be an implicit transition at the end.
+VkAttachmentDescription depthFramebufferAttachment = {
+    ...
+    .initialLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
+    .finalLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL};
+
+VkRenderPassCreateInfo renderPassCreateInfo = {
+    ...
+    .attachmentCount = 1,
+    .pAttachments = &depthFramebufferAttachment,
+    .subpassCount = 2,
+    .pSubpasses = subpasses,
+    .dependencyCount = 1,
+    .pDependencies = &dependency};
+
+vkCreateRenderPass(...);
+
+...
+----
+
+=== First draw writes to a depth attachment. Second draw samples from that depth image in the fragment shader (e.g. shadow map rendering).
+[source, c]
+----
+vkCmdDraw(...);
+
+... // First render pass teardown etc.
+
+VkImageMemoryBarrier2KHR imageMemoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT_KHR | VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT_KHR,
+  .srcAccessMask = VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT_KHR,
+  .dstStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR,
+  .dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR,
+  .oldLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
+  .newLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL
+  /* .image and .subresourceRange should identify image subresource accessed */};
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,                      // imageMemoryBarrierCount
+    &imageMemoryBarrier,    // pImageMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+... // Second render pass setup etc.
+
+vkCmdDraw(...);
+----
+
+=== First draw writes to a color attachment. Second draw reads from it as an input attachment in the fragment shader.
+[source, c]
+----
+// Set this to the index in VkRenderPassCreateInfo::pAttachments where the color image is described.
+uint32_t colorAttachmentIndex = ...;
+
+VkSubpassDescription subpasses[2];
+
+VkAttachmentReference colorAttachment = {
+    .attachment = colorAttachmentIndex,
+    .layout     = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL};
+
+// Subpass containing first draw
+subpasses[0] = {
+    ...
+    .colorAttachmentCount = 1,
+    .pColorAttachments = &colorAttachment,
+    ...};
+
+VkAttachmentReference colorAsInputAttachment = {
+    .attachment = colorAttachmentIndex,
+    .layout     = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL};
+
+// Subpass containing second draw
+subpasses[1] = {
+    ...
+    .inputAttachmentCount = 1,
+    .pInputAttachments = &colorAsInputAttachment,
+    ...};
+
+VkSubpassDependency dependency = {
+    .srcSubpass = 0,
+    .dstSubpass = 1,
+    .srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+    .dstStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+    .srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+    .dstAccessMask = VK_ACCESS_INPUT_ATTACHMENT_READ_BIT,
+    .dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT};
+
+// If initialLayout does not match the layout of the attachment reference in the first subpass, there will be an implicit transition before starting the render pass.
+// If finalLayout does not match the layout of the attachment reference in the last subpass, there will be an implicit transition at the end.
+VkAttachmentDescription colorFramebufferAttachment = {
+    ...
+    .initialLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
+    .finalLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL};
+
+VkRenderPassCreateInfo renderPassCreateInfo = {
+    ...
+    .attachmentCount = 1,
+    .pAttachments = &colorFramebufferAttachment,
+    .subpassCount = 2,
+    .pSubpasses = subpasses,
+    .dependencyCount = 1,
+    .pDependencies = &dependency};
+
+vkCreateRenderPass(...);
+
+...
+----
+
+=== First draw writes to a color attachment. Second draw samples from that color image in the fragment shader.
+[source, c]
+----
+vkCmdDraw(...);
+
+... // First render pass teardown etc.
+
+VkImageMemoryBarrier2KHR imageMemoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR,
+  .srcAccessMask = VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT_KHR,
+  .dstStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR,
+  .dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR,
+  .oldLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
+  .newLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL
+  /* .image and .subresourceRange should identify image subresource accessed */};
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,                      // imageMemoryBarrierCount
+    &imageMemoryBarrier,    // pImageMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+... // Second render pass setup etc.
+
+vkCmdDraw(...);
+----
+
+=== First draw writes to a color attachment. Second draw samples from that color image in the vertex shader.
+[source, c]
+----
+vkCmdDraw(...);
+
+... // First render pass teardown etc.
+
+VkImageMemoryBarrier2KHR imageMemoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR,
+  .srcAccessMask = VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT_KHR,
+  .dstStageMask = VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT_KHR,
+  .dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR,
+  .oldLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
+  .newLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL
+  /* .image and .subresourceRange should identify image subresource accessed */};
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,                      // imageMemoryBarrierCount
+    &imageMemoryBarrier,    // pImageMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+... // Second render pass setup etc.
+
+vkCmdDraw(...);
+----
+
+=== First draw samples a texture in the fragment shader. Second draw writes to that texture as a color attachment.
+
+This is a WAR hazard, which you would usually only need an execution dependency for - meaning you wouldn't need to supply any memory barriers.
+In this case you still need a memory barrier to do a layout transition though, but you don't need any access types in the src access mask.
+The layout transition itself is considered a write operation though, so you do need the destination access mask to be correct - or there would be a WAW hazard between the layout transition and the color attachment write.
+
+[source, c]
+----
+vkCmdDraw(...);
+
+... // First render pass teardown etc.
+
+VkImageMemoryBarrier2KHR imageMemoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR,
+  .dstStageMask = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR,
+  .dstAccessMask = VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT_KHR,
+  .oldLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL,
+  .newLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL
+  /* .image and .subresourceRange should identify image subresource accessed */};
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,                      // imageMemoryBarrierCount
+    &imageMemoryBarrier,    // pImageMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+... // Second render pass setup etc.
+
+vkCmdDraw(...);
+----
+
+=== First render-pass writes to a depth attachment. Second render-pass re-uses the same depth attachment.
+
+This is an example of a WAW (Write-After-Write) hazard, which always require a memory dependency.
+Even if the render-pass does not read the output of the previous pass (in fact, in this example the previously image contents are explicitly not preserved by nature of transitioning from `UNDEFINED`) we still need a memory dependency to ensure writes to the image are not re-ordered.
+
+Additionally, as we're using an automatic layout transition (`initialLayout` differs from `layout`), it's important to make sure the transition does not happen too early.
+This commonly requires specifying a `VK_SUBPASS_EXTERNAL` subpass dependency explicitly, as the default implicit dependency (which has `srcStageMask = TOP`) is not sufficient.
+(See "Swapchain Image Acquire and Present" for another example of this.)
+
+This example use a `VK_SUBPASS_EXTERNAL` subpass dependency to achieve both goals (resolve WAW hazard, and hold back automatic layout transition), but as always a pipeline-barrier can also be used.
+
+[source, c]
+----
+// We're using the depth buffer as a depth-stencil attachment
+VkAttachmentReference depthAttachment = {
+    .attachment = 0,
+    .layout     = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL};
+
+VkAttachmentDescription depthFramebufferAttachment = {
+    ...
+    .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR, // Want to clear the buffer at the start of the subpass
+    .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED, // No need to preserve previous image contents
+    .finalLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL // When done, leave it in the layout used in the subpass (no transition at the end)
+};
+
+// Subpass using the depth-buffer
+VkSubpassDescription subpass = {
+    ...
+    .pDepthStencilAttachment = &depthAttachment,
+    ...};
+
+// Use an incoming subpass-dependency to ensure:
+// * Previous use of the depth-buffer is complete (execution dependency).
+// * WAW hazard is resolved (e.g. caches are flushed and invalidated so old and new writes are not re-ordered).
+// * Transition from UNDEFINED -> VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL happens-after previous `EARLY/LATE_FRAGMENT_TESTS` use.
+// * Changes made to the image by the transition are accounted for by setting the appropriate dstAccessMask.
+VkSubpassDependency dependency = {
+    .srcSubpass = VK_SUBPASS_EXTERNAL,
+    .dstSubpass = 0,
+    .srcStageMask = VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,  // Store op is always performed in late tests, after subpass access
+    .dstStageMask = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT, // Load op is always performed in early tests, before subpass access
+    .srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
+    .dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT,
+    .dependencyFlags = 0};
+
+VkRenderPassCreateInfo renderPassCreateInfo = {
+    ...
+    .attachmentCount = 1,
+    .pAttachments = &depthFramebufferAttachment,
+    .subpassCount = 1,
+    .pSubpasses = &subpass
+    .dependencyCount = 1,
+    .pDependencies = &dependency};
+
+vkCreateRenderPass(...);
+
+...
+
+# First render-pass
+vkCmdBeginRenderPass();
+...
+vkCmdEndRenderPass();
+
+...
+
+# Second render-pass, could be the same or a different frame
+vkCmdBeginRenderPass();
+...
+vkCmdEndRenderPass();
+----
+
+== Transfer Dependencies
+
+=== Upload data from the CPU to a vertex buffer
+
+==== Discrete Host and Device Memory
+
+If there is a memory type with "HOST_VISIBLE" and not "DEVICE_LOCAL", and a separate type with "DEVICE_LOCAL" on, then use the following setup path.
+UMA systems are described in the next code block, though this code will work on such systems at the cost of additional memory overhead.
+
+Setup:
+
+[source, c]
+----
+// Data and size of that data
+const uint32_t vertexDataSize = ... ;
+const void* pData = ... ;
+
+// Create a staging buffer for upload
+VkBufferCreateInfo stagingCreateInfo = {
+    ...
+    .size = vertexDataSize,
+    .usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+    ... };
+
+VkBuffer stagingBuffer;
+vkCreateBuffer(device, &stagingCreateInfo, NULL, &stagingBuffer);
+
+// Create the vertex buffer
+VkBufferCreateInfo vertexCreateInfo = {
+    ...
+    .size = vertexDataSize,
+    .usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+    ... };
+
+VkBuffer vertexBuffer;
+vkCreateBuffer(device, &vertexCreateInfo, NULL, &vertexBuffer);
+
+...
+
+// Allocate and memory bind memory for these buffers.
+// Ensure that the staging buffer uses a memory type that has
+// VK_MEMORY_PROPERTY_HOST_VISIBLE property and doesn't have
+// VK_MEMORY_PROPERTY_DEVICE_LOCAL.
+// The vertex buffer memory should be the opposite - it should include
+// VK_MEMORY_PROPERTY_DEVICE_LOCAL and should not have
+// VK_MEMORY_PROPERTY_HOST_VISIBLE.
+// Use the example code documented in the description of
+// VkPhysicalDeviceMemoryProperties:
+// https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPhysicalDeviceMemoryProperties.html
+
+...
+
+// Map the staging buffers - if you plan to re-use these (which you should),
+// keep them mapped.
+// Ideally just map the whole range at once as well.
+
+void* stagingData;
+
+vkMapMemory(
+    ...
+    stagingMemory,
+    stagingMemoryOffset,
+    vertexDataSize,
+    0,
+    &stagingData);
+
+// Write data directly into the mapped pointer
+fread(stagingData, vertexDataSize, 1, vertexFile);
+
+// Flush the memory range
+// If the memory type of stagingMemory includes VK_MEMORY_PROPERTY_HOST_COHERENT, skip this step
+
+// Align to the VkPhysicalDeviceProperties::nonCoherentAtomSize
+uint32_t alignedSize = (vertexDataSize-1) - ((vertexDataSize-1) % nonCoherentAtomSize) + nonCoherentAtomSize;
+
+// Setup the range
+VkMappedMemoryRange stagingRange = {
+    ...
+    .memory = stagingMemory,
+    .offset = stagingMemoryOffset,
+    .size   = alignedSize};
+
+// Flush the range
+vkFlushMappedMemoryRanges(device, 1, &stagingRange);
+----
+
+Command Buffer Recording and Submission for a unified transfer/graphics queue:
+
+[source, c]
+----
+vkBeginCommandBuffer(...);
+
+// Submission guarantees the host write being complete, as per
+// https://www.khronos.org/registry/vulkan/specs/1.0/html/vkspec.html#synchronization-submission-host-writes
+// So no need for a barrier before the transfer
+
+// Copy the staging buffer contents to the vertex buffer
+VkBufferCopy vertexCopyRegion = {
+    .srcOffset = stagingMemoryOffset,
+    .dstOffset = vertexMemoryOffset,
+    .size      = vertexDataSize};
+
+vkCmdCopyBuffer(
+    commandBuffer,
+    stagingBuffer,
+    vertexBuffer,
+    1,
+    &vertexCopyRegion);
+
+
+// If the graphics queue and transfer queue are the same queue
+if (isUnifiedGraphicsAndTransferQueue)
+{
+    // If there is a semaphore signal + wait between this being submitted and
+    // the vertex buffer being used, then skip this pipeline barrier.
+
+    // Pipeline barrier before using the vertex data
+    // Note that this can apply to all buffers uploaded in the same way, so
+    // ideally batch all copies before this.
+    VkMemoryBarrier2KHR memoryBarrier = {
+        ...
+        .srcStageMask = VK_PIPELINE_STAGE_2_TRANSFER_BIT_KHR,
+        .srcAccessMask = VK_ACCESS_2_MEMORY_WRITE_BIT_KHR,
+        .dstStageMask = VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR,
+        .dstAccessMask = VK_ACCESS_2_MEMORY_READ_BIT_KHR};
+
+    VkDependencyInfoKHR dependencyInfo = {
+        ...
+        1,                 // memoryBarrierCount
+        &memoryBarrier,    // pMemoryBarriers
+        ...
+    }
+
+    vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+
+    vkEndCommandBuffer(...);
+
+    vkQueueSubmit2KHR(unifiedQueue, ...);
+}
+else
+{
+    // Pipeline barrier to start a queue ownership transfer after the copy
+    VkBufferMemoryBarrier2KHR bufferMemoryBarrier = {
+        ...
+        .srcStageMask = VK_PIPELINE_STAGE_2_TRANSFER_BIT_KHR,
+        .srcAccessMask = VK_ACCESS_2_MEMORY_WRITE_BIT_KHR,
+        .srcQueueFamilyIndex = transferQueueFamilyIndex,
+        .dstQueueFamilyIndex = graphicsQueueFamilyIndex,
+        .buffer = vertexBuffer,
+        ...};
+
+    VkDependencyInfoKHR dependencyInfo = {
+        ...
+        1,                      // bufferMemoryBarrierCount
+        &bufferMemoryBarrier,    // pBufferMemoryBarriers
+        ...
+    }
+
+    vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+    vkEndCommandBuffer(...);
+
+    // Ensure a semaphore is signalled here which will be waited on by the graphics queue.
+    vkQueueSubmit2KHR(transferQueue, ...);
+
+    // Record a command buffer for the graphics queue.
+    vkBeginCommandBuffer(...);
+
+    // Pipeline barrier before using the vertex buffer, after finalising the ownership transfer
+    VkBufferMemoryBarrier2KHR bufferMemoryBarrier = {
+        ...
+        .dstStageMask = VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR,
+        .dstAccessMask = VK_ACCESS_2_MEMORY_READ_BIT_KHR,
+        .srcQueueFamilyIndex = transferQueueFamilyIndex,
+        .dstQueueFamilyIndex = graphicsQueueFamilyIndex,
+        .buffer = vertexBuffer,
+        ...};
+
+    VkDependencyInfoKHR dependencyInfo = {
+        ...
+        1,                       // bufferMemoryBarrierCount
+        &bufferMemoryBarrier,    // pBufferMemoryBarriers
+        ...
+    }
+
+    vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+    vkEndCommandBuffer(...);
+
+    vkQueueSubmit2KHR(graphicsQueue, ...);
+}
+----
+
+==== Unified Memory
+
+For UMA systems, you can use the above, but it will use less memory if you avoid the staging buffer for these systems, as per the following setup.
+There is no need to perform any device-side synchronization assuming the first commands that use it are submitted _after_ the upload (rather than using VkEvents, which are not recommended, and not described here).
+
+Setup:
+
+[source, c]
+----
+// Data and size of that data
+const uint32_t vertexDataSize = ... ;
+const void* pData = ... ;
+
+// Create the vertex buffer
+VkBufferCreateInfo vertexCreateInfo = {
+    ...
+    .size = vertexDataSize,
+    .usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+    ... };
+
+VkBuffer vertexBuffer;
+vkCreateBuffer(device, &vertexCreateInfo, NULL, &vertexBuffer);
+
+...
+
+// Allocate and memory bind memory for this buffer.
+// It should use a memory type that includes HOST_VISIBLE, and ideally also
+// DEVICE_LOCAL if available.
+// Use the example code documented in the description of
+// VkPhysicalDeviceMemoryProperties:
+// https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPhysicalDeviceMemoryProperties.html
+
+...
+
+// Map the vertex buffer
+
+void* vertexData;
+
+vkMapMemory(
+    ...
+    vertexMemory,
+    vertexMemoryOffset,
+    vertexDataSize,
+    0,
+    &vertexData);
+
+// Write data directly into the mapped pointer
+fread(vertexData, vertexDataSize, 1, vertexFile);
+
+// Flush the memory range
+// If the memory type of vertexMemory includes VK_MEMORY_PROPERTY_HOST_COHERENT, skip this step
+
+// Align to the VkPhysicalDeviceProperties::nonCoherentAtomSize
+uint32_t alignedSize = (vertexDataSize-1) - ((vertexDataSize-1) % nonCoherentAtomSize) + nonCoherentAtomSize;
+
+// Setup the range
+VkMappedMemoryRange vertexRange = {
+    ...
+    .memory = vertexMemory,
+    .offset = vertexMemoryOffset,
+    .size   = alignedSize};
+
+// Flush the range
+vkFlushMappedMemoryRanges(device, 1, &vertexRange);
+
+// You may want to skip this if you're going to modify the
+// data again
+vkUnmapMemory(device, vertexMemory);
+----
+
+=== Upload data from the CPU to an image sampled in a fragment shader
+
+This path is universal to both UMA and discrete systems, as images should be converted to optimal tiling on upload.
+
+Setup:
+
+[source, c]
+----
+// Data and size of that data
+const uint32_t imageDataSize = ... ;
+
+// Create a staging buffer for upload
+VkBufferCreateInfo stagingCreateInfo = {
+    ...
+    .size = imageDataSize,
+    .usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+    ... };
+
+VkBuffer stagingBuffer;
+vkCreateBuffer(device, &stagingCreateInfo, NULL, &stagingBuffer);
+
+// Create the sampled image
+VkImageCreateInfo imageCreateInfo = {
+    ...
+    // Set the dimensions for the image as appropriate
+    .tiling = VK_IMAGE_TILING_OPTIMAL,
+    .usage  = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
+    ... };
+
+VkImage image;
+vkCreateImage(device, &imageCreateInfo, NULL, &image);
+
+...
+
+// Allocate and memory bind memory for these resources.
+// Ensure that the staging buffer uses a memory type that has
+// VK_MEMORY_PROPERTY_HOST_VISIBLE property and doesn't have
+// VK_MEMORY_PROPERTY_DEVICE_LOCAL.
+// The image memory should be the opposite - it should include
+// VK_MEMORY_PROPERTY_DEVICE_LOCAL and should not have
+// VK_MEMORY_PROPERTY_HOST_VISIBLE.
+// Use the example code documented in the description of
+// VkPhysicalDeviceMemoryProperties:
+// https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPhysicalDeviceMemoryProperties.html
+
+...
+
+// Map the staging buffers - if you plan to re-use these (which you should),
+// keep them mapped.
+// Ideally just map the whole range at once as well.
+
+void* stagingData;
+
+vkMapMemory(
+    ...
+    stagingMemory,
+    stagingMemoryOffset,
+    imageDataSize,
+    0,
+    &stagingData);
+
+// Write data directly into the mapped pointer
+fread(stagingData, imageDataSize, 1, imageFile);
+
+// Flush the memory range
+// If the memory type of stagingMemory includes VK_MEMORY_PROPERTY_HOST_COHERENT, skip this step
+
+// Align to the VkPhysicalDeviceProperties::nonCoherentAtomSize
+uint32_t alignedSize = (imageDataSize-1) - ((imageDataSize-1) % nonCoherentAtomSize) + nonCoherentAtomSize;
+
+// Setup the range
+VkMappedMemoryRange stagingRange = {
+    ...
+    .memory = stagingMemory,
+    .offset = stagingMemoryOffset,
+    .size   = alignedSize};
+
+// Flush the range
+vkFlushMappedMemoryRanges(device, 1, &stagingRange);
+----
+
+Command Buffer Recording and Submission:
+
+[source, c]
+----
+vkBeginCommandBuffer(...);
+
+// Submission guarantees the host write being complete, as per
+// https://www.khronos.org/registry/vulkan/specs/1.0/html/vkspec.html#synchronization-submission-host-writes
+// So no need for a barrier before the transfer for that purpose, but one is
+// required for the image layout changes.
+
+// Pipeline barrier before the copy to perform a layout transition
+VkImageMemoryBarrier2KHR preCopyMemoryBarrier = {
+    ...
+    .dstStageMask = VK_PIPELINE_STAGE_2_TRANSFER_BIT_KHR,
+    .dstAccessMask = VK_ACCESS_2_MEMORY_WRITE_BIT_KHR,
+    .oldLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+    .newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+    .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+    .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+    .image = image,
+    .subresourceRange = ... }; // Transition as much of the image as you can at once.
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,                      // imageMemoryBarrierCount
+    &preCopyMemoryBarrier,  // pImageMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+// Setup copies for the all regions required (should be batched into a single call where possible)
+vkCmdCopyBufferToImage(
+    commandBuffer,
+    stagingBuffer,
+    image,
+    ... };
+
+// If the graphics queue and transfer queue are the same queue
+if (isUnifiedGraphicsAndTransferQueue)
+{
+    // Pipeline barrier before using the vertex data
+    VkImageMemoryBarrier2KHR postCopyMemoryBarrier = {
+        ...
+        .srcStageMask = VK_PIPELINE_STAGE_2_TRANSFER_BIT_KHR,
+        .srcAccessMask = VK_ACCESS_2_TRANSFER_WRITE_BIT_KHR,
+        .dstStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR,
+        .dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR,
+        .oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        .newLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL,
+        .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+        .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+        .image = image,
+        .subresourceRange = ... }; // Transition as much of the image as you can at once.
+
+    VkDependencyInfoKHR dependencyInfo = {
+        ...
+        1,                      // imageMemoryBarrierCount
+        &postCopyMemoryBarrier, // pImageMemoryBarriers
+        ...
+    }
+
+    vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+    vkEndCommandBuffer(...);
+
+    vkQueueSubmit2KHR(unifiedQueue, ...);
+}
+else
+{
+    // Pipeline barrier before using the vertex data
+    VkImageMemoryBarrier2KHR postCopyTransferMemoryBarrier = {
+        ...
+        .srcStageMask = VK_PIPELINE_STAGE_2_TRANSFER_BIT_KHR,
+        .srcAccessMask = VK_ACCESS_2_TRANSFER_WRITE_BIT_KHR,
+        .oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        .newLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL,
+        .srcQueueFamilyIndex = transferQueueFamilyIndex,
+        .dstQueueFamilyIndex = graphicsQueueFamilyIndex,
+        .image = image,
+        .subresourceRange = ... }; // Transition as much of the image as you can at once.
+
+    VkDependencyInfoKHR dependencyInfo = {
+        ...
+        1,                              // imageMemoryBarrierCount
+        &postCopyTransferMemoryBarrier, // pImageMemoryBarriers
+        ...
+    }
+
+    vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+    vkEndCommandBuffer(...);
+
+    vkQueueSubmit2KHR(transferQueue, ...);
+
+    vkBeginCommandBuffer(...);
+
+    // Pipeline barrier before using the vertex data
+    VkImageMemoryBarrier2KHR postCopyGraphicsMemoryBarrier = {
+        ...
+        .dstStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR,
+        .dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR,
+        .oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        .newLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL,
+        .srcQueueFamilyIndex = transferQueueFamilyIndex,
+        .dstQueueFamilyIndex = graphicsQueueFamilyIndex,
+        .image = image,
+        .subresourceRange = ... }; // Transition as much of the image as you can at once.
+
+    VkDependencyInfoKHR dependencyInfo = {
+        ...
+        1,                              // imageMemoryBarrierCount
+        &postCopyGraphicsMemoryBarrier, // pImageMemoryBarriers
+        ...
+    }
+
+    vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+    vkEndCommandBuffer(...);
+
+    vkQueueSubmit2KHR(graphicsQueue, ...);
+}
+----
+
+=== CPU read back of data written by a compute shader
+
+This example shows the steps required to get data written to a buffer by a compute shader, back to the CPU.
+
+----
+vkCmdDispatch(...);
+
+VkMemoryBarrier2KHR memoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+  .srcAccessMask = VK_ACCESS_2_SHADER_WRITE_BIT_KHR,
+  .dstStageMask = VK_PIPELINE_STAGE_2_HOST_BIT_KHR,
+  .dstAccessMask = VK_ACCESS_2_HOST_READ_BIT_KHR};
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,              // memoryBarrierCount
+    &memoryBarrier, // pMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+vkEndCommandBuffer(...);
+
+vkQueueSubmit2KHR(..., fence); // Submit the command buffer with a fence
+----
+
+The GPU will take time to process, so this should be pipelined with other resource management (e.g.
+swapchain images):
+
+----
+vkWaitForFences(fence);
+
+// If the memory is host coherent, skip this step - otherwise invalidation is necessary
+if (memoryIsNotHostCoherent) {
+    VkMappedMemoryRange mappedMemoryRange = {
+        ...
+        mappedMemory,       // Mapped pointer to the VkDeviceMemory allocation backing the buffer.
+        ...
+    } VkMappedMemoryRange;
+
+    vkInvalidateMappedMemoryRanges(..., 1, &mappedMemoryRange);
+}
+
+// Read values back from the mapped pointer
+value = mappedMemory[...];
+----
+
+== Interactions with semaphores
+
+If you have a dependency where the two commands being synchronized have a semaphore signal/wait between them, the additional synchronization done by pipeline barriers/events/subpass dependencies can be reduced or removed.
+Only parameters affected by the presence of the semaphore dependency are listed
+
+=== Any dependency where only buffers are affected, or images where the layout doesn't change
+[source, c]
+----
+// Nothing to see here - semaphore alone is sufficient.
+// No additional synchronization required - remove those barriers.
+----
+
+Signalling a semaphore waits for all stages to complete, and all memory accesses are made available automatically.
+Similarly, waiting for a semaphore will make all memory accesses available, and prevent further work from being started until it is signalled.
+Note that in the case of QueueSubmit there is an explicit set of stages to prevent running in VkSubmitInfo::pWaitDstStageMask - for all other semaphore uses execution of all work is prevented.
+
+=== Dependency between images where a layout transition is required, expressed before the semaphore signal
+[source, c]
+----
+vkCmdDispatch(...);
+
+VkImageMemoryBarrier2KHR imageMemoryBarrier = {
+  ...
+  .dstStageMask = VK_PIPELINE_STAGE_2_NONE_KHR
+  .dstAccessMask = VK_ACCESS_2_NONE_KHR};
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,                      // imageMemoryBarrierCount
+    &imageMemoryBarrier,    // pImageMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+... // Semaphore signal/wait happens here
+
+vkCmdDispatch(...);
+----
+
+=== Dependency between images where a layout transition is required, expressed after the semaphore signal
+[source, c]
+----
+vkCmdDispatch(...);
+
+... // Semaphore signal/wait happens here
+
+VkImageMemoryBarrier2KHR imageMemoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_NONE_KHR
+  .srcAccessMask = VK_ACCESS_2_NONE_KHR};
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,                      // imageMemoryBarrierCount
+    &imageMemoryBarrier,    // pImageMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+vkCmdDispatch(...);
+----
+
+The stages used in srcAccessMask must: be equal to (or logically later than) the values in VkSubmitInfo::pWaitDstStageMask defined for the relevant semaphore wait operation, otherwise the barrier is not guaranteed to occur after the semaphore wait.
+In this example, we're assuming the relevant pWaitDstStageMask value is equal to `VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT_KHR`.
+
+== Swapchain Image Acquire and Present
+
+=== Combined Graphics/Present Queue
+[source, c]
+----
+VkAttachmentReference attachmentReference = {
+    .attachment = 0,
+    .layout     = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL};
+
+// Subpass containing first draw
+VkSubpassDescription subpass = {
+    ...
+    .colorAttachmentCount = 1,
+    .pColorAttachments = &attachmentReference,
+    ...};
+
+/* Add external dependencies to ensure that the layout
+   transitions happen at the right time.
+   Unlike synchronization 1, we insert 2 dependencies,
+   as the semaphore wait and signal operations happen
+   at COLOR_ATTACHMENT_OUTPUT to reduce their scope to
+   the minimum; the subpass dependencies are then both
+   adjusted to match */
+VkSubpassDependency dependencies[2] = {
+    {
+        .srcSubpass = VK_SUBPASS_EXTERNAL,
+        .dstSubpass = 0,
+        .srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+        .dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+        .srcAccessMask = VK_ACCESS_NONE_KHR,
+        .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+        .dependencyFlags = 0
+    },
+    /* In cases where the application signals the semaphore with
+       VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT, or uses vkQueueSubmit,
+       this second dependency could be omitted. */
+    {
+        .srcSubpass = 0,
+        .dstSubpass = VK_SUBPASS_EXTERNAL,
+        .srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+        .dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+        .srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+        .dstAccessMask = VK_ACCESS_NONE_KHR,
+        .dependencyFlags = 0
+    }
+};
+
+
+VkAttachmentDescription attachmentDescription = {
+    ...
+    .loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+    .storeOp = VK_ATTACHMENT_STORE_OP_STORE,
+    ...
+    // The image will automatically be transitioned from UNDEFINED to COLOR_ATTACHMENT_OPTIMAL for rendering, then out to PRESENT_SRC_KHR at the end.
+    .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+    // Presenting images in Vulkan requires a special layout.
+    .finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR};
+
+VkRenderPassCreateInfo renderPassCreateInfo = {
+    ...
+    .attachmentCount = 1,
+    .pAttachments    = &attachmentDescription,
+    .subpassCount    = 1,
+    .pSubpasses      = &subpass,
+    .dependencyCount = 2,
+    .pDependencies   = dependencies};
+
+vkCreateRenderPass(...);
+
+...
+
+vkAcquireNextImageKHR(
+    ...
+    acquireCompleteSemaphore,   //semaphore
+    ...
+    &imageIndex);       //image index
+
+VkSemaphoreSubmitInfoKHR acquireCompleteInfo = {
+    ...
+    .semaphore = acquireCompleteSemaphore,
+    .stageMask = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR};
+
+VkSemaphoreSubmitInfoKHR renderingCompleteInfo = {
+    ...
+    .semaphore = renderingCompleteSemaphore,
+    .stageMask = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR};
+
+VkSubmitInfo2KHR submitInfo = {
+    ...
+    .waitSemaphoreInfoCount     = 1,
+    .pWaitSemaphoreInfos        = &acquireCompleteInfo,
+    ...
+    .signalSemaphoreInfoCount   = 1,
+    .pSignalSemaphoreInfos      = &renderingCompleteInfo};
+
+
+vkQueueSubmit2KHR(..., &submitInfo, ...);
+
+VkPresentInfoKHR presentInfo = {
+    .waitSemaphoreCount = 1,
+    .pWaitSemaphores = &renderingCompleteSemaphore,
+    ...};
+
+vkQueuePresentKHR(..., &presentInfo);
+----
+
+=== Multiple Queues
+
+If the present queue is a different queue from the queue where rendering is done, a queue ownership transfer must additionally be performed between the two queues at both acquire and present time, which requires additional synchronization.
+
+Render pass setup:
+
+[source, c]
+----
+VkAttachmentReference attachmentReference = {
+    .attachment = 0,
+    .layout     = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL};
+
+// Subpass containing first draw
+VkSubpassDescription subpass = {
+    ...
+    .colorAttachmentCount = 1,
+    .pColorAttachments = &attachmentReference,
+    ...};
+
+VkAttachmentDescription attachmentDescription = {
+    ...
+    .loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+    .storeOp = VK_ATTACHMENT_STORE_OP_STORE,
+    ...
+    .initialLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
+    .finalLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL};
+
+/*  Due to these necessary extra synchronization points, it makes more sense
+    to omit the sub pass external dependencies (which can't express a queue
+    transfer), and batch the relevant operations with the new pipeline
+    barriers we're introducing. */
+
+VkRenderPassCreateInfo renderPassCreateInfo = {
+    ...
+    .attachmentCount = 1,
+    .pAttachments    = &attachmentDescription,
+    .subpassCount    = 1,
+    .pSubpasses      = &subpass,
+    .dependencyCount = 0,
+    .pDependencies   = NULL};
+
+vkCreateRenderPass(...);
+----
+
+Rendering command buffer - graphics queue
+
+[source, c]
+----
+/* Queue ownership transfer is only required when we need the content to remain valid across queues.
+   Since we are transitioning from UNDEFINED -- and therefore discarding the image contents to begin with --
+   we are not required to perform an ownership transfer from the presentation queue to graphics.
+
+   This transition could also be made as an EXTERNAL -> subpass #0 render pass dependency as shown earlier. */
+
+VkImageMemoryBarrier2KHR imageMemoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR,
+  .dstStageMask = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR,
+  .dstAccessMask = VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT_KHR,
+  .oldLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+  .newLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
+  .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+  .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+  /* .image and .subresourceRange should identify image subresource accessed */};
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,                      // imageMemoryBarrierCount
+    &imageMemoryBarrier,    // pImageMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+
+... // Render pass submission.
+
+// Queue release operation. dstAccessMask should always be 0.
+VkImageMemoryBarrier2KHR imageMemoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR,
+  .srcAccessMask = VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT_KHR,
+  .oldLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
+  .newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+  .srcQueueFamilyIndex = graphicsQueueFamilyIndex, // index of the graphics queue family
+  .dstQueueFamilyIndex = presentQueueFamilyIndex,  // index of the present queue family
+  /* .image and .subresourceRange should identify image subresource accessed */};
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,                      // imageMemoryBarrierCount
+    &imageMemoryBarrier,    // pImageMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+----
+
+Pre-present commands - presentation queue
+
+[source, c]
+----
+// After submitting the render pass...
+VkImageMemoryBarrier2KHR imageMemoryBarrier = {
+  ...
+  // A layout transition which happens as part of an ownership transfer needs to be specified twice; one for the release, and one for the acquire.
+  // No srcStage/AccessMask is needed, waiting for a semaphore does that automatically.
+  // No dstStage/AccessMask is needed, signalling a semaphore does that automatically.
+  .oldLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
+  .newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+  .srcQueueFamilyIndex = graphicsQueueFamilyIndex, // index of the graphics queue family
+  .dstQueueFamilyIndex = presentQueueFamilyIndex,  // index of the present queue family
+  /* .image and .subresourceRange should identify image subresource accessed */};
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,                      // imageMemoryBarrierCount
+    &imageMemoryBarrier,    // pImageMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+----
+
+Queue submission:
+
+[source, c]
+----
+vkAcquireNextImageKHR(
+    ...
+    acquireCompleteSemaphore,   //semaphore
+    ...
+    &imageIndex);       //image index
+
+VkSemaphoreSubmitInfoKHR acquireCompleteInfo = {
+    ...
+    .semaphore = acquireCompleteSemaphore,
+    .stageMask = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR};
+
+VkSemaphoreSubmitInfoKHR renderingCompleteInfo = {
+    ...
+    .semaphore = renderingCompleteSemaphore,
+    .stageMask = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR};
+
+VkCommandBufferSubmitInfoKHR renderingCommandBufferInfo = {
+    ...
+    .commandBuffer = renderingCommandBuffer;
+};
+
+VkSubmitInfo2KHR renderingSubmitInfo = {
+    ...
+    .waitSemaphoreInfoCount     = 1,
+    .pWaitSemaphoreInfos        = &acquireCompleteInfo,
+    .commandBufferInfoCount     = 1,
+    .pCommandBufferInfos        = &renderingCommandBufferInfo,
+    .signalSemaphoreInfoCount   = 1,
+    .pSignalSemaphoreInfos      = &renderingCompleteSemaphore};
+
+vkQueueSubmit2KHR(renderQueue, &renderingSubmitInfo, ...);
+
+VkSemaphoreSubmitInfoKHR prePresentCompleteInfo = {
+    ...
+    .semaphore = prePresentCompleteSemaphore,
+    .stageMask = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT_KHR};
+
+VkCommandBufferSubmitInfoKHR prePresentCommandBufferInfo = {
+    ...
+    .commandBuffer = prePresentCommandBuffer;
+};
+
+VkSubmitInfo2KHR prePresentSubmitInfo = {
+    ...
+    .waitSemaphoreInfoCount     = 1,
+    .pWaitSemaphoreInfos        = &renderingCompleteInfo,
+    .commandBufferInfoCount     = 1,
+    .pCommandBufferInfos        = &prePresentCommandBufferInfo,
+    .signalSemaphoreInfoCount   = 1,
+    .pSignalSemaphoreInfos      = &prePresentCompleteInfo};
+
+vkQueueSubmit2KHR(presentQueue, &prePresentSubmitInfo, ...);
+
+VkPresentInfoKHR presentInfo = {
+    .waitSemaphoreCount = 1,
+    .pWaitSemaphores = &prePresentCompleteSemaphore,
+    ...};
+
+vkQueuePresentKHR(..., &presentInfo);
+----
+
+== Full pipeline barrier
+
+[WARNING]
+====
+You should *ONLY USE THIS FOR DEBUGGING* - this is not something that should ever ship in real code, this will flush and invalidate all caches and stall everything, it is a tool not to be used lightly!
+====
+
+That said, it can be _really_ handy if you think you have a race condition in your app and you just want to serialize everything so you can debug it.
+
+Note that this does not take care of image layouts - if you're debugging you can set the layout of all your images to GENERAL to overcome this, but again - do not do this in release code!
+
+[source, c]
+----
+VkMemoryBarrier2KHR memoryBarrier = {
+  ...
+  .srcStageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR,
+  .srcAccessMask = VK_ACCESS_2_MEMORY_READ_BIT_KHR |
+                   VK_ACCESS_2_MEMORY_WRITE_BIT_KHR,
+  .dstStageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR,
+  .dstAccessMask = VK_ACCESS_2_MEMORY_READ_BIT_KHR |
+                   VK_ACCESS_2_MEMORY_WRITE_BIT_KHR};
+
+VkDependencyInfoKHR dependencyInfo = {
+    ...
+    1,              // memoryBarrierCount
+    &memoryBarrier, // pMemoryBarriers
+    ...
+}
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+----
