@@ -28,10 +28,6 @@ Vulkan Configurator 사용에 대한 자세한 내용은 link:https://vulkan.lun
 
 로더와 레이어가 서로 통신하기로 합의하는 방식인 link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md#loader-and-layer-interface[로더-레이어 인터페이스]를 따르기만 하면 누구나 레이어를 만들 수 있습니다.
 
-LunarG는 새로운 레이어를 개발하는 데 도움이 되는 link:https://github.com/LunarG/VulkanTools/tree/master/layer_factory[Layer Factory]라는 레이어 생성 프레임워크를 제공합니다(link:https://www.youtube.com/watch?v=gVT7nyXz6M8&t=5m22s[동영상 프레젠테이션]).
-layer factory는 로더-레이어 인터페이스, 레이어 상용구, 설정 및 초기화, 레이어 개발의 복잡성 대부분을 숨깁니다.
-애플리케이션 개발 시 애플리케이션 디버깅에 도움이 되는 레이어를 쉽게 생성할 수 있는 기능이 유용할 수 있습니다. 자세한 내용은 link:https://github.com/LunarG/VulkanTools/blob/master/layer_factory/README.md[Vulkan Layer Factory 문서]를 참조하세요.
-
 == 다양한 플랫폼
 
 레이어를 암시적으로 로드하는 방법은 로더와 플랫폼에 따라 다릅니다.
