@@ -577,7 +577,7 @@ float4 main(VSOutput input) : SV_TARGET {
 | textureSize | GetDimensions
 | textureProj | n.a., requires manual perspective divide
 | texelFetch | Load
-| sparseTexelsResidentARB | SampleLevel
+| sparseTexelsResidentARB | CheckAccessFullyMapped
 |====
 
 === Image formats
