@@ -326,7 +326,7 @@ VSOutput main(VSInput input) {
 | COLOR[n] | Diffuse and specular color | float4
 | NORMAL[n] | Normal vector | float4
 | POSITION[n] | Vertex position in object space. | float4
-| POSITIONT	Transformed vertex position | float4
+| POSITIONT	| Transformed vertex position | float4
 | PSIZE[n] | Point size | float
 | TANGENT[n] | Tangent | float4
 | TEXCOORD[n] | Texture coordinates | float4
@@ -577,7 +577,7 @@ float4 main(VSOutput input) : SV_TARGET {
 | textureSize | GetDimensions
 | textureProj | n.a., requires manual perspective divide
 | texelFetch | Load
-| sparseTexelsResidentARB | SampleLevel
+| sparseTexelsResidentARB | CheckAccessFullyMapped
 |====
 
 === Image formats
@@ -968,13 +968,12 @@ Most GLSL functions are also available in HLSL and vice-versa. This chapter list
 [options="header"]
 |====
 | *GLSL* | *HLSL*
-| clamp | saturate
 | dFdx | ddx 
 | dFdxCoarse | ddx_coarse
-| DFdxFine | ddx_fine
+| dFdxFine | ddx_fine
 | dFdy | ddy
 | dFdyCoarse | ddy_coarse
-| DFdyFine | ddy_fine
+| dFdyFine | ddy_fine
 | fma | mad
 | fract | frac
 | mix | lerp
