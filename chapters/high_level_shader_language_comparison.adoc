@@ -968,7 +968,6 @@ Most GLSL functions are also available in HLSL and vice-versa. This chapter list
 [options="header"]
 |====
 | *GLSL* | *HLSL*
-| clamp | saturate
 | dFdx | ddx 
 | dFdxCoarse | ddx_coarse
 | dFdxFine | ddx_fine
