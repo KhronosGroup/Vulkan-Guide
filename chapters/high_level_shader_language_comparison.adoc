@@ -326,7 +326,7 @@ VSOutput main(VSInput input) {
 | COLOR[n] | Diffuse and specular color | float4
 | NORMAL[n] | Normal vector | float4
 | POSITION[n] | Vertex position in object space. | float4
-| POSITIONT	Transformed vertex position | float4
+| POSITIONT	| Transformed vertex position | float4
 | PSIZE[n] | Point size | float
 | TANGENT[n] | Tangent | float4
 | TEXCOORD[n] | Texture coordinates | float4
