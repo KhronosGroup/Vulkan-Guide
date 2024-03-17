@@ -971,10 +971,10 @@ Most GLSL functions are also available in HLSL and vice-versa. This chapter list
 | clamp | saturate
 | dFdx | ddx 
 | dFdxCoarse | ddx_coarse
-| DFdxFine | ddx_fine
+| dFdxFine | ddx_fine
 | dFdy | ddy
 | dFdyCoarse | ddy_coarse
-| DFdyFine | ddy_fine
+| dFdyFine | ddy_fine
 | fma | mad
 | fract | frac
 | mix | lerp
