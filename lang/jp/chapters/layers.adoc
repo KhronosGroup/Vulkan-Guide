@@ -26,8 +26,6 @@ Windows、Linux、macOS の開発者は、Vulkan Configurator（vkconfig）を�
 
 ローダとレイヤが相互に通信することに同意する方法であるlink:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md#loader-and-layer-interface[ローダからレイヤへのインターフェイス]に従う限り、誰でもレイヤを作成することができます。
 
-LunarG では、新しいレイヤの開発を支援するために、link:https://github.com/LunarG/VulkanTools/tree/master/layer_factory[Layer Factory]と呼ばれるレイヤ作成のためのフレームワークを提供しています（link:https://www.youtube.com/watch?v=gVT7nyXz6M8&t=5m22s[プレゼン動画]）。Layer Factory は、ローダ・レイヤのインターフェイス、レイヤの定型文、セットアップや初期化、レイヤ開発の複雑さなどの大部分を隠します。アプリケーションの開発時には、アプリケーションのデバッグを支援するレイヤを簡単に作成できる機能が役立ちます。詳しくは、link:https://github.com/LunarG/VulkanTools/blob/master/layer_factory/README.md[Vulkan Layer Factory のドキュメント]をご覧ください。
-
 == プラットフォームのバリエーション
 
 暗黙的にレイヤを読み込む方法は、ローダやプラットフォームによって異なります。

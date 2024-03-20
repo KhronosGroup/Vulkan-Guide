@@ -28,11 +28,6 @@ There used to be both instance layers and device layers, but device layers were 
 
 Anyone can create a layer as long as it follows the link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md#loader-and-layer-interface[loader to layer interface] which is how the loader and layers agree to communicate with each other.
 
-LunarG provides a framework for layer creation called the link:https://github.com/LunarG/VulkanTools/tree/master/layer_factory[Layer Factory] to help develop new layers (link:https://www.youtube.com/watch?v=gVT7nyXz6M8&t=5m22s[Video presentation]).
-The layer factory hides the majority of the loader-layer interface, layer boilerplate, setup and initialization, and complexities of layer development.
-During application development, the ability to easily create a layer to aid in debugging your application can be useful.
-For more information, see the link:https://github.com/LunarG/VulkanTools/blob/master/layer_factory/README.md[Vulkan Layer Factory documentation].
-
 == Platform Variations
 
 The way to load a layer in implicitly varies between loader and platform.
