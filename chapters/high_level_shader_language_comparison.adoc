@@ -818,23 +818,23 @@ Example:
 GLSL:
 [source,glsl]
 ----
-groupMemoryBarrier;
-barrier;
+groupMemoryBarrier();
+barrier();
 for (int j = 0; j < 256; j++) {
     doSomething;
 }
-groupMemoryBarrier;
-barrier;
+groupMemoryBarrier();
+barrier();
 ----
 
 HLSL:
 [source,hlsl]
 ----
-GroupMemoryBarrierWithGroupSync;
+GroupMemoryBarrierWithGroupSync();
 for (int j = 0; j < 256; j++) {
     doSomething;
 }
-GroupMemoryBarrierWithGroupSync;
+GroupMemoryBarrierWithGroupSync();
 ----
 
 |====
