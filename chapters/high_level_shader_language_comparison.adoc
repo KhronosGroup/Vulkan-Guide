@@ -898,28 +898,28 @@ These shader stages share several functions and built-ins
 | gl_SubgroupGtMask | n.a.
 | gl_SubgroupLeMask | n.a.
 | gl_SubgroupLtMask | SubgroupLtMask decorated OpVariablen.a.
-| WaveIsFirstLane | subgroupElect
-| WaveActiveAnyTrue | subgroupAny
-| WaveActiveAllTrue | subgroupAll
-| WaveActiveBallot | subgroupBallot
-| WaveActiveAllEqual | subgroupAllEqual
-| WaveActiveCountBits | subgroupBallotBitCount   
-| WaveActiveBitAdd | subgroupAnd
-| WaveActiveBitOr | subgroupOr
-| WaveActiveBitXor | subgroupXor
-| WaveActiveSum | subgroupAdd
-| WaveActiveProduct | subgroupMul
-| WaveActiveMin | subgroupMin
-| WaveActiveMax | subgroupMax
-| WavePrefixSum | subgroupExclusiveAdd
-| WavePrefixProduct | subgroupExclusiveMul
-| WavePrefixCountBits | subgroupBallotExclusiveBitCount
-| WaveReadLaneAt | subgroupBroadcast
-| WaveReadLaneFirst | subgroupBroadcastFirst
-| QuadReadAcrossX | subgroupQuadSwapHorizontal
-| QuadReadAcrossY | subgroupQuadSwapVertical
-| QuadReadAcrossDiagonal | subgroupQuadSwapDiagonal	 
-| QuadReadLaneAt | subgroupQuadBroadcast
+| subgroupElect | WaveIsFirstLane
+| subgroupAny | WaveActiveAnyTrue
+| subgroupAll | WaveActiveAllTrue
+| subgroupBallot | WaveActiveBallot
+| subgroupAllEqual | WaveActiveAllEqual
+| subgroupBallotBitCount | WaveActiveCountBits
+| subgroupAnd | WaveActiveBitAdd
+| subgroupOr | WaveActiveBitOr
+| subgroupXor | WaveActiveBitXor
+| subgroupAdd | WaveActiveSum
+| subgroupMul | WaveActiveProduct
+| subgroupMin | WaveActiveMin
+| subgroupMax | WaveActiveMax
+| subgroupExclusiveAdd | WavePrefixSum
+| subgroupExclusiveMul | WavePrefixProduct
+| subgroupBallotExclusiveBitCount | WavePrefixCountBits
+| subgroupBroadcast | WaveReadLaneAt
+| subgroupBroadcastFirst | WaveReadLaneFirst
+| subgroupQuadSwapHorizontal | QuadReadAcrossX
+| subgroupQuadSwapVertical | QuadReadAcrossY
+| subgroupQuadSwapDiagonal | QuadReadAcrossDiagonal
+| subgroupQuadBroadcast | QuadReadLaneAt
 |====
 
 === Misc
