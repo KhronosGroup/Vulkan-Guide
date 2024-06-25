@@ -61,6 +61,10 @@ float4x3 mat = (float4x3)(ubo.view);
 An imporant difference: Matrices in GLSL are column-major, while matrices in HLSL are row-major. This affects things like matrix construction.
 ====
 
+== Implicit vk Namespace
+
+For Vulkan concepts that are not available in DirectX, an link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst#the-implicit-vk-namespace)[implicit namespace] has been added that marks Vulkan specific features.
+
 == SPIR-V macro
 
 When using xref:{chapters}hlsl.adoc#DirectXShaderCompiler[DXC] to compile HLSL to SPIR-V you can use the `\\__spirv__` macro for Vulkan specific code. This is useful if HLSL shaders need to work with both Vulkan and D3D:
@@ -71,6 +75,29 @@ When using xref:{chapters}hlsl.adoc#DirectXShaderCompiler[DXC] to compile HLSL t
 [[vk::binding(0, 1)]]
 #endif
 ConstantBuffer<Node> node : register(b0, space1);
+----
+
+== SPIR-V intrinsics
+
+DXC supports link:https://github.com/microsoft/DirectXShaderCompiler/wiki/GL_EXT_spirv_intrinsics-for-SPIR-V-code-gen[SPIR-V intrinsics] with the `GL_EXT_spirv_intrinsics` extension. This adds support for embedding arbitrary SPIR-V in the middle of of GLSL for features not available in DirectX. For this new keywords are added to the `vk` namespace that map SPIR-V opcodes, incl. `vk::ext_extension`, `vk::ext_capability`, `vk::ext_builtin_input`, `vk::ext_execution_mode` and `vk::ext_instruction`.
+
+Example for using the stencil export SPIR-V extension in HLSL:
+
+[source,hlsl]
+----
+[[vk::ext_capability(/* StencilExportEXT */ 5013)]]
+[[vk::ext_extension("SPV_EXT_shader_stencil_export")]]
+vk::ext_execution_mode(/* StencilRefReplacingEXT */ 5027);
+----
+
+Example for setting up the built-in to access vertex positions in ray tracing:
+
+[source,hlsl]
+----
+[[vk::ext_extension("SPV_KHR_ray_tracing_position_fetch")]]
+[[vk::ext_capability(RayTracingPositionFetchKHR)]]
+[[vk::ext_builtin_input(HitTriangleVertexPositionsKHR)]]
+const static float3 gl_HitTriangleVertexPositions[3];
 ----
 
 == Built-ins vs. Semantics
@@ -145,7 +172,7 @@ VSOutput main(VSInput input)
 
 [NOTE]
 ====
-Shader interfaces greatly differ between GLSL and HLSL. Vulkan concepts not directly available in HLSL use the link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst#the-implicit-vk-namespace)[implicit vk namespace].
+Shader interfaces greatly differ between GLSL and HLSL.
 ====
 
 === Descriptor bindings
@@ -741,6 +768,14 @@ ConstantBuffer<SBT> sbt;
 | gl_RayFlagsSkipAABBEXT  | RAY_FLAG_SKIP_PROCEDURAL_PRIMITIVES |
 | gl_HitKindFrontFacingTriangleEXT | HIT_KIND_TRIANGLE_FRONT_FACE  |
 | gl_HitKindBackFacingTriangleEXT | HIT_KIND_TRIANGLE_BACK_FACE  |
+| gl_HitTriangleVertexPositionsEXT a| Requires <<SPIR-V intrinsics>>:
+[,hlsl]
+----
+[[vk::ext_extension("SPV_KHR_ray_tracing_position_fetch")]]
+[[vk::ext_capability(RayTracingPositionFetchKHR)]]
+[[vk::ext_builtin_input(HitTriangleVertexPositionsKHR)]]
+----
+  | Requires `GL_EXT_ray_tracing_position_fetch`
 | shadercallcoherent | n.a.
 |====
 
