@@ -891,7 +891,7 @@ These shader stages share several functions and built-ins
 | ballotARB | WaveBallot
 | gl_NumSubgroups | NumSubgroups decorated OpVariable
 | gl_SubgroupID | SubgroupId decorated OpVariable
-| gl_SubGroupSize | WaveGetLaneCount
+| gl_SubgroupSize | WaveGetLaneCount
 | gl_SubgroupInvocationID | WaveGetLaneIndex
 | gl_SubgroupEqMask | n.a.
 | gl_SubgroupGeMask | n.a.
