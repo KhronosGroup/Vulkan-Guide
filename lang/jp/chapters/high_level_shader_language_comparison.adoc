@@ -679,7 +679,7 @@ struct PushConstants {
 [[vk::push_constant]] PushConstants pushConstants;
 
 void main() {
-  float4 data = vk::RawBufferLoad<float4>(pushConstants.bufferAddress);
+    float4 data = vk::RawBufferLoad<float4>(pushConstants.bufferAddress);
 }
 ----
 
@@ -707,7 +707,7 @@ void main(inout RayPayload rayPayload, in float2 attribs) {
 [source,glsl]
 ----
 layout(shaderRecordEXT, std430) buffer SBT {
-  float data;
+    float data;
 };
 ----
 
@@ -717,7 +717,7 @@ layout(shaderRecordEXT, std430) buffer SBT {
 [source,hlsl]
 ----
 struct SBT {
-  float data;
+    float data;
 };
 [[vk::shader_record_ext]]
 ConstantBuffer<SBT> sbt;

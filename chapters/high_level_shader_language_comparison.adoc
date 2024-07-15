@@ -674,7 +674,7 @@ struct PushConstants {
 [[vk::push_constant]] PushConstants pushConstants;
 
 void main() {
-  float4 data = vk::RawBufferLoad<float4>(pushConstants.bufferAddress);
+    float4 data = vk::RawBufferLoad<float4>(pushConstants.bufferAddress);
 }
 ----
 
@@ -702,7 +702,7 @@ Example:
 [source,glsl]
 ----
 layout(shaderRecordEXT, std430) buffer SBT {
-  float data;
+    float data;
 };
 ----
 
@@ -712,7 +712,7 @@ Example:
 [source,hlsl]
 ----
 struct SBT {
-  float data;
+    float data;
 };
 [[vk::shader_record_ext]]
 ConstantBuffer<SBT> sbt;
