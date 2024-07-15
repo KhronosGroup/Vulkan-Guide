@@ -212,6 +212,9 @@ Vulkan Guide は、`asciidoctor guide.adoc` を使って1つのページとし�
 
 // include::{chapters}hlsl.adoc[]
 
+== xref:{chapters}high_level_shader_language_comparison.adoc[高レベルシェーダ言語の比較]
+
+// include::{chapters}high_level_shader_language_comparison.adoc[]
 
 = 拡張機能を使うタイミングと理由
 
