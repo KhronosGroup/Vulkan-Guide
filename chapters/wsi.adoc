@@ -1,4 +1,4 @@
-// Copyright 2019-2022 The Khronos Group, Inc.
+// Copyright 2019-2024 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
@@ -20,8 +20,7 @@ Each platform that supports a Vulkan Surface has its own way to create a `VkSurf
   * Android - link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vkCreateAndroidSurfaceKHR[vkCreateAndroidSurfaceKHR]
   * DirectFB - link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vkCreateDirectFBSurfaceEXT[vkCreateDirectFBSurfaceEXT]
   * Fuchsia - link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vkCreateImagePipeSurfaceFUCHSIA[vkCreateImagePipeSurfaceFUCHSIA]
-  * Google Games - link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vkCreateStreamDescriptorSurfaceGGP[vkCreateStreamDescriptorSurfaceGGP]
-  * iOS - link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vkCreateIOSSurfaceMVK[vkCreateIOSSurfaceMVK]
+   * iOS - link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vkCreateIOSSurfaceMVK[vkCreateIOSSurfaceMVK]
   * macOS - link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vkCreateMacOSSurfaceMVK[vkCreateMacOSSurfaceMVK]
   * Metal - link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vkCreateMetalSurfaceEXT[vkCreateMetalSurfaceEXT]
   * VI - link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vkCreateViSurfaceNN[vkCreateViSurfaceNN]
