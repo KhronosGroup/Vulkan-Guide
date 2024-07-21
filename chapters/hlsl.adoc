@@ -1,5 +1,5 @@
-// Copyright 2021 The Khronos Group, Inc.
-// Copyright 2021 Sascha Willems
+// Copyright 2021-2024 The Khronos Group, Inc.
+// Copyright 2021-2024 Sascha Willems
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
@@ -322,11 +322,15 @@ DirectX and HLSL use a fixed shader model notion to describe the supported featu
 | Shader integer dot product, SV_ShadingRate
 
 | link:https://github.com/microsoft/DirectXShaderCompiler/wiki/Shader-Model-6.5[Shader Model 6.5]
-| ❌ (partially)
+| ⚠️ (partially)
 | DXR1.1 (KHR ray tracing), Mesh and Amplification shaders, additional Wave intrinsics
 
 | link:https://github.com/microsoft/DirectXShaderCompiler/wiki/Shader-Model-6.6[Shader Model 6.6]
-| ❌ (partially)
-| VK_NV_compute_shader_derivatives, VK_KHR_shader_atomic_int64
+| ⚠️ (partially)
+| VK_NV_compute_shader_derivatives, VK_KHR_shader_atomic_int64, VK_EXT_descriptor_buffer, VK_EXT_mutable_descriptor_type
+
+| link:https://microsoft.github.io/DirectX-Specs/d3d/HLSL_ShaderModel6_7.html[Shader Model 6.7]
+| ⚠️ (partially)
+| VK_KHR_shader_quad_control, VkPhysicalDeviceFeatures::shaderStorageImageMultisample
 
 |===
