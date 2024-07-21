@@ -1,4 +1,4 @@
-// Copyright 2019-2022 The Khronos Group, Inc.
+// Copyright 2019-2024 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 // Required for both single-page and combined guide xrefs to work
@@ -47,10 +47,6 @@ Nintendo Switch는 네이티브 Vulkan을 지원하는 NVIDIA Tegra 칩셋을 �
 == QNX
 
 Vulkan은 QNX 운영 체제에서 지원됩니다.
-
-== Stadia
-
-구글의 스타디아는 AMD 기반 Linux 시스템에서 실행되며, Vulkan은 필수 그래픽 API입니다.
 
 == Windows
 

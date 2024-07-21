@@ -1,4 +1,4 @@
-// Copyright 2019-2022 The Khronos Group, Inc.
+// Copyright 2019-2024 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 // Required for both single-page and combined guide xrefs to work
@@ -47,10 +47,6 @@ The Nintendo Switch runs an NVIDIA Tegra chipset that supports native Vulkan.
 == QNX
 
 Vulkan is supported on QNX operation system.
-
-== Stadia
-
-Google's Stadia runs on AMD based Linux machines and Vulkan is the required graphics API.
 
 == Windows
 
