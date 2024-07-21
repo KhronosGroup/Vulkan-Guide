@@ -30,7 +30,7 @@ Vulkan の最大の特徴は、マルチプラットフォーム、マルチデ�
 利用可能なすべての拡張機能が記載されたlink:https://www.khronos.org/registry/vulkan/#repo-docs[レジストリ]があります。
 ====
 
-Vulkan には、現在は存在しない新機能が望まれることが多々あります。拡張機能は新しい機能を追加することができます。拡張機能は新しい Vulkan 関数、列挙型、構造体、または機能ビットを定義することができます。これらの拡張項目はすべて Vulkan Headers にデフォルトで含まれていますが、xref:{chapters}enabling_extensions.adoc#enabling-extensions[拡張機能が有効になっていない]場合、拡張された Vulkan を使用することは**未定義の振る舞い**となります。
+Vulkan には、現在は存在しない新機能が望まれることが多々あります。拡張機能は新しい機能を追加することができます。拡張機能は新しい Vulkan 関数、列挙型、構造体、または機能ビットを定義することができます。これらの拡張項目はすべて Vulkan Headers にデフォルトで含まれていますが、xref:{chapters}enabling_extensions.adoc#enabling-extensions[拡張機能が有効になっていない]場合、拡張された Vulkan を使用することは**未定義の動作**となります。
 
 == 機能
 

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[decoder-ring]]
 = Vulkan Decoder Ring
@@ -40,6 +41,10 @@ Not everything will be a perfect 1:1 match, the goal is to give a rough idea whe
             | conditional rendering
                         | predication
                                     |
+| cooperative matrix
+            |
+                        | wave matrix
+                                    | SIMD group matrix
 | depth/stencil attachment
             | depth Attachment and stencil Attachment
                         | depth/stencil view
@@ -87,11 +92,11 @@ Not everything will be a perfect 1:1 match, the goal is to give a rough idea whe
 | framebuffer
             | framebuffer object
                         | collection of resources
-                                    |
+                                    | MTLRenderPassDescriptor
 | heap
             |
-                        | pool
-                                    |
+                        | ID3D12Heap
+                                    | MTLHeap
 | image
             | texture and renderbuffer
                         | texture
@@ -111,7 +116,7 @@ Not everything will be a perfect 1:1 match, the goal is to give a rough idea whe
 | interface matching (`in`/`out`)
             | varying (link:https://registry.khronos.org/OpenGL/specs/gl/GLSLangSpec.4.20.pdf[removed in GLSL 4.20])
                         | Matching semantics
-                                    |
+                                    | Pervertex input attributes [[stage_in]]
 | invocation
             | invocation
                         | thread, lane
@@ -195,7 +200,7 @@ Not everything will be a perfect 1:1 match, the goal is to give a rough idea whe
 | task shader
             |
                         | amplification shader
-                                    |
+                                    | object shader
 | tessellation control shader
             | tessellation control shader
                         | hull shader

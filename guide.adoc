@@ -18,6 +18,8 @@ image::images/khronos_logo.png[Khronos logo]
 
 // Switch imagesdir for chapters/ includes so they can also load as single pages
 :imagesdir: chapters
+// Use {images} as base path for images
+:images: images/
 
 // Use {chapters} as base path for individual chapters, to allow single
 // pages to work properly as well. Must have trailing slash.
@@ -132,9 +134,12 @@ include::{chapters}synchronization.adoc[]
 
 // Switch imagesdir for chapters/extensions/ includes so they can also load as single pages,
 // then switch it back again
-:imagesdir: chapters/extensions
+// :imagesdir: chapters/images/extensions
+// :images: images/
 
 include::{chapters}extensions/VK_KHR_synchronization2.adoc[]
+
+include::{chapters}synchronization_examples.adoc[]
 
 :imagesdir: chapters
 
@@ -174,6 +179,10 @@ include::{chapters}vertex_input_data_processing.adoc[]
 
 include::{chapters}descriptor_dynamic_offset.adoc[]
 
+// === Push Constants
+
+include::{chapters}push_constants.adoc[]
+
 // == Robustness
 
 include::{chapters}robustness.adoc[]
@@ -181,6 +190,10 @@ include::{chapters}robustness.adoc[]
 // == Dynamic State
 
 include::{chapters}dynamic_state.adoc[]
+
+// === Dynamic State Map
+
+include::{chapters}dynamic_state_map.adoc[]
 
 // == Subgroups
 
@@ -202,6 +215,10 @@ include::{chapters}common_pitfalls.adoc[]
 
 include::{chapters}hlsl.adoc[]
 
+// == High Level Shading Language Comparison
+
+include::{chapters}high_level_shader_language_comparison.adoc[]
+
 = When and Why to use Extensions
 
 [NOTE]
@@ -210,7 +227,7 @@ These are supplemental references for the various Vulkan Extensions. Please cons
 ====
 
 // Switch imagesdir for chapters/extensions/ includes so they can also load as single pages
-:imagesdir: chapters/extensions
+// :imagesdir: chapters/images/extensions
 
 // == Cleanup Extensions
 

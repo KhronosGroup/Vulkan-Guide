@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
 
 [[VK_EXT_descriptor_indexing]]
 = VK_EXT_descriptor_indexing
@@ -10,7 +11,7 @@ ifndef::chapters[:chapters: ../]
 ====
 Promoted to core in Vulkan 1.2
 
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_descriptor_indexing.html[SPV_EXT_descriptor_indexing]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/EXT/SPV_EXT_descriptor_indexing.html[SPV_EXT_descriptor_indexing]
 
 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_nonuniform_qualifier.txt[GLSL - GL_EXT_nonuniform_qualifier]
 
@@ -37,7 +38,7 @@ After enabling the desired feature support for updating after bind, an applicati
 
 The following code example gives an idea of the difference between enabling update after bind and without it:
 
-image::images/VK_EXT_descriptor_indexing_update_after_bind.png[VK_EXT_descriptor_indexing_update_after_bind.png]
+image::{images}extensions/VK_EXT_descriptor_indexing_update_after_bind.png[VK_EXT_descriptor_indexing_update_after_bind.png]
 
 == Partially bound
 

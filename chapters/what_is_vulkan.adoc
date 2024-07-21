@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[what-is-vulkan]]
 = What is Vulkan?
@@ -25,19 +26,19 @@ For those who might not work with C code, there are various link:https://github.
 
 Some developers might be aware of the other Khronos Group standard link:https://www.khronos.org/opengl/[OpenGL] which is also a 3D Graphics API. Vulkan is not a direct replacement for OpenGL, but rather an explicit API that allows for more explicit control of the GPU.
 
-Khronos' link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples] article on link:https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/vulkan_basics.md["How does Vulkan compare to OpenGL ES? What should you expect when targeting Vulkan?] offers a more detailed comparison between the two APIs.
+Khronos' link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples] article on link:https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/vulkan_basics.adoc["How does Vulkan compare to OpenGL ES? What should you expect when targeting Vulkan?] offers a more detailed comparison between the two APIs.
 
-image::images/what_is_vulkan_compared_to_gl.png[what_is_vulkan_compared_to_gl.png]
+image::{images}what_is_vulkan_compared_to_gl.png[what_is_vulkan_compared_to_gl.png]
 
 Vulkan puts more work and responsibility into the application. Not every developer will want to make that extra investment, but those that do so correctly can find power and performance improvements.
 
-image::images/what_is_vulkan_decision.png[what_is_vulkan_decision.png]
+image::{images}what_is_vulkan_decision.png[what_is_vulkan_decision.png]
 
 == Using helping libraries
 
 While some developers may want to try using Vulkan with no help, it is common to use some lighter libraries in your development flow to help abstract some of the more tedious aspect of Vulkan. Here are some link:https://github.com/KhronosGroup/Khronosdotorg/blob/main/api/vulkan/resources.md#libraries[libraries] to link:https://github.com/vinjn/awesome-vulkan#libraries[help with development]
 
-image::images/what_is_vulkan_layer.png[what_is_vulkan_layer]
+image::{images}what_is_vulkan_layer.png[what_is_vulkan_layer]
 
 == Learning to use Vulkan
 

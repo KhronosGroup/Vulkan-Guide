@@ -1,0 +1,294 @@
+// Copyright 2019-2022 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Vulkan^®^ Guide
+:regtitle: pass:q,r[^®^]
+The Khronos{regtitle} Vulkan Working Group
+:data-uri:
+:icons: font
+:toc2:
+:toclevels: 2
+:max-width: 100%
+:numbered:
+:source-highlighter: rouge
+:rouge-style: github
+
+image::images/vulkan_logo.png[Vulkan Logo]
+image::images/khronos_logo.png[Khronos logo]
+
+// Switch imagesdir for chapters/ includes so they can also load as single pages
+:imagesdir: chapters
+// Use {images} as base path for images
+:images: images/
+
+// Use {chapters} as base path for individual chapters, to allow single
+// pages to work properly as well. Must have trailing slash.
+// Implicit {relfileprefix} does not work due to file hierarchy
+:chapters: chapters/
+
+The Vulkan Guide is designed to help developers get up and going with the world of Vulkan. It is aimed to be a light read that leads to many other useful links depending on what a developer is looking for. All information is intended to help better fill the gaps about the many nuances of Vulkan.
+
+:leveloffset: 1
+
+= Logistics Overview
+
+// == What is Vulkan?
+
+include::{chapters}what_is_vulkan.adoc[]
+
+// == What you can do with Vulkan
+
+include::{chapters}what_vulkan_can_do.adoc[]
+
+// == Vulkan Spec
+
+include::{chapters}vulkan_spec.adoc[]
+
+// == Platforms
+
+include::{chapters}platforms.adoc[]
+
+// == Checking for Support
+
+include::{chapters}checking_for_support.adoc[]
+
+// == Versions
+
+include::{chapters}versions.adoc[]
+
+// == Vulkan Release Summary
+
+include::{chapters}vulkan_release_summary.adoc[]
+
+// == What is SPIR-V?
+
+include::{chapters}what_is_spirv.adoc[]
+
+// == Portability Initiative
+
+include::{chapters}portability_initiative.adoc[]
+
+// == Vulkan CTS
+
+include::{chapters}vulkan_cts.adoc[]
+
+// == Vulkan Development Tools
+
+include::{chapters}development_tools.adoc[]
+
+// == Vulkan Validation Overview
+
+include::{chapters}validation_overview.adoc[]
+
+// == Vulkan Decoder Ring (GL, GLES, DirectX, and Metal)
+
+include::{chapters}decoder_ring.adoc[]
+
+= Using Vulkan
+
+// == Loader
+
+include::{chapters}loader.adoc[]
+
+// == Layers
+
+include::{chapters}layers.adoc[]
+
+// == Querying Properties, Extensions, Features, Limits, and Formats
+
+include::{chapters}querying_extensions_features.adoc[]
+
+// === Enabling Vulkan Extensions
+
+include::{chapters}enabling_extensions.adoc[]
+
+// === Enabling Vulkan Features
+
+include::{chapters}enabling_features.adoc[]
+
+// === Using SPIR-V Extension
+
+include::{chapters}spirv_extensions.adoc[]
+
+// === Formats
+
+include::{chapters}formats.adoc[]
+
+// == Queues and Queue Family
+
+include::{chapters}queues.adoc[]
+
+// == WSI
+
+include::{chapters}wsi.adoc[]
+
+// == pNext and sType
+
+include::{chapters}pnext_and_stype.adoc[]
+
+// == Synchronization
+
+include::{chapters}synchronization.adoc[]
+
+// === Porting to VK_KHR_synchronization2
+
+// Switch imagesdir for chapters/extensions/ includes so they can also load as single pages,
+// then switch it back again
+// :imagesdir: chapters/images/extensions
+// :images: images/
+
+include::{chapters}extensions/VK_KHR_synchronization2.adoc[]
+
+:imagesdir: chapters
+
+// == Memory Allocation Strategy
+
+include::{chapters}memory_allocation.adoc[]
+
+// === Sparse Resources
+
+include::{chapters}sparse_resources.adoc[]
+
+// === Protected Memory
+
+include::{chapters}protected.adoc[]
+
+// == Pipeline Caching/Derivatives
+
+include::{chapters}pipeline_cache.adoc[]
+
+// == Threading
+
+include::{chapters}threading.adoc[]
+
+// == Depth
+
+include::{chapters}depth.adoc[]
+
+// == Mapping Data to Shaders
+
+include::{chapters}mapping_data_to_shaders.adoc[]
+
+// === Vertex Input Data Processing
+
+include::{chapters}vertex_input_data_processing.adoc[]
+
+// === Descriptor Dynamic Offset
+
+include::{chapters}descriptor_dynamic_offset.adoc[]
+
+// === Push Constants
+
+include::{chapters}push_constants.adoc[]
+
+// == Robustness
+
+include::{chapters}robustness.adoc[]
+
+// == Dynamic State
+
+include::{chapters}dynamic_state.adoc[]
+
+// === Dynamic State Map
+
+include::{chapters}dynamic_state_map.adoc[]
+
+// == Subgroups
+
+include::{chapters}subgroups.adoc[]
+
+// Shader Memory Layout
+
+include::{chapters}shader_memory_layout.adoc[]
+
+// == Atomics
+
+include::{chapters}atomics.adoc[]
+
+// == Common Pitfalls
+
+include::{chapters}common_pitfalls.adoc[]
+
+// == Using HLSL shaders
+
+include::{chapters}hlsl.adoc[]
+
+= When and Why to use Extensions
+
+[NOTE]
+====
+These are supplemental references for the various Vulkan Extensions. Please consult the Vulkan Spec for further details on any extension
+====
+
+// Switch imagesdir for chapters/extensions/ includes so they can also load as single pages
+// :imagesdir: chapters/images/extensions
+
+// == Cleanup Extensions
+
+include::{chapters}extensions/cleanup.adoc[]
+
+// == Device Groups
+
+include::{chapters}extensions/device_groups.adoc[]
+
+// == External Memory and Sychronization
+
+include::{chapters}extensions/external.adoc[]
+
+// == Ray Tracing
+
+include::{chapters}extensions/ray_tracing.adoc[]
+
+// == Shader Features
+
+include::{chapters}extensions/shader_features.adoc[]
+
+// == Translation Layer Extensions
+
+include::{chapters}extensions/translation_layer_extensions.adoc[]
+
+// == VK_EXT_descriptor_indexing
+
+include::{chapters}extensions/VK_EXT_descriptor_indexing.adoc[]
+
+// == VK_EXT_inline_uniform_block
+
+include::{chapters}extensions/VK_EXT_inline_uniform_block.adoc[]
+
+// == VK_EXT_memory_priority
+
+include::{chapters}extensions/VK_EXT_memory_priority.adoc[]
+
+// == VK_KHR_descriptor_update_template
+
+include::{chapters}extensions/VK_KHR_descriptor_update_template.adoc[]
+
+// == VK_KHR_draw_indirect_count
+
+include::{chapters}extensions/VK_KHR_draw_indirect_count.adoc[]
+
+// == VK_KHR_image_format_list
+
+include::{chapters}extensions/VK_KHR_image_format_list.adoc[]
+
+// == VK_KHR_imageless_framebuffer
+
+include::{chapters}extensions/VK_KHR_imageless_framebuffer.adoc[]
+
+// == VK_KHR_sampler_ycbcr_conversion
+
+include::{chapters}extensions/VK_KHR_sampler_ycbcr_conversion.adoc[]
+
+// == link:https://www.khronos.org/blog/vulkan-timeline-semaphores[VK_KHR_timeline_semaphore]
+
+// == link:https://www.khronos.org/blog/streamlining-render-passes[VK_KHR_dynamic_rendering]
+
+// == VK_KHR_shader_subgroup_uniform_control_flow
+
+include::{chapters}extensions/VK_KHR_shader_subgroup_uniform_control_flow.adoc[]
+
+= link:CONTRIBUTING.adoc[Contributing]
+
+= link:LICENSE[License]
+
+= link:CODE_OF_CONDUCT.adoc[Code of conduct]

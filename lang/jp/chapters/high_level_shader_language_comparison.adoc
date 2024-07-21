@@ -1,0 +1,1023 @@
+// Copyright 2024 Sascha Willems
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[shader-decoder-ring]]
+= Vulkanにおける高レベルシェーダ言語の比較
+:toc:
+
+Vulkan自体はシェーダをバイナリ形式であるxref:{chapters}what_is_spirv.adoc[SPIR-V]として使用しますが、シェーダは通常、高レベル言語で記述されます。このセクションでは、Vulkanで一般的に使用されるGLSLとHLSLのシェーダ機能の対応を示します。これは主に、ある高レベルシェーダ言語から別の言語に移行しようとする人々を対象としています。これは出発点としての意図があり、完全な移行ガイドではありません。
+
+[TIP]
+====
+HLSLをVulkanで使用する方法については、xref:{chapters}hlsl.adoc[こちらの章]をご覧ください。
+====
+
+[NOTE]
+====
+以下のリストは完全なものではなく、新しい拡張機能のマッピングが欠けている場合があります。また、GLSLとHLSLの間で概念が必ずしも1対1で対応するわけではないことに注意してください。例えば、HLSLにおけるセマンティクスがGLSLには存在しなかったり、一部の新しいGLSLの機能がHLSLでまだ利用できなかったりすることがあります。
+====
+
+== 拡張機能
+
+GLSLでは、`#extension` ディレクティブを使用して拡張機能を明示的に有効にする必要があります。これはHLSLでは必要ありません。コンパイラはシェーダに基づいて適切なSPIR-V拡張機能を自動的に選択します。必要に応じて、`-fspv-extension` 引数を使用して拡張機能を明示的に選択することもできます。
+
+== データ型
+
+[NOTE]
+====
+型はGLSLとHLSLで似たように機能します。ただし、GLSLが明示的なベクトルや行列型を持っているのに対し、HLSLは基本型を使用します。一方で、HLSLはC++のテンプレートのような高度な型機能を提供します。この段落では、両言語間の型の違いを示すための概要といくつかの例を紹介します。
+====
+
+[options="header"]
+|====
+| *GLSL* | *HLSL* | *Example*
+| vec__n__ | float__n__ | vec4 -> float4
+| ivec__n__ | int__n__ | ivec3 --> int3
+| mat__nxm__ or shorthand mat__n__ | float__nxm__ | mat4 -> float4x4
+|====
+
+* link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-data-types[HLSL data types (Microsoft)]
+* link:https://www.khronos.org/opengl/wiki/Data_Type_(GLSL)[GLSL data types (OpenGL wiki)]
+
+型キャストの構文も異なります：
+
+GLSL:
+[source,glsl]
+----
+mat4x3 mat = mat4x3(ubo.view);
+----
+
+HLSL:
+[source,hlsl]
+----
+float4x3 mat = (float4x3)(ubo.view);
+----
+
+[NOTE]
+====
+GLSLの行列は列優先ですが、HLSLの行列は行優先であるという重要な違いがあります。この違いは、行列の構築方法などに影響を与えます。
+====
+
+== 暗黙のvk名前空間
+
+DirectXには存在しないVulkanの概念については、Vulkan固有の機能を示すためにlink:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst#the-implicit-vk-namespace[暗黙の名前空間]が追加されています。
+
+== SPIR-Vマクロ
+
+HLSLをSPIR-Vにコンパイルするためにxref:{chapters}hlsl.adoc#DirectXShaderCompiler[DXC]を使用する際、Vulkan固有のコードには `\\__spirv__` マクロを使用できます。これは、HLSLシェーダがVulkanとD3Dの両方で動作する必要がある場合に便利です。
+
+[source,hlsl]
+----
+#ifdef __spirv__
+[[vk::binding(0, 1)]]
+#endif
+ConstantBuffer<Node> node : register(b0, space1);
+----
+
+== SPIR-V 組み込み関数
+
+DXCは、`GL_EXT_spirv_intrinsics` 拡張機能を使用してlink:https://github.com/microsoft/DirectXShaderCompiler/wiki/GL_EXT_spirv_intrinsics-for-SPIR-V-code-gen[SPIR-V組み込み関数]をサポートしています。これにより、DirectXでは利用できない機能を実現するために、GLSLの中に任意のSPIR-Vコードを埋め込むことができます。この拡張機能のために、SPIR-Vのオペコードにマッピングされた新しいキーワードが `vk` 名前空間に追加されました。これには、`vk::ext_extension`、`vk::ext_capability`、`vk::ext_builtin_input`、`vk::ext_execution_mode`、`vk::ext_instruction` が含まれます。
+
+HLSLでステンシルエクスポートSPIR-V拡張機能を使用する例：
+
+[source,hlsl]
+----
+[[vk::ext_capability(/* StencilExportEXT */ 5013)]]
+[[vk::ext_extension("SPV_EXT_shader_stencil_export")]]
+vk::ext_execution_mode(/* StencilRefReplacingEXT */ 5027);
+----
+
+レイトレーシングで頂点位置にアクセスするための組み込み設定例：
+
+[source,hlsl]
+----
+[[vk::ext_extension("SPV_KHR_ray_tracing_position_fetch")]]
+[[vk::ext_capability(RayTracingPositionFetchKHR)]]
+[[vk::ext_builtin_input(HitTriangleVertexPositionsKHR)]]
+const static float3 gl_HitTriangleVertexPositions[3];
+----
+
+== 組み込み変数 vs. セマンティクス
+
+[NOTE]
+====
+GLSLが「組み込み変数 (built-ins)」と呼ばれる言語内の入力および出力変数を多用する一方で、HLSLにはそのような概念はありません。HLSLでは、代わりにlink:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics[セマンティクス]を使用します。セマンティクスは、変数の意図された使用に関する情報を含む入力や出力に付加される文字列で、`SV_` で始まります。HLSLでは、入力値はメインエントリポイントの明示的な引数として渡され、シェーダは明示的に出力を返す必要があります。
+====
+
+=== 例
+
+頂点シェーダから位置を書き込む例：
+
+GLSL:
+[source,glsl]
+----
+layout (location = 0) in vec4 inPos;
+
+void main() {
+    // 頂点の出力位置は gl_Position 組み込み変数に書き込まれます
+    gl_Position = ubo.projectionMatrix * ubo.viewMatrix * ubo.modelMatrix * inPos.xyz;
+}
+----
+
+HLSL
+[source,hlsl]
+----
+struct VSOutput
+{
+    // SV_POSITION セマンティクスは Pos メンバーを頂点の出力位置として宣言します
+    float4 Pos : SV_POSITION;
+};
+
+VSOutput main(VSInput input)
+{
+    VSOutput output = (VSOutput)0;
+    output.Pos = mul(ubo.projectionMatrix, mul(ubo.viewMatrix, mul(ubo.modelMatrix, input.Pos)));
+    return output;
+}
+----
+
+頂点インデックスを読み取る例：
+
+GLSL:
+[source,glsl]
+----
+void main() {
+    // 頂点インデックスは gl_VertexIndex 組み込み変数に格納されます
+    outUV = vec2((gl_VertexIndex << 1) & 2, gl_VertexIndex & 2);
+}
+----
+
+HLSL
+[source,hlsl]
+----
+struct VSInput
+{
+    // SV_VertexID セマンティクスは VertexIndex メンバーを頂点インデックス入力として宣言します
+    uint VertexIndex : SV_VertexID
+};
+
+VSOutput main(VSInput input)
+{
+    VSOutput output = (VSOutput)0;
+    output.UV = float2((input.VertexIndex << 1) & 2, input.VertexIndex & 2);
+    return output;
+}
+----
+
+== シェーダインターフェイス
+
+[NOTE]
+====
+シェーダインターフェイスはGLSLとHLSLの間で大きく異なります。
+====
+
+=== ディスクリプタバインディング
+
+==== GLSL
+
+[source,glsl]
+----
+layout (set = <set-index>, binding = <binding-index>) uniform <type> <name>
+----
+
+Vulkanを使用する際、HLSLでディスクリプタセットとバインディングインデックスを定義するには、二つの方法があります。
+
+==== HLSLの方法
+
+[source,hlsl]
+----
+<type> <name> : register(<register-type><binding-index>, space<set-index>)
+----
+
+この構文を使用すると、ディスクリプタセットとバインディングインデックスはセットおよびバインディングインデックスから暗黙的に割り当てられます。
+
+==== Vulkan名前空間
+
+[source,hlsl]
+----
+[[vk::binding(binding-index, set-index)]]
+<type> <name>
+----
+
+この方法では、ディスクリプタセットとバインディングインデックスを `vk::binding` を使用して明示的に設定します。
+
+[NOTE]
+====
+1つのディスクリプタに対して `vk::binding[]` と `register()` の両方の構文を使用できます。これは、シェーダがVulkanとDirectXの両方で使用される場合に便利です。
+====
+
+==== 例
+
+===== GLSL
+
+[source, glsl]
+----
+layout (set = 1, binding = 0) uniform Node {
+    mat4 matrix;
+} node;
+----
+
+===== HLSL
+
+[source, hlsl]
+----
+struct Node {
+    float4x4 transform;
+};
+
+// HLSL スタイル
+ConstantBuffer<Node> node : register(b0, space1);
+
+// Vulkan スタイル
+[[vk::binding(0, 1)]]
+ConstantBuffer<Node> node;
+
+// 結合版
+[[vk::binding(0, 1)]]
+ConstantBuffer<Node> node : register(b0, space1);
+----
+
+=== ユニフォーム変数 (Uniforms)
+
+==== GLSL
+
+[source,glsl]
+----
+layout (set = <set-index>, binding = <binding-index>) uniform <type> <name>
+----
+
+例：
+
+[source,glsl]
+----
+// Uniform buffer
+layout (set = 0, binding = 0) uniform UBO 
+{
+    mat4 projection;
+} ubo;
+
+// Combined image sampler
+layout (set = 0, binding = 1) uniform sampler2D samplerColor;
+----
+
+==== HLSL
+
+[source,hlsl]
+----
+<type> <name> : register(<register-type><binding-index>, space<set-index>)
+----
+
+または
+
+[source,hlsl]
+----
+[[vk::binding(binding-index, set-index)]]
+<type> <name>
+----
+
+例：
+
+[source,hlsl]
+----
+// Uniform buffer
+struct UBO
+{
+    float4x4 projection;
+};
+ConstantBuffer<UBO> ubo : register(b0, space0);
+
+// Combined image sampler
+Texture2D textureColor : register(t1);
+SamplerState samplerColor : register(s1);
+----
+
+HLSLのディスクリプタバインディング構文を使用する場合、`+<register type>+` は次のようになります：
+
+[options="header"]
+|====
+| *Type* | *Register Description* | *Vulkan resource*
+| b | Constant buffer | Uniform buffer
+| t | Texture and texture buffer | Uniform texel buffer and read-only shader storage buffer
+| c | Buffer offset | `layout(offset = N)`
+| s | Sampler | 同様
+| u | Unordered Access View | Shader storage buffer, storage image and storage texel buffer
+|====
+
+=== シェーダ入力
+
+==== GLSL
+
+[source,glsl]
+----
+layout (location = <location-index>) in <type> <name>;
+----
+
+例：
+
+[source,glsl]
+----
+layout (location = 0) in vec3 inPos;
+layout (location = 1) in vec3 inNormal;
+layout (location = 2) in vec2 inUV0;
+layout (location = 3) in vec2 inUV1;
+----
+
+==== HLSL
+
+[source,hlsl]
+----
+[[vk::location(<location-index>)]] <type> <name> : <semantic-type>;
+----
+
+例：
+
+[source,hlsl]
+----
+struct VSInput
+{
+[[vk::location(0)]] float3 Pos : POSITION;
+[[vk::location(1)]] float3 Normal : NORMAL;
+[[vk::location(2)]] float2 UV0 : TEXCOORD0;
+[[vk::location(3)]] float2 UV1 : TEXCOORD1;
+};
+
+VSOutput main(VSInput input) {
+}
+----
+
+// @todo: add general note on input semantics, e.g. for other stuff like compute where you need to use input semantics instead of built-ins
+
+`+<semantic type>+` は次のようになります
+[options="header"]
+|====
+| *Semantic* | *Description* | *Type*
+| BINORMAL[n] | Binormal | float4
+| BLENDINDICES[n] | Blend indices | uint
+| BLENDWEIGHT[n] | Blend weights | float
+| COLOR[n] | Diffuse and specular color | float4
+| NORMAL[n] | Normal vector | float4
+| POSITION[n] | Vertex position in object space. | float4
+| POSITIONT | Transformed vertex position | float4
+| PSIZE[n] | Point size | float
+| TANGENT[n] | Tangent | float4
+| TEXCOORD[n] | Texture coordinates | float4
+|====
+
+`+n+` は0からサポートされるリソースの数までのオプションの整数です。（link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics[ソース]）
+
+=== シェーダ出力
+
+==== ステージ間でのデータの受け渡し
+
+例: 頂点シェーダとテッセレーションシェーダの場合
+
+===== GLSL
+
+[source,glsl]
+----
+layout (location = <location-index>) out/in <type> <name>;
+----
+
+例：
+[source,glsl]
+----
+layout (location = 0) out vec3 outNormal;
+layout (location = 1) out vec3 outColor;
+layout (location = 2) out vec2 outUV;
+layout (location = 3) out vec3 outViewVec;
+
+void main() {
+    gl_Position = vec4(inPos, 1.0);
+    outNormal = inNormal;
+}
+----
+
+===== HLSL
+
+[source,hlsl]
+----
+[[vk::location(<location-index>)]] <type> <name> : <semantic-type>;
+----
+
+例：
+[source,hlsl]
+----
+struct VSOutput
+{
+                    float4 Pos : SV_POSITION;
+[[vk::location(0)]] float3 Normal : NORMAL;
+[[vk::location(1)]] float3 Color : COLOR;
+[[vk::location(2)]] float2 UV : TEXCOORD0;
+[[vk::location(3)]] float3 ViewVec : TEXCOORD1;
+}
+
+VSOutput main(VSInput input) {
+    VSOutput output = (VSOutput)0;
+    output.Pos = float4(input.Pos.xyz, 1.0);
+    output.Normal = input.Normal;
+    return output;
+}
+----
+
+==== アタッチメントへの書き込み
+
+フラグメントシェーダの場合
+
+===== GLSL
+
+[source,glsl]
+----
+layout (location = <attachment-index>) out/in <type> <name>;
+----
+
+例：
+[source,glsl]
+----
+layout (location = 0) out vec4 outPosition;
+layout (location = 1) out vec4 outNormal;
+layout (location = 2) out vec4 outAlbedo;
+
+void main() {
+    outPosition = ...
+    outNormal = ...
+    outAlbedo = ...
+}
+----
+
+===== HLSL
+
+[source,hlsl]
+----
+<type> <name> : SV_TARGET<attachment-index>;
+----
+
+例：
+[source,hlsl]
+----
+struct FSOutput
+{
+    float4 Position : SV_TARGET0;
+    float4 Normal : SV_TARGET1;
+    float4 Albedo : SV_TARGET2;
+};
+
+FSOutput main(VSOutput input) {
+    output.Position = ...
+    output.Normal = ...
+    output.Albedo = ...
+    return output;
+}
+----
+
+=== プッシュ定数 (Push constants)
+
+[NOTE]
+====
+プッシュ定数はD3Dではルートシグネチャを通じて処理する必要があります。
+====
+
+==== GLSL
+
+[source,glsl]
+----
+layout (push_constant) uniform <structure-type> { <members> } <name>
+----
+
+例：
+[source,glsl]
+----
+layout (push_constant) uniform PushConsts {
+    mat4 matrix;
+} pushConsts;
+----
+
+==== HLSL
+
+[source,hlsl]
+----
+[[vk::push_constant]] <structure-type> <name>;
+----
+
+[source,hlsl]
+----
+struct PushConsts {
+    float4x4 matrix;
+};
+[[vk::push_constant]] PushConsts pushConsts;
+----
+
+=== 特殊化定数 (Specialization constants)
+
+[NOTE]
+====
+特殊化定数はVulkanでのみ利用可能で、D3Dには同様の機能はありません。
+====
+
+==== GLSL
+
+[source,glsl]
+----
+layout (constant_id = <specialization-constant-index>) const int <name> = <default-value>;
+----
+
+例：
+[source,glsl]
+----
+layout (constant_id = 0) const int SPEC_CONST = 0;
+----
+
+==== HLSL
+
+[source,hlsl]
+----
+[[vk::constant_id(<specialization-constant-index>)]] const int <name> = <default-value>;
+----
+
+例：
+[source,hlsl]
+----
+[[vk::constant_id(0)]] const int SPEC_CONST = 0;
+----
+
+=== サブパス
+
+==== GLSL
+
+[source,glsl]
+----
+layout (input_attachment_index = <input-attachment-index>, binding = <binding-index>) uniform subpassInput <name>;
+----
+
+例：
+[source,glsl]
+----
+layout (input_attachment_index = 0, binding = 0) uniform subpassInput input0;
+----
+
+==== HLSL
+
+[source,hlsl]
+----
+[[vk::input_attachment_index(<input-attachment-index>)]][[vk::binding(<binding-index>)]] SubpassInput <name>;
+----
+
+例：
+[source,hlsl]
+----
+[[vk::input_attachment_index(0)]][[vk::binding(0)]] SubpassInput input0;
+----
+
+=== テクスチャ読み込み
+
+[NOTE]
+====
+GLSLがグローバル関数を使用してイメージにアクセスするのに対し、HLSLはテクスチャオブジェクトのメンバー関数を使用します。
+====
+
+例：
+
+GLSL:
+[source,glsl]
+----
+layout (binding = 0, set = 0) uniform sampler2D sampler0;
+
+void main() {
+    vec4 color = texture(sampler0, inUV);
+}
+----
+
+HLSL:
+[source,hlsl]
+----
+Texture2D texture0 : register(t0, space0);
+SamplerState sampler0 : register(s0, space0);
+
+float4 main(VSOutput input) : SV_TARGET {
+    float4 color = texture0.Sample(sampler0, input.UV);
+}
+----
+
+[options="header"]
+|====
+| *GLSL*  | *HLSL*
+| texture | Sample
+| textureGrad | SampleGrad
+| textureLod | SampleLevel
+| textureSize | GetDimensions
+| textureProj | 該当なし。手動でのパースペクティブ除算が必要
+| texelFetch | Load
+| sparseTexelsResidentARB | CheckAccessFullyMapped
+|====
+
+=== イメージフォーマット
+
+==== GLSL
+
+[source,glsl]
+----
+layout (set = <set-index>, binding = <image-binding-index>, <image-format>) uniform <memory-qualifier> <image-type> <name>;
+----
+
+例：
+[source,glsl]
+----
+layout (set = 0, binding = 0, rgba8) uniform writeonly image2D outputImage;
+----
+
+==== HLSL
+
+[source,hlsl]
+----
+[[vk::image_format(<image-format>)]]
+RWTexture2D<image-components> <name> : register(<register-type><binding-index>, space<set-index>);
+----
+
+例：
+[source,hlsl]
+----
+[[vk::image_format("rgba8")]]
+RWTexture2D<float4> resultImage : register(u0, space0);
+----
+
+== 組み込み変数と関数のマッピング
+// @todo: change caption or maybe remove completely
+
+=== バッファデバイスアドレス
+
+[NOTE]
+====
+現在、HLSLは `VK_KHR_buffer_device_address` のlink:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst#rawbufferload-and-rawbufferstore[サブセット]のみをサポートしています。
+====
+
+==== GLSL
+
+例：
+[source,glsl]
+----
+layout(push_constant) uniform PushConstants {
+    uint64_t bufferAddress;
+} pushConstants;
+
+layout(buffer_reference, scalar) buffer Data {vec4 f[]; };
+
+void main() {
+    Data data = Data(pushConstants.bufferAddress);
+}
+----
+
+==== HLSL
+
+例：
+[source,hlsl]
+----
+struct PushConstants {
+    uint64_t bufferAddress;
+};
+[[vk::push_constant]] PushConstants pushConstants;
+
+void main() {
+    float4 data = vk::RawBufferLoad<float4>(pushConstants.bufferAddress);
+}
+----
+
+=== レイトレーシング
+
+==== シェーダステージの選択
+
+GLSLはファイル拡張子を通じてシェーダステージ（レイトレーシング用）を暗黙的に検出します。また、コンパイラー引数を介して明示的に指定することもできます。しかし、HLSLのレイトレーシングシェーダは `[shader("stage")]` セマンティクスでマークする必要があります：
+
+例：
+[source,hlsl]
+----
+[shader("closesthit")]
+void main(inout RayPayload rayPayload, in float2 attribs) {
+}
+----
+
+ステージ名はGLSLと一致します：`raygeneration`、`intersection`、`anyhit`、`closesthit`、`miss`、`callable`
+
+==== シェーダレコードバッファ
+
+==== GLSL
+
+例：
+[source,glsl]
+----
+layout(shaderRecordEXT, std430) buffer SBT {
+    float data;
+};
+----
+
+==== HLSL
+
+例：
+[source,hlsl]
+----
+struct SBT {
+    float data;
+};
+[[vk::shader_record_ext]]
+ConstantBuffer<SBT> sbt;
+----
+
+==== 組み込み変数
+
+// @todo: some of the stuff in here is used across different stages (e.g. gl_PrimitiveID)
+[options="header"]
+|====
+| *GLSL*  | *HLSL* | Note
+| accelerationStructureEXT | RaytracingAccelerationStructure |
+| executeCallableEXT | CallShader |
+| ignoreIntersectionEXT | IgnoreHit |
+| reportIntersectionEXT | ReportHit |
+| terminateRayEXT | AcceptHitAndEndSearch |
+| traceRayEXT | TraceRay |
+| rayPayloadEXT (storage qualifier) | Last argument of TraceRay |
+| rayPayloadInEXT (storage qualifier) | First argument for main entry of any hit, closest hit and miss stage |
+| hitAttributeEXT (storage qualifier) | Last argument of ReportHit |
+| callableDataEXT (storage qualifier) | Last argument of CallShader |
+| callableDataInEXT (storage qualifier) | First argument for main entry of callabe stage |
+| gl_LaunchIDEXT | DispatchRaysIndex |
+| gl_LaunchSizeEXT | DispatchRaysDimensions |
+| gl_PrimitiveID | PrimitiveIndex |
+| gl_InstanceID | InstanceIndex |
+| gl_InstanceCustomIndexEXT | InstanceID |
+| gl_GeometryIndexEXT | GeometryIndex |
+| gl_VertexIndex | SV_VertexID |
+| gl_WorldRayOriginEXT | WorldRayOrigin |
+| gl_WorldRayDirectionEXT | WorldRayDirection |
+| gl_ObjectRayOriginEXT | ObjectRayOrigin |
+| gl_ObjectRayDirectionEXT | ObjectRayDirection |
+| gl_RayTminEXT | RayTMin |
+| gl_RayTmaxEXT | RayTCurrent |
+| gl_IncomingRayFlagsEXT | RayFlags |
+| gl_HitTEXT | RayTCurrent |
+| gl_HitKindEXT | HitKind |
+| gl_ObjectToWorldEXT | ObjectToWorld4x3 |
+| gl_WorldToObjectEXT | WorldToObject4x3 |
+| gl_WorldToObject3x4EXT | WorldToObject3x4 |
+| gl_ObjectToWorld3x4EXT | ObjectToWorld3x4 |
+| gl_RayFlagsNoneEXT | RAY_FLAG_NONE  |
+| gl_RayFlagsOpaqueEXT | RAY_FLAG_FORCE_OPAQUE |
+| gl_RayFlagsNoOpaqueEXT | AY_FLAG_FORCE_NON_OPAQUE |
+| gl_RayFlagsTerminateOnFirstHitEXT | RAY_FLAG_ACCEPT_FIRST_HIT_AND_END_SEARCH |
+| gl_RayFlagsSkipClosestHitShaderEXT | RAY_FLAG_SKIP_CLOSEST_HIT_SHADER |
+| gl_RayFlagsCullBackFacingTrianglesEXT | RAY_FLAG_CULL_BACK_FACING_TRIANGLES |
+| gl_RayFlagsCullFrontFacingTrianglesEXT | RAY_FLAG_CULL_FRONT_FACING_TRIANGLES  |
+| gl_RayFlagsCullOpaqueEXT | RAY_FLAG_CULL_OPAQUE |
+| gl_RayFlagsCullNoOpaqueEXT | RAY_FLAG_CULL_NON_OPAQUE | `GL_EXT_ray_flags_primitive_culling` が必要
+| gl_RayFlagsSkipTrianglesEXT | RAY_FLAG_SKIP_TRIANGLES | `GL_EXT_ray_flags_primitive_culling` が必要
+| gl_RayFlagsSkipAABBEXT  | RAY_FLAG_SKIP_PROCEDURAL_PRIMITIVES |
+| gl_HitKindFrontFacingTriangleEXT | HIT_KIND_TRIANGLE_FRONT_FACE  |
+| gl_HitKindBackFacingTriangleEXT | HIT_KIND_TRIANGLE_BACK_FACE  |
+| gl_HitTriangleVertexPositionsEXT a| <<SPIR-V intrinsics>> が必要：
+[,hlsl]
+----
+[[vk::ext_extension("SPV_KHR_ray_tracing_position_fetch")]]
+[[vk::ext_capability(RayTracingPositionFetchKHR)]]
+[[vk::ext_builtin_input(HitTriangleVertexPositionsKHR)]]
+----
+  | `GL_EXT_ray_tracing_position_fetch` が必要
+| shadercallcoherent | 該当なし
+|====
+
+=== コンピュート
+
+==== ローカルワークグループサイズ
+
+===== GLSL
+
+[source,glsl]
+----
+layout (local_size_x = <local-size-x>, local_size_y = <local-size-y>, local_size_z = <local-size-z>) in;
+----
+
+例：
+[source,glsl]
+----
+layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+----
+
+===== HLSL
+
+[source,hlsl]
+----
+[numthreads(<local-size-x>, <local-size-y>, <local-size-z>)]
+----
+
+例：
+[source,hlsl]
+----
+[numthreads(1, 1, 1)]
+void main() {}
+----
+
+==== 共有メモリ (Shared memory)
+
+===== GLSL
+
+例：
+[source,glsl]
+----
+shared vec4 sharedData[1024];
+----
+
+===== HLSL
+
+例：
+[source,hlsl]
+----
+groupshared float4 sharedData[1024];
+----
+
+==== 組み込み変数
+
+[options="header"]
+|====
+| *GLSL*  | *HLSL*
+| gl_GlobalInvocationID | SV_DispatchThreadID
+| gl_LocalInvocationID | SV_GroupThreadID
+| gl_WorkGroupID | SV_GroupID
+| gl_LocalInvocationIndex | SV_GroupIndex
+| gl_NumWorkGroups | 該当なし
+| gl_WorkGroupSize | 該当なし
+|====
+
+==== バリア (Barriers)
+
+[NOTE]
+====
+バリアの扱いはGLSLとHLSLで大きく異なります。1つの例外を除いて、直接対応するものはありません。GLSLでHLSLに対応させるには、GLSLで複数の異なるバリアタイプを呼び出す必要があることがよくあります。
+====
+
+例：
+
+GLSL:
+[source,glsl]
+----
+groupMemoryBarrier();
+barrier();
+for (int j = 0; j < 256; j++) {
+    doSomething;
+}
+groupMemoryBarrier();
+barrier();
+----
+
+HLSL:
+[source,hlsl]
+----
+GroupMemoryBarrierWithGroupSync();
+for (int j = 0; j < 256; j++) {
+    doSomething;
+}
+GroupMemoryBarrierWithGroupSync();
+----
+
+|====
+| *GLSL*  | *HLSL*
+| groupMemoryBarrier | GroupMemoryBarrier
+| groupMemoryBarrier + barrier | GroupMemoryBarrierWithGroupSync
+| memoryBarrier + memoryBarrierImage + memoryBarrierImage | DeviceMemoryBarrier
+| memoryBarrier + memoryBarrierImage + memoryBarrierImage + barrier | DeviceMemoryBarrierWithGroupSync
+| All above barriers + barrier | AllMemoryBarrierWithGroupSync
+| All above barriers | AllMemoryBarrier
+| memoryBarrierShared (only) | 該当なし
+|====
+
+=== メッシュシェーダ、タスク（アンプリフィケーション）シェーダ、ジオメトリシェーダ
+
+これらのシェーダステージは、いくつかの関数と組み込み変数を共有します
+
+[options="header"]
+|====
+| *GLSL*  | *HLSL*
+| EmitMeshTasksEXT | DispatchMesh
+| SetMeshOutputsEXT | SetMeshOutputCounts
+| EmitVertex | __StreamType__<__Name__>.Append (e.g. +{TriangleStream<MSOutput>}+)
+| EndPrimitive | __StreamType__<__Name__>.RestartStrip
+// @todo: check these
+| gl_PrimitiveShadingRateEXT | SV_ShadingRate
+| gl_CullPrimitiveEXT | SV_CullPrimitive
+| gl_in | Array argument for main entry (e.g. +{triangle VSInput input[3]}+)
+|====
+
+=== テッセレーションシェーダ
+
+[options="header"]
+|====
+| *GLSL* | *HLSL*
+| gl_InvocationID | SV_OutputControlPointID
+| gl_TessLevelInner | SV_InsideTessFactor
+| gl_TessLevelOuter | SV_TessFactor
+| gl_TessCoord | SV_DomainLocation
+|====
+
+=== サブグループ (Subgroups)
+// @todo: not sure, maybe rename or split into others
+[options="header"]
+|====
+| *GLSL* | *HLSL*
+| gl_HelperInvocation | WaveIsHelperLane
+| 該当なし | WaveOnce
+| readFirstInvocationARB | WaveReadFirstLane
+| readInvocationARB | WaveReadLaneAt
+| anyInvocationARB | WaveAnyTrue
+| allInvocationsARB | WaveAllTrue
+| allInvocationsEqualARB | WaveAllEqual
+| ballotARB | WaveBallot
+| gl_NumSubgroups | NumSubgroups decorated OpVariable
+| gl_SubgroupID | SubgroupId decorated OpVariable
+| gl_SubgroupSize | WaveGetLaneCount
+| gl_SubgroupInvocationID | WaveGetLaneIndex
+| gl_SubgroupEqMask | 該当なし
+| gl_SubgroupGeMask | 該当なし
+| gl_SubgroupGtMask | 該当なし
+| gl_SubgroupLeMask | 該当なし
+| gl_SubgroupLtMask | SubgroupLtMask decorated OpVariable
+| subgroupElect | WaveIsFirstLane
+| subgroupAny | WaveActiveAnyTrue
+| subgroupAll | WaveActiveAllTrue
+| subgroupBallot | WaveActiveBallot
+| subgroupAllEqual | WaveActiveAllEqual
+| subgroupBallotBitCount | WaveActiveCountBits
+| subgroupAnd | WaveActiveBitAdd
+| subgroupOr | WaveActiveBitOr
+| subgroupXor | WaveActiveBitXor
+| subgroupAdd | WaveActiveSum
+| subgroupMul | WaveActiveProduct
+| subgroupMin | WaveActiveMin
+| subgroupMax | WaveActiveMax
+| subgroupExclusiveAdd | WavePrefixSum
+| subgroupExclusiveMul | WavePrefixProduct
+| subgroupBallotExclusiveBitCount | WavePrefixCountBits
+| subgroupBroadcast | WaveReadLaneAt
+| subgroupBroadcastFirst | WaveReadLaneFirst
+| subgroupQuadSwapHorizontal | QuadReadAcrossX
+| subgroupQuadSwapVertical | QuadReadAcrossY
+| subgroupQuadSwapDiagonal | QuadReadAcrossDiagonal
+| subgroupQuadBroadcast | QuadReadLaneAt
+|====
+
+=== その他
+// @todo: rename, split
+[options="header"]
+|====
+| *GLSL*  | *HLSL* | *Note*
+| gl_PointSize | [[vk::builtin("PointSize")]] | Vulkanのみ。直接対応するHLSLの機能はなし
+| gl_BaseVertexARB | [[vk::builtin("BaseVertex")]] | Vulkanのみ。直接対応するHLSLの機能はなし
+| gl_BaseInstanceARB | [[vk::builtin("BaseInstance")]] | Vulkanのみ。直接対応するHLSLの機能はなし
+| gl_DrawID | [[vk::builtin("DrawIndex")]] | Vulkanのみ。直接対応するHLSLの機能はなし
+| gl_DeviceIndex | [[vk::builtin("DeviceIndex")]] | Vulkanのみ。直接対応するHLSLの機能はなし
+| gl_ViewportMask | [[vk::builtin("ViewportMaskNV")]] | Vulkanのみ。直接対応するHLSLの機能はなし
+| gl_FragCoord | SV_Position |
+| gl_FragDepth | SV_Depth |
+| gl_FrontFacing | SV_IsFrontFace |
+| gl_InstanceIndex | SV_InstanceID |
+| gl_ViewIndex | SV_ViewID |
+| gl_ClipDistance | SV_ClipDistance |
+| gl_CullDistance | SV_CullDistance |
+| gl_PointCoord | SV_Position |
+| gl_Position | SV_Position |
+| gl_PrimitiveID | SV_PrimitiveID |
+| gl_ViewportIndex | SV_ViewportArrayIndex |
+| gl_Layer | SV_RenderTargetArrayIndex |
+| gl_SampleID | SV_SampleIndex |
+| gl_SamplePosition | EvaluateAttributeAtSample |
+| subpassLoad | <SubPassInput>.SubpassLoad |
+| imageLoad | RWTexture1D/2D/3D<T>[] |
+| imageStore | RWTexture1D/2D/3D<T>[] |
+| atomicAdd | InterlockedAdd |
+| atomicCompSwap | InterlockedCompareExchange |
+| imageAtomicExchange | InterlockedExchange |
+| nonuniformEXT | NonUniformResourceIndex |
+| gl_BaryCoordEXT | SV_Barycentrics |
+| gl_BaryCoordNoPerspEXT | SV_Barycentrics with noperspective | 
+|====
+
+== 関数
+
+[NOTE]
+====
+ほとんどのGLSL関数はHLSLでも利用可能で、その逆も同様です。この章では名前が異なる関数を一覧にしています。1対1で対応する関数（例：`isNan`）は記載していません。
+==== 
+
+[options="header"]
+|====
+| *GLSL* | *HLSL*
+| dFdx | ddx 
+| dFdxCoarse | ddx_coarse
+| dFdxFine | ddx_fine
+| dFdy | ddy
+| dFdyCoarse | ddy_coarse
+| dFdyFine | ddy_fine
+| fma | mad
+| fract | frac
+| mix | lerp
+|====
+
+* link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-intrinsic-functions[HLSL intrinsic function (Microsoft)]
+* link:https://registry.khronos.org/OpenGL-Refpages/gl4/index.php[OpenGL reference pages]

@@ -25,11 +25,11 @@ ifndef::chapters[:chapters:]
 
 有効な使用法は、仕様書の各機能や構造の後に記載されています。たとえば、ある VUID が `VkBindImageMemory` で無効な `VkImage` をチェックする場合、仕様書に記載されている有効な使用法は `VkBindImageMemory` 内にあります。これは、検証レイヤが `VkBindImageMemory` に与えられたすべての情報を知るのが、アプリケーションの実行中だけだからです。
 
-== 未定義の振る舞い
+== 未定義の動作
 
-仕様の有効な使用法に基づいて、アプリケーションが無効な入力をした場合は未定義の振る舞いとなります。この状態では、link:https://raphlinus.github.io/programming/rust/2018/08/17/undefined-behavior.html[未定義の振る舞いではあらゆることが可能]なので、Vulkan は何の保証もしません。
+仕様の有効な使用法に基づいて、アプリケーションが無効な入力をした場合は未定義の動作となります。この状態では、link:https://raphlinus.github.io/programming/rust/2018/08/17/undefined-behavior.html[未定義の動作ではあらゆることが可能]なので、Vulkan は何の保証もしません。
 
-**非常に重要**：未定義の振る舞いは、ある実装ではうまく動くように見えても、別の実装では失敗する可能性が高いです。
+**非常に重要**：未定義の動作は、ある実装ではうまく動くように見えても、別の実装では失敗する可能性が高いです。
 
 == Valid Usage ID (VUID)
 
@@ -49,7 +49,7 @@ Khronos Validation Layer は、以前は複数のレイヤで構成されてい�
 
 === 検証レイヤの取得
 
-検証レイヤは常に更新・改良されているので、ソースを入手してlink:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/master/BUILD.md[自分でビルド]することも可能です。ビルド済みのバージョンが必要な場合は、対応プラットフォーム毎に様々なオプションが用意されています。
+検証レイヤは常に更新・改良されているので、ソースを入手してlink:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/main/BUILD.md[自分でビルド]することも可能です。ビルド済みのバージョンが必要な場合は、対応プラットフォーム毎に様々なオプションが用意されています。
 
   * **Android** - バイナリは link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/releases[GitHub] で最新のバージョンが公開されています。また、NDK には検証レイヤが組み込まれており、そのlink:https://developer.android.com/ndk/guides/graphics/validation-layer[使用方法]に関する情報も含まれています。
   * **Linux** - link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK] には検証レイヤが組み込まれており、link:https://vulkan.lunarg.com/doc/sdk/latest/linux/validation_layers.html[Linux] での使用方法が記載されています。
@@ -96,7 +96,7 @@ backed by a memory object (https://www.khronos.org/registry/vulkan/specs/1.1-ext
 html/vkspec.html#VUID-vkBindImageMemory-image-01044)
 ----
 
-  * 例2は例1とほぼ同じですが、オブジェクトに `name` （`name = myTextureMemory`）が付けられています。これは、link:https://www.lunarg.com/new-tutorial-for-vulkan-debug-utilities-extension/[VK_EXT_debug_utils] 拡張機能を使用して行われました（link:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/extensions/debug_utils[拡張機能の使用方法のサンプル]）。なお、`VK_EXT_debug_utils` をサポートしていないレガシーデバイスでは、link:https://www.saschawillems.de/blog/2016/05/28/tutorial-on-using-vulkans-vk_ext_debug_marker-with-renderdoc/[VK_EXT_debug_report] を使う古い方法が必要になるかもしれません。
+  * 例2は例1とほぼ同じですが、オブジェクトに `name` （`name = myTextureMemory`）が付けられています。これは、link:https://www.lunarg.com/new-tutorial-for-vulkan-debug-utilities-extension/[VK_EXT_debug_utils] 拡張機能を使用して行われました（link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions/debug_utils[拡張機能の使用方法のサンプル]）。なお、`VK_EXT_debug_utils` をサポートしていないレガシーデバイスでは、link:https://www.saschawillems.de/blog/2016/05/28/tutorial-on-using-vulkans-vk_ext_debug_marker-with-renderdoc/[VK_EXT_debug_report] を使う古い方法が必要になるかもしれません。
   * このエラーの原因となるオブジェクトは3つあります。
   ** オブジェクト0は、`myTextureMemory` という名前の `VkDeviceMemory` です。
   ** オブジェクト1は、名前のない `VkImage` です。
@@ -164,7 +164,7 @@ VkBool32 DebugReportCallbackEXT(/* ... */ const char* pMessage /* ... */)
     // pMessage に "specialuse-extension" が含まれている場合は終了
     if(strstr(pMessage, "specialuse-extension") != NULL) {
         return VK_FALSE;
-    };
+    }
 
     // 残りの検証メッセージを処理
 }
@@ -179,7 +179,7 @@ VkBool32 DebugUtilsMessengerCallbackEXT(/* ... */ const VkDebugUtilsMessengerCal
     // pMessageIdName に "specialuse-extension" が含まれている場合は終了
     if(strstr(pCallbackData->pMessageIdName, "specialuse-extension") != NULL) {
         return VK_FALSE;
-    };
+    }
 
     // 残りの検証メッセージを処理
 }

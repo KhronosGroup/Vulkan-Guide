@@ -19,7 +19,7 @@ image::../../images/khronos_logo.png[Khronos logo]
 // Implicit {relfileprefix} does not work due to file hierarchy
 :chapters: chapters/
 
-Vulkan Guide は、開発者が Vulkan の世界へ足を踏み出すための手助けをするものです。このガイドは、知りたいトピックに応じて、さまざまな役立つリンクを提供する軽い読み物を目指しています。ここに書かれている情報は Vulkan のさまざまなニュアンスに関するずれを埋めることを目的としています。
+Vulkan Guide は、開発者が Vulkan の世界へ足を踏み出すための手助けをするものです。このガイドは気軽に読める内容を目指しており、知りたいトピックに対して参考になるさまざまな資料を紹介します。ここには、Vulkan の多くのニュアンスに対する理解を促すための情報が記載されています。
 
 [NOTE]
 ====
@@ -180,7 +180,11 @@ Vulkan Guide は、`asciidoctor guide.adoc` を使って1つのページとし�
 
 // include::{chapters}dynamic_state.adoc[]
 
-  * `VK_EXT_extended_dynamic_state`, `VK_EXT_extended_dynamic_state2`, `VK_EXT_vertex_input_dynamic_state`, `VK_EXT_color_write_enable`
+  * `VK_EXT_extended_dynamic_state`, `VK_EXT_extended_dynamic_state2`, `VK_EXT_extended_dynamic_state3`, `VK_EXT_vertex_input_dynamic_state`, `VK_EXT_color_write_enable`, `VK_EXT_attachment_feedback_loop_dynamic_state`
+
+=== xref:{chapters}dynamic_state_map.adoc[動的な状態のマップ（Dynamic State Map）]
+
+// include::{chapters}dynamic_state_map.adoc[]
 
 == xref:{chapters}subgroups.adoc[サブグループ]
 
@@ -208,6 +212,9 @@ Vulkan Guide は、`asciidoctor guide.adoc` を使って1つのページとし�
 
 // include::{chapters}hlsl.adoc[]
 
+== xref:{chapters}high_level_shader_language_comparison.adoc[高レベルシェーダ言語の比較]
+
+// include::{chapters}high_level_shader_language_comparison.adoc[]
 
 = 拡張機能を使うタイミングと理由
 
@@ -218,7 +225,7 @@ Vulkan Guide は、`asciidoctor guide.adoc` を使って1つのページとし�
 
 == xref:{chapters}extensions/cleanup.adoc[クリーンアップ拡張機能]
 
-  * `VK_EXT_4444_formats`, `VK_KHR_bind_memory2`, `VK_KHR_create_renderpass2`, `VK_KHR_dedicated_allocation`, `VK_KHR_driver_properties`, `VK_KHR_get_memory_requirements2`, `VK_KHR_get_physical_device_properties2`, `VK_EXT_host_query_reset`, `VK_KHR_maintenance1`, `VK_KHR_maintenance2`, `VK_KHR_maintenance3`, `VK_KHR_maintenance4`, `VK_KHR_separate_depth_stencil_layouts`, `VK_KHR_depth_stencil_resolve`, `VK_EXT_separate_stencil_usage`, `VK_EXT_sampler_filter_minmax`, `VK_KHR_sampler_mirror_clamp_to_edge`, `VK_EXT_ycbcr_2plane_444_formats`, `VK_KHR_format_feature_flags2`, `VK_EXT_rgba10x6_formats`, `VK_KHR_copy_commands2`
+  * `VK_EXT_4444_formats`, `VK_KHR_bind_memory2`, `VK_KHR_create_renderpass2`, `VK_KHR_dedicated_allocation`, `VK_KHR_driver_properties`, `VK_KHR_get_memory_requirements2`, `VK_KHR_get_physical_device_properties2`, `VK_EXT_host_query_reset`, `VK_KHR_maintenance1`, `VK_KHR_maintenance2`, `VK_KHR_maintenance3`, `VK_KHR_maintenance4`, `VK_KHR_maintenance5`, `VK_KHR_maintenance6`, `VK_KHR_separate_depth_stencil_layouts`, `VK_KHR_depth_stencil_resolve`, `VK_EXT_separate_stencil_usage`, `VK_EXT_sampler_filter_minmax`, `VK_KHR_sampler_mirror_clamp_to_edge`, `VK_EXT_ycbcr_2plane_444_formats`, `VK_KHR_format_feature_flags2`, `VK_EXT_rgba10x6_formats`, `VK_KHR_copy_commands2`
 
 // include::{chapters}extensions/cleanup.adoc[]
 
@@ -248,7 +255,7 @@ Vulkan Guide は、`asciidoctor guide.adoc` を使って1つのページとし�
 
 == xref:{chapters}extensions/translation_layer_extensions.adoc[変換レイヤ拡張機能]
 
-  `VK_EXT_custom_border_color`, `VK_EXT_border_color_swizzle`, `VK_EXT_depth_clip_enable`, `VK_EXT_depth_clip_control`, `VK_EXT_provoking_vertex`, `VK_EXT_transform_feedback`, `VK_EXT_image_view_min_lod`
+  * `VK_EXT_custom_border_color`, `VK_EXT_border_color_swizzle`, `VK_EXT_depth_clip_enable`, `VK_EXT_depth_clip_control`, `VK_EXT_provoking_vertex`, `VK_EXT_transform_feedback`, `VK_EXT_image_view_min_lod`
 
 // include::{chapters}extensions/translation_layer_extensions.adoc[]
 

@@ -1,0 +1,55 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
+
+[[translation-layer-extensions]]
+= 변환 레이어 확장 기능
+
+xref:{chapters}portability_initiative.adoc#translation-layer[변환 레이어]를 Vulkan에 효율적으로 매핑하는 방법을 제공하기 위해 만들어진 확장 기능 클래스가 있습니다.
+
+여기에는 드라이버가 효율적으로 구현하기 어려운 레거시 동작의 복제도 포함됩니다. 이 기능은 미래 지향적인 것으로 **간주되지 않으며**, KHR 확장이나 Vulkan 코어로 승격될거라 예상되지 **않습니다**.
+
+변환을 위해 필요한 경우가 아니라면, 동일한 기능을 구현하기 위해 GPU를 사용하는 다른 기술을 사용할 것을 **강력히 추천합니다**.
+
+[[VK_EXT_custom_border_color]]
+== VK_EXT_custom_border_color
+
+Vulkan은 코어 사양에서 `VkSampler` 객체에 투명한 검정, 불투명한 검정, 불투명한 흰색의 `VkBorderColor` 를 제공합니다. OpenGL과 D3D 모두 샘플러 경계선을 커스텀 컬러로 설정할 수 있는 옵션이 있습니다.
+
+[[VK_EXT_border_color_swizzle]]
+== VK_EXT_border_color_swizzle
+
+`VK_EXT_custom_border_color` 가 공개된 후, 사용자 지정 경계선 색상을 사용하는 샘플러와 컴포넌트 매핑이 ID 매핑이 아닌 이미지 뷰와 조합할 경우 일부 구현에서 정의되지 않은 동작이 발생하는 것이 발견되었습니다.
+
+[[VK_EXT_depth_clip_enable]]
+== VK_EXT_depth_clip_enable
+
+깊이 클립 활성화 기능은 D3D11 및 Vulkan과 다르게 지정되어 있습니다. `VkPipelineRasterizationStateCreateInfo::depthClampEnable` 대신에, D3D11에는 link:https://docs.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_rasterizer_desc[DepthClipEnable (D3D12_RASTERIZER_DESC)]이 있는데, 이는 래스터라이즈 전 깊이 값의 뷰포트 클립에만 영향을 미치고 D3D11 그래픽 파이프라인의 출력 병합 스테이지에서 항상 발생하는 깊이 클램프에는 영향을 미치지 않습니다.
+
+[[VK_EXT_depth_clip_control]]
+== VK_EXT_depth_clip_control
+
+깊이 클립 제어 기능을 사용하면 애플리케이션이 NDC에서 OpenGL 깊이 범위를 사용할 수 있습니다. Vulkan의 기본값인 `[0, 1]` 과 달리 OpenGL에서는 `[-1, 1]` 입니다. 클립 제어 지원은 link:https://registry.khronos.org/OpenGL/extensions/ARB/ARB_clip_control.txt[ARB_clip_control] 확장 기능을 통해 OpenGL에서 지원되었습니다.
+
+자세한 내용은 xref:{chapters}depth.adoc#user-defined-clipping-and-culling[깊이 챕터]에서 확인하세요.
+
+[[VK_EXT_provoking_vertex]]
+== VK_EXT_provoking_vertex
+
+Vulkan의 provoking vertex 기본 규칙은 "`첫 번째 정점`" 인 반면, OpenGL의 기본 규칙은 "`마지막 정점`" 입니다.
+
+[[VK_EXT_transform_feedback]]
+== VK_EXT_transform_feedback
+
+변환 피드백(Transform-feedback)에 필요한 모든 것은 Vulkan의 컴퓨트 쉐이더를 통해 수행할 수 있습니다. 변환 피드백이 왜 끔찍하고 피해야 하는지에 대한 https://www.jlekstrand.net/jason/blog/2018/10/transform-feedback-is-terrible-so-why/[Jason Ekstrand의 훌륭한 블로그]도 있습니다.
+
+[[VK_EXT_image_view_min_lod]]
+== VK_EXT_image_view_min_lod
+
+이 확장 기능은 `MinLod` SPIR-V 수식자의 API 측 버전을 제공합니다.
+새 값은 이미지 뷰와 연관되며, 이는 D3D12의 SRV ResourceMinLODClamp 파라미터와 일치하도록 설계되었습니다.
+MinLod와 유사한 기능을 사용하는 것은 고해상도 밉 레벨을 필요에 따라 페이지 인/아웃할 수 있기 때문에 주로 희소 텍스터링(sparse texturing)에 사용됩니다.
+Vulkan에서 비슷한 클램프를 구현하는 방법은 여러 가지가 있습니다. `VkImageView` 는 베이스 레벨을 클램프할 수 있지만, `MinLod` 는 분수형(fractional) LOD에 클램프할 수 있으며 베이스 텍스처 차원을 수정할 필요가 없으므로 일부 알고리즘을 단순화할 수 있습니다. `VkSampler`&#8203; 도 분수형 LOD에 클램핑할 수 있지만, 이 용도로 많은 고유 샘플러를 사용하는 것은 실용적이지 않을 수 있습니다.

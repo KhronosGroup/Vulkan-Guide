@@ -1,0 +1,84 @@
+// Copyright 2019-2023 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[development-tools]]
+= 개발 도구
+
+Vulkan 생태계는 많은 개발 도구로 구성되어 있습니다. 이 페이지는 완전한 목록이 **아닌** 개발자를 위한 좋은 출발점으로 제공됩니다. 개발 생태계는 한 페이지에 담을 수 없을 정도로 크므로 계속 자체 조사를 통해 다른 도구를 찾아보시기 바랍니다.
+
+크로노스 그룹은 link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples]을 호스팅하고 있습니다. 이 샘플에는 API 사용법을 보여주는 코드와 튜토리얼 모음집으로 성능 모범 사례 구현을 설명하고 있습니다.
+
+LunarG 는 Vulkan 생태계 컴포넌트 개발 및 유지보수를 위해 민간 스폰서로 현재 link:https://github.com/KhronosGroup/Vulkan-Loader[Vulkan Loader]와 link:https://github.com/KhronosGroup/Vulkan-ValidationLayers[Vulkan Validation Layers]의 크로노스 그룹 저장소의 큐레이터를 맡고 있습니다. 게다가 link:https://vulkan.lunarg.com/[Vulkan SDK]를 제공하고 있으며 link:https://vulkan.lunarg.com/doc/sdk/latest/windows/vkconfig.html[Vulkan Configurator]와 link:https://vulkan.lunarg.com/doc/sdk/latest/windows/capture_tools.html[GFXReconstruct]와 같은 기타 주요 툴의 개발도 실시하고 있습니다.
+
+== Vulkan Layers
+
+레이어는 Vulkan 시스템을 보강하는 옵션 요소입니다. 레이어는 애플리케이션에서 하드웨어에 이르기까지 기존의 Vulkan 함수를 가로채고, 평가하고, 수정할 수 있습니다. 레이어는 라이브러리로 구현되어 있으며, link:https://vulkan.lunarg.com/doc/sdk/latest/windows/vkconfig.html[Vulkan Configurator]를 사용하여 활성화 및 구성할 수 있습니다.
+
+=== Khronos Layers
+
+  * xref:{chapters}validation_overview.adoc#khronos-validation-layer[`VK_LAYER_KHRONOS_validation`] 은 크로노스 검증 레이어를 말합니다.
+    이것은 모든 개발자들이 Vulkan 애플리케이션을 디버깅할 때 사용하는 첫 번째 디버깅 레이어입니다. 그래서 이 목록 맨 위에 기재되었습니다. 자세한 내용은 xref:{chapters}validation_overview.adoc#validation-overview[유효성 검사 개요 챕터]를 읽어주세요.
+    유효성 검사 레이어에는 여러 기능이 포함되어 있습니다:
+  ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/synchronization_usage.html[동기화 유효성 검사]: 동일한 메모리 영역을 읽거나 쓰는 작업(Draw, Copy, Dispatch, Blit) 간의 동기화 작업이 누락되거나 잘못되어 리소스 접근 충돌이 발생하는지 식별합니다.
+  ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/gpu_validation.html[GPU 지원 유효성 검사]: 쉐이더 코드에 다양한 계측을 위한 코드를 삽입하여 쉐이더 실행 중에 발생하는 오류 상태를 실시간 검사를 합니다.
+  ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/debug_printf.html[Shader printf]: 관심있는 값을 디버깅 콜백이나 표준 출력에 "`printing`" 하고 쉐이더 코드를 디버깅 합니다.
+  ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html[Best Practices Warnings]: 잠재적인 성능 문제, 의심스러운 사용 패턴, 자주 있는 실수 등을 강조 표시합니다.
+
+=== Vulkan SDK layers
+
+크로노스 레이어 외에도 Vulkan SDK에는 유용한 플랫폼 독립 레이어가 추가로 포함되어 있습니다.
+
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/api_dump_layer.html[`VK_LAYER_LUNARG_api_dump`] 는 Vulkan API 호출을 로그에 기록하는 레이어입니다.
+    API 덤프 레이어는 API 호출, 파라미터, 값을 특정 출력 스트림에 프린트합니다.
+
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/capture_tools.html[`VK_LAYER_LUNARG_gfxreconstruct`]는 Vulkan에서 작성된 프레임을 캡쳐하기 위한 레이어입니다.
+    이 레이어는 Vulkan API 호출을 캡쳐하고 재생하기 위한 소프트웨어인 GFXReconstruct의 일부입니다. 전체 안드로이드 지원은 <https://github.com/LunarG/gfxreconstruct>에서 확인할 수 있습니다.
+
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/device_simulation_layer.html[`VK_LAYER_LUNARG_device_simulation`]는 Vulkan 애플리케이션 이식성을 테스트하기 위한 레이어입니다.
+    디바이스 시뮬레이션 레이어를 사용하여 낮은 성능의 Vulkan 디바이스에서 Vulkan 애플리케이션이 작동하는지 테스트할 수 있습니다.
+
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/screenshot_layer.html[`VK_LAYER_LUNARG_screenshot`]는 스크린샷 레이어입니다.
+    Vulkan 애플리케이션의 렌더링된 이미지를 보기 쉬운 이미지로 캡처합니다.
+
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/monitor_layer.html[`VK_LAYER_LUNARG_monitor`]는 프레임률 측정 레이어입니다.
+    Vulkan 애플리케이션의 FPS를 창 제목 표시줄에 표시하여 성능에 대한 정보를 제공합니다.
+
+=== Vulkan Extension Layer
+
+The link:https://github.com/KhronosGroup/Vulkan-ExtensionLayer/[`Vulkan Extension Layer`] 는 확장 기능을 구현한 레이어의 모음이지만 모든 곳에서 사용할 수 있는 것은 아닙니다. 기본적으로 드라이버가 확장 기능을 제공하는 경우 자체적으로 비활성화됩니다.
+
+=== Vulkan Third-party layers
+
+그 밖에도 개발에 도움이 되는 레이어들이 공개되어 있습니다.
+
+  * link:https://github.com/powervr-graphics/perfdoc[`VK_LAYER_IMG_powervr_perf_doc`]는 PowerVR PerfDoc 레이어입니다.
+    Imagination Technologies PowerVR 디바이스 상의 Vulkan 애플리케이션의 모범 사례를 체크합니다.
+
+  * link:https://developer.qualcomm.com/software/adreno-gpu-sdk/tools[`VK_LAYER_adreno`]는 Vulkan Adreno 레이어입니다.
+    Qualcomm Adreno 디바이스 상의 Vulkan 애플리케이션의 모범 사례를 체크합니다.
+
+== 디버깅(Debugging)
+
+GPU에서 실행되는 무언가를 디버깅하는 것은 매우 어려울 수 있지만, 다행히도 도움이 되는 도구가 있습니다.
+
+  * link:https://developer.arm.com/Tools%20and%20Software/Graphics%20Analyzer[Arm Graphics Analyzer]
+  * link:https://github.com/google/gapid[GAPID]
+  * link:https://developer.nvidia.com/nsight-graphics[NVIDIA Nsight]
+  * link:https://developer.imaginationtech.com[PVRCarbon]
+  * link:https://renderdoc.org/[RenderDoc]
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/capture_tools.html[GFXReconstruct]
+
+== 프로파일링(Profiling)
+
+GPU와 관련된 것은 가급적 가정하지 않고 프로파일링하는 것이 가장 좋습니다. 다음은 개발에 도움이 되는 알려진 프로파일러를 소개합니다.
+
+  * link:https://gpuopen.com/rgp/[AMD Radeon GPU Profiler] - AMD Radeon GPU용 저수준 성능 분석 도구.
+  * link:https://developer.arm.com/Tools%20and%20Software/Streamline%20Performance%20Analyzer[Arm Streamline Performance Analyzer] - Arm 모바일 스튜디오를 사용하여 다양한 디바이스에서 모바일 게임 및 애플리케이션의 성능을 시각화할 수 있습니다.
+  * link:https://www.intel.com/content/www/us/en/developer/tools/graphics-performance-analyzers/overview.html[Intel(R) GPA] - Vulkan 앱의 멀티프레임 스트립 캡쳐 및 분석을 지원하는 Intel의 그래픽스 성능 분석 도구.
+  * link:https://github.com/GPUOpen-Tools/OCAT[OCAT] - The Open Capture and Analytics Tool (OCAT) D3D11, D3D12, Vulkan에 대한 FPS 오버레이 및 성능 측정 기능을 제공합니다.
+  * link:https://developer.imaginationtech.com[PVRTune]
+  * link:https://developer.qualcomm.com/software/snapdragon-profiler[Qualcomm Snapdragon Profiler] - Adreno GPU 대상 프로파일링 도구.
+  * link:https://www.vktracer.com[VKtracer] - Cross-vendor and cross-platform profiler.

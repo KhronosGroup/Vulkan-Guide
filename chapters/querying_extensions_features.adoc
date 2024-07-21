@@ -3,6 +3,7 @@
 
 // Required for both single-page and combined guide xrefs to work
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[querying-extensions-features]]
 = Querying Properties, Extensions, Features, Limits, and Formats

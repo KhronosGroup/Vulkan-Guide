@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
 
 :YCbCr: pass:q[Y′C~B~C~R~]
 
@@ -54,7 +55,7 @@ vkGetImageMemoryRequirements2(device, &imageMemoryRequirementsInfo2, &memoryRequ
 // Allocate plane 0 memory
 VkMemoryAllocateInfo memoryAllocateInfo = {};
 memoryAllocateInfo.allocationSize       = memoryRequirements2.memoryRequirements.size;
-vkAllocateMemory(device, &memoryAllocateInfo, nullptr, &disjointMemoryPlane0));
+vkAllocateMemory(device, &memoryAllocateInfo, nullptr, &disjointMemoryPlane0);
 
 // Allocate the same for each plane
 
@@ -69,7 +70,7 @@ bindImageMemoryInfo.memory       = disjointMemoryPlane0;
 
 // Bind the same for each plane
 
-vkBindImageMemory2(device, bindImageMemoryInfoSize, bindImageMemoryInfoArray));
+vkBindImageMemory2(device, bindImageMemoryInfoSize, bindImageMemoryInfoArray);
 ----
 
 == Copying memory to each plane
@@ -120,7 +121,7 @@ Here is some pseudo code to help give an idea of how to use it from the API poin
 VkSamplerYcbcrConversion samplerYcbcrConversion;
 VkSamplerYcbcrConversionCreateInfo samplerYcbcrConversionCreateInfo = {};
 // ...
-vkCreateSamplerYcbcrConversion(device, &samplerYcbcrConversionCreateInfo, nullptr, &samplerYcbcrConversion));
+vkCreateSamplerYcbcrConversion(device, &samplerYcbcrConversionCreateInfo, nullptr, &samplerYcbcrConversion);
 
 VkSamplerYcbcrConversionInfo samplerYcbcrConversionInfo = {};
 samplerYcbcrConversionInfo.conversion = samplerYcbcrConversion;
@@ -129,13 +130,13 @@ samplerYcbcrConversionInfo.conversion = samplerYcbcrConversion;
 VkImageViewCreateInfo imageViewInfo = {};
 imageViewInfo.pNext = &samplerYcbcrConversionInfo;
 // ...
-vkCreateImageView(device, &imageViewInfo, nullptr, &myImageView));
+vkCreateImageView(device, &imageViewInfo, nullptr, &myImageView);
 
 // Create a sampler with conversion
 VkSamplerCreateInfo samplerInfo = {};
 samplerInfo.pNext = &samplerYcbcrConversionInfo;
 // ...
-vkCreateSampler(device, &samplerInfo, nullptr, &mySampler));
+vkCreateSampler(device, &samplerInfo, nullptr, &mySampler);
 ----
 
 == combinedImageSamplerDescriptorCount
@@ -146,19 +147,21 @@ All descriptors in a binding use the same maximum `combinedImageSamplerDescripto
 
 For example, consider a descriptor set layout binding with two descriptors and immutable samplers for multi-planar formats that have `VkSamplerYcbcrConversionImageFormatProperties::combinedImageSamplerDescriptorCount` values of `2` and `3` respectively. There are two descriptors in the binding and the maximum `combinedImageSamplerDescriptorCount` is `3`, so descriptor sets with this layout consume `6` descriptors from the descriptor pool. To create a descriptor pool that allows allocating `4` descriptor sets with this layout, `descriptorCount` must be at least `24`.
 
+Currently, link:https://github.com/KhronosGroup/Vulkan-Docs/issues/2139[there is no way] to tell what the largest `combinedImageSamplerDescriptorCount` can be. In practice, this value will be `3`, but can be `4` when using some external formats with Alpha components.
+
 Some pseudo code how to query for the `combinedImageSamplerDescriptorCount`:
 
 [source,cpp]
 ----
-VkSamplerYcbcrConversionImageFormatProperties samplerYcbcrConversionImageFormatProperties = {};
+VkSamplerYcbcrConversionImageFormatProperties samplerYcbcrConversionImageFormatProperties = { /* ... */ };
 
-VkImageFormatProperties imageFormatProperties   = {};
-VkImageFormatProperties2 imageFormatProperties2 = {};
+VkImageFormatProperties imageFormatProperties   = { /* ... */ };
+VkImageFormatProperties2 imageFormatProperties2 = { /* ... */ };
 // ...
 imageFormatProperties2.pNext                 = &samplerYcbcrConversionImageFormatProperties;
 imageFormatProperties2.imageFormatProperties = imageFormatProperties;
 
-VkPhysicalDeviceImageFormatInfo2 imageFormatInfo = {};
+VkPhysicalDeviceImageFormatInfo2 imageFormatInfo = { /* ... */ };
 // ...
 imageFormatInfo.format = formatToQuery;
 vkGetPhysicalDeviceImageFormatProperties2(physicalDevice, &imageFormatInfo, &imageFormatProperties2));

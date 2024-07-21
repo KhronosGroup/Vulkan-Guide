@@ -3,6 +3,7 @@
 
 // Required for both single-page and combined guide xrefs to work
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[Depth]]
 = Depth
@@ -130,7 +131,7 @@ In the graphics pipeline, there are a series of link:https://registry.khronos.or
 
 The following gives a high level overview of the various coordinates name and operations that occur before rasterization.
 
-image::images/depth_coordinates_flow.png[depth_coordinates_flow]
+image::{images}depth_coordinates_flow.png[depth_coordinates_flow]
 
 [[primitive-clipping]]
 === Primitive Clipping
@@ -261,7 +262,7 @@ When using `OpTypeImage` in SPIR-V the `Depth` operand is ignored in Vulkan
 [[conservative-depth]]
 ==== Conservative depth
 
-The `DepthGreater`, `DepthLess`, and `DepthUnchanged` Executation Mode allow for a possible optimization for implementations that link:https://registry.khronos.org/OpenGL/extensions/ARB/ARB_conservative_depth.txt[relies on an early depth test to be run before the fragment]. This can be easily done in GLSL by declaring `gl_FragDepth` with the proper layout qualifier.
+The `DepthGreater`, `DepthLess`, and `DepthUnchanged` Execution Mode allow for a possible optimization for implementations that link:https://registry.khronos.org/OpenGL/extensions/ARB/ARB_conservative_depth.txt[relies on an early depth test to be run before the fragment]. This can be easily done in GLSL by declaring `gl_FragDepth` with the proper layout qualifier.
 
 [source,glsl]
 ----
@@ -314,7 +315,7 @@ The depth test compares the framebuffer depth coordinate `Zf` with the depth val
 
 The following gives a high level overview of the depth test.
 
-image::images/depth_test.png[depth_test]
+image::{images}depth_test.png[depth_test]
 
 [[depth-compare-operation]]
 ==== Depth Compare Operation

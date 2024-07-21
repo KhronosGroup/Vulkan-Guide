@@ -10,7 +10,7 @@ ifndef::chapters[:chapters:]
 
 == 2種類の拡張機能
 
-拡張機能には、**インスタンス拡張機能**と**デバイス拡張機能**の2つのグループがあります。簡単に言えば、**インスタンス拡張機能** は `VkInstance` 全体に結び付けられ、**デバイス拡張機能** は単一の `VkDevice` インスタンスにのみ結び付けられます。
+拡張機能には、**インスタンス拡張機能**と**デバイス拡張機能**の2つのグループがあります。簡単に言えば、**インスタンス拡張機能** は `VkInstance` 全体に結び付けられ、**デバイス拡張機能** は単一の `VkDevice` オブジェクトにのみ結び付けられます。
 
 この情報は、各拡張機能のリファレンスページの「`Extension Type`」セクションに記載されています。以下に例を示します。
 
@@ -38,7 +38,7 @@ for (uint32_t i = 0; i < count; i++) {
 
 == 拡張機能の有効化
 
-拡張機能が実装で**サポート**されていても、`VkInstance` や `VkDevice` の作成時に**有効化**されていなければ、拡張機能を使用すると**未定義の振る舞い**となります。
+拡張機能が実装で**サポート**されていても、`VkInstance` や `VkDevice` の作成時に**有効化**されていなければ、拡張機能を使用すると**未定義の動作**となります。
 
 ここでは、`VK_KHR_driver_properties` のような拡張機能を有効にするために必要なものの例を示します。
 
@@ -54,7 +54,7 @@ instance_extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_
 VkInstanceCreateInfo instance_create_info  = {};
 instance_create_info.enabledExtensionCount   = static_cast<uint32_t>(instance_extensions.size());
 instance_create_info.ppEnabledExtensionNames = instance_extensions.data();
-vkCreateInstance(&instance_create_info, nullptr, &myInstance));
+vkCreateInstance(&instance_create_info, nullptr, &myInstance);
 
 // ...
 

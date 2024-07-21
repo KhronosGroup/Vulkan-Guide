@@ -3,6 +3,7 @@
 
 // Required for both single-page and combined guide xrefs to work
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[synchronization]]
 = Synchronization
@@ -13,7 +14,7 @@ There are a link:https://github.com/KhronosGroup/Vulkan-Docs/wiki/Synchronizatio
 
 The following is an overview diagram of the difference between `VkEvent`, `VkFence`, and `VkSemaphore`
 
-image::images/synchronization_overview.png[synchronization_overview.png]
+image::{images}synchronization_overview.png[synchronization_overview.png]
 
 == Validation
 
@@ -23,7 +24,7 @@ The Khronos Validation Layer has implemented some link:https://vulkan.lunarg.com
 
 link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#synchronization-pipeline-barriers[Pipeline Barriers] give control over which pipeline stages need to wait on previous pipeline stages when a command buffer is executed.
 
-image::images/synchronization_pipeline_barrieres.png[synchronization_pipeline_barrieres.png]
+image::{images}synchronization_pipeline_barrieres.png[synchronization_pipeline_barrieres.png]
 
 While Pipeline Barriers might be hard to understand at first, there are many great Khronos talks and other resources that go more in depth on the topic.
 

@@ -16,8 +16,8 @@ ifndef::chapters[:chapters: ../]
 
 また、SPIR-V や GLSL の拡張機能を追加することで、シェーダに必要なプログラマブルな機能を実現しています。
 
-  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_ray_tracing.html[SPV_KHR_ray_tracing]
-  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_ray_query.html[SPV_KHR_ray_query]
+  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_ray_tracing.html[SPV_KHR_ray_tracing]
+  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_ray_query.html[SPV_KHR_ray_query]
   * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_tracing.txt[GLSL_EXT_ray_tracing]
   * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_query.txt[GLSL_EXT_ray_query]
   * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_flags_primitive_culling.txt[GLSL_EXT_ray_flags_primitive_culling]
@@ -134,3 +134,97 @@ if (rayQueryGetIntersectionTypeEXT(rq, true) == gl_RayQueryCommittedIntersection
   ** `VK_THREAD_IDLE_KHR` は、呼び出したスレッドに割り当てるべき仕事が**一時的に**存在しませんが、将来的に追加の仕事が利用可能になる可能性があることを示します。現在のスレッドは、呼び出したスレッドに対して他の有用な作業を行うことができ、後で `vkDeferredOperationJoinKHR` を再度呼び出して再参加できるかもしれません。
 
 操作が完了した後（つまり、`vkDeferredOperationJoinKHR` が `VK_SUCCESS` を返した後）、`vkGetDeferredOperationResultKHR` を呼び出して操作の結果を取得します。
+
+[[ray-tracing-synchronization]]
+== レイトレーシングに関する同期
+
+  * シェーダー内でトレースやクエリを呼び出すには、関連するシェーダステージでアクセラレーション構造に対して
+    `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR` を使用します。
+  * レイトレーシングパイプラインでシェーダバインディングテーブルにアクセスするには、
+    `VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR` と、
+    `VK_ACCESS_SHADER_READ_BIT` または `VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR` のいずれかを使用します。
+  * アクセラレーション構造（AS）をビルドするには、`VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR` と、
+    アクセスされるリソースに対応するアクセスビットを使用します：
+
+  ** 書きこみ対象のASには `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR`
+  ** 読み込み対象のAS（例：更新用）には、`VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR`
+  ** スクラッチバッファには `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR`
+     と `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR` の両方
+  ** 頂点/インデックス/インスタンス/トランスフォームバッファには `VK_ACCESS_SHADER_READ_BIT`
+
+  * アクセラレーション構造のコピーコマンドには、
+    `VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR` または
+    `VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR` を使用し、
+    ソースに応じたアクセスフラグを使用します：
+
+  ** 書きこみ対象のASには `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR`
+  ** 読み込み対象のASには `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR`
+  ** 書きこみ対象のバッファには `VK_ACCESS_TRANSFER_WRITE_BIT`
+  ** 読み込み対象のバッファには `VK_ACCESS_TRANSFER_READ_BIT`
+
+  * 間接トレース呼び出しをするには、間接バッファに対して
+    `VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT` と
+    `VK_ACCESS_INDIRECT_COMMAND_READ_BIT` を使用します。
+  * アクセラレーション構造の間接ビルドには、間接バッファに対して
+    `VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR` と
+    `VK_ACCESS_INDIRECT_COMMAND_READ_BIT` を使用します。
+  * マイクロマップのビルドには、
+    `VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT` と、
+    アクセスされるリソースに対応するアクセスビットを使用します：
+
+  ** 書きこみ対象のマイクロマップには `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT`
+  ** スクラッチバッファには `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT` と
+     `VK_ACCESS_2_MICROMAP_READ_BIT_EXT` の両方
+  ** 入力バッファには `VK_ACCESS_SHADER_READ_BIT`
+
+  * マイクロマップのコピーコマンドには、
+    `VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT` を使用し、
+    ソースに応じたアクセスフラグを使用します：
+
+  ** 書きこみ対象のマイクロマップには `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT`
+  ** 読み込み対象のマイクロマップには `VK_ACCESS_2_MICROMAP_READ_BIT_EXT`
+  ** 書きこみ対象のバッファには `VK_ACCESS_TRANSFER_WRITE_BIT`
+  ** 読み込み対象のバッファには `VK_ACCESS_TRANSFER_READ_BIT`
+
+[NOTE]
+====
+他のコピー操作とは異なり、`VK_PIPELINE_STAGE_TRANSFER_BIT`
+はアクセラレーション構造のコピーには使用できません。
+
+`VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR`/
+`VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR` の使用には、
+`VK_KHR_ray_tracing_maintenance1` が必要です。
+
+`VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT`/
+`VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT`/
+`VK_ACCESS_2_MICROMAP_READ_BIT_EXT` の使用には、`VK_EXT_opacity_micromap` が必要です。
+====
+
+[[ray-tracing-best-practices]]
+== レイトレーシングのベストプラクティス
+
+=== 同時にアクティブなレイクエリオブジェクトの数を最小限にする
+
+レイクエリオブジェクトは、スレッドプライベートストレージを圧迫することがあるため、
+パフォーマンスのためにはできるだけ少なくするのが望ましいです。
+ほとんどの場合、複数のレイをトレースするとしても、終了したレイが新しいレイを発行するのであれば、
+同じレイクエリオブジェクトを使いまわすことができるはずです。
+同じシェーダーで複数のレイクエリが必要になるのは、複数のトラバーサルが同時にアクティブでなければならない場合であり、
+シェーダーではアクティブなトラバーサルの数を最小限に抑えるといいでしょう。
+
+=== レイペイロード、Hit Attribute、およびCallable Dataのサイズを最小限にする
+
+レイトレーシングシェーダーステージは、ステージ間でパラメータと結果をやり取りできます。
+レイペイロード構造はすべてのトラバーサルステージ間でやり取りでき、
+Hit Attribute構造体はトラバーサル制御シェーダーから、
+Callable Data構造体はCallableシェーダーで使用できます。
+
+これらの構造体はドライバーで管理されるメモリを消費し、
+構造体のサイズ、同時にアクティブなレイの数、
+さらには再帰レベルなどの追加要因に基づいて、メモリ総量が増加する可能性があります。
+
+シェーダーでは、これらの構造体のサイズを小さく保つのが望ましいです。
+
+=== デバイスローカルメモリを優先する
+
+高速化構造はどのVulkanメモリヒープでも作成できますが、デバイスローカルメモリ上の高速化構造に対するレイトレースが最高のパフォーマンスを期待できるため、優先するといいでしょう。デバイスローカルメモリの容量が不足している場合、ホストローカルメモリ（GPUアクセス可能なシステムメモリ）を使用する必要がありますが、デバイスローカルメモリと同等のパフォーマンスは期待できません。

@@ -3,6 +3,7 @@
 
 // Required for both single-page and combined guide xrefs to work
 ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
 
 [[cleanup]]
 = Cleanup Extensions
@@ -64,7 +65,7 @@ Promoted to core in Vulkan 1.2
 
 There are formats that express both the usage of depth and stencil, but there was no way to list a different usage for them. The `VkImageStencilUsageCreateInfo` now lets an application pass in a separate `VkImageUsageFlags` for the stencil usage of an image. The depth usage is the original usage passed into `VkImageCreateInfo::usage` and without using `VkImageStencilUsageCreateInfo` the stencil usage will be the same as well.
 
-A good use case of this is when using the xref:{chapters}VK_KHR_image_format_list.adoc#VK_KHR_image_format_list[VK_KHR_image_format_list] extension. This provides a way for the application to more explicitly describe the possible image views of their `VkImage` at creation time. This allows some implementations to possibly do implementation dependent optimization depending on the usages set.
+A good use case of this is when using the xref:{chapters}extensions/VK_KHR_image_format_list.adoc#VK_KHR_image_format_list[VK_KHR_image_format_list] extension. This provides a way for the application to more explicitly describe the possible image views of their `VkImage` at creation time. This allows some implementations to possibly do implementation dependent optimization depending on the usages set.
 
 [[VK_KHR_dedicated_allocation]]
 == VK_KHR_dedicated_allocation
@@ -126,12 +127,14 @@ This extension adds an exception for `VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK
 
 The maintenance extensions add a collection of minor features that were intentionally left out or overlooked from the original Vulkan 1.0 release.
 
-Currently, there are 4 maintenance extensions. The first 3 were bundled in Vulkan 1.1 as core. All the details for each are well defined in the extension appendix page.
+Currently, there are 6 maintenance extensions. The first 3 were bundled in Vulkan 1.1 as core. All the details for each are well defined in the extension appendix page.
 
   * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance1[VK_KHR_maintenance1] - core in Vulkan 1.1
   * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance2[VK_KHR_maintenance2] - core in Vulkan 1.1
   * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance3[VK_KHR_maintenance3] - core in Vulkan 1.1
   * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance4[VK_KHR_maintenance4] - core in Vulkan 1.3
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance5[VK_KHR_maintenance5] - extension only
+  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance6[VK_KHR_maintenance6] - extension only
 
 [[pnext-expansions]]
 == pNext Expansions
@@ -197,7 +200,7 @@ VkBindImagePlaneMemoryInfo plane_info[2];
 plane_info[0] = {VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO, NULL, VK_IMAGE_ASPECT_PLANE_0_BIT};
 plane_info[1] = {VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO, NULL, VK_IMAGE_ASPECT_PLANE_1_BIT};
 
-// Can now pass other extensions structs into the pNext missing from vkBindImagemMemory()
+// Can now pass other extensions structs into the pNext missing from vkBindImageMemory()
 VkBindImageMemoryInfo infos[2];
 infos[0] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, &plane_info[0], image, memories[0], 0};
 infos[1] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, &plane_info[1], image, memories[1], 0};
@@ -239,8 +242,8 @@ void vkBindImageMemory(VkDevice device,
 }
 
 void vkBindImageMemory2(VkDevice device,
-                        uint32_t bindInfoCount, const
-                        VkBindImageMemoryInfo* pBindInfos)
+                        uint32_t bindInfoCount, 
+                        const VkBindImageMemoryInfo* pBindInfos)
 {
     for (uint32_t i = 0; i < bindInfoCount; i++) {
         HandleVkBindImageMemoryInfo(pBindInfos[i]);

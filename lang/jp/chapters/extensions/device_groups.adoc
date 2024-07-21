@@ -10,11 +10,11 @@ ifndef::chapters[:chapters: ../]
 ====
 Vulkan 1.1でコアに昇格
 
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_device_group.html[SPV_KHR_device_group]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_device_group.html[SPV_KHR_device_group]
 
 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_device_group.txt[GLSL - GL_EXT_device_group]
 ====
 
 デバイスグループとは、複数の物理デバイス（単一のベンダー）を1つの論理デバイスとして表現する方法です。例えば、1つのシステムに、ベンダーが提供するブリッジインターフェイスで接続された2つの同じ GPU がある場合、Vulkan で2つの論理デバイスを作成するという方法があります。ここで問題となるのは、2つの `VkDevice` オブジェクト間で共有・同期できる内容に制限があることで、これは悪いことではありませんが、アプリケーションが2つの GPU 間でメモリを結合したい場合があります。デバイスグループはこのようなユースケースを想定して設計されており、アプリケーションが単一の `VkDevice` に対して「サブデバイス」を作成することができます。デバイスグループでは、`VkCommandBuffers` や `VkQueue` のようなオブジェクトは、単一の「サブデバイス」に縛られるのではなく、ドライバがどの物理デバイス上で実行するかを管理します。デバイスグループの別の使い方としては、各フレームが異なる「サブデバイス」によって表示される代替フレーム提示システムがあります。
 
-`VK_KHR_device_group` と `VK_KHR_device_group_creation` という2つの拡張機能があります。拡張機能が2つに分かれている理由は、拡張機能が「インスタンスレベルの拡張機能」か「デバイスレベルの拡張機能」のどちらかであるからです。デバイスグループは、デバイスレベルの呼び出しと同様に、インスタンスレベルの呼び出しと相互作用する必要があるため、2つの拡張機能が作成されました。また、一致する link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_device_group.html[SPV_KHR_device_group] 拡張機能があり、`DeviceGroup` スコープと新しい `DeviceIndex` 組み込み型がシェーダに追加され、シェーダが各論理デバイスに対して何をすべきか制御できるようになります。GLSL を使用している場合は、link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_device_group.txt[GL_EXT_device_group] 拡張機能もあり、すべてのシェーダタイプに `highp int gl_DeviceIndex;` という組み込み変数が導入されます。
+`VK_KHR_device_group` と `VK_KHR_device_group_creation` という2つの拡張機能があります。拡張機能が2つに分かれている理由は、拡張機能が「インスタンスレベルの拡張機能」か「デバイスレベルの拡張機能」のどちらかであるからです。デバイスグループは、デバイスレベルの呼び出しと同様に、インスタンスレベルの呼び出しと相互作用する必要があるため、2つの拡張機能が作成されました。また、一致する link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_device_group.html[SPV_KHR_device_group] 拡張機能があり、`DeviceGroup` スコープと新しい `DeviceIndex` 組み込み型がシェーダに追加され、シェーダが各論理デバイスに対して何をすべきか制御できるようになります。GLSL を使用している場合は、link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_device_group.txt[GL_EXT_device_group] 拡張機能もあり、すべてのシェーダタイプに `highp int gl_DeviceIndex;` という組み込み変数が導入されます。

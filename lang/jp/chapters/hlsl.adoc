@@ -15,6 +15,11 @@ link:https://github.com/microsoft/DirectXShaderCompiler/blob/master/docs/SPIR-V.
 
 image::../../../chapters/images/what_is_spirv_dxc.png[what_is_spriv_dxc.png]
 
+[[educational-resources]]
+== 教育リソース
+
+link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl[Microsoft Learn]には、HLSLを初めて使う人のために、HLSLに関する素晴らしい情報が掲載されています。また、link:https://microsoft.github.io/DirectX-Specs/[DirectX-Specs のドキュメント]も素晴らしく、最近のシェーダー機能と HLSL のシェーダーモデルに関する貴重な情報が掲載されています。
+
 [[applications-pov]]
 == アプリケーションから見た場合
 
@@ -45,7 +50,7 @@ HLSL を Vulkan に対応させるため、Vulkan 固有の機能に対するイ
 layout (location = 0) in vec3 inPosition;
 layout (location = 1) in vec3 inColor;
 
-layout (binding = 0) uniform UBO 
+layout (binding = 0) uniform UBO
 {
 	mat4 projectionMatrix;
 	mat4 modelMatrix;
@@ -54,7 +59,7 @@ layout (binding = 0) uniform UBO
 
 layout (location = 0) out vec3 outColor;
 
-void main() 
+void main()
 {
 	outColor = inColor * float(gl_VertexIndex);
 	gl_Position = ubo.projectionMatrix * ubo.viewMatrix * ubo.modelMatrix * vec4(inPosition.xyz, 1.0);
@@ -180,7 +185,7 @@ if (idx != std::string::npos) {
 	if (extension == L"frag") {
 		targetProfile = L"ps_6_1";
 	}
-    // 他のファイルタイプのマッピング (cs_x_y, lib_x_y, etc.)
+    // 他のファイルタイプのマッピング (cs_x_y, lib_x_y, 等)
 }
 
 // シェーダをコンパイルする
@@ -190,9 +195,9 @@ hres = compiler->Compile(
 	nullptr,
 	L"main",
 	targetProfile,
-	arguments.data(), 
+	arguments.data(),
 	(uint32_t)arguments.size(),
-	nullptr, 
+	nullptr,
 	0,
 	nullptr,
 	&resultOp);
@@ -255,7 +260,7 @@ DXC で HLSL をコンパイルする場合、ターゲットシェーダプロ�
 | `cs`
 |
 
-|`VK_SHADER_STAGE_RAYGEN_BIT_KHR`, 
+|`VK_SHADER_STAGE_RAYGEN_BIT_KHR`,
 `VK_SHADER_STAGE_ANY_HIT_BIT_KHR`,
 `VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR`,
 `VK_SHADER_STAGE_MISS_BIT_KHR`,
@@ -264,11 +269,11 @@ DXC で HLSL をコンパイルする場合、ターゲットシェーダプロ�
 | `lib`
 | レイトレーシング関連のシェーダはすべて `lib` シェーダターゲットプロファイルを使ってビルドされ、少なくともシェーダモデル 6.3 (例: `lib_6_3`) を使う必要があります。
 
-| `VK_SHADER_STAGE_TASK_BIT_NV`
+| `VK_SHADER_STAGE_TASK_BIT`
 | `as`
 | HLSL における Amplification シェーダ。少なくともシェーダモデル 6.5 (例: `as_6_5`) を使う必要があります。
 
-| `VK_SHADER_STAGE_MESH_BIT_NV`
+| `VK_SHADER_STAGE_MESH_BIT`
 | `ms`
 | 少なくともシェーダモデル 6.5 (例: `as_6_5`) を使う必要があります。
 
@@ -306,7 +311,7 @@ DirectX と HLSL は、サポートされる機能セットを記述するため
 | ハードウェアアクセラレーテッドレイトレーシング
 
 | link:https://github.com/microsoft/DirectXShaderCompiler/wiki/Shader-Model-6.4[Shader Model 6.4]
-| ✔ 
+| ✔
 | シェーダ整数内積、SV_ShadingRate
 
 | link:https://github.com/microsoft/DirectXShaderCompiler/wiki/Shader-Model-6.5[Shader Model 6.5]

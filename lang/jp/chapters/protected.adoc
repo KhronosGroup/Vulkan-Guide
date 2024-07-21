@@ -98,7 +98,7 @@ vkGetDeviceQueue2(deviceHandle, &info, &protectedQueue);
 VkCommandPoolCreateInfo info = {};
 info.flags            = VK_COMMAND_POOL_CREATE_PROTECTED_BIT;
 info.queueFamilyIndex = queueFamilyFound; // 保護されたキュー
-vkCreateCommandPool(deviceHandle, &info, nullptr, &protectedCommandPool));
+vkCreateCommandPool(deviceHandle, &info, nullptr, &protectedCommandPool);
 ----
 
 保護されたコマンドプールから割り当てられたすべてのコマンドバッファは、「保護されたコマンドバッファ」となります。

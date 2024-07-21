@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
 
 [[ray-tracing]]
 = Ray Tracing
@@ -16,8 +17,8 @@ A set of five interrelated extensions provide ray tracing support in the Vulkan 
 
 Additional SPIR-V and GLSL extensions also expose the necessary programmable functionality for shaders:
 
-  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_ray_tracing.html[SPV_KHR_ray_tracing]
-  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_ray_query.html[SPV_KHR_ray_query]
+  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_ray_tracing.html[SPV_KHR_ray_tracing]
+  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_ray_query.html[SPV_KHR_ray_query]
   * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_tracing.txt[GLSL_EXT_ray_tracing]
   * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_query.txt[GLSL_EXT_ray_query]
   * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_flags_primitive_culling.txt[GLSL_EXT_ray_flags_primitive_culling]
@@ -225,3 +226,104 @@ the operation:
 After an operation has completed (i.e. `vkDeferredOperationJoinKHR` has returned
 `VK_SUCCESS`), call `vkGetDeferredOperationResultKHR` to get the result of the
 operation.
+
+[[ray-tracing-synchronization]]
+== Synchronization for Ray Tracing
+
+  * For trace or query calls in a shader, use
+    `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR` with the relevant shader
+    stage(s) for the acceleration structure
+  * For accesses to the shader binding table in the ray tracing pipeline, use
+    `VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR` with either
+    `VK_ACCESS_SHADER_READ_BIT` or `VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR`
+  * For acceleration structure builds, use
+    `VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR` with access bits
+    corresponding to the resource being accessed:
+
+  ** Destination AS uses `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR`
+  ** Source AS (e.g. for updates) uses `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR`
+  ** Scratch buffers need both `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR`
+      and `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR`
+  ** Vertex/Index/Instance/Transform buffers use `VK_ACCESS_SHADER_READ_BIT`
+
+  * For acceleration structure copy commands, use
+    `VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR` or
+    `VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR`, again with access
+    flags dependent on sources:
+
+  ** Destination AS uses `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR`
+  ** Source AS uses `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR`
+  ** Destination buffer uses `VK_ACCESS_TRANSFER_WRITE_BIT`
+  ** Source buffer uses `VK_ACCESS_TRANSFER_READ_BIT`
+
+  * For indirect trace calls, the indirect buffer is
+    `VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT` with
+    `VK_ACCESS_INDIRECT_COMMAND_READ_BIT`
+  * For indirect acceleration structure builds, the indirect buffer is
+    `VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR` with
+    `VK_ACCESS_INDIRECT_COMMAND_READ_BIT`
+  * For micromap builds, use `VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT` with
+    access bits corresponding to which resource is being accessed:
+
+  ** Destination micromap uses `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT`
+  ** Scratch buffers need both `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT` and
+      `VK_ACCESS_2_MICROMAP_READ_BIT_EXT`
+  ** Input buffers use `VK_ACCESS_SHADER_READ_BIT`
+
+  * For micromap copy commands, use `VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT`,
+    again with access flags dependent on sources:
+
+  ** Destination micromap uses `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT`
+  ** Source micromap uses `VK_ACCESS_2_MICROMAP_READ_BIT_EXT`
+  ** Destination buffer uses `VK_ACCESS_TRANSFER_WRITE_BIT`
+  ** Source buffer uses `VK_ACCESS_TRANSFER_READ_BIT`
+
+[NOTE]
+====
+Unlike other copy operations, `VK_PIPELINE_STAGE_TRANSFER_BIT` does not
+work for acceleration structure copies.
+
+Use of `VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR`/
+`VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR` requires
+`VK_KHR_ray_tracing_maintenance1`.
+
+Use of `VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT`/
+`VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT`/`VK_ACCESS_2_MICROMAP_READ_BIT_EXT`
+requires `VK_EXT_opacity_micromap`.
+====
+
+[[ray-tracing-best-practices]]
+== Ray Tracing Best Practices
+
+=== Minimize the Number of Concurrently Active Ray Query Objects
+
+Ray query objects may be expensive in terms of thread private storage, so for
+performance, it's best to use as few as possible. In most cases it should be
+possible to use a single ray query object even if tracing multiple rays since a
+terminated ray that's issuing a new ray can use the same object. Multiple ray
+queries in the same shader should only be needed when multiple traversals need
+to be active concurrently, and shaders should be designed to minimize the number
+of active traversals.
+
+=== Minimize the Size of Ray Payloads, Hit Attributes and Callable Data
+
+The ray tracing shader stages can communicate parameters and results using ray
+payload structures between all traversal stages, hit attribute structures
+from the traversal control shaders, and callable data structures for callable
+shaders.
+
+All three of these structures consume driver-managed memory, the total quantity of
+which may scale based on the size of the structures themselves, the number
+of concurrently active rays, and additional factors such as levels of recursion.
+
+Shaders should aim to keep the size of these structures low.
+
+=== Prefer Device-Local Memory
+
+While acceleration structures can be built on any Vulkan memory heap,
+tracing rays on accelerations structures located in device-local memory should
+be expected to deliver the best performance, and should be preferred. The use of
+host-local memory (i.e. GPU accessible system memory) may be necessary in
+situations where applications are limited by the quantity of available
+device-local memory, but this is unlikely to deliver equivalent performance to
+tracing rays on device-local memory.

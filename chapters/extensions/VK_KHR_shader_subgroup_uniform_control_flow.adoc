@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
 
 [[VK_KHR_shader_subgroup_uniform_control_flow]]
 = VK_KHR_shader_subgroup_uniform_control_flow
@@ -127,5 +128,5 @@ to the first if statement.
   * link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_subgroup_uniform_control_flow.txt[GL_EXT_subgroup_uniform_control_flow] - adds a GLSL attribute for entry points
     to notify implementations that stronger guarantees for convergence are
     required. This translates to a new execution mode in the SPIR-V entry point.
-  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_subgroup_uniform_control_flow.html[SPV_KHR_subgroup_uniform_control_flow] - adds an execution mode for entry
+  * link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_subgroup_uniform_control_flow.html[SPV_KHR_subgroup_uniform_control_flow] - adds an execution mode for entry
     points to indicate the requirement for stronger reconvergence guarantees.

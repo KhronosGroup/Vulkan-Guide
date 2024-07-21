@@ -10,13 +10,13 @@ Vulkan では、メモリ管理が重要な役割を果たします。`VK_EXT_me
 
 この拡張機能は、2つのアプリケーション（メインアプリケーションとホストマシン上の別プロセス）を例にして説明することができます。時間の経過とともに、2つのアプリケーションは限られたデバイスのヒープメモリを消費しようとします。
 
-image::../../../../chapters/extensions/images/VK_EXT_memory_priority_overview.png[VK_EXT_memory_priority_overview]
+image::../../../../chapters/images/extensions/VK_EXT_memory_priority_overview.png[VK_EXT_memory_priority_overview]
 
 この場合、メインアプリケーションからのアロケーションはまだ存在しますが、低速なメモリ上にある可能性があります（実装により、再び必要になるまでホストビジブルメモリに移動している可能性があります）。
 
 **どのメモリ**を移動させるかは、実装で定義されます。メインアプリケーションのメモリ使用量を考えてみましょう。
 
-image::../../../../chapters/extensions/images/VK_EXT_memory_priority_app.png[VK_EXT_memory_priority_app]
+image::../../../../chapters/images/extensions/VK_EXT_memory_priority_app.png[VK_EXT_memory_priority_app]
 
 このように、常に高速なメモリに保持するべき重要なデータがあります。
 

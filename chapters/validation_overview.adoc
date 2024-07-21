@@ -3,6 +3,7 @@
 
 // Required for both single-page and combined guide xrefs to work
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[validation-overview]]
 = Vulkan Validation Overview
@@ -49,7 +50,7 @@ The Khronos Validation Layer used to consist of multiple layers but now has been
 
 === Getting Validation Layers
 
-The Validation Layers are constantly being updated and improved so it is always possible to grab the source and link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/master/BUILD.md[build it yourself]. In case you want a prebuit version there are various options for all supported platforms:
+The Validation Layers are constantly being updated and improved so it is always possible to grab the source and link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/main/BUILD.md[build it yourself]. In case you want a prebuilt version there are various options for all supported platforms:
 
   * **Android** - Binaries are link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/releases[released on GitHub] with most up to date version. The NDK will also comes with the Validation Layers built and link:https://developer.android.com/ndk/guides/graphics/validation-layer[information on how to use them].
   * **Linux** - The link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK] comes with the Validation Layers built and instructions on how to use them on link:https://vulkan.lunarg.com/doc/sdk/latest/linux/validation_layers.html[Linux].
@@ -96,7 +97,7 @@ backed by a memory object (https://registry.khronos.org/vulkan/specs/1.1-extensi
 html/vkspec.html#VUID-vkBindImageMemory-image-01044)
 ----
 
-  * Example 2 is about the same as Example 1 with the exception that the `name` that was attached to the object (`name = myTextureMemory`). This was done using the link:https://www.lunarg.com/new-tutorial-for-vulkan-debug-utilities-extension/[VK_EXT_debug_util] extension (link:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/extensions/debug_utils[Sample of how to use the extension]). Note that the old way of using link:https://www.saschawillems.de/blog/2016/05/28/tutorial-on-using-vulkans-vk_ext_debug_marker-with-renderdoc/[VK_EXT_debug_report] might be needed on legacy devices that don't support `VK_EXT_debug_util`.
+  * Example 2 is about the same as Example 1 with the exception that the `name` that was attached to the object (`name = myTextureMemory`). This was done using the link:https://www.lunarg.com/new-tutorial-for-vulkan-debug-utilities-extension/[VK_EXT_debug_util] extension (link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions/debug_utils[Sample of how to use the extension]). Note that the old way of using link:https://www.saschawillems.de/blog/2016/05/28/tutorial-on-using-vulkans-vk_ext_debug_marker-with-renderdoc/[VK_EXT_debug_report] might be needed on legacy devices that don't support `VK_EXT_debug_util`.
   * There were 3 objects involved in causing this error.
   ** Object 0 is a `VkDeviceMemory` named `myTextureMemory`
   ** Object 1 is a `VkImage` with no name
@@ -164,7 +165,7 @@ VkBool32 DebugReportCallbackEXT(/* ... */ const char* pMessage /* ... */)
     // If pMessage contains "specialuse-extension", then exit
     if(strstr(pMessage, "specialuse-extension") != NULL) {
         return VK_FALSE;
-    };
+    }
 
     // Handle remaining validation messages
 }
@@ -179,7 +180,7 @@ VkBool32 DebugUtilsMessengerCallbackEXT(/* ... */ const VkDebugUtilsMessengerCal
     // If pMessageIdName contains "specialuse-extension", then exit
     if(strstr(pCallbackData->pMessageIdName, "specialuse-extension") != NULL) {
         return VK_FALSE;
-    };
+    }
 
     // Handle remaining validation messages
 }

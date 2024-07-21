@@ -10,7 +10,7 @@ ifndef::chapters[:chapters: ../]
 ====
 Vulkan 1.2 でコアに昇格
 
-link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_descriptor_indexing.html[SPV_EXT_descriptor_indexing]
+link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/EXT/SPV_EXT_descriptor_indexing.html[SPV_EXT_descriptor_indexing]
 
 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_nonuniform_qualifier.txt[GLSL - GL_EXT_nonuniform_qualifier]
 
@@ -37,7 +37,7 @@ Montreal Developer Day の プレゼンテーション (link:https://www.youtube
 
 次のコード例では、バインド後の更新を有効にした場合と、有効にしなかった場合の違いを説明します。
 
-image::../../../../chapters/extensions/images/VK_EXT_descriptor_indexing_update_after_bind.png[VK_EXT_descriptor_indexing_update_after_bind.png]
+image::../../../../chapters/images/extensions/VK_EXT_descriptor_indexing_update_after_bind.png[VK_EXT_descriptor_indexing_update_after_bind.png]
 
 == 部分的バインド
 

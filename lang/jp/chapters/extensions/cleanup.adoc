@@ -126,19 +126,21 @@ Vulkan 1.3でコアに昇格
 
 メンテナンス拡張機能は、オリジナルの Vulkan 1.0リリース時には意図的に省かれていた、または見落とされていたマイナーな機能をまとめて追加するものです。
 
-現在、4つのメンテナンス拡張機能があり、最初の3つは Vulkan 1.1にコアとしてバンドルされています。各拡張機能の詳細は、拡張機能の付録ページに記載されています。
+現在、6つのメンテナンス拡張機能があり、最初の3つは Vulkan 1.1にコアとしてバンドルされています。各拡張機能の詳細は、拡張機能の付録ページに記載されています。
 
   * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance1[VK_KHR_maintenance1] - Vulkan 1.1コア
   * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance2[VK_KHR_maintenance2] - Vulkan 1.1コア
   * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance3[VK_KHR_maintenance3] - Vulkan 1.1コア
   * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance4[VK_KHR_maintenance4] - Vulkan 1.3コア
+  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance5[VK_KHR_maintenance5]
+  * link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance6[VK_KHR_maintenance6]
 
 [[pnext-expansions]]
 == pNext 拡張機能
 
 オリジナルの Vulkan 1.0仕様に含まれるいくつかの構造体は、`sType`/`pNext` が欠けているため、適切な拡張ができないことに Vulkan のワーキンググループが気付きました。
 
-バージョン間の下位互換性を維持することは非常に重要であるため、最善の解決策は、ミスを修正するための拡張機能を作成することでした。これらの拡張機能は主に新しい構造体ですが、新しい構造体を利用するために新しい関数のエントリポイントも作成する必要があります。
+バージョン間の後方互換性を維持することは非常に重要であるため、最善の解決策は、ミスを修正するための拡張機能を作成することでした。これらの拡張機能は主に新しい構造体ですが、新しい構造体を利用するために新しい関数のエントリポイントも作成する必要があります。
 
 現在、このカテゴリーに当てはまる拡張子のリストは以下の通りです。
 
@@ -197,7 +199,7 @@ VkBindImagePlaneMemoryInfo plane_info[2];
 plane_info[0] = {VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO, NULL, VK_IMAGE_ASPECT_PLANE_0_BIT};
 plane_info[1] = {VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO, NULL, VK_IMAGE_ASPECT_PLANE_1_BIT};
 
-// vkBindImagemMemory() で欠落した pNext に他の拡張機能の構造体を渡せるようになりました。
+// vkBindImageMemory() で欠落した pNext に他の拡張機能の構造体を渡せるようになりました。
 VkBindImageMemoryInfo infos[2];
 infos[0] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, &plane_info[0], image, memories[0], 0};
 infos[1] = {VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO, &plane_info[1], image, memories[1], 0};
@@ -239,8 +241,8 @@ void vkBindImageMemory(VkDevice device,
 }
 
 void vkBindImageMemory2(VkDevice device,
-                        uint32_t bindInfoCount, const
-                        VkBindImageMemoryInfo* pBindInfos)
+                        uint32_t bindInfoCount,
+                        const VkBindImageMemoryInfo* pBindInfos)
 {
     for (uint32_t i = 0; i < bindInfoCount; i++) {
         HandleVkBindImageMemoryInfo(pBindInfos[i]);

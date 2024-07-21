@@ -57,8 +57,8 @@ if ((formatProperties2.formatProperties.linearTilingFeatures & VK_FORMAT_FEATURE
 ----
 // VK_KHR_format_feature_flags2 を使用
 VkFormatProperties3KHR formatProperties3;
-formatProperties2.sType = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_3_KHR;
-formatProperties2.pNext = nullptr;
+formatProperties3.sType = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_3_KHR;
+formatProperties3.pNext = nullptr;
 
 VkFormatProperties2 formatProperties2;
 formatProperties2.sType = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2;

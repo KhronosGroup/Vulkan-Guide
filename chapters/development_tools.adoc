@@ -1,7 +1,8 @@
-// Copyright 2019-2021 The Khronos Group, Inc.
+// Copyright 2019-2023 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[development-tools]]
 = Development Tools
@@ -26,9 +27,6 @@ Layers are optional components that augment the Vulkan system. They can intercep
   ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/debug_printf.html[Shader printf]: Debug shader code by "`printing`" any values of interest to the debug callback or stdout.
   ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html[Best Practices Warnings]: Highlights potential performance issues, questionable usage patterns, common mistakes.
 
-  * link:https://vulkan.lunarg.com/doc/view/latest/windows/synchronization2_layer.html[`VK_LAYER_KHRONOS_synchronization2`], the Khronos Synchronization2 layer.
-    The `VK_LAYER_KHRONOS_synchronization2` layer implements the `VK_KHR_synchronization2` extension. By default, it will disable itself if the underlying driver provides the extension.
-
 === Vulkan SDK layers
 
 Besides the Khronos Layers, the Vulkan SDK included additional useful platform independent layers.
@@ -48,12 +46,13 @@ Besides the Khronos Layers, the Vulkan SDK included additional useful platform i
   * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/monitor_layer.html[`VK_LAYER_LUNARG_monitor`], a framerate monitor layer.
     Display the Vulkan application FPS in the window title bar to give a hint about the performance.
 
+=== Vulkan Extension Layer
+
+The link:https://github.com/KhronosGroup/Vulkan-ExtensionLayer/[`Vulkan Extension Layer`] is a collection of layers that implement extensions that are not available everywhere. By default, these layers will disable themselves if the underlying driver provides the extension.
+
 === Vulkan Third-party layers
 
 There are also other publicly available layers that can be used to help in development.
-
-  * link:https://github.com/ARM-software/perfdoc[`VK_LAYER_ARM_mali_perf_doc`], the ARM PerfDoc layer.
-    Checks Vulkan applications for best practices on Arm Mali devices.
 
   * link:https://github.com/powervr-graphics/perfdoc[`VK_LAYER_IMG_powervr_perf_doc`], the PowerVR PerfDoc layer.
     Checks Vulkan applications for best practices on Imagination Technologies PowerVR devices.
@@ -65,7 +64,7 @@ There are also other publicly available layers that can be used to help in devel
 
 Debugging something running on a GPU can be incredibly hard, luckily there are tools out there to help.
 
-  * link:https://developer.arm.com/Tools%20and%20Software/Graphics%20Analyzer [Arm Graphics Analyzer]
+  * link:https://developer.arm.com/Tools%20and%20Software/Graphics%20Analyzer[Arm Graphics Analyzer]
   * link:https://github.com/google/gapid[GAPID]
   * link:https://developer.nvidia.com/nsight-graphics[NVIDIA Nsight]
   * link:https://developer.imaginationtech.com[PVRCarbon]
@@ -77,7 +76,7 @@ Debugging something running on a GPU can be incredibly hard, luckily there are t
 With anything related to a GPU it is best to not assume and profile when possible. Here is a list of known profilers to aid in your development.
 
   * link:https://gpuopen.com/rgp/[AMD Radeon GPU Profiler] - Low-level performance analysis tool for AMD Radeon GPUs.
-  * link:https://developer.arm.com/Tools%20and%20Software/Streamline%20Performance%20Analyzer [Arm Streamline Performance Analyzer] - Visualize the performance of mobile games and applications for a broad range of devices, using Arm Mobile Studio.
+  * link:https://developer.arm.com/Tools%20and%20Software/Streamline%20Performance%20Analyzer[Arm Streamline Performance Analyzer] - Visualize the performance of mobile games and applications for a broad range of devices, using Arm Mobile Studio.
   * link:https://www.intel.com/content/www/us/en/developer/tools/graphics-performance-analyzers/overview.html[Intel(R) GPA] - Intel's Graphics Performance Analyzers that supports capturing and analyzing multi-frame streams of Vulkan apps.
   * link:https://github.com/GPUOpen-Tools/OCAT[OCAT] - The Open Capture and Analytics Tool (OCAT) provides an FPS overlay and performance measurement for D3D11, D3D12, and Vulkan.
   * link:https://developer.imaginationtech.com[PVRTune]

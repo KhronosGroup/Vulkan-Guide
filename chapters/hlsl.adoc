@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[hlsl-in-vulkan]]
 = HLSL in Vulkan
@@ -13,7 +14,12 @@ One such language is the High Level Shading Language (HLSL) by Microsoft, used b
 
 With link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst#unsupported-hlsl-features[a few exceptions], all Vulkan features and shader stages available with GLSL can be used with HLSL too, including recent Vulkan additions like hardware accelerated ray tracing. On the other hand, HLSL to SPIR-V supports Vulkan exclusive features that are not (yet) available in DirectX.
 
-image::images/what_is_spirv_dxc.png[what_is_spriv_dxc.png]
+image::{images}what_is_spirv_dxc.png[what_is_spriv_dxc.png]
+
+[[educational-resources]]
+== Educational resources
+
+If you are new to HLSL, a good starting point are the HLSL resources over at link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl[Microsoft Learn]. Another great source is the link:https://microsoft.github.io/DirectX-Specs/[DirectX-Specs document]. It contains valuable information on recent shader features and HLSL's shader models.
 
 [[applications-pov]]
 == From the application's point-of-view
@@ -22,7 +28,7 @@ From the application's point-of-view, using HLSL is exactly the same as using GL
 
 [[hlsl-spirv-mapping-manual]]
 == HLSL to SPIR-V feature mapping manual
-A great starting point on using HLSL in Vulkan via SPIR-V is the link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst[HLSL to SPIR-V feature mapping manual]. It contains detailed information on semantics, syntax, supported features and extensions and much more and is a must-read. The xref:{chapters}decoder_ring.adoc[decoder ring] also has a translation table for concepts and terms used in Vulkan an DirectX.
+A great starting point on using HLSL in Vulkan via SPIR-V is the link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst[HLSL to SPIR-V feature mapping manual]. It contains detailed information on semantics, syntax, supported features and extensions and much more and is a must-read. The xref:{chapters}decoder_ring.adoc[decoder ring] also has a translation table for concepts and terms used in Vulkan and DirectX.
 
 [[vk-namespace]]
 == The Vulkan HLSL namespace
@@ -276,11 +282,11 @@ When compiling HLSL with DXC you need to select a target shader profile. The nam
 | `lib`
 | All raytracing related shaders are built using the `lib` shader target profile and must use at least shader model 6.3 (e.g. `lib_6_3`).
 
-| `VK_SHADER_STAGE_TASK_BIT_NV`
+| `VK_SHADER_STAGE_TASK_BIT`
 | `as`
 | Amplification shader in HLSL terminology. Must use at least shader model 6.5 (e.g. `as_6_5`).
 
-| `VK_SHADER_STAGE_MESH_BIT_NV`
+| `VK_SHADER_STAGE_MESH_BIT`
 | `ms`
 | Must use at least shader model 6.5 (e.g. `ms_6_5`).
 

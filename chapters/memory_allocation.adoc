@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[memory-allocation]]
 = Memory Allocation
@@ -16,7 +17,7 @@ It is also worth noting that managing memory is not easy and developers might wa
 
 Sub-allocation is considered to be a first-class approach when working in Vulkan. It is also important to realize there is a link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#limits-maxMemoryAllocationCount[maxMemoryAllocationCount] which creates a limit to the number of simultaneously active allocations an application can use at once. Memory allocation and deallocation at the OS/driver level is likely to be really slow which is another reason for sub-allocation. A Vulkan app should aim to create large allocations and then manage them itself.
 
-image::images/memory_allocation_sub_allocation.png[memory_allocation_sub_allocation.png]
+image::{images}memory_allocation_sub_allocation.png[memory_allocation_sub_allocation.png]
 
 == Transfer
 
@@ -26,8 +27,8 @@ Discrete graphics cards contain their own dedicated memory on the device. The da
 
 UMA systems share the memory between the device and host which is advertised with a `VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT` combination. The disadvantage of this is that system memory has to be shared with the GPU which requires being cautious of memory pressure. The main advantage is that there is no need to create a _staging buffer_ and the transfer overhead is greatly reduced.
 
-image::images/memory_allocation_transfer.png[memory_allocation_transfer.png]
+image::{images}memory_allocation_transfer.png[memory_allocation_transfer.png]
 
 == Lazily Allocated Memory
 
-On tile-based architectures (virtually all mobile GPUs) the `LAZILY_ALLOCATED_BIT` memory type is not backed by actual memory. It can be used for attachments that can be held in tile memory, such as the G-buffer between subpasses, depth buffer, or multi-sampled images. This saves some significant bandwidth cost for writing the image back to memory. You can find more information in Khronos' tutorials on link:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/render_passes[Render Passes] and link:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/subpasses[Subpasses].
+On tile-based architectures (virtually all mobile GPUs) the `LAZILY_ALLOCATED_BIT` memory type is not backed by actual memory. It can be used for attachments that can be held in tile memory, such as the G-buffer between subpasses, depth buffer, or multi-sampled images. This saves some significant bandwidth cost for writing the image back to memory. You can find more information in Khronos' tutorials on link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/performance/render_passes[Render Passes] and link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/performance/subpasses[Subpasses].

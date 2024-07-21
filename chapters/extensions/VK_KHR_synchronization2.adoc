@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
 
 [[VK_KHR_synchronization2]]
 = VK_KHR_synchronization2
@@ -19,7 +20,7 @@ One main change with the extension is to have pipeline stages and access flags n
 
 The only new type of structure needed is `VkDependencyInfoKHR`, which wraps all the barriers into a single location.
 
-image::images/VK_KHR_synchronization2_stage_access.png[VK_KHR_synchronization2_stage_access]
+image::{images}extensions/VK_KHR_synchronization2_stage_access.png[VK_KHR_synchronization2_stage_access]
 
 === Adding barriers for setting events
 
@@ -72,7 +73,7 @@ VkMemoryBarrier2KHR memoryBarrier = {
     .dstStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR,
     .srcAccessMask = VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT_KHR,
     .dstAccessMask = VK_ACCESS_2_INPUT_ATTACHMENT_READ_BIT_KHR
-}
+};
 
 // The 4 fields unset are ignored according to the spec
 // When VkMemoryBarrier2KHR is passed into pNext
@@ -87,7 +88,7 @@ VkSubpassDependency2 dependency = {
 
 == Splitting up pipeline stages and access masks
 
-Some `VkAccessFlags` and `VkPipelineStageFlags` had values that were ambiguous to what it was targeting in hardware. The new `VkAccessFlags2KHR` and `VkPipelineStageFlags2KHR` break these up for some cases while leaving the old value for maintability.
+Some `VkAccessFlags` and `VkPipelineStageFlags` had values that were ambiguous to what it was targeting in hardware. The new `VkAccessFlags2KHR` and `VkPipelineStageFlags2KHR` break these up for some cases while leaving the old value for maintainability.
 
 === Splitting up VK_PIPELINE_STAGE_VERTEX_INPUT_BIT
 
@@ -208,14 +209,14 @@ VkImageMemoryBarrier colorImageMemoryBarrier = {
 };
 
 VkImageMemoryBarrier depthStencilImageMemoryBarrier = {
-  .srcAccessMask = VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT_KHR,,
+  .srcAccessMask = VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT_KHR,
   .dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR,
   .oldLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR, // new layout from VK_KHR_synchronization2
   .newLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR   // new layout from VK_KHR_synchronization2
 };
 ----
 
-In the new case `VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR` works by contextually appling itself based on the image format used. So as long as `colorImageMemoryBarrier` is used on a color format, `VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR` maps to `VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL`
+In the new case `VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR` works by contextually applying itself based on the image format used. So as long as `colorImageMemoryBarrier` is used on a color format, `VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR` maps to `VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL`
 
 Additionally, with `VK_KHR_synchronization2`, if `oldLayout` is equal to `newLayout`, no layout transition is performed and the image contents are preserved.  The layout used does not even need to match the layout of an image, so the following barrier is valid:
 
@@ -262,7 +263,7 @@ VkSubmitInfo submitInfo = {
     .pNext = &protectedSubmitInfo, // Chains all 3 extensible structures
     .waitSemaphoreCount = 1,
     .pWaitSemaphores = &waitSemaphore,
-    .pWaitDstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+    .pWaitDstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
     .commandBufferCount = 8,
     .pCommandBuffers = commandBuffers,
     .signalSemaphoreCount = 1,
@@ -339,5 +340,5 @@ For devices that do not natively support this extension, there is a portable imp
 
 [NOTE]
 ====
-The `VK_KHR_synchronization2` specification lists `VK_KHR_create_renderpass2` and `VK_KHR_get_phyiscal_device_properties2` as requirements. As a result, using synchronization2 without these extensions may result in validation errors. The extension requirements are being reevaluated and validation will be adjusted once this is complete.
+The `VK_KHR_synchronization2` specification lists `VK_KHR_create_renderpass2` and `VK_KHR_get_physical_device_properties2` as requirements. As a result, using synchronization2 without these extensions may result in validation errors. The extension requirements are being reevaluated and validation will be adjusted once this is complete.
 ====

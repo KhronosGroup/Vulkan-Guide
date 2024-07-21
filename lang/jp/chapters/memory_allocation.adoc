@@ -30,4 +30,4 @@ image::../../../chapters/images/memory_allocation_transfer.png[memory_allocation
 
 == 遅延メモリ割り当て
 
-タイルベースのアーキテクチャ（事実上すべてのモバイル GPU）では、`LAZILY_ALLOCATED_BIT` メモリタイプは、実際のメモリに一致しません。`LAZILY_ALLOCATED_BIT` は、サブパス間の G-buffer や深度バッファ、マルチサンプルイメージなど、タイルメモリに保持できるアタッチメントに使用できます。これにより、イメージをメモリに書き戻すための大幅な帯域幅コストを削減することができます。詳しい情報は、Khronos のチュートリアルのlink:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/render_passes[レンダーパス]とlink:https://github.com/KhronosGroup/Vulkan-Samples/tree/master/samples/performance/subpasses[サブパス]をご覧ください。
+タイルベースのアーキテクチャ（事実上すべてのモバイル GPU）では、`LAZILY_ALLOCATED_BIT` メモリタイプは、実際のメモリに一致しません。`LAZILY_ALLOCATED_BIT` は、サブパス間の G-buffer や深度バッファ、マルチサンプルイメージなど、タイルメモリに保持できるアタッチメントに使用できます。これにより、イメージをメモリに書き戻すための大幅な帯域幅コストを削減することができます。詳しい情報は、Khronos のチュートリアルのlink:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/performance/render_passes[レンダーパス]とlink:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/performance/subpasses[サブパス]をご覧ください。

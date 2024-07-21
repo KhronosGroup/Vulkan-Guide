@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[layers]]
 = Layers
@@ -10,7 +11,7 @@ Layers are optional components that augment the Vulkan system. They can intercep
 
 == Using Layers
 
-Layers are packaged as shared libraries that get dynamically loaded in by the loader and inserted between it and the application. The two things needed to use layers are the location of the binary files and which layers to enable. The layers to use can be either explicitly enabled by the application or implicitly enabled by telling the loader to use them. More details about implicit and explicit layers can be found in the link:https://github.com/KhronosGroup/Vulkan-Loader/blob/master/loader/LoaderAndLayerInterface.md#implicit-vs-explicit-layers[Loader and Layer Interface].
+Layers are packaged as shared libraries that get dynamically loaded in by the loader and inserted between it and the application. The two things needed to use layers are the location of the binary files and which layers to enable. The layers to use can be either explicitly enabled by the application or implicitly enabled by telling the loader to use them. More details about implicit and explicit layers can be found in the link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md#implicit-vs-explicit-layers[Loader and Layer Interface].
 
 The link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK] contains a link:https://vulkan.lunarg.com/doc/sdk/latest/windows/layer_configuration.html[layer configuration document] that is very specific to how to discover and configure layers on each of the platforms.
 
@@ -25,12 +26,7 @@ There used to be both instance layers and device layers, but device layers were 
 
 == Creating a Layer
 
-Anyone can create a layer as long as it follows the link:https://github.com/KhronosGroup/Vulkan-Loader/blob/master/loader/LoaderAndLayerInterface.md#loader-and-layer-interface[loader to layer interface] which is how the loader and layers agree to communicate with each other.
-
-LunarG provides a framework for layer creation called the link:https://github.com/LunarG/VulkanTools/tree/master/layer_factory[Layer Factory] to help develop new layers (link:https://www.youtube.com/watch?v=gVT7nyXz6M8&t=5m22s[Video presentation]).
-The layer factory hides the majority of the loader-layer interface, layer boilerplate, setup and initialization, and complexities of layer development.
-During application development, the ability to easily create a layer to aid in debugging your application can be useful.
-For more information, see the link:https://github.com/LunarG/VulkanTools/blob/master/layer_factory/README.md[Vulkan Layer Factory documentation].
+Anyone can create a layer as long as it follows the link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md#loader-and-layer-interface[loader to layer interface] which is how the loader and layers agree to communicate with each other.
 
 == Platform Variations
 
@@ -38,7 +34,7 @@ The way to load a layer in implicitly varies between loader and platform.
 
 === Android
 
-As of Android P (Android 9 / API level 28), if a device is in a debuggable state such that `getprop ro.debuggable` link:hhttps://cs.android.com/android/platform/superproject/+/android-9.0.0_r1:frameworks/native/vulkan/libvulkan/layers_extensions.cpp;l=454[returns 1], then the loader will look in link:https://cs.android.com/android/platform/superproject/+/android-9.0.0_r1:frameworks/native/vulkan/libvulkan/layers_extensions.cpp;l=67[/data/local/debug/vulkan].
+As of Android P (Android 9 / API level 28), if a device is in a debuggable state such that `getprop ro.debuggable` link:https://cs.android.com/android/platform/superproject/+/android-9.0.0_r1:frameworks/native/vulkan/libvulkan/layers_extensions.cpp;l=454[returns 1], then the loader will look in link:https://cs.android.com/android/platform/superproject/+/android-9.0.0_r1:frameworks/native/vulkan/libvulkan/layers_extensions.cpp;l=67[/data/local/debug/vulkan].
 
 Starting in Android P (Android 9 / API level 28) implicit layers can be link:https://developer.android.com/ndk/guides/graphics/validation-layer#vl-adb[pushed using ADB] if the application was built in debug mode.
 

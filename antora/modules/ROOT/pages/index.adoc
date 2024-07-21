@@ -1,0 +1,9 @@
+# Copyright 2022-2024 The Khronos Group Inc.
+# SPDX-License-Identifier: CC-BY-4.0
+
+image::vulkan_logo.png[Vulkan Logo]
+image::khronos_logo.png[Khronos logo]
+
+// Extracted from boilerplate at start of guide.adoc
+
+The Vulkan Guide is designed to help developers get up and going with the world of Vulkan. It is aimed to be a light read that leads to many other useful links depending on what a developer is looking for. All information is intended to help better fill the gaps about the many nuances of Vulkan.

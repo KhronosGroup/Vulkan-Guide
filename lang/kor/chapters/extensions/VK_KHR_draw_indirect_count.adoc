@@ -1,0 +1,25 @@
+// Copyright 2019-2021 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
+
+[[VK_KHR_draw_indirect_count]]
+= VK_KHR_draw_indirect_count
+
+[NOTE]
+====
+Vulkan 1.2에서 코어로 승격됨
+====
+
+`vkCmdDraw` 를 호출할 때마다 드로우콜을 기술하는 매개변수 세트를 사용합니다. 드로우콜을 일괄 처리하기 위해 동일한 매개변수가 `VkDrawIndirectCommand` 블록의 `VkBuffer` 에 저장됩니다. `vkCmdDrawIndirect` 를 사용하면 `drawCount` 드로우 횟수를 호출할 수 있지만, `drawCount` 는 기록 시점에 필요합니다. 새로운 `vkCmdDrawIndirectCount` 호출을 사용하면 `drawCount` 가 `VkBuffer` 에도 포함될 수 있습니다. 이를 통해 드로우콜이 실행될 때 `drawCount` 의 값이 동적으로 결정될 수 있습니다.
+
+[NOTE]
+====
+확장 기능이 지원되거나 `VkPhysicalDeviceVulkan12Features::drawIndirectCount` 기능 비트가 `true` 인 경우 `vkCmdDrawIndirectCount` 및 `vkCmdDrawIndexedIndirectCount` 함수를 사용할 수 있습니다.
+====
+
+다음 다이어그램은 `vkCmdDraw` , `vkCmdDrawIndirect` , `vkCmdDrawIndirectCount` 의 차이를 시각화한 것입니다.
+
+image::../../../../chapters/images/extensions/VK_KHR_draw_indirect_count_example.png[VK_KHR_draw_indirect_count example]
+

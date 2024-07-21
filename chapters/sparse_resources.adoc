@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[sparse-resources]]
 = Sparse Resources
@@ -26,7 +27,7 @@ Imagine a 256 KB `VkBuffer` where there are 3 parts that an application wants to
 
 The following showcases how the application views the `VkBuffer`:
 
-image::images/sparse_resources_buffer.png[sparse_resources_buffer.png]
+image::{images}sparse_resources_buffer.png[sparse_resources_buffer.png]
 
 === Sparse Images
 

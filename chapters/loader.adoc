@@ -2,24 +2,25 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[loader]]
 = Loader
 
 The loader is responsible for mapping an application to Vulkan layers and Vulkan installable client drivers (ICD).
 
-image::images/loader_overview.png[loader_overview.png]
+image::{images}loader_overview.png[loader_overview.png]
 
-Anyone can create their own Vulkan Loader, as long as they follow the link:https://github.com/KhronosGroup/Vulkan-Loader/blob/master/docs/LoaderInterfaceArchitecture.md[Loader Interface]. One can build the link:https://github.com/KhronosGroup/Vulkan-Loader/blob/master/BUILD.md[reference loader] as well or grab a built version from the link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK] for selected platforms.
+Anyone can create their own Vulkan Loader, as long as they follow the link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/docs/LoaderInterfaceArchitecture.md[Loader Interface]. One can build the link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/BUILD.md[reference loader] as well or grab a built version from the link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK] for selected platforms.
 
 == Linking Against the Loader
 
-The link:https://github.com/KhronosGroup/Vulkan-Headers[Vulkan headers] only provide the Vulkan function prototypes. When building a Vulkan application you have to link it to the loader or you will get errors about undefined references to the Vulkan functions. There are two ways of linking the loader, link:https://github.com/KhronosGroup/Vulkan-Loader/blob/master/loader/LoaderAndLayerInterface.md#directly-linking-to-the-loader[directly] and link:https://github.com/KhronosGroup/Vulkan-Loader/blob/master/loader/LoaderAndLayerInterface.md#indirectly-linking-to-the-loader[indirectly], which should not be confused with "`static and dynamic linking`".
+The link:https://github.com/KhronosGroup/Vulkan-Headers[Vulkan headers] only provide the Vulkan function prototypes. When building a Vulkan application you have to link it to the loader or you will get errors about undefined references to the Vulkan functions. There are two ways of linking the loader, link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md#directly-linking-to-the-loader[directly] and link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md#indirectly-linking-to-the-loader[indirectly], which should not be confused with "`static and dynamic linking`".
 
-  * link:https://github.com/KhronosGroup/Vulkan-Loader/blob/master/loader/LoaderAndLayerInterface.md#directly-linking-to-the-loader[Directly linking] at compile time
+  * link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md#directly-linking-to-the-loader[Directly linking] at compile time
   ** This requires having a built Vulkan Loader (either as a static or dynamic library) that your build system can find.
   ** Build systems (Visual Studio, CMake, etc) have documentation on how to link to the library. Try searching "`(InsertBuildSystem) link to external library`" online.
-  * link:https://github.com/KhronosGroup/Vulkan-Loader/blob/master/loader/LoaderAndLayerInterface.md#indirectly-linking-to-the-loader[Indirectly linking] at runtime
+  * link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md#indirectly-linking-to-the-loader[Indirectly linking] at runtime
   ** Using dynamic symbol lookup (via system calls such as `dlsym` and `dlopen`) an application can initialize its own dispatch table. This allows an application to fail gracefully if the loader cannot be found. It also provides the fastest mechanism for the application to call Vulkan functions.
   ** link:https://github.com/zeux/volk/[Volk] is an open source implementation of a meta-loader to help simplify this process.
 

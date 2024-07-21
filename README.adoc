@@ -1,4 +1,4 @@
-// Copyright 2019-2022 The Khronos Group, Inc.
+// Copyright 2019-2024 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 = Vulkan^®^ Guide
@@ -15,9 +15,10 @@ image::images/vulkan_logo.png[Vulkan Logo]
 image::images/khronos_logo.png[Khronos logo]
 
 :lang-jp: lang/jp/
+:lang-kor: lang/kor/
 This document is also available in the following languages: +
 xref:{lang-jp}README-jp.adoc[Japanese]
-
+xref:{lang-kor}README-kor.adoc[Korean]
 
 // Use {chapters} as base path for individual chapters, to allow single
 // pages to work properly as well. Must have trailing slash.
@@ -137,6 +138,10 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 // include::{chapters}extensions/VK_KHR_synchronization2.adoc[]
 
+=== xref:{chapters}synchronization_examples.adoc[Synchronization Examples]
+
+// include::{chapters}extensions/synchronization_examples.adoc[]
+
 == xref:{chapters}memory_allocation.adoc[Memory Allocation Strategy]
 
 // include::{chapters}memory_allocation.adoc[]
@@ -175,17 +180,25 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 // include::{chapters}descriptor_dynamic_offset.adoc[]
 
+=== xref:{chapters}push_constants.adoc[Push Constants]
+
+// include::{chapters}push_constants.adoc[]
+
 == xref:{chapters}robustness.adoc[Robustness]
 
 // include::{chapters}robustness.adoc[]
 
-  * `VK_EXT_image_robustness`, `VK_EXT_robustness2`
+  * `VK_EXT_image_robustness`, `VK_EXT_robustness2`, `VK_EXT_pipeline_robustness`
 
 == xref:{chapters}dynamic_state.adoc[Dynamic State]
 
 // include::{chapters}dynamic_state.adoc[]
 
-  * `VK_EXT_extended_dynamic_state`, `VK_EXT_extended_dynamic_state2`, `VK_EXT_vertex_input_dynamic_state`, `VK_EXT_color_write_enable`
+  * `VK_EXT_extended_dynamic_state`, `VK_EXT_extended_dynamic_state2`, `VK_EXT_extended_dynamic_state3`, `VK_EXT_vertex_input_dynamic_state`, `VK_EXT_color_write_enable`, `VK_EXT_attachment_feedback_loop_dynamic_state`
+
+=== xref:{chapters}dynamic_state_map.adoc[Dynamic State Map]
+
+// include::{chapters}dynamic_state_map.adoc[]
 
 == xref:{chapters}subgroups.adoc[Subgroups]
 
@@ -213,6 +226,10 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 // include::{chapters}hlsl.adoc[]
 
+== xref:{chapters}high_level_shader_language_comparison.adoc[High Level Shader Language Comparison]
+
+// include::{chapters}high_level_shader_language_comparison.adoc[]
+
 = When and Why to use Extensions
 
 [NOTE]
@@ -222,7 +239,7 @@ These are supplemental references for the various Vulkan Extensions. Please cons
 
 == xref:{chapters}extensions/cleanup.adoc[Cleanup Extensions]
 
-  * `VK_EXT_4444_formats`, `VK_KHR_bind_memory2`, `VK_KHR_create_renderpass2`, `VK_KHR_dedicated_allocation`, `VK_KHR_driver_properties`, `VK_KHR_get_memory_requirements2`, `VK_KHR_get_physical_device_properties2`, `VK_EXT_host_query_reset`, `VK_KHR_maintenance1`, `VK_KHR_maintenance2`, `VK_KHR_maintenance3`, `VK_KHR_maintenance4`, `VK_KHR_separate_depth_stencil_layouts`, `VK_KHR_depth_stencil_resolve`, `VK_EXT_separate_stencil_usage`, `VK_EXT_sampler_filter_minmax`, `VK_KHR_sampler_mirror_clamp_to_edge`, `VK_EXT_ycbcr_2plane_444_formats`, `VK_KHR_format_feature_flags2`, `VK_EXT_rgba10x6_formats`, `VK_KHR_copy_commands2`
+  * `VK_EXT_4444_formats`, `VK_KHR_bind_memory2`, `VK_KHR_create_renderpass2`, `VK_KHR_dedicated_allocation`, `VK_KHR_driver_properties`, `VK_KHR_get_memory_requirements2`, `VK_KHR_get_physical_device_properties2`, `VK_EXT_host_query_reset`, `VK_KHR_maintenance1`, `VK_KHR_maintenance2`, `VK_KHR_maintenance3`, `VK_KHR_maintenance4`, `VK_KHR_maintenance5`, `VK_KHR_maintenance6`, `VK_KHR_separate_depth_stencil_layouts`, `VK_KHR_depth_stencil_resolve`, `VK_EXT_separate_stencil_usage`, `VK_EXT_sampler_filter_minmax`, `VK_KHR_sampler_mirror_clamp_to_edge`, `VK_EXT_ycbcr_2plane_444_formats`, `VK_KHR_format_feature_flags2`, `VK_EXT_rgba10x6_formats`, `VK_KHR_copy_commands2`
 
 // include::{chapters}extensions/cleanup.adoc[]
 

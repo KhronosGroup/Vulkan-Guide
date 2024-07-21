@@ -3,6 +3,7 @@
 
 // Required for both single-page and combined guide xrefs to work
 ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
 
 [[what-vulkan-can-do]]
 = What Vulkan Can Do
@@ -46,13 +47,13 @@ There is also an older link:https://registry.khronos.org/vulkan/specs/1.3-extens
 
 == Video
 
-link:https://www.khronos.org/blog/an-introduction-to-vulkan-video?mc_cid=8052312abe&mc_eid=64241dfcfa[Vulkan Video] has release a provisional specification as of the 1.2.175 spec release.
+With the link:https://www.khronos.org/blog/khronos-finalizes-vulkan-video-extensions-for-accelerated-h.264-and-h.265-decode[Vulkan Video extensions] developers can use hardware accelerated video decoding functionality in realtime. The functionality is exposed through the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_video_queue.html[VK_KHR_video_queue], link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_video_decode_queue.html[VK_KHR_video_decode_queue], link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_video_decode_h264.html[VK_KHR_video_decode_h264] and link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_video_decode_h265.html[VK_KHR_video_decode_h265] extensions.
 
 Vulkan Video adheres to the Vulkan philosophy of providing flexible, fine-grained control over video processing scheduling, synchronization, and memory utilization to the application.
 
 [NOTE]
 ====
-link:https://github.com/KhronosGroup/Vulkan-Docs/issues/1497[feedback] for the provisional specification is welcomed
+Provisional extensions for encoding videos are already in the works, link:https://github.com/KhronosGroup/Vulkan-Docs/issues/1694[feedback] is welcome
 ====
 
 == Machine Learning

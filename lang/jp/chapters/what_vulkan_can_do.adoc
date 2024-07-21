@@ -36,7 +36,7 @@ GPGPU と呼ばれる新しいプログラミングスタイルを用いて、GP
 
 レイトレーシングとは光の物理的な振る舞いをシミュレートするというコンセプトに基づいた、ラスタライズとは別のレンダリング技術です。
 
-レイトレーシングのクロスベンダー API サポートは、Vulkan の1.2.162仕様で拡張機能として追加されました。 
+レイトレーシングのクロスベンダー API サポートは、Vulkan の1.2.162仕様で拡張機能として追加されました。
 主な拡張機能は link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline[`VK_KHR_ray_tracing_pipeline`]、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_ray_query[`VK_KHR_ray_query`]、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_acceleration_structure[`VK_KHR_acceleration_structure`] です。
 
 [NOTE]
@@ -46,13 +46,13 @@ GPGPU と呼ばれる新しいプログラミングスタイルを用いて、GP
 
 == ビデオ
 
-link:https://www.khronos.org/blog/an-introduction-to-vulkan-video?mc_cid=8052312abe&mc_eid=64241dfcfa[Vulkan Video] は、1.2.175仕様リリース時点で暫定仕様を公開しています。
+link:https://www.khronos.org/blog/khronos-finalizes-vulkan-video-extensions-for-accelerated-h.264-and-h.265-decode[Vulkan Video拡張機能]により、開発者はハードウェアアクセラレーションによるビデオデコード機能をリアルタイムで使用することができます。この機能は、link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_video_queue.html[VK_KHR_video_queue]、link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_video_decode_queue.html[VK_KHR_video_decode_queue]、link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_video_decode_h264.html[VK_KHR_video_decode_h264]、link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_video_decode_h265.html[VK_KHR_video_decode_h265] 拡張機能を通じて公開されています。
 
 Vulkan Video は Vulkan の理念に基づき、ビデオ処理のスケジューリング、同期、メモリ使用などを、柔軟かつきめ細かくアプリケーションに提供します。
 
 [NOTE]
 ====
-暫定仕様へのlink:https://github.com/KhronosGroup/Vulkan-Docs/issues/1497[フィードバック]をお待ちしています。
+動画をエンコードするための暫定仕様へのlink:https://github.com/KhronosGroup/Vulkan-Docs/issues/1694[フィードバック]をお待ちしています。
 ====
 
 == 機械学習
@@ -70,6 +70,6 @@ Vulkan SC（Safety Critical）は、自動車、航空電子、産業、医療�
 
 [NOTE]
 ====
-Vulkan SC は、Vulkan 1.2をベースに、セーフティクリティカルな市場に不要な機能を削除し、無視されるパラメータや未定義の振る舞いを排除して仕様の堅牢性を高め、実行時フォルトの検出、報告、修正を強化したものです。
+Vulkan SC は、Vulkan 1.2をベースに、セーフティクリティカルな市場に不要な機能を削除し、無視されるパラメータや未定義の動作を排除して仕様の堅牢性を高め、実行時フォルトの検出、報告、修正を強化したものです。
 ====
 
