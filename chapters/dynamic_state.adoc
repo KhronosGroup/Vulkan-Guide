@@ -84,6 +84,49 @@ Vulkan is a tool, so as with most things, and there is no single answer for this
 
 Some implementations might have a performance loss using some certain `VkDynamicState` state over a static value, but dynamic states might prevent an application from having to create many permutations of pipeline objects which might be a bigger desire for the application.
 
+[[dynamic-state-lifetime]]
+== Dynamic state lifetime
+
+The spec talks about how there is a link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#dynamic-state-lifetime[dynamic state lifetime]. The following best describes it in some examples:
+
+[source,cpp]
+----
+// example 1 - valid
+vkCmdSetViewport()
+vkCmdBindPipeline() // static state
+vkCmdDraw()
+
+// example 2 - valid
+vkCmdBindPipeline() // static state
+vkCmdSetViewport()
+vkCmdBindPipeline() // dynamic state
+vkCmdDraw()
+
+// example 3 - invalid (VUID-vkCmdDraw-None-07831)
+vkCmdBindPipeline() // static state
+vkCmdBindPipeline() // dynamic state
+vkCmdDraw()
+
+// example 4 - invalid (VUID-vkCmdDraw-None-08608)
+vkCmdBindPipeline() // dynamic state
+vkCmdBindPipeline() // static state
+vkCmdSetViewport()
+vkCmdDraw()
+
+// example 5 - invalid (VUID-vkCmdDraw-None-07831)
+vkCmdSetViewport()
+vkCmdBindPipeline() // static state
+vkCmdBindPipeline() // dynamic state
+vkCmdDraw()
+
+// example 6 - invalid (VUID-vkCmdDraw-None-07831)
+vkCmdSetViewport()
+vkCmdBindPipeline() // static state
+vkCmdDraw()
+vkCmdBindPipeline() // dynamic state
+vkCmdDraw()
+----
+
 [[states-that-are-dynamic]]
 == What states are dynamic
 
