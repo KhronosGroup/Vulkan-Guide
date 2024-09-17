@@ -14,7 +14,7 @@ SPIR-V는 중간 언어이지 API가 아니라는 것을 잊어서는 안 됩니
 
 == SPIR-V 확장 기능 예제
 
-이 예제에서는 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_shader_atomic_int64.html[VK_KHR_8bit_storage] 와 link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage]를 사용하여 `UniformAndStorageBuffer8BitAccess` 기능을 공개합니다. 다음은 SPIR-V의 디스어셈블리 모습입니다:
+이 예제에서는 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_8bit_storage.html[VK_KHR_8bit_storage] 와 link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage]를 사용하여 `UniformAndStorageBuffer8BitAccess` 기능을 공개합니다. 다음은 SPIR-V의 디스어셈블리 모습입니다:
 
 [source,swift]
 ----
