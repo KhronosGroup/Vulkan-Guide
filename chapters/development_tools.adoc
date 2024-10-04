@@ -60,24 +60,33 @@ There are also other publicly available layers that can be used to help in devel
   * link:https://developer.qualcomm.com/software/adreno-gpu-sdk/tools[`VK_LAYER_adreno`], the Vulkan Adreno Layer.
     Checks Vulkan applications for best practices on Qualcomm Adreno devices.
 
-== Debugging
+== Debugging 
 
 Debugging something running on a GPU can be incredibly hard, luckily there are tools out there to help.
 
+  * link:https://gpuopen.com/rga/[AMD Radeon GPU Analyzer (RGA)]
+  * link:https://gpuopen.com/radeon-raytracing-analyzer/[AMD Radeon Raytracing Analyzer (RRA)]
   * link:https://developer.arm.com/Tools%20and%20Software/Graphics%20Analyzer[Arm Graphics Analyzer]
-  * link:https://github.com/google/gapid[GAPID]
+  * link:https://developer.android.com/agi[Android GPU Inspector (AGI)] - Successor for GAPID
   * link:https://developer.nvidia.com/nsight-graphics[NVIDIA Nsight]
   * link:https://developer.imaginationtech.com[PVRCarbon]
   * link:https://renderdoc.org/[RenderDoc]
   * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/capture_tools.html[GFXReconstruct]
+
+The following tools help debug crashes.
+
+  * link:https://gpuopen.com/radeon-gpu-detective[AMD GPU detective]
+  * link:https://developer.nvidia.com/nsight-aftermath[NVIDIA Nsight Aftermath SDK]
 
 == Profiling
 
 With anything related to a GPU it is best to not assume and profile when possible. Here is a list of known profilers to aid in your development.
 
   * link:https://gpuopen.com/rgp/[AMD Radeon GPU Profiler] - Low-level performance analysis tool for AMD Radeon GPUs.
+  * link:https://developer.android.com/agi[Android GPU Inspector (AGI)] - Google's profiler for the Android platform with support for Vulkan  
   * link:https://developer.arm.com/Tools%20and%20Software/Streamline%20Performance%20Analyzer[Arm Streamline Performance Analyzer] - Visualize the performance of mobile games and applications for a broad range of devices, using Arm Mobile Studio.
   * link:https://www.intel.com/content/www/us/en/developer/tools/graphics-performance-analyzers/overview.html[Intel(R) GPA] - Intel's Graphics Performance Analyzers that supports capturing and analyzing multi-frame streams of Vulkan apps.
+  * link:https://developer.nvidia.com/nsight-graphics[NVIDIA Nsight]
   * link:https://github.com/GPUOpen-Tools/OCAT[OCAT] - The Open Capture and Analytics Tool (OCAT) provides an FPS overlay and performance measurement for D3D11, D3D12, and Vulkan.
   * link:https://developer.imaginationtech.com[PVRTune]
   * link:https://developer.qualcomm.com/software/snapdragon-profiler[Qualcomm Snapdragon Profiler] - Profiling tool targeting Adreno GPU.
