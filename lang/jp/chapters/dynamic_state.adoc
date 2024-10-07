@@ -83,6 +83,50 @@ Vulkan はツールなので、他のものと同様に、唯一の答えはあ�
 
 実装によっては、`VkDynamicState` を使用すると、静的な値を使用するよりもパフォーマンスが低下する場合があります。しかし、動的な状態にすることで、パイプラインオブジェクトのバリエーションを大量に作成する必要がなくなります。アプリケーションによっては、これが有用かもしれません。
 
+[[dynamic-state-lifetime]]
+== 動的な状態の寿命
+
+仕様書では、link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#dynamic-state-lifetime[動的な状態の寿命]について言及している。以下、いくつかの例を挙げて説明する：
+
+
+[source,cpp]
+----
+// 例1 - 有効
+vkCmdSetViewport()
+vkCmdBindPipeline() //静的な状態
+vkCmdDraw()
+
+// 例2 - 有効
+vkCmdBindPipeline() // 静的な状態
+vkCmdSetViewport()
+vkCmdBindPipeline() // 動的な状態
+vkCmdDraw()
+
+// 例3 - 無効 (VUID-vkCmdDraw-None-07831)
+vkCmdBindPipeline() // 静的な状態
+vkCmdBindPipeline() // 動的な状態
+vkCmdDraw()
+
+// 例4 - 無効 (VUID-vkCmdDraw-None-08608)
+vkCmdBindPipeline() // 動的な状態
+vkCmdBindPipeline() // 静的な状態
+vkCmdSetViewport()
+vkCmdDraw()
+
+// 例5 - 無効 (VUID-vkCmdDraw-None-07831)
+vkCmdSetViewport()
+vkCmdBindPipeline() // 静的な状態
+vkCmdBindPipeline() // 動的な状態
+vkCmdDraw()
+
+// 例6 - 無効 (VUID-vkCmdDraw-None-07831)
+vkCmdSetViewport()
+vkCmdBindPipeline() // 静的な状態
+vkCmdDraw()
+vkCmdBindPipeline() // 動的な状態
+vkCmdDraw()
+----
+
 [[states-that-are-dynamic]]
 == 動的な状態とは
 
