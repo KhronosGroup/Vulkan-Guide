@@ -323,17 +323,12 @@ link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#f
 
 `VkVertexInputAttributeDescription` 의 각 `location` 에는 4개의 컴포넌트가 있습니다. 위의 예제에서는 쉐이더 입력에 컴포넌트 수가 적을 때 `format` 의 여분의 컴포넌트가 버려지는 것을 이미 보여주었습니다.
 
-[NOTE]
-.예제
-====
+____
 `VK_FORMAT_R32G32B32_SFLOAT` 에는 3개의 컴포넌트가 있는 반면 `vec2` 에는 2개만 있습니다
-====
-
-그 반대의 경우 사양서에는 다음과 같이 나와 있습니다:
-
 ____
-포맷에 G, B, A 컴포넌트가 포함되지 않은 경우 64비트 데이터 유형이 아닌 속성은 필요에 따라 (0,0,1)로 채워집니다(포맷에 따라 1.0f 또는 정수 1 사용).
-____
+
+그 반대의 경우 사양에는 누락된 컴포넌트를 확장하는 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-conversion-to-rgba[방법을 보여주는 표가 있습니다.]
+
 
 이는 다음과 같은 예제를 의미합니다
 
