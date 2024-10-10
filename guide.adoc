@@ -183,6 +183,10 @@ include::{chapters}descriptor_dynamic_offset.adoc[]
 
 include::{chapters}push_constants.adoc[]
 
+// === Ways to Provide SPIR-V
+
+include::{chapters}ways_to_provide_spirv.adoc[]
+
 // == Robustness
 
 include::{chapters}robustness.adoc[]
