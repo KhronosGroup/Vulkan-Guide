@@ -7,7 +7,7 @@ ifndef::images[:images: images/]
 [[ways-to-provide-spirv]]
 = Ways to Provide SPIR-V
 
-This chapter is designed for anyone who wants to write a tool to inspect, consume, edit, or anything else related the the SPIR-V modules passed into Vulkan.
+This chapter is designed for anyone who wants to write a tool to inspect, consume, edit, or do anything related to the SPIR-V modules passed into Vulkan.
 
 Over the years, more and more ways have been created to pass SPIR-V down to the driver and this chapter goes over them all
 
@@ -29,7 +29,7 @@ VkPipelineShaderStageCreateInfo pipeline_stage_ci;
 pipeline_stage_ci.module = shader_module;
 ----
 
-The most common issue for tools or drivers consuming there is still information missing at `vkCreateShaderModule` time
+The most common issue for tools or drivers consuming `vkCreateShaderModule` is there is still information missing:
 
 * For graphics pipeline, what are the descriptor set layouts bound
 * What are the other shader stages that will be linked up to this `VkShaderModule`
@@ -38,7 +38,7 @@ The most common issue for tools or drivers consuming there is still information 
 
 == Inlining inside VkPipelineShaderStageCreateInfo
 
-If you have support for either `VK_KHR_maintenance5` or `VK_EXT_graphics_pipeline_library` are can just skip the `VkShaderModule` object all together.
+If you have support for either `VK_KHR_maintenance5` or `VK_EXT_graphics_pipeline_library` you can just skip the `VkShaderModule` object completely.
 
 When creating the `VkPipeline` you can just pass in SPIR-V then:
 
@@ -94,7 +94,7 @@ pipeline_stage_ci.module = VK_NULL_HANDLE;
 
 The `VK_EXT_graphics_pipeline_library` extension breaks up the pipeline into 4 smaller parts with the intent of allowing faster pipeline loading for applications reusing the same shaders or state in multiple pipelines.
 
-From a tools point a view, you may see up too 5 different `vkCreateGraphicsPipelines` calls, but only 2 of them will have SPIR-V in it. The following is an example workflow:
+From a tools point a view, you may see up to 5 different `vkCreateGraphicsPipelines` calls, but only 2 of them will have SPIR-V in it. The following is an example workflow:
 
 [source,cpp]
 ----
@@ -122,7 +122,7 @@ vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, create_info, NULL, executab
 
 == Shader Objects
 
-The `VK_EXT_shader_object` extension created a new complete flow to pass state information in the command buffer that doesn't involve pipelines. The following is the workflow to pass in the SPIR-V.
+The `VK_EXT_shader_object` extension created a completely new flow to pass state information in the command buffer that doesn't involve pipelines. The following is the workflow to pass in the SPIR-V.
 
 
 [source,cpp]
@@ -146,4 +146,4 @@ The link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.ht
 
 > Parameters to the command requesting a deferred operation may be accessed by the implementation at any time until the deferred operation enters the complete state.
 
-This means if your tool is touching the SPIR-V being passed in, it must not take in consideration that the call to `vkCreateRayTracingPipelinesKHR` be asynchronous.
+In this particular case this means that if your tool is touching the SPIR-V being passed in, **all** parameters passed down to `vkCreateRayTracingPipelinesKHR`, including pointers, shader modules, inlined SPIR-V... must live until operation completion.
