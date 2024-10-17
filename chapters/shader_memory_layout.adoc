@@ -8,7 +8,7 @@ ifndef::images[:images: images/]
 [[shader-memory-layout]]
 = Shader Memory Layout
 
-When an implementation accesses memory from an interface, it needs to know how the **memory layout**. This includes things such as **offsets**, **stride**, and **alignments**. While the Vulkan Spec has a link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-layout[section dedicated to this], it can be hard to parse due to the various extensions that add extra complexity to the spec language. This chapter aims to help explain all the memory layout concepts Vulkan uses with some high level shading language (GLSL) examples.
+When an implementation accesses memory from an interface, it needs to know the **memory layout**. This includes things such as **offsets**, **stride**, and **alignments**. While the Vulkan Spec has a link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-layout[section dedicated to this], it can be hard to parse due to the various extensions that add extra complexity to the spec language. This chapter aims to help explain all the memory layout concepts Vulkan uses with some high level shading language (GLSL) examples.
 
 [[alignment-requirements]]
 == Alignment Requirements
