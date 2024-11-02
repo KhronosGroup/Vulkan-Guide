@@ -43,6 +43,7 @@ HLSL を Vulkan に対応させるため、Vulkan 固有の機能に対するイ
 ここでは、両言語で書かれた同じシェーダを、前述した名前空間による明示的な位置指定などを含めて、どのように異なるかを簡単に比較します。
 
 === GLSL
+link:https://godbolt.org/z/jcPofTK9j[オンラインで試す]
 [source,glsl]
 ----
 #version 450
@@ -67,6 +68,7 @@ void main()
 ----
 
 === HLSL
+https://godbolt.org/z/Y4sd9anMY[オンラインで試す]
 [source,hlsl]
 ----
 struct VSInput
@@ -94,7 +96,7 @@ VSOutput main(VSInput input, uint VertexIndex : SV_VertexID)
 {
 	VSOutput output = (VSOutput)0;
 	output.Color = input.Color * float(VertexIndex);
-	output.Position = mul(ubo.projectionMatrix, mul(ubo.viewMatrix, mul(ubo.modelMatrix, float4(input.Position.xyz, 1.0))));
+	output.Pos = mul(ubo.projectionMatrix, mul(ubo.viewMatrix, mul(ubo.modelMatrix, float4(input.Position.xyz, 1.0))));
 	return output;
 }
 ----

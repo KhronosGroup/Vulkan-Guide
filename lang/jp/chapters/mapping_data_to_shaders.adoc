@@ -38,7 +38,7 @@ ifndef::chapters[:chapters:]
 
 `VkCreateGraphicsPipelines` を呼び出す前に、 `VkPipelineVertexInputStateCreateInfo` 構造体に、シェーダへの `VkVertexInputAttributeDescription` マッピングのリストを入力する必要があります。
 
-GLSL 頂点シェーダの例:
+GLSL 頂点シェーダの例 (link:https://godbolt.org/z/x3b3ceTa6[オンラインで試す]):
 
 [source,glsl]
 ----
@@ -54,12 +54,11 @@ void main() {
 
 [source,swift]
 ----
-                Name 18  "inPosition"
-                Decorate 18(inPosition) Location 0
+              OpDecorate %inPosition Location 0
 
-            17: TypePointer Input 16(fvec3)
-18(inPosition): 17(ptr) Variable Input
-            19: 16(fvec3) Load 18(inPosition)
+       %ptr = OpTypePointer Input %v3float
+%inPosition = OpVariable %ptr Input
+        %20 = OpLoad %v3float %inPosition
 ----
 
 この例では、`VkVertexInputAttributeDescription` に次のようなものが使えます。
@@ -114,7 +113,7 @@ Vulkan にはさまざまなlink:https://www.khronos.org/registry/vulkan/specs/1
 
 image::../../../chapters/images/mapping_data_to_shaders_descriptor_1.png[mapping_data_to_shaders_descriptor_1.png]
 
-GLSL シェーダ:
+GLSL シェーダ (link:https://godbolt.org/z/oMz58a78T[オンラインで試す]):
 
 [source,glsl]
 ----
@@ -139,23 +138,23 @@ layout(set = 2, binding = 0) buffer storageBuffer {
 
 [source,swift]
 ----
-Decorate 19(myTextureSampler) DescriptorSet 0
-Decorate 19(myTextureSampler) Binding 0
+OpDecorate %myTextureSampler DescriptorSet 0
+OpDecorate %myTextureSampler Binding 0
 
-MemberDecorate 29(uniformBuffer0) 0 Offset 0
-Decorate 29(uniformBuffer0) Block
-Decorate 31(ubo_0) DescriptorSet 0
-Decorate 31(ubo_0) Binding 2
+OpMemberDecorate %uniformBuffer0 0 Offset 0
+OpDecorate %uniformBuffer0 Block
+OpDecorate %ubo_0 DescriptorSet 0
+OpDecorate %ubo_0 Binding 2
 
-MemberDecorate 38(uniformBuffer1) 0 Offset 0
-Decorate 38(uniformBuffer1) Block
-Decorate 40(ubo_1) DescriptorSet 0
-Decorate 40(ubo_1) Binding 3
+OpMemberDecorate %uniformBuffer1 0 Offset 0
+OpDecorate %uniformBuffer1 Block
+OpDecorate %ubo_1 DescriptorSet 0
+OpDecorate %ubo_1 Binding 3
 
-MemberDecorate 44(storageBuffer) 0 Offset 0
-Decorate 44(storageBuffer) BufferBlock
-Decorate 46(ssbo) DescriptorSet 2
-Decorate 46(ssbo) Binding 0
+OpMemberDecorate %storageBuffer 0 Offset 0
+OpDecorate %storageBuffer BufferBlock
+OpDecorate %ssbo DescriptorSet 2
+OpDecorate %ssbo Binding 0
 ----
 
 ディスクリプタのバインドは、コマンドバッファの記録中に行われます。ディスクリプタは、ドロー/ディスパッチの呼び出し時にバインドされている必要があります。これを表現する疑似コードを以下に示します。
@@ -193,6 +192,8 @@ GLSL については、link:https://www.khronos.org/registry/OpenGL/specs/gl/GLS
 
 `VK_DESCRIPTOR_TYPE_STORAGE_IMAGE`
 
+link:https://godbolt.org/z/7KPe11GPs[オンラインで試す]
+
 [source,glsl]
 ----
 // VK_FORMAT_R32_UINT
@@ -216,8 +217,9 @@ OpDecorate %storageImage Binding 0
 [[sampler-and-sampled-image]]
 ==== サンプラとサンプルイメージ
 
-
 `VK_DESCRIPTOR_TYPE_SAMPLER` と `VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE`
+
+link:https://godbolt.org/z/zbb3TW19x[オンラインで試す]
 
 [source,glsl]
 ----
@@ -257,6 +259,8 @@ OpDecorate %samplerDescriptor Binding 0
 
 `VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER`
 
+link:https://godbolt.org/z/aTrajsrY3[オンラインで試す]
+
 [NOTE]
 ====
 実装によっては、ディスクリプタセットに一緒に保存されているサンプラとサンプルイメージの組み合わせを使用して、イメージからサンプリングすると効率的な場合があります。
@@ -294,6 +298,8 @@ OpDecorate %combinedimagesampler Binding 0
 ユニフォームバッファは、バインド時にxref:{chapters}descriptor_dynamic_offset.adoc[動的オフセット]を持つこともできます（VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC）。
 ====
 
+link:https://godbolt.org/z/qz6dcndxd[オンラインで試す]
+
 [source,glsl]
 ----
 layout(set = 0, binding = 0) uniform uniformBuffer {
@@ -321,10 +327,14 @@ OpDecorate %ubo Binding 0
 
 ==== ストレージバッファ
 
+`VK_DESCRIPTOR_TYPE_STORAGE_BUFFER`
+
 [NOTE]
 ====
-VK_DESCRIPTOR_TYPE_STORAGE_BUFFER
+ストレージバッファは  xref:{chapters}descriptor_dynamic_offset.adoc[バインド時に動的なオフセット] を持つこともできます (VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC)
 ====
+
+link:https://godbolt.org/z/hEfe8PhfY[オンラインで試す]
 
 [source,glsl]
 ----
@@ -362,6 +372,8 @@ OpDecorate %ssbo Binding 0
 
 `VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER`
 
+link:https://godbolt.org/z/ob4T9d3E4[オンラインで試す]
+
 [source,glsl]
 ----
 layout(set = 0, binding = 0) uniform textureBuffer uniformTexelBuffer;
@@ -385,6 +397,8 @@ OpDecorate %uniformTexelBuffer Binding 0
 ==== ストレージテクセルバッファ
 
 `VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER`
+
+link:https://godbolt.org/z/zoeMxsKjq[オンラインで試す]
 
 [source,glsl]
 ----
@@ -411,6 +425,8 @@ OpDecorate %storageTexelBuffer Binding 0
 ==== 入力アタッチメント
 
 `VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT`
+
+link:https://godbolt.org/z/aMncGWajG[オンラインで試す]
 
 [source,glsl]
 ----
@@ -473,6 +489,8 @@ void main() {
 
 ですが、特殊化定数を使えば、シェーダをコンパイルするために `vkCreateGraphicsPipelines` を呼び出す際に色を決定することができます。つまり、シェーダは1つあればいいということです。
 
+link:https://godbolt.org/z/xnncjdf3z[オンラインで試す]
+
 [source,glsl]
 ----
 #version 450
@@ -488,11 +506,11 @@ SPIR-V アセンブリ:
 
 [source,swift]
 ----
-                      Decorate 9(outColor) Location 0
-                      Decorate 10(myColor) SpecId 0
+           OpDecorate %outColor Location 0
+           OpDecorate %myColor SpecId 0
 
-                      // 0x3f800000 as decimal which is 1.0 for a 32 bit float
-10(myColor): 6(float) SpecConstant 1065353216
+// 0x3f800000 as decimal which is 1.0 for a 32 bit float
+%myColor = OpSpecConstant %float 1065353216
 ----
 
 特殊化定数では、値はシェーダ内の定数のままですが、たとえば、別の `VkPipeline` が同じシェーダを使用していて、`myColor` の値を `0.5f` に設定したい場合、実行時に設定することができます。

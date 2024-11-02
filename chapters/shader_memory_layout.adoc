@@ -39,6 +39,8 @@ This extension allows the use of `std430` memory layout in UBOs. link:https://re
 
 One example of when the `uniformBufferStandardLayout` feature is needed is when an application doesn't want the array stride for a UBO to be restricted to `extended alignment`
 
+(link:https://godbolt.org/z/j11d58hcs[Try Online])
+
 [source,glsl]
 ----
 layout(std140, binding = 0) uniform ubo140 {
@@ -140,6 +142,8 @@ The following are some GLSL to SPIR-V examples to help better understand the dif
 
 === Alignment Example 1
 
+(link:https://godbolt.org/z/9rWKEdf1W[Try Online])
+
 [source,glsl]
 ----
 layout(binding = 0) buffer block {
@@ -164,6 +168,8 @@ OpMemberDecorate %block 1 Offset 32
 ----
 
 === Alignment Example 2
+
+(link:https://godbolt.org/z/YMr6P749b[Try Online])
 
 [source,glsl]
 ----
@@ -191,6 +197,8 @@ OpMemberDecorate %block 2 Offset 12
 
 === Alignment Example 3
 
+(link:https://godbolt.org/z/c4Pe4KvG9[Try Online])
+
 [source,glsl]
 ----
 layout(binding = 0) buffer block {
@@ -216,6 +224,8 @@ OpMemberDecorate %block 2 Offset 20
 ----
 
 === Alignment Example 4
+
+(link:https://godbolt.org/z/rG17jorf8[Try Online])
 
 [source,glsl]
 ----

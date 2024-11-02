@@ -42,6 +42,7 @@ HLSL을 Vulkan과 호환하기 위해 Vulkan 고유 기능에 대한 인터페�
 다음은 두 언어로 작성된 동일한 쉐이더로, 앞서 언급한 명시적 위치를 추가하는 네임스페이스를 포함하여 기본적으로 어떻게 다른지 빠르게 비교할 수 있습니다:
 
 === GLSL
+link:https://godbolt.org/z/jcPofTK9j[온라인 체험]
 [source,glsl]
 ----
 #version 450
@@ -66,6 +67,7 @@ void main()
 ----
 
 === HLSL
+https://godbolt.org/z/Y4sd9anMY[온라인 체험]
 [source,hlsl]
 ----
 struct VSInput
@@ -93,7 +95,7 @@ VSOutput main(VSInput input, uint VertexIndex : SV_VertexID)
 {
 	VSOutput output = (VSOutput)0;
 	output.Color = input.Color * float(VertexIndex);
-	output.Position = mul(ubo.projectionMatrix, mul(ubo.viewMatrix, mul(ubo.modelMatrix, float4(input.Position.xyz, 1.0))));
+	output.Pos = mul(ubo.projectionMatrix, mul(ubo.viewMatrix, mul(ubo.modelMatrix, float4(input.Position.xyz, 1.0))));
 	return output;
 }
 ----
@@ -198,7 +200,7 @@ std::vector<LPCWSTR> arguments = {
 	// Shader target profile
 	L"-T", targetProfile,
 	// Compile to SPIRV
-	L"-spirv"				
+	L"-spirv"
 };
 
 // 쉐이더 컴파일

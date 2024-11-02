@@ -41,6 +41,8 @@ Vulkan 1.2에서 코어 승격
 
 `uniformBufferStandardLayout` 기능이 필요한 경우의 일례로 애플리케이션이 UBO 배열의 스트라이드를 `확장 정렬` 로 제한하고 싶지 않을 때입니다.
 
+(link:https://godbolt.org/z/j11d58hcs[온라인 체험])
+
 [source,glsl]
 ----
 layout(std140, binding = 0) uniform ubo140 {
@@ -142,6 +144,8 @@ SPIR-V 유효성 검사기를 실행할 때 `--scalar-block-layout` 을 설정�
 
 === 정렬 예제 1
 
+(link:https://godbolt.org/z/9rWKEdf1W[온라인 체험])
+
 [source,glsl]
 ----
 layout(binding = 0) buffer block {
@@ -166,6 +170,8 @@ OpMemberDecorate %block 1 Offset 32
 ----
 
 === 정렬 예제 2
+
+(link:https://godbolt.org/z/YMr6P749b[온라인 체험])
 
 [source,glsl]
 ----
@@ -193,6 +199,8 @@ OpMemberDecorate %block 2 Offset 12
 
 === 정렬 예제 3
 
+(link:https://godbolt.org/z/c4Pe4KvG9[온라인 체험])
+
 [source,glsl]
 ----
 layout(binding = 0) buffer block {
@@ -218,6 +226,8 @@ OpMemberDecorate %block 2 Offset 20
 ----
 
 === 정렬 예제 4
+
+(link:https://godbolt.org/z/rG17jorf8[온라인 체험])
 
 [source,glsl]
 ----

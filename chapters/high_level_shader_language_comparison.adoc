@@ -127,7 +127,7 @@ HLSL
 ----
 struct VSOutput
 {
-    // The SV_POSITION semantic declares the Pos member as the vertex output position 
+    // The SV_POSITION semantic declares the Pos member as the vertex output position
     float4 Pos : SV_POSITION;
 };
 
@@ -144,7 +144,7 @@ Reading the vertex index:
 GLSL:
 [source,glsl]
 ----
-void main() 
+void main()
 {
     // The vertex index is stored in the gl_VertexIndex built-in
     outUV = vec2((gl_VertexIndex << 1) & 2, gl_VertexIndex & 2);
@@ -254,7 +254,7 @@ Examples:
 [source,glsl]
 ----
 // Uniform buffer
-layout (set = 0, binding = 0) uniform UBO 
+layout (set = 0, binding = 0) uniform UBO
 {
     mat4 projection;
 } ubo;
@@ -990,7 +990,7 @@ These shader stages share several functions and built-ins
 | imageAtomicExchange | InterlockedExchange |
 | nonuniformEXT | NonUniformResourceIndex |
 | gl_BaryCoordEXT | SV_Barycentrics |
-| gl_BaryCoordNoPerspEXT | SV_Barycentrics with noperspective | 
+| gl_BaryCoordNoPerspEXT | SV_Barycentrics with noperspective |
 |====
 
 == Functions
@@ -998,12 +998,12 @@ These shader stages share several functions and built-ins
 [NOTE]
 ====
 Most GLSL functions are also available in HLSL and vice-versa. This chapter lists functions with divergent names. Functions that have a 1:1 counterpart (e.g. `isNan`) aren't listed.
-==== 
+====
 
 [options="header"]
 |====
 | *GLSL* | *HLSL*
-| dFdx | ddx 
+| dFdx | ddx
 | dFdxCoarse | ddx_coarse
 | dFdxFine | ddx_fine
 | dFdy | ddy

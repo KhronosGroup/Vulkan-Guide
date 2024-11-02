@@ -39,6 +39,8 @@ link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.ht
 
 `UniformBufferStandardLayout` 機能が必要な場合の一例として、アプリケーションが UBO の配列のストライドを `extended alignment` に制限したくない場合があります。
 
+(link:https://godbolt.org/z/j11d58hcs[オンラインで試す])
+
 [source,glsl]
 ----
 layout(std140, binding = 0) uniform ubo140 {
@@ -140,6 +142,8 @@ SPIR-V Validator を実行する際には、必ず `--scalar-block-layout` を�
 
 === アライメントの例1
 
+(link:https://godbolt.org/z/9rWKEdf1W[オンラインで試す])
+
 [source,glsl]
 ----
 layout(binding = 0) buffer block {
@@ -164,6 +168,8 @@ OpMemberDecorate %block 1 Offset 32
 ----
 
 === アライメントの例2
+
+(link:https://godbolt.org/z/YMr6P749b[オンラインで試す])
 
 [source,glsl]
 ----
@@ -191,6 +197,8 @@ OpMemberDecorate %block 2 Offset 12
 
 === アライメントの例3
 
+(link:https://godbolt.org/z/c4Pe4KvG9[オンラインで試す])
+
 [source,glsl]
 ----
 layout(binding = 0) buffer block {
@@ -216,6 +224,8 @@ OpMemberDecorate %block 2 Offset 20
 ----
 
 === アライメントの例4
+
+(link:https://godbolt.org/z/rG17jorf8[オンラインで試す])
 
 [source,glsl]
 ----
