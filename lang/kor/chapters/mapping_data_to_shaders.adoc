@@ -39,7 +39,7 @@ Vulkan 코어에서 Vulkan이 제어하는 입력 속성을 가지는 쉐이더 
 
 `vkCreateGraphicsPipelines` 를 호출하기 전에 쉐이더에 대한 `VkVertexInputAttributeDescription` 매핑 목록으로 `VkPipelineVertexInputStateCreateInfo` 구조체를 채워야 합니다.
 
-GLSL 정점 쉐이더 예제:
+GLSL 정점 쉐이더 예제 (link:https://godbolt.org/z/x3b3ceTa6[온라인 체험]):
 
 [source,glsl]
 ----
@@ -55,12 +55,11 @@ location 0에는 입력 속성이 하나만 있습니다. 이는 생성된 SPIR-
 
 [source,swift]
 ----
-                Name 18  "inPosition"
-                Decorate 18(inPosition) Location 0
+              OpDecorate %inPosition Location 0
 
-            17: TypePointer Input 16(fvec3)
-18(inPosition): 17(ptr) Variable Input
-            19: 16(fvec3) Load 18(inPosition)
+       %ptr = OpTypePointer Input %v3float
+%inPosition = OpVariable %ptr Input
+        %20 = OpLoad %v3float %inPosition
 ----
 
 이 예제에서는 `VkVertexInputAttributeDescription` 에 다음과 같은 것을 사용할 수 있습니다:
@@ -115,7 +114,7 @@ Vulkan에는 다양한 link:https://registry.khronos.org/vulkan/specs/1.3-extens
 
 image::../../../chapters/images/mapping_data_to_shaders_descriptor_1.png[mapping_data_to_shaders_descriptor_1.png]
 
-GLSL 쉐이더:
+GLSL 쉐이더 (link:https://godbolt.org/z/oMz58a78T[온라인 체험]):
 
 [source,glsl]
 ----
@@ -140,23 +139,23 @@ layout(set = 2, binding = 0) buffer storageBuffer {
 
 [source,swift]
 ----
-Decorate 19(myTextureSampler) DescriptorSet 0
-Decorate 19(myTextureSampler) Binding 0
+OpDecorate %myTextureSampler DescriptorSet 0
+OpDecorate %myTextureSampler Binding 0
 
-MemberDecorate 29(uniformBuffer0) 0 Offset 0
-Decorate 29(uniformBuffer0) Block
-Decorate 31(ubo_0) DescriptorSet 0
-Decorate 31(ubo_0) Binding 2
+OpMemberDecorate %uniformBuffer0 0 Offset 0
+OpDecorate %uniformBuffer0 Block
+OpDecorate %ubo_0 DescriptorSet 0
+OpDecorate %ubo_0 Binding 2
 
-MemberDecorate 38(uniformBuffer1) 0 Offset 0
-Decorate 38(uniformBuffer1) Block
-Decorate 40(ubo_1) DescriptorSet 0
-Decorate 40(ubo_1) Binding 3
+OpMemberDecorate %uniformBuffer1 0 Offset 0
+OpDecorate %uniformBuffer1 Block
+OpDecorate %ubo_1 DescriptorSet 0
+OpDecorate %ubo_1 Binding 3
 
-MemberDecorate 44(storageBuffer) 0 Offset 0
-Decorate 44(storageBuffer) BufferBlock
-Decorate 46(ssbo) DescriptorSet 2
-Decorate 46(ssbo) Binding 0
+OpMemberDecorate %storageBuffer 0 Offset 0
+OpDecorate %storageBuffer BufferBlock
+OpDecorate %ssbo DescriptorSet 2
+OpDecorate %ssbo Binding 0
 ----
 
 디스크립터 바인딩은 커맨드 버퍼를 기록하는 동안 수행됩니다. 디스크립터는 드로우/디스패치 콜 할 때 바인딩되어야 합니다. 다음은 이를 더 잘 표현하기 위한 의사 코드입니다:
@@ -194,6 +193,8 @@ GLSL의 경우 자세한 내용은 link:https://registry.khronos.org/OpenGL/spec
 
 `VK_DESCRIPTOR_TYPE_STORAGE_IMAGE`
 
+link:https://godbolt.org/z/7KPe11GPs[온라인 체험]
+
 [source,glsl]
 ----
 // VK_FORMAT_R32_UINT
@@ -218,6 +219,8 @@ OpDecorate %storageImage Binding 0
 ==== 샘플러와 샘플링된 이미지
 
 `VK_DESCRIPTOR_TYPE_SAMPLER` and `VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE`
+
+link:https://godbolt.org/z/zbb3TW19x[온라인 체험]
 
 [source,glsl]
 ----
@@ -257,6 +260,8 @@ OpDecorate %samplerDescriptor Binding 0
 
 `VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER`
 
+link:https://godbolt.org/z/aTrajsrY3[온라인 체험]
+
 [NOTE]
 ====
 구현에 따라서 결합된 디스크립터 내의 디스크립터 세트에 함께 저장된 샘플러와 샘플링된 이미지를 조합하여 이미지로부터 샘플링하는 것이 더 효율적**일 수** 있습니다.
@@ -294,6 +299,8 @@ OpDecorate %combinedImageSampler Binding 0
 유니폼 버퍼는 xref:{chapters}descriptor_dynamic_offset.adoc[바인드 시간에 동적 오프셋]을 가질 수도 있습니다(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC)
 ====
 
+link:https://godbolt.org/z/qz6dcndxd[온라인 체험]
+
 [source,glsl]
 ----
 layout(set = 0, binding = 0) uniform uniformBuffer {
@@ -328,6 +335,8 @@ OpDecorate %ubo Binding 0
 ====
 스토리지 버퍼는 xref:{chapters}descriptor_dynamic_offset.adoc[바인드 시간에 동적 오프셋]을 가질 수도 있습니다(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC)
 ====
+
+link:https://godbolt.org/z/hEfe8PhfY[온라인 체험]
 
 [source,glsl]
 ----
@@ -365,6 +374,8 @@ OpDecorate %ssbo Binding 0
 
 `VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER`
 
+link:https://godbolt.org/z/ob4T9d3E4[온라인 체험]
+
 [source,glsl]
 ----
 layout(set = 0, binding = 0) uniform textureBuffer uniformTexelBuffer;
@@ -388,6 +399,8 @@ OpDecorate %uniformTexelBuffer Binding 0
 ==== 스토리지 텍셀 버퍼(Storage Texel Buffer)
 
 `VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER`
+
+link:https://godbolt.org/z/zoeMxsKjq[온라인 체험]
 
 [source,glsl]
 ----
@@ -414,6 +427,8 @@ OpDecorate %storageTexelBuffer Binding 0
 ==== 입력 첨부(Input Attachment)
 
 `VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT`
+
+link:https://godbolt.org/z/aMncGWajG[온라인 체험]
 
 [source,glsl]
 ----
@@ -476,6 +491,8 @@ void main() {
 
 특수화 상수를 사용하면 쉐이더를 컴파일하기 위해 `vkCreateGraphicsPipelines` 를 호출할 때 대신 결정할 수 있습니다. 즉, 쉐이더가 하나만 있으면 됩니다.
 
+link:https://godbolt.org/z/xnncjdf3z[온라인 체험]
+
 [source,glsl]
 ----
 #version 450
@@ -489,13 +506,13 @@ void main() {
 
 SPIR-V 어셈블리 결과:
 
-[source,spswiftirv]
+[source,swift]
 ----
-                      Decorate 9(outColor) Location 0
-                      Decorate 10(myColor) SpecId 0
+           OpDecorate %outColor Location 0
+           OpDecorate %myColor SpecId 0
 
-                      // 0x3f800000 as decimal which is 1.0 for a 32 bit float
-10(myColor): 6(float) SpecConstant 1065353216
+// 0x3f800000 as decimal which is 1.0 for a 32 bit float
+%myColor = OpSpecConstant %float 1065353216
 ----
 
 특수화 상수를 사용하면 쉐이더 내부에서는 여전히 값이 상수이지만, 예를 들어 다른 `VkPipeline` 이 동일한 쉐이더를 사용하지만 `myColor` 값을 `0.5f` 로 설정하려는 경우, 런타임에 이를 설정할 수 있습니다.

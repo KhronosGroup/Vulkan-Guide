@@ -35,7 +35,7 @@ API를 통해 작성할 수 있고 쉐이더에서 액세스할 수 있는 작�
 
 쉐이더 관점에서 푸시 상수는 유니폼 버퍼와 유사합니다. Vulkan과 SPIR-V 사이의 link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-pushconst[푸시 상수 인터페이스]는 사양서에 자세하게 설명되어 있습니다.
 
-간단한 GLSL 프래그먼트 쉐이더 예제:
+간단한 GLSL 프래그먼트 쉐이더 예제 (link:https://godbolt.org/z/93WaYd8dE[온라인 체험]):
 
 [source,glsl]
 ----
