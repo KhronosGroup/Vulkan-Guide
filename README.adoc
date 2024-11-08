@@ -184,7 +184,7 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 // include::{chapters}push_constants.adoc[]
 
-=== xref:{chapters}ways_to_provide_spirv.adoc[Push Constants]
+=== xref:{chapters}ways_to_provide_spirv.adoc[Ways to Provide SPIR-V]
 
 // include::{chapters}ways_to_provide_spirv.adoc[]
 
