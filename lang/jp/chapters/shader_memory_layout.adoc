@@ -7,12 +7,12 @@ ifndef::chapters[:chapters:]
 [[shader-memory-layout]]
 = シェーダメモリレイアウト
 
-実装がインターフェイスからメモリにアクセスするとき、**メモリレイアウト**を知る必要があります。これには、**オフセット**、**ストライド**、 **アライメント**が含まれます。Vulkan Spec には link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-layout[レイアウトのセクション] がありますが、さまざまな拡張機能による複雑化により、理解が困難な場合があります。この章では、いくつかの高レベルシェーディング言語（GLSL）の例を用いて、Vulkan が使用するすべてのメモリレイアウトの概念を説明します。
+実装がインターフェイスからメモリにアクセスするとき、**メモリレイアウト**を知る必要があります。これには、**オフセット**、**ストライド**、 **アライメント**が含まれます。Vulkan Spec には link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#interfaces-resources-layout[レイアウトのセクション] がありますが、さまざまな拡張機能による複雑化により、理解が困難な場合があります。この章では、いくつかの高レベルシェーディング言語（GLSL）の例を用いて、Vulkan が使用するすべてのメモリレイアウトの概念を説明します。
 
 [[alignment-requirements]]
 == アライメントの要件
 
-Vulkan には、インターフェイスオブジェクトをレイアウトできる3つのlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-alignment-requirements[アライメント要件]があります。
+Vulkan には、インターフェイスオブジェクトをレイアウトできる3つのlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#interfaces-alignment-requirements[アライメント要件]があります。
 
 - 拡張アライメント (別名 `std140`)
 - ベースアライメント (別名 `std430`)
@@ -35,7 +35,7 @@ Vulkan 1.2でコアに昇格
 ====
 
 この拡張機能により、UBOで `std430` メモリレイアウトを使用できるようになります。
-link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-standard-layout[Vulkan Standard Buffer Layout Interface]は、このガイドには含まれていません。プッシュ定数や SSBO など、他のストレージアイテムはすでに std430 スタイルのレイアウトが可能なため、これらのメモリレイアウトの変更は `Uniforms` にのみ適用されます。
+link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#interfaces-resources-standard-layout[Vulkan Standard Buffer Layout Interface]は、このガイドには含まれていません。プッシュ定数や SSBO など、他のストレージアイテムはすでに std430 スタイルのレイアウトが可能なため、これらのメモリレイアウトの変更は `Uniforms` にのみ適用されます。
 
 `UniformBufferStandardLayout` 機能が必要な場合の一例として、アプリケーションが UBO の配列のストライドを `extended alignment` に制限したくない場合があります。
 

@@ -8,7 +8,7 @@ ifndef::chapters[:chapters: ../]
 
 == 概要
 
-link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_shader_subgroup_uniform_control_flow.html[VK_KHR_shader_subgroup_uniform_control_flow] は、シェーダ内の呼び出しの再収束をより強く保証するものです。この拡張機能に対応している場合、シェーダはより強力な保証を提供する新しい属性を含むように修正できます（link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_subgroup_uniform_control_flow.txt[GL_EXT_subgroup_uniform_control_flow] を参照）。この属性は、サブグループ操作をサポートするシェーダステージにのみ適用可能です（`VkPhysicalDeviceSubgroupProperties::supportedStages` と
+link:https://www.khronos.org/registry/vulkan/specs/latest/man/html/VK_KHR_shader_subgroup_uniform_control_flow.html[VK_KHR_shader_subgroup_uniform_control_flow] は、シェーダ内の呼び出しの再収束をより強く保証するものです。この拡張機能に対応している場合、シェーダはより強力な保証を提供する新しい属性を含むように修正できます（link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_subgroup_uniform_control_flow.txt[GL_EXT_subgroup_uniform_control_flow] を参照）。この属性は、サブグループ操作をサポートするシェーダステージにのみ適用可能です（`VkPhysicalDeviceSubgroupProperties::supportedStages` と
 `VkPhysicalDeviceVulkan11Properties::subgroupSupportedStages` を確認してください）。
 
 この保証が強化されたことにより、SPIR-V 仕様のユニフォーム制御フロールールが、個々のサブグループにも適用されるようになりました。これらのルールの最も重要な部分は、すべての呼び出しがヘッダブロックへのエントリ時に収束した場合、マージブロックでの再収束を要求することです。これは、シェーダの作者によって暗黙のうちに信頼されていることもありますが、実際にはコア Vulkan 仕様によって保証されていません。

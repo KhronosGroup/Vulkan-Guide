@@ -15,7 +15,7 @@ The purpose of this section is to give a full overview of how Vulkan deals with 
 
 == Valid Usage (VU)
 
-A **VU** is explicitly link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-validusage[defined in the Vulkan Spec] as:
+A **VU** is explicitly link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-validusage[defined in the Vulkan Spec] as:
 
 [NOTE]
 ====
@@ -36,7 +36,7 @@ When an application supplies invalid input, according to the valid usages in the
 
 A `VUID` is an unique ID given to each valid usage. This allows a way to point to a valid usage in the spec easily.
 
-Using `VUID-vkBindImageMemory-memoryOffset-01046` as an example, it is as simple as adding the VUID to an anchor in the HMTL version of the spec (link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VUID-vkBindImageMemory-memoryOffset-01046[vkspec.html#VUID-vkBindImageMemory-memoryOffset-01046]) and it will jump right to the VUID.
+Using `VUID-vkBindImageMemory-memoryOffset-01046` as an example, it is as simple as adding the VUID to an anchor in the HMTL version of the spec (link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VUID-vkBindImageMemory-memoryOffset-01046[vkspec.html#VUID-vkBindImageMemory-memoryOffset-01046]) and it will jump right to the VUID.
 
 [[khronos-validation-layer]]
 == Khronos Validation Layer
@@ -63,7 +63,7 @@ The Validation Layers attempt to supply as much useful information as possible w
 
 === Example 1 - Implicit Valid Usage
 
-This example shows a case where an link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-implicit-validity[implicit VU] is triggered. There will not be a number at the end of the VUID.
+This example shows a case where an link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-implicit-validity[implicit VU] is triggered. There will not be a number at the end of the VUID.
 
 [source]
 ----
@@ -77,8 +77,8 @@ html/vkspec.html#VUID-vkBindBufferMemory-memory-parameter)
   * The first thing to notice is the VUID is listed first in the message (`VUID-vkBindBufferMemory-memory-parameter`)
   ** There is also a link at the end of the message to the VUID in the spec
   * `The Vulkan spec states:` is the quoted VUID from the spec.
-  * The `VK_OBJECT_TYPE_INSTANCE` is the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#_debugging[VkObjectType]
-  * `Invalid VkDeviceMemory Object 0x60000000006` is the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-objectmodel-overview[Dispatchable Handle] to help show which `VkDeviceMemory` handle was the cause of the error.
+  * The `VK_OBJECT_TYPE_INSTANCE` is the link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#_debugging[VkObjectType]
+  * `Invalid VkDeviceMemory Object 0x60000000006` is the link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-objectmodel-overview[Dispatchable Handle] to help show which `VkDeviceMemory` handle was the cause of the error.
 
 === Example 2 - Explicit Valid Usage
 
@@ -154,7 +154,7 @@ The Validation Layer uses the device properties of the application in order to d
 
 == Special Usage Tags
 
-The link:https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html[Best Practices layer] will produce warnings when an application tries to use any extension with link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse[special usage tags]. An example of such an extension is xref:{chapters}extensions/translation_layer_extensions.adoc#vk_ext_transform_feedback[VK_EXT_transform_feedback] which is only designed for emulation layers. If an application's intended usage corresponds to one of the special use cases, the following approach will allow you to ignore the warnings.
+The link:https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html[Best Practices layer] will produce warnings when an application tries to use any extension with link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-compatibility-specialuse[special usage tags]. An example of such an extension is xref:{chapters}extensions/translation_layer_extensions.adoc#vk_ext_transform_feedback[VK_EXT_transform_feedback] which is only designed for emulation layers. If an application's intended usage corresponds to one of the special use cases, the following approach will allow you to ignore the warnings.
 
 Ignoring Special Usage Warnings with `VK_EXT_debug_report`
 

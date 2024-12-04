@@ -33,7 +33,7 @@ API 経由で値を書き込める小さなメモリ領域で、シェーダか�
 [[pc-shader-code]]
 === シェーダコード
 
-シェーダから見ると、プッシュ定数はユニフォームバッファと似ています。VulkanとSPIR-Vの間のlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-pushconst[プッシュ定数インターフェース]は、Specに記載されています。
+シェーダから見ると、プッシュ定数はユニフォームバッファと似ています。VulkanとSPIR-Vの間のlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#interfaces-resources-pushconst[プッシュ定数インターフェース]は、Specに記載されています。
 
 簡単な GLSLのフラグメントシェーダの例です (link:https://godbolt.org/z/93WaYd8dE[オンラインで試す]):
 
@@ -68,12 +68,12 @@ SPIR-Vの逆アセンブル:
 %access_chain   = OpAccessChain %pc_v4float_ptr %pc_var %int_0
 ----
 
-これは、`Block` 修飾を持つ `OpTypeStruct` タイプであるという link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-pushconst[Vulkan Spec]の記述に一致します。
+これは、`Block` 修飾を持つ `OpTypeStruct` タイプであるという link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#interfaces-resources-pushconst[Vulkan Spec]の記述に一致します。
 
 [[pc-pipeline-layout]]
 === パイプラインレイアウト
 
-`vkCreatePipelineLayout` の呼び出し時に、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPipelineLayoutCreateInfo.html[VkPipelineLayoutCreateInfo]にlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPushConstantRange.html[プッシュ定数範囲]を設定する必要があります。
+`vkCreatePipelineLayout` の呼び出し時に、link:https://www.khronos.org/registry/vulkan/specs/latest/man/html/VkPipelineLayoutCreateInfo.html[VkPipelineLayoutCreateInfo]にlink:https://www.khronos.org/registry/vulkan/specs/latest/man/html/VkPushConstantRange.html[プッシュ定数範囲]を設定する必要があります。
 
 上記のシェーダを使用した例:
 
@@ -100,7 +100,7 @@ vkCreatePipelineLayout(device, &create_info, NULL, &pipeline_layout);
 [[pc-updating]]
 === 記録時に更新する
 
-最後に、プッシュ定数の値は、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdPushConstants.html[vkCmdPushConstants]を使用して更新する必要があります。
+最後に、プッシュ定数の値は、link:https://www.khronos.org/registry/vulkan/specs/latest/man/html/vkCmdPushConstants.html[vkCmdPushConstants]を使用して更新する必要があります。
 
 [source,cpp]
 ----
@@ -159,14 +159,14 @@ image::../../../chapters/images/push_constant_offset.png[push_constant_offset]
 [[pc-pipeline-layout-compatibility]]
 == パイプラインレイアウトの互換性
 
-Vulkan Spec では、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-compatibility[プッシュ定数との互換]を次のように定義しています。
+Vulkan Spec では、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#descriptorsets-compatibility[プッシュ定数との互換]を次のように定義しています。
 
 [NOTE]
 ====
 パイプラインレイアウトが同じプッシュ定数範囲で作成された場合
 ====
 
-つまり、バインドされた link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-bindpoint-commands[パイプラインコマンド]　（`vkCmdDraw`、`vkCmdDispatch` など）が呼ばれる直前の `vkCmdPushConstants` と `vkCmdBindPipeline`（適切な `VkPipelineBindPoint` 用）で使用された `VkPipelineLayout` は、**同じ** `VkPushConstantRange` を持っている必要があります。
+つまり、バインドされた link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#pipeline-bindpoint-commands[パイプラインコマンド]　（`vkCmdDraw`、`vkCmdDispatch` など）が呼ばれる直前の `vkCmdPushConstants` と `vkCmdBindPipeline`（適切な `VkPipelineBindPoint` 用）で使用された `VkPipelineLayout` は、**同じ** `VkPushConstantRange` を持っている必要があります。
 
 [[pc-lifetime]]
 == プッシュ定数の寿命

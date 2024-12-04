@@ -13,7 +13,7 @@ ifndef::images[:images: images/]
 모든 SPIR-V 어셈블리는 glslangValidator로 생성되었습니다.
 ====
 
-이 장에서는 데이터를 매핑하기 위한 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces[Vulkan과 SPIR-V의 인터페이스] 방법에 대해 설명합니다. `vkAllocateMemory` 에서 할당된 `VkDeviceMemory` 객체를 사용하여 Vulkan으로부터의 데이터를 SPIR-V 쉐이더가 올바르게 이용할 수 있도록 적절히 매핑하는 것은 애플리케이션의 책임입니다.
+이 장에서는 데이터를 매핑하기 위한 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces[Vulkan과 SPIR-V의 인터페이스] 방법에 대해 설명합니다. `vkAllocateMemory` 에서 할당된 `VkDeviceMemory` 객체를 사용하여 Vulkan으로부터의 데이터를 SPIR-V 쉐이더가 올바르게 이용할 수 있도록 적절히 매핑하는 것은 애플리케이션의 책임입니다.
 
 Vulkan 코어에서는 Vulkan 애플리케이션의 데이터를 매핑하여 SPIR-V와 인터페이스하는 5가지 기본 방법이 있습니다:
 
@@ -102,11 +102,11 @@ vkEndCommandBuffer();
 [[descriptors]]
 == 디스크립터(Descriptors)
 
-link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets[리소스 디스크립터]는 유니폼 버퍼, 스토리지 버퍼, 샘플러 등의 데이터를 Vulkan의 임의의 쉐이더 스테이지에 매핑하는 핵심 방법입니다. 개념적으로 디스크립터는 쉐이더가 사용할 수 있는 메모리에 대한 포인터로 생각하면 됩니다.
+link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets[리소스 디스크립터]는 유니폼 버퍼, 스토리지 버퍼, 샘플러 등의 데이터를 Vulkan의 임의의 쉐이더 스테이지에 매핑하는 핵심 방법입니다. 개념적으로 디스크립터는 쉐이더가 사용할 수 있는 메모리에 대한 포인터로 생각하면 됩니다.
 
-Vulkan에는 다양한 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VkDescriptorType[디스크립터 유형]이 있으며, 각 유형이 무엇을 허용하고 있는지 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-types[상세하게 설명되어 있습니다].
+Vulkan에는 다양한 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VkDescriptorType[디스크립터 유형]이 있으며, 각 유형이 무엇을 허용하고 있는지 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-types[상세하게 설명되어 있습니다].
 
-디스크립터는 쉐이더에 바인딩되는 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sets[디스크립터 세트]로 함께 그룹화됩니다. 디스크립터 세트 안에 디스크립터가 하나만 있더라도 쉐이더에 바인딩할 때는 `VkDescriptorSet` 전체가 사용됩니다.
+디스크립터는 쉐이더에 바인딩되는 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-sets[디스크립터 세트]로 함께 그룹화됩니다. 디스크립터 세트 안에 디스크립터가 하나만 있더라도 쉐이더에 바인딩할 때는 `VkDescriptorSet` 전체가 사용됩니다.
 
 === 예제
 
@@ -182,9 +182,9 @@ image::../../../chapters/images/mapping_data_to_shaders_descriptor_2.png[mapping
 [[descriptor-types]]
 === 디스크립터 유형
 
-Vulkan 사양서에는 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-storage-class-correspondence[쉐이더 리소스와 스토리지 클래스 대응표]가 있으며 각 디스크립터 유형이 SPIR-V에서 어떻게 매핑되어야 하는지 설명되어있습니다.
+Vulkan 사양서에는 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces-resources-storage-class-correspondence[쉐이더 리소스와 스토리지 클래스 대응표]가 있으며 각 디스크립터 유형이 SPIR-V에서 어떻게 매핑되어야 하는지 설명되어있습니다.
 
-다음은 각 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-types[디스크립터 유형]에 대한 GLSL 및 SPIR-V 매핑의 예시입니다.
+다음은 각 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#descriptorsets-types[디스크립터 유형]에 대한 GLSL 및 SPIR-V 매핑의 예시입니다.
 
 GLSL의 경우 자세한 내용은 link:https://registry.khronos.org/OpenGL/specs/gl/GLSLangSpec.4.60.pdf[GLSL 사양 - 12.2.4. Vulkan 전용: 샘플러, 이미지, 텍스쳐 및 버퍼]에서 확인할 수 있습니다.
 
@@ -461,7 +461,7 @@ OpDecorate %inputAttachment InputAttachmentIndex 0
 [[specialization-constants]]
 == 특수화 상수(Specialization Constants)
 
-link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-specialization-constants[특수화 상수]는 `VkPipeline` 생성 시 SPIR-V의 상수 값을 지정할 수 있는 메커니즘입니다. 이는 고수준 쉐이딩 언어(GLSL, HLSL 등)에서 전처리기 매크로 사용을 대체할 수 있는 강력한 기능입니다.
+link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-specialization-constants[특수화 상수]는 `VkPipeline` 생성 시 SPIR-V의 상수 값을 지정할 수 있는 메커니즘입니다. 이는 고수준 쉐이딩 언어(GLSL, HLSL 등)에서 전처리기 매크로 사용을 대체할 수 있는 강력한 기능입니다.
 
 === 예제
 
@@ -563,13 +563,13 @@ vkCreateGraphicsPipelines(&pipelineInfo);
 [[physical-storage-buffer]]
 == 물리적 스토리지 버퍼(Physical Storage Buffer)
 
-Vulkan 1.2에서 승격된 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_buffer_device_address.html#_description[VK_KHR_buffer_device_address] 확장을 통해 "`쉐이더 내에 포인터`" 를 가진 기능이 추가되었습니다. 애플리케이션은 SPIR-V의 `PhysicalStorageBuffer` 스토리지 클래스를 사용하여 `vkGetBufferDeviceAddress` 를 호출하면 `VkDeviceAddress` 를 메모리로 반환할 수 있습니다.
+Vulkan 1.2에서 승격된 link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_buffer_device_address.html#_description[VK_KHR_buffer_device_address] 확장을 통해 "`쉐이더 내에 포인터`" 를 가진 기능이 추가되었습니다. 애플리케이션은 SPIR-V의 `PhysicalStorageBuffer` 스토리지 클래스를 사용하여 `vkGetBufferDeviceAddress` 를 호출하면 `VkDeviceAddress` 를 메모리로 반환할 수 있습니다.
 
 이것은 데이터를 쉐이더에 매핑하는 방법이긴 하지만, 쉐이더와 인터페이스 되는 것은 아닙니다. 예를 들어, 애플리케이션이 유니폼 버퍼에서 이를 사용하고 싶다면 `VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT` 와 `VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT` 를 모두 포함하는 `VkBuffer` 를 생성해야 합니다. 이 예제에서 Vulkan은 디스크립터를 사용하여 쉐이더와 인터페이스하지만, 그 이후에는 물리적 스토리지 버퍼를 사용하여 값을 업데이트할 수 있습니다.
 
 == 제한 사항
 
-Vulkan에는 한 번에 바인딩할 수 있는 데이터의 양에 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits[제한]이 있다는 점을 알아두는 것이 중요합니다.
+Vulkan에는 한 번에 바인딩할 수 있는 데이터의 양에 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits[제한]이 있다는 점을 알아두는 것이 중요합니다.
 
   * 입력 속성
   ** `maxVertexInputAttributes`

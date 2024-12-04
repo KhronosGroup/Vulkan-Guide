@@ -127,7 +127,7 @@ When clearing, notice that `VkClearValue` is a union and `VkClearDepthStencilVal
 [[pre-rasterization]]
 == Pre-rasterization
 
-In the graphics pipeline, there are a series of link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization[pre-rasterization shader stages] that generate primitives to be rasterized. Before reaching the rasterization step, the final `vec4` position (`gl_Position`) of the last pre-rasterization stage runs through link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc[Fixed-Function Vertex Post-Processing].
+In the graphics pipeline, there are a series of link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization[pre-rasterization shader stages] that generate primitives to be rasterized. Before reaching the rasterization step, the final `vec4` position (`gl_Position`) of the last pre-rasterization stage runs through link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vertexpostproc[Fixed-Function Vertex Post-Processing].
 
 The following gives a high level overview of the various coordinates name and operations that occur before rasterization.
 
@@ -155,7 +155,7 @@ A few examples where `Zd` is the result of `Zc`/`Wc`:
 [[user-defined-clipping-and-culling]]
 ==== User defined clipping and culling
 
-Using `ClipDistance` and `CullDistance` built-in arrays the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization[pre-rasterization shader stages] can set link:https://www.khronos.org/opengl/wiki/Vertex_Post-Processing#User-defined_clipping[user defined clipping and culling].
+Using `ClipDistance` and `CullDistance` built-in arrays the link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization[pre-rasterization shader stages] can set link:https://www.khronos.org/opengl/wiki/Vertex_Post-Processing#User-defined_clipping[user defined clipping and culling].
 
 In the last pre-rasterization shader stage, these values will be linearly interpolated across the primitive and the portion of the primitive with interpolated distances less than `0` will be considered outside the clip volume. If `ClipDistance` or `CullDistance` are then used by a fragment shader, they contain these linearly interpolated values.
 
@@ -176,7 +176,7 @@ In OpenGL the `view volume` is expressed as
 
 and anything outside of `[-1, 1]` is clipped.
 
-The link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_depth_clip_control.html[VK_EXT_depth_clip_control] extension was added to allow efficient layering of OpenGL over Vulkan. By setting the `VkPipelineViewportDepthClipControlCreateInfoEXT::negativeOneToOne` to `VK_TRUE` when creating the `VkPipeline` it will use the OpenGL `[-1, 1]` view volume.
+The link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_depth_clip_control.html[VK_EXT_depth_clip_control] extension was added to allow efficient layering of OpenGL over Vulkan. By setting the `VkPipelineViewportDepthClipControlCreateInfoEXT::negativeOneToOne` to `VK_TRUE` when creating the `VkPipeline` it will use the OpenGL `[-1, 1]` view volume.
 
 If `VK_EXT_depth_clip_control` is not available, the link:https://github.com/KhronosGroup/Vulkan-Docs/issues/1054#issuecomment-547202276[workaround currently] is to perform the conversion in the pre-rasterization shader
 
@@ -195,7 +195,7 @@ The list of viewports being used in the pipeline is expressed by `VkPipelineView
 
 [NOTE]
 ====
-The viewport value can be set xref:{chapters}dynamic_state.adoc[dynamically] using `VK_DYNAMIC_STATE_VIEWPORT` or the `VK_DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT` from link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_extended_dynamic_state.html[VK_EXT_extended_dynamic_state].
+The viewport value can be set xref:{chapters}dynamic_state.adoc[dynamically] using `VK_DYNAMIC_STATE_VIEWPORT` or the `VK_DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT` from link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_extended_dynamic_state.html[VK_EXT_extended_dynamic_state].
 ====
 
 [[depth-range]]
@@ -208,7 +208,7 @@ Each viewport holds a `VkViewport::minDepth` and `VkViewport::maxDepth` value wh
 Despite their names, `minDepth` can be less than, equal to, or greater than `maxDepth`.
 ====
 
-The `minDepth` and `maxDepth` are restricted to be set inclusively between `0.0` and `1.0`. If the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_depth_range_unrestricted.html[VK_EXT_depth_range_unrestricted] is enabled, this restriction goes away.
+The `minDepth` and `maxDepth` are restricted to be set inclusively between `0.0` and `1.0`. If the link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_depth_range_unrestricted.html[VK_EXT_depth_range_unrestricted] is enabled, this restriction goes away.
 
 The framebuffer depth coordinate `Zf` is represented as:
 
@@ -229,7 +229,7 @@ Zf = Pz * Zd + Oz
 
 The depth values of all fragments generated by the rasterization of a polygon can be offset by a single value that is computed for that polygon. If `VkPipelineRasterizationStateCreateInfo::depthBiasEnable` is `VK_FALSE` at draw time, no depth bias is applied.
 
-Using the `depthBiasConstantFactor`, `depthBiasClamp`, and `depthBiasSlopeFactor` in `VkPipelineRasterizationStateCreateInfo` the depth bias link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-depthbias[can be calculated].
+Using the `depthBiasConstantFactor`, `depthBiasClamp`, and `depthBiasSlopeFactor` in `VkPipelineRasterizationStateCreateInfo` the depth bias link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-depthbias[can be calculated].
 
 [NOTE]
 ====
@@ -238,7 +238,7 @@ Requires the `VkPhysicalDeviceFeatures::depthBiasClamp` feature to be supported 
 
 [NOTE]
 ====
-The depth bias values can be set xref:{chapters}dynamic_state.adoc[dynamically] using `VK_DYNAMIC_STATE_DEPTH_BIAS` or the `VK_DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT` from link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_extended_dynamic_state2.html[VK_EXT_extended_dynamic_state2].
+The depth bias values can be set xref:{chapters}dynamic_state.adoc[dynamically] using `VK_DYNAMIC_STATE_DEPTH_BIAS` or the `VK_DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT` from link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_extended_dynamic_state2.html[VK_EXT_extended_dynamic_state2].
 ====
 
 [[post-rasterization]]
@@ -284,9 +284,9 @@ Violating the condition​ yields undefined behavior.
 [[per-sample-processing-and-coverage-mask]]
 === Per-sample processing and coverage mask
 
-The following post-rasterization occurs as a "per-sample" operation. This means when doing link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-covg[multisampling] with a color attachment, any "depth buffer" `VkImage` used as well must also have been created with the same `VkSampleCountFlagBits` value.
+The following post-rasterization occurs as a "per-sample" operation. This means when doing link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fragops-covg[multisampling] with a color attachment, any "depth buffer" `VkImage` used as well must also have been created with the same `VkSampleCountFlagBits` value.
 
-Each fragment has a link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask[coverage mask] based on which samples within that fragment are determined to be within the area of the primitive that generated the fragment. If a fragment operation results in all bits of the coverage mask being `0`, the fragment is discarded.
+Each fragment has a link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-multisampling-coverage-mask[coverage mask] based on which samples within that fragment are determined to be within the area of the primitive that generated the fragment. If a fragment operation results in all bits of the coverage mask being `0`, the fragment is discarded.
 
 [[resolving-depth-buffer]]
 ==== Resolving depth buffer
@@ -301,11 +301,11 @@ It is possible in Vulkan using the xref:{chapters}extensions/cleanup.adoc#vk_khr
 Requires the `VkPhysicalDeviceFeatures::depthBounds` feature to be supported.
 ====
 
-If `VkPipelineDepthStencilStateCreateInfo::depthBoundsTestEnable` is used to take each `Za` in the depth attachment and check if it is within the range set by `VkPipelineDepthStencilStateCreateInfo::minDepthBounds` and `VkPipelineDepthStencilStateCreateInfo::maxDepthBounds`. If the value is not within the bounds, the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask[coverage mask] is set to zero.
+If `VkPipelineDepthStencilStateCreateInfo::depthBoundsTestEnable` is used to take each `Za` in the depth attachment and check if it is within the range set by `VkPipelineDepthStencilStateCreateInfo::minDepthBounds` and `VkPipelineDepthStencilStateCreateInfo::maxDepthBounds`. If the value is not within the bounds, the link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-multisampling-coverage-mask[coverage mask] is set to zero.
 
 [NOTE]
 ====
-The depth bound values can be set xref:{chapters}dynamic_state.adoc[dynamically] using `VK_DYNAMIC_STATE_DEPTH_BOUNDS` or the `VK_DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT` from link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_extended_dynamic_state.html[VK_EXT_extended_dynamic_state].
+The depth bound values can be set xref:{chapters}dynamic_state.adoc[dynamically] using `VK_DYNAMIC_STATE_DEPTH_BOUNDS` or the `VK_DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT` from link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_extended_dynamic_state.html[VK_EXT_extended_dynamic_state].
 ====
 
 [[depth-test]]
@@ -330,17 +330,17 @@ An example where `depthCompareOp` == `VK_COMPARE_OP_LESS` (`Zf` < `Za`)
 
 [NOTE]
 ====
-The `depthTestEnable` and `depthCompareOp` value can be set xref:{chapters}dynamic_state.adoc[dynamically] using `VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT` and `VK_DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT` from link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_extended_dynamic_state.html[VK_EXT_extended_dynamic_state].
+The `depthTestEnable` and `depthCompareOp` value can be set xref:{chapters}dynamic_state.adoc[dynamically] using `VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT` and `VK_DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT` from link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_extended_dynamic_state.html[VK_EXT_extended_dynamic_state].
 ====
 
 [[depth-buffer-writes]]
 ==== Depth Buffer Writes
 
-Even if the depth test passes, if `VkPipelineDepthStencilStateCreateInfo::depthWriteEnable` is set to `VK_FALSE` it will not write the value out to the depth attachment. The main reason for this is because the depth test itself will set the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask[coverage mask] which can be used for certain render techniques.
+Even if the depth test passes, if `VkPipelineDepthStencilStateCreateInfo::depthWriteEnable` is set to `VK_FALSE` it will not write the value out to the depth attachment. The main reason for this is because the depth test itself will set the link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#primsrast-multisampling-coverage-mask[coverage mask] which can be used for certain render techniques.
 
 [NOTE]
 ====
-The `depthWriteEnable` value can be set xref:{chapters}dynamic_state.adoc[dynamically] using `VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT` from link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_extended_dynamic_state.html[VK_EXT_extended_dynamic_state].
+The `depthWriteEnable` value can be set xref:{chapters}dynamic_state.adoc[dynamically] using `VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT` from link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_extended_dynamic_state.html[VK_EXT_extended_dynamic_state].
 ====
 
 [[depth-clamping]]

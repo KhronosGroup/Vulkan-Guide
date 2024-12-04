@@ -8,13 +8,13 @@ ifndef::images[:images: images/]
 [[versions]]
 = Versions
 
-Vulkan works on a link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#extendingvulkan-coreversions-versionnumbers[major, minor, patch] versioning system. Currently, there are 3 minor version releases of Vulkan (1.0, 1.1, 1.2 and 1.3) which are backward compatible with each other. An application can use link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#vkEnumerateInstanceVersion[vkEnumerateInstanceVersion] to check what version of a Vulkan instance is supported. There is also a link:https://www.lunarg.com/wp-content/uploads/2019/02/Vulkan-1.1-Compatibility-Statement_01_19.pdf[white paper] by LunarG on how to query and check for the supported version. While working across minor versions, there are some subtle things to be aware of.
+Vulkan works on a link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-coreversions-versionnumbers[major, minor, patch] versioning system. Currently, there are 3 minor version releases of Vulkan (1.0, 1.1, 1.2 and 1.3) which are backward compatible with each other. An application can use link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkEnumerateInstanceVersion[vkEnumerateInstanceVersion] to check what version of a Vulkan instance is supported. There is also a link:https://www.lunarg.com/wp-content/uploads/2019/02/Vulkan-1.1-Compatibility-Statement_01_19.pdf[white paper] by LunarG on how to query and check for the supported version. While working across minor versions, there are some subtle things to be aware of.
 
 == Instance and Device
 
 It is important to remember there is a difference between the instance-level version and device-level version. It is possible that the loader and implementations will support different versions.
 
-The link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#extendingvulkan-coreversions-queryingversionsupport[Querying Version Support] section in the Vulkan Spec goes into details on how to query for supported versions at both the instance and device level.
+The link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-coreversions-queryingversionsupport[Querying Version Support] section in the Vulkan Spec goes into details on how to query for supported versions at both the instance and device level.
 
 == Header
 
@@ -24,7 +24,7 @@ It is highly recommended that developers try to keep up to date with the latest 
 
 == Extensions
 
-Between minor versions of Vulkan, link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#versions-1.1[some extensions] get link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#extendingvulkan-compatibility-promotions[promoted] to the link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#extendingvulkan-coreversions[core version]. When targeting a newer minor version of Vulkan, an application will not need to enable the newly promoted extensions at the instance and device creation. However, if an application wants to keep backward compatibility, it will need to enable the extensions.
+Between minor versions of Vulkan, link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#versions-1.1[some extensions] get link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-compatibility-promotions[promoted] to the link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-coreversions[core version]. When targeting a newer minor version of Vulkan, an application will not need to enable the newly promoted extensions at the instance and device creation. However, if an application wants to keep backward compatibility, it will need to enable the extensions.
 
 For a summary of what is new in each version, check out the xref:{chapters}vulkan_release_summary.adoc#vulkan-release-summary[Vulkan Release Summary]
 
@@ -54,17 +54,17 @@ The `vkGetPhysicalDeviceFeatures2KHR` function will only exist in a Vulkan 1.0 i
 
 == Features
 
-Between minor versions, it is possible that some feature bits are added, removed, made optional, or made mandatory. All details of features that have changed are described in the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#versions[Core Revisions] section.
+Between minor versions, it is possible that some feature bits are added, removed, made optional, or made mandatory. All details of features that have changed are described in the link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#versions[Core Revisions] section.
 
-The link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-requirements[Feature Requirements] section in the Vulkan Spec can be used to view the list of features that are required from implementations across minor versions.
+The link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-requirements[Feature Requirements] section in the Vulkan Spec can be used to view the list of features that are required from implementations across minor versions.
 
 == Limits
 
-Currently, all versions of Vulkan share the same minimum/maximum limit requirements, but any changes would be listed in the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-minmax[Limit Requirements] section of the Vulkan Spec.
+Currently, all versions of Vulkan share the same minimum/maximum limit requirements, but any changes would be listed in the link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-minmax[Limit Requirements] section of the Vulkan Spec.
 
 == SPIR-V
 
-Every minor version of Vulkan maps to a version of link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#spirvenv[SPIR-V that must be supported].
+Every minor version of Vulkan maps to a version of link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv[SPIR-V that must be supported].
 
   * Vulkan 1.0 supports SPIR-V 1.0
   * Vulkan 1.1 supports SPIR-V 1.3 and below

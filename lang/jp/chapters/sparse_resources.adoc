@@ -6,11 +6,11 @@ ifndef::chapters[:chapters:]
 [[sparse-resources]]
 = スパースリソース（Sparse Resources）
 
-Vulkan のlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory[スパースリソース]は、`VkBuffer` と `VkImage` オブジェクトを作成する方法で、1つまたは複数の `VkDeviceMemory` に非連続的にバインドすることができます。スパースリソースにはさまざまな側面や機能があり、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures[仕様書]ではそれらがうまく説明されています。link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#_sparse_resource_implementation_guidelines[実装ガイドライン]に記載されているように、ほとんどの実装では、スパースリソースを使用してメモリの直線的な仮想アドレス範囲をアプリケーションに公開する一方で、バインド時には各スパースブロックを物理ページにマッピングします。
+Vulkan のlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#sparsememory[スパースリソース]は、`VkBuffer` と `VkImage` オブジェクトを作成する方法で、1つまたは複数の `VkDeviceMemory` に非連続的にバインドすることができます。スパースリソースにはさまざまな側面や機能があり、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#sparsememory-sparseresourcefeatures[仕様書]ではそれらがうまく説明されています。link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#_sparse_resource_implementation_guidelines[実装ガイドライン]に記載されているように、ほとんどの実装では、スパースリソースを使用してメモリの直線的な仮想アドレス範囲をアプリケーションに公開する一方で、バインド時には各スパースブロックを物理ページにマッピングします。
 
 == スパースメモリのバインド
 
-通常のリソースが `vkBindBufferMemory()` や `vkBindImageMemory()` を呼び出すのとは異なり、スパースメモリは link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-resource-binding[キュー操作] `vkQueueBindSparse()` を介してバインドされます。この方法の主な利点は、アプリケーションがそのライフタイムを通じてメモリをスパースリソースに再バインドできることです。
+通常のリソースが `vkBindBufferMemory()` や `vkBindImageMemory()` を呼び出すのとは異なり、スパースメモリは link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#sparsememory-resource-binding[キュー操作] `vkQueueBindSparse()` を介してバインドされます。この方法の主な利点は、アプリケーションがそのライフタイムを通じてメモリをスパースリソースに再バインドできることです。
 
 この際、アプリケーション側でいくつか配慮が必要です。アプリケーションは、他のキューがバインディングの変更と同時にメモリの範囲をアクセスしないことを保証するために、**同期プリミティブを使用しなければなりません**。また、`vkDeviceMemory` オブジェクトを `vkFreeMemory()` で解放しても、メモリオブジェクトにバインドされたリソース（またはリソース領域）は**アンバインドされません** 。アプリケーションは、解放されたメモリにバインドされたリソースにアクセスしてはいけません。
 
@@ -32,7 +32,7 @@ image::../../../chapters/images/sparse_resources_buffer.png[sparse_resources_buf
 
 ==== Mip Tail Region
 
-スパースイメージを使ってミップレベルを個別に更新すると、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-miptail[mip tail region]のような結果になります。仕様書の図では、さまざまな例が記載されています。
+スパースイメージを使ってミップレベルを個別に更新すると、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#sparsememory-miptail[mip tail region]のような結果になります。仕様書の図では、さまざまな例が記載されています。
 
 ==== スパースリソースの基本的な例
 

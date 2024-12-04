@@ -11,7 +11,7 @@ ifndef::chapters[:chapters:]
 
 ほとんどの OS は、明示的に共有（たとえば xref:{chapters}extensions/external.adoc#external-memory[外部メモリ] を介して）されていない限り、あるアプリケーションが別のアプリケーションの GPU メモリにアクセスすることを許可しません。保護されたメモリの一般的な例は、DRM コンテンツを格納するためのものです。プロセスは、（イメージフィルタリング、再生コントロールやクローズドキャプションの合成などのために）変更を許可されるかもしれませんが、保護されていないメモリに抽出することはできません。データは暗号化されて送られ、ディスプレイ上のピクセルに届くまで暗号化されたままです。
 
-Vulkan Spec では、「保護されたデバイスメモリ」が実行することをlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-protected-memory[詳しく説明しています]。以下では、保護されたメモリを使用して保護されたサブミットを適切に有効化するために必要なことを示します。
+Vulkan Spec では、「保護されたデバイスメモリ」が実行することをlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#memory-protected-memory[詳しく説明しています]。以下では、保護されたメモリを使用して保護されたサブミットを適切に有効化するために必要なことを示します。
 
 == 対応の確認
 
@@ -87,7 +87,7 @@ vkGetDeviceQueue2(deviceHandle, &info, &protectedQueue);
 
 保護されたスワップチェーンから `vkGetSwapchainImagesKHR` で取得したすべての `VkImage` は、`VK_IMAGE_CREATE_PROTECTED_BIT` で作成された場合と同じものになります。
 
-`VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR` フラグが設定されている状態でスワップチェーンを作成できるかどうか不明な場合があります。link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_surface_protected_capabilities.html[VK_KHR_surface_protected_capabilities] 拡張機能は、これが不明な可能性があるプラットフォームで公開されています。
+`VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR` フラグが設定されている状態でスワップチェーンを作成できるかどうか不明な場合があります。link:https://www.khronos.org/registry/vulkan/specs/latest/man/html/VK_KHR_surface_protected_capabilities.html[VK_KHR_surface_protected_capabilities] 拡張機能は、これが不明な可能性があるプラットフォームで公開されています。
 
 == 保護されたコマンドバッファ
 

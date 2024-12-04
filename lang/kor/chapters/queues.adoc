@@ -32,12 +32,12 @@ link:https://gpuopen.com/learn/concurrent-execution-asynchronous-queues/[AMD] �
 
 `VkQueue` 가 지원할 수 있는 연산에는 다양한 유형이 있습니다. "`큐 패밀리`" 는 `VkQueueFamilyProperties` 에 명시된 대로 공통 속성을 가지며 동일한 기능을 지원하는 `VkQueue`&#8203; 의 집합을 설명할 뿐입니다.
 
-다음은 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueueFlagBits.html[VkQueueFlagBits]에 있는 큐 연산입니다:
+다음은 link:https://registry.khronos.org/vulkan/specs/latest/man/html/VkQueueFlagBits.html[VkQueueFlagBits]에 있는 큐 연산입니다:
 
   * `VK_QUEUE_GRAPHICS_BIT` 는 `vkCmdDraw*` 및 그래픽스 파이프라인 명령에 사용됩니다
   * `VK_QUEUE_COMPUTE_BIT` 는 `vkCmdDispatch*` , `vkCmdTraceRays*` 및 컴퓨트 파이프라인 관련 명령에 사용됩니다.
   * `VK_QUEUE_TRANSFER_BIT` 는 모든 전송 명령에 사용됩니다.
-  ** 사양서의 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineStageFlagBits.html[VK_PIPELINE_STAGE_TRANSFER_BIT]는 "`전송 명령`" 을 설명합니다.
+  ** 사양서의 link:https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineStageFlagBits.html[VK_PIPELINE_STAGE_TRANSFER_BIT]는 "`전송 명령`" 을 설명합니다.
   ** `VK_QUEUE_TRANSFER_BIT` 만 있는 큐 패밀리는 일반적으로 link:https://en.wikipedia.org/wiki/Direct_memory_access[DMA]를 사용하여 호스트와 개별 GPU의 장치 메모리 간에 데이터를 비동기적으로 전송하기 위한 것으로, 독립적인 그래픽/컴퓨팅 처리와 동시에 전송을 수행할 수 있습니다.
   ** `VK_QUEUE_GRAPHICS_BIT` 및 `VK_QUEUE_COMPUTE_BIT` 는 항상 암시적으로 `VK_QUEUE_TRANSFER_BIT` 명령을 받을 수 있습니다.
   * `VK_QUEUE_SPARSE_BINDING_BIT` 는 xref:{chapters}sparse_resources.adoc#sparse-resources[희소 리소스]를 `vkQueueBindSparse` 로 메모리에 바인딩하는 데 사용됩니다.

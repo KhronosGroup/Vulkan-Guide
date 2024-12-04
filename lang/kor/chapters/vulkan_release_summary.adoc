@@ -8,7 +8,7 @@ ifndef::images[:images: images/]
 [[vulkan-release-summary]]
 = Vulkan Release 요약
 
-Vulkan의 각 마이너 릴리즈 버전은 서로 다른 확장 기능 세트를 코어로 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-compatibility-promotion[승격]했습니다. 즉, 애플리케이션이 최소한 해당 Vulkan 버전을 요청하는 경우(해당 버전이 구현에서 지원되는 경우) 승격된 기능을 사용하기 위해 확장 기능을 활성화할 필요가 없데 되었습니다.
+Vulkan의 각 마이너 릴리즈 버전은 서로 다른 확장 기능 세트를 코어로 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-compatibility-promotion[승격]했습니다. 즉, 애플리케이션이 최소한 해당 Vulkan 버전을 요청하는 경우(해당 버전이 구현에서 지원되는 경우) 승격된 기능을 사용하기 위해 확장 기능을 활성화할 필요가 없데 되었습니다.
 
 다음 요약에는 각 코어 버전에 추가된 확장 기능 목록과 추가된 이유가 포함되어 있습니다. 이 목록은 Vulkan 사양서에서 가져온 것이지만 링크는 Vulkan 가이드의 다양한 부분으로 이동됩니다
 
@@ -16,7 +16,7 @@ Vulkan의 각 마이너 릴리즈 버전은 서로 다른 확장 기능 세트�
 
 [NOTE]
 ====
-link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#versions-1.1[Vulkan Spec Section]
+link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#versions-1.1[Vulkan Spec Section]
 ====
 
 Vulkan 1.1은 2018년 3월 7일에 릴리즈되었습니다.
@@ -40,7 +40,7 @@ Vulkan 1.1은 2018년 3월 7일에 릴리즈되었습니다.
   * xref:{chapters}extensions/cleanup.adoc#maintenance-extensions[VK_KHR_maintenance1]
   * xref:{chapters}extensions/cleanup.adoc#maintenance-extensions[VK_KHR_maintenance2]
   * xref:{chapters}extensions/cleanup.adoc#maintenance-extensions[VK_KHR_maintenance3]
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_multiview.html#_description[VK_KHR_multiview]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_multiview.html#_description[VK_KHR_multiview]
   * xref:{chapters}shader_memory_layout.adoc#VK_KHR_relaxed_block_layout[VK_KHR_relaxed_block_layout]
   * xref:{chapters}extensions/VK_KHR_sampler_ycbcr_conversion.adoc#VK_KHR_sampler_ycbcr_conversion[VK_KHR_sampler_ycbcr_conversion]
   * xref:{chapters}extensions/shader_features.adoc#VK_KHR_shader_draw_parameters[VK_KHR_shader_draw_parameters]
@@ -51,15 +51,15 @@ Vulkan 1.1은 2018년 3월 7일에 릴리즈되었습니다.
 
 [NOTE]
 ====
-link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#versions-1.2[Vulkan Spec Section]
+link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#versions-1.2[Vulkan Spec Section]
 ====
 
 Vulkan 1.2는 2020년 1월 15일에 릴리즈되었습니다
 
   * xref:{chapters}extensions/shader_features.adoc#VK_KHR_8bit_storage[VK_KHR_8bit_storage]
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_buffer_device_address.html#_description[VK_KHR_buffer_device_address]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_buffer_device_address.html#_description[VK_KHR_buffer_device_address]
   * xref:{chapters}extensions/cleanup.adoc#pnext-expansions[VK_KHR_create_renderpass2]
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_depth_stencil_resolve.html#_description[VK_KHR_depth_stencil_resolve]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_depth_stencil_resolve.html#_description[VK_KHR_depth_stencil_resolve]
   * xref:{chapters}extensions/VK_KHR_draw_indirect_count.adoc#VK_KHR_draw_indirect_count[VK_KHR_draw_indirect_count]
   * xref:{chapters}extensions/cleanup.adoc#VK_KHR_driver_properties[VK_KHR_driver_properties]
   * xref:{chapters}extensions/VK_KHR_image_format_list.adoc#VK_KHR_image_format_list[VK_KHR_image_format_list]
@@ -85,7 +85,7 @@ Vulkan 1.2는 2020년 1월 15일에 릴리즈되었습니다
 
 [NOTE]
 ====
-link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#versions-1.3[Vulkan Spec Section]
+link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#versions-1.3[Vulkan Spec Section]
 ====
 
 Vulkan 1.3은 2022년 1월 25일에 릴리즈되었습니다
@@ -94,7 +94,7 @@ Vulkan 1.3은 2022년 1월 25일에 릴리즈되었습니다
   * link:https://www.khronos.org/blog/streamlining-render-passes[VK_KHR_dynamic_rendering]
   * xref:{chapters}extensions/cleanup.adoc#VK_KHR_format_feature_flags2[VK_KHR_format_feature_flags2]
   * xref:{chapters}extensions/cleanup.adoc#VK_KHR_maintenance4[VK_KHR_maintenance4]
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_shader_integer_dot_product.html#_description[VK_KHR_shader_integer_dot_product]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_integer_dot_product.html#_description[VK_KHR_shader_integer_dot_product]
   * xref:{chapters}extensions/shader_features.adoc#VK_KHR_shader_non_semantic_info[VK_KHR_shader_non_semantic_info]
   * xref:{chapters}extensions/shader_features.adoc#VK_KHR_shader_terminate_invocation[VK_KHR_shader_terminate_invocation]
   * xref:{chapters}extensions/VK_KHR_synchronization2.adoc[VK_KHR_synchronization2]
@@ -103,12 +103,12 @@ Vulkan 1.3은 2022년 1월 25일에 릴리즈되었습니다
   * xref:{chapters}dynamic_state.adoc#states-that-are-dynamic[VK_EXT_extended_dynamic_state]
   * xref:{chapters}dynamic_state.adoc#states-that-are-dynamic[VK_EXT_extended_dynamic_state2]
   * xref:{chapters}extensions/VK_EXT_inline_uniform_block.adoc#VK_EXT_inline_uniform_block[VK_EXT_inline_uniform_block]
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_pipeline_creation_cache_control.html#_description[VK_EXT_pipeline_creation_cache_control]
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_pipeline_creation_feedback.html#_description[VK_EXT_pipeline_creation_feedback]
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_private_data.html#_description[VK_EXT_private_data]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_pipeline_creation_cache_control.html#_description[VK_EXT_pipeline_creation_cache_control]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_pipeline_creation_feedback.html#_description[VK_EXT_pipeline_creation_feedback]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_private_data.html#_description[VK_EXT_private_data]
   * xref:{chapters}extensions/shader_features.adoc#VK_EXT_shader_demote_to_helper_invocation[VK_EXT_shader_demote_to_helper_invocation]
   * xref:{chapters}subgroups.adoc#VK_EXT_subgroup_size_control[VK_EXT_subgroup_size_control]
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_texel_buffer_alignment.html#_description[VK_EXT_texel_buffer_alignment]
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_texture_compression_astc_hdr.html#_description[VK_EXT_texture_compression_astc_hdr]
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_tooling_info.html#_description[VK_EXT_tooling_info]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_texel_buffer_alignment.html#_description[VK_EXT_texel_buffer_alignment]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_texture_compression_astc_hdr.html#_description[VK_EXT_texture_compression_astc_hdr]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_tooling_info.html#_description[VK_EXT_tooling_info]
   * xref:{chapters}extensions/cleanup.adoc#VK_EXT_4444_formats-and-VK_EXT_ycbcr_2plane_444_formats[VK_EXT_ycbcr_2plane_444_formats]

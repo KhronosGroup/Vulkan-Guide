@@ -7,7 +7,7 @@ ifndef::images[:images: images/]
 [[vertex-input-data-processing]]
 = Vertex Input Data Processing
 
-This chapter is an overview of the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex[Fixed-Function Vertex Processing chapter in the spec] to help give a high level understanding of how an application can map data to the vertex shader when using a graphics pipeline.
+This chapter is an overview of the link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fxvertex[Fixed-Function Vertex Processing chapter in the spec] to help give a high level understanding of how an application can map data to the vertex shader when using a graphics pipeline.
 
 It is also important to remember that Vulkan is a tool that can be used in different ways. The following are examples for educational purposes of how vertex data **can** be laid out.
 
@@ -315,7 +315,7 @@ So in this case, the last component of location 1 (`d`) is discarded and would n
 
 == Components Assignment
 
-The link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-attrib-location[spec] explains more in detail about the `Component` assignment. The following is a general overview of the topic.
+The link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fxvertex-attrib-location[spec] explains more in detail about the `Component` assignment. The following is a general overview of the topic.
 
 
 === Filling in components
@@ -326,7 +326,7 @@ ____
 `VK_FORMAT_R32G32B32_SFLOAT` has 3 components while a `vec2` has only 2
 ____
 
-For the opposite case, the spec link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-conversion-to-rgba[has a table] showing how it will expand missing components.
+For the opposite case, the spec link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-conversion-to-rgba[has a table] showing how it will expand missing components.
 
 This means the example of
 

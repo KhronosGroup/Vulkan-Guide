@@ -21,7 +21,7 @@ ifndef::images[:images: ../images/]
 Vulkan 1.2에서 코어로 승격됨
 ====
 
-이 확장 기능은 각 구현에 대한 쿼리에 더 많은 정보를 추가합니다. link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VkDriverId[VkDriverId]는 구현에 대해 등록된 제조사의 ID입니다. link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VkConformanceVersion[VkConformanceVersion]은 구현이 xref:{chapters}vulkan_cts.adoc#vulkan-cts[Vulkan 적합성 테스트 제품군(CTS)]을 통과한 버전을 표시합니다.
+이 확장 기능은 각 구현에 대한 쿼리에 더 많은 정보를 추가합니다. link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VkDriverId[VkDriverId]는 구현에 대해 등록된 제조사의 ID입니다. link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VkConformanceVersion[VkConformanceVersion]은 구현이 xref:{chapters}vulkan_cts.adoc#vulkan-cts[Vulkan 적합성 테스트 제품군(CTS)]을 통과한 버전을 표시합니다.
 
 [[VK_EXT_host_query_reset]]
 == VK_EXT_host_query_reset
@@ -129,10 +129,10 @@ Vulkan 1.3에서 코어로 승격됨
 
 현재 4개의 유지보수 확장 기능이 있습니다. 처음 3개는 Vulkan 1.1에 코어로 번들되어 제공되었습니다. 각 확장 기능에 대한 자세한 내용은 확장 부록 페이지에서 잘 정의되어 있습니다.
 
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance1[VK_KHR_maintenance1] - core in Vulkan 1.1
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance2[VK_KHR_maintenance2] - core in Vulkan 1.1
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance3[VK_KHR_maintenance3] - core in Vulkan 1.1
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_maintenance4[VK_KHR_maintenance4] - core in Vulkan 1.3
+  * link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_maintenance1[VK_KHR_maintenance1] - core in Vulkan 1.1
+  * link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_maintenance2[VK_KHR_maintenance2] - core in Vulkan 1.1
+  * link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_maintenance3[VK_KHR_maintenance3] - core in Vulkan 1.1
+  * link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_maintenance4[VK_KHR_maintenance4] - core in Vulkan 1.3
 
 [[pnext-expansions]]
 == pNext 확장 기능
@@ -240,7 +240,7 @@ void vkBindImageMemory(VkDevice device,
 }
 
 void vkBindImageMemory2(VkDevice device,
-                        uint32_t bindInfoCount, 
+                        uint32_t bindInfoCount,
                         const VkBindImageMemoryInfo* pBindInfos)
 {
     for (uint32_t i = 0; i < bindInfoCount; i++) {

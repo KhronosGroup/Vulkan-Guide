@@ -19,7 +19,7 @@ Reference the Vulkan Spec early and often.
 
 The Vulkan Spec can be built for any version and with any permutation of extensions. The Khronos Group hosts the link:https://registry.khronos.org/vulkan/specs/[Vulkan Spec Registry] which contains a few publicly available variations that most developers will find sufficient. Anyone can build their own variation of the Vulkan Spec from link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/BUILD.adoc[Vulkan-Docs].
 
-When building the Vulkan Spec, you pass in what version of Vulkan to build for as well as what extensions to include. A Vulkan Spec without any extensions is also referred to as the link:https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#extendingvulkan-coreversions[core version] as it is the minimal amount of Vulkan an implementation needs to support in order to be xref:{chapters}vulkan_cts.adoc#vulkan-cts[conformant].
+When building the Vulkan Spec, you pass in what version of Vulkan to build for as well as what extensions to include. A Vulkan Spec without any extensions is also referred to as the link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-coreversions[core version] as it is the minimal amount of Vulkan an implementation needs to support in order to be xref:{chapters}vulkan_cts.adoc#vulkan-cts[conformant].
 
 == Vulkan Spec Format
 
@@ -104,6 +104,6 @@ Prebuilt PDF Vulkan Spec
 
 === Man pages
 
-The Khronos Group currently only host the Vulkan Man Pages for the latest version of the 1.3 spec, with all extensions, on the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/[online registry].
+The Khronos Group currently only host the Vulkan Man Pages for the latest version of the 1.3 spec, with all extensions, on the link:https://registry.khronos.org/vulkan/specs/latest/man/html/[online registry].
 
 The Vulkan Man Pages can also be found in the VulkanSDK for each SDK version. See the link:https://vulkan.lunarg.com/doc/sdk/latest/windows/apispec.html[Man Pages] for the latest Vulkan SDK.

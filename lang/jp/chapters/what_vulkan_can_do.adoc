@@ -37,16 +37,16 @@ GPGPU と呼ばれる新しいプログラミングスタイルを用いて、GP
 レイトレーシングとは光の物理的な振る舞いをシミュレートするというコンセプトに基づいた、ラスタライズとは別のレンダリング技術です。
 
 レイトレーシングのクロスベンダー API サポートは、Vulkan の1.2.162仕様で拡張機能として追加されました。
-主な拡張機能は link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline[`VK_KHR_ray_tracing_pipeline`]、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_ray_query[`VK_KHR_ray_query`]、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_acceleration_structure[`VK_KHR_acceleration_structure`] です。
+主な拡張機能は link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VK_KHR_ray_tracing_pipeline[`VK_KHR_ray_tracing_pipeline`]、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VK_KHR_ray_query[`VK_KHR_ray_query`]、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VK_KHR_acceleration_structure[`VK_KHR_acceleration_structure`] です。
 
 [NOTE]
 ====
-レイトレーシングの実装を公開している古い link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_ray_tracing[NVIDIA ベンダー拡張機能]もあります。この拡張機能はクロスベンダー拡張機能よりも前から存在しました。新規に開発する場合は、新しい KHR 拡張機能を使用することをお勧めします。
+レイトレーシングの実装を公開している古い link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VK_NV_ray_tracing[NVIDIA ベンダー拡張機能]もあります。この拡張機能はクロスベンダー拡張機能よりも前から存在しました。新規に開発する場合は、新しい KHR 拡張機能を使用することをお勧めします。
 ====
 
 == ビデオ
 
-link:https://www.khronos.org/blog/khronos-finalizes-vulkan-video-extensions-for-accelerated-h.264-and-h.265-decode[Vulkan Video拡張機能]により、開発者はハードウェアアクセラレーションによるビデオデコード機能をリアルタイムで使用することができます。この機能は、link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_video_queue.html[VK_KHR_video_queue]、link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_video_decode_queue.html[VK_KHR_video_decode_queue]、link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_video_decode_h264.html[VK_KHR_video_decode_h264]、link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_video_decode_h265.html[VK_KHR_video_decode_h265] 拡張機能を通じて公開されています。
+link:https://www.khronos.org/blog/khronos-finalizes-vulkan-video-extensions-for-accelerated-h.264-and-h.265-decode[Vulkan Video拡張機能]により、開発者はハードウェアアクセラレーションによるビデオデコード機能をリアルタイムで使用することができます。この機能は、link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_queue.html[VK_KHR_video_queue]、link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_decode_queue.html[VK_KHR_video_decode_queue]、link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_decode_h264.html[VK_KHR_video_decode_h264]、link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_video_decode_h265.html[VK_KHR_video_decode_h265] 拡張機能を通じて公開されています。
 
 Vulkan Video は Vulkan の理念に基づき、ビデオ処理のスケジューリング、同期、メモリ使用などを、柔軟かつきめ細かくアプリケーションに提供します。
 

@@ -46,10 +46,10 @@ GLSL과 SPIR-V 모두 아토믹 카운터 사용을 지원하지만, Vulkan은 `
 
 현재 아토믹의 추가 지원을 공개하고 있는 확장 기능은 다음과 같습니다.
 
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_shader_atomic_int64.html[VK_KHR_shader_atomic_int64]
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_shader_image_atomic_int64.html[VK_EXT_shader_image_atomic_int64]
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_shader_atomic_float.html[VK_EXT_shader_atomic_float]
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_shader_atomic_float2.html[VK_EXT_shader_atomic_float2]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_atomic_int64.html[VK_KHR_shader_atomic_int64]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_shader_image_atomic_int64.html[VK_EXT_shader_image_atomic_int64]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_shader_atomic_float.html[VK_EXT_shader_atomic_float]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_shader_atomic_float2.html[VK_EXT_shader_atomic_float2]
 
 아래에서 각각에 대해 자세히 설명합니다.
 

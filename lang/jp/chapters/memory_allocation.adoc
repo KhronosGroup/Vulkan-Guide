@@ -14,13 +14,13 @@ Vulkan のメモリ管理に関する2つの Khronos のプレゼンテーショ
 
 == サブ割り当て
 
-サブ割り当ては Vulkan では最も良いアプローチです。また、アプリケーションが同時に使用できるアクティブな割り当て数である link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#limits-maxMemoryAllocationCount[maxMemoryAllocationCount] が存在することも重要です。OS やドライバレベルでのメモリ割り当てと解放は非常に遅くなる可能性があり、これがサブ割り当てのもう一つの理由です。Vulkan アプリは大きな割り当てを作成し、それを自分で管理することを目指すべきです。
+サブ割り当ては Vulkan では最も良いアプローチです。また、アプリケーションが同時に使用できるアクティブな割り当て数である link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#limits-maxMemoryAllocationCount[maxMemoryAllocationCount] が存在することも重要です。OS やドライバレベルでのメモリ割り当てと解放は非常に遅くなる可能性があり、これがサブ割り当てのもう一つの理由です。Vulkan アプリは大きな割り当てを作成し、それを自分で管理することを目指すべきです。
 
 image::../../../chapters/images/memory_allocation_sub_allocation.png[memory_allocation_sub_allocation.png]
 
 == 転送
 
-link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#VkPhysicalDeviceType[VkPhysicalDeviceType] では、主にディスクリートと統合型（UMA（ユニファイド・メモリ・アーキテクチャ）とも呼ばれる）の2タイプの GPU を示しています。この2つの違いを理解することは、パフォーマンスにとって重要です。
+link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VkPhysicalDeviceType[VkPhysicalDeviceType] では、主にディスクリートと統合型（UMA（ユニファイド・メモリ・アーキテクチャ）とも呼ばれる）の2タイプの GPU を示しています。この2つの違いを理解することは、パフォーマンスにとって重要です。
 
 ディスクリートのグラフィックスカードは、デバイス上に専用のメモリを搭載しています。データはバス（PCIe など）を介して転送されますが、このバスは通常、データ転送の物理的な速度制限のためにボトルネックとなります。一部の物理デバイスは、データ転送専用のキューを可能にする `VK_QUEUE_TRANSFER_BIT` を使用してキューを示します。一般的には、ホストデータをコピーするためのステージングバッファを作成してから、コマンドバッファを経由してデバイスのローカルメモリにコピーします。
 

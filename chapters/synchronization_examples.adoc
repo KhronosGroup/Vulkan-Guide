@@ -731,7 +731,7 @@ vkCreateBuffer(device, &vertexCreateInfo, NULL, &vertexBuffer);
 // VK_MEMORY_PROPERTY_HOST_VISIBLE.
 // Use the example code documented in the description of
 // VkPhysicalDeviceMemoryProperties:
-// https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPhysicalDeviceMemoryProperties.html
+// https://www.khronos.org/registry/vulkan/specs/latest/man/html/VkPhysicalDeviceMemoryProperties.html
 
 ...
 
@@ -776,7 +776,7 @@ Command Buffer Recording and Submission for a unified transfer/graphics queue:
 vkBeginCommandBuffer(...);
 
 // Submission guarantees the host write being complete, as per
-// https://www.khronos.org/registry/vulkan/specs/1.0/html/vkspec.html#synchronization-submission-host-writes
+// https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#synchronization-submission-host-writes
 // So no need for a barrier before the transfer
 
 // Copy the staging buffer contents to the vertex buffer
@@ -907,7 +907,7 @@ vkCreateBuffer(device, &vertexCreateInfo, NULL, &vertexBuffer);
 // DEVICE_LOCAL if available.
 // Use the example code documented in the description of
 // VkPhysicalDeviceMemoryProperties:
-// https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPhysicalDeviceMemoryProperties.html
+// https://www.khronos.org/registry/vulkan/specs/latest/man/html/VkPhysicalDeviceMemoryProperties.html
 
 ...
 
@@ -990,7 +990,7 @@ vkCreateImage(device, &imageCreateInfo, NULL, &image);
 // VK_MEMORY_PROPERTY_HOST_VISIBLE.
 // Use the example code documented in the description of
 // VkPhysicalDeviceMemoryProperties:
-// https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkPhysicalDeviceMemoryProperties.html
+// https://www.khronos.org/registry/vulkan/specs/latest/man/html/VkPhysicalDeviceMemoryProperties.html
 
 ...
 
@@ -1035,7 +1035,7 @@ Command Buffer Recording and Submission:
 vkBeginCommandBuffer(...);
 
 // Submission guarantees the host write being complete, as per
-// https://www.khronos.org/registry/vulkan/specs/1.0/html/vkspec.html#synchronization-submission-host-writes
+// https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#synchronization-submission-host-writes
 // So no need for a barrier before the transfer for that purpose, but one is
 // required for the image layout changes.
 

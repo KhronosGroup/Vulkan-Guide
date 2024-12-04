@@ -126,7 +126,7 @@ destinationStage = VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT_KHR | VK_PIPELIN
 [[pre-rasterization]]
 == ラスタライズの前
 
-グラフィックスパイプラインには、ラスタライズされるべきプリミティブを生成する一連のlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization[ラスタライズ前のシェーダステージ]があります。ラスタライズステップに到達する前に、ラスタライズ前の最後のステージの最終的な `vec4` 型の位置（`gl_Position`）は、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc[Fixed-Function Vertex Post-Processing] を実行します。
+グラフィックスパイプラインには、ラスタライズされるべきプリミティブを生成する一連のlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization[ラスタライズ前のシェーダステージ]があります。ラスタライズステップに到達する前に、ラスタライズ前の最後のステージの最終的な `vec4` 型の位置（`gl_Position`）は、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vertexpostproc[Fixed-Function Vertex Post-Processing] を実行します。
 
 以下は、ラスタライズの前に行われるさまざまな座標名と操作についての高レベルの概要です。
 
@@ -154,7 +154,7 @@ xref:{chapters}extensions/translation_layer_extensions.adoc#vk_ext_depth_clip_en
 [[user-defined-clipping-and-culling]]
 ==== ユーザー定義のクリッピングとカリング
 
-link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization[ラスタライズ前のシェーダステージ]では、`ClipDistance` と `CullDistance` の組み込み配列を使って、link:https://www.khronos.org/opengl/wiki/Vertex_Post-Processing#User-defined_clipping[ユーザー定義のクリッピングとカリング]を設定することができます。
+link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization[ラスタライズ前のシェーダステージ]では、`ClipDistance` と `CullDistance` の組み込み配列を使って、link:https://www.khronos.org/opengl/wiki/Vertex_Post-Processing#User-defined_clipping[ユーザー定義のクリッピングとカリング]を設定することができます。
 
 ラスタライズ前の最後のシェーダステージでは、これらの値はプリミティブ全体で線形補間され、補間された距離が `0` よりも小さいプリミティブの部分はクリップボリュームの外側とみなされます。フラグメントシェーダで `ClipDistance` や `CullDistance` が使用される場合、これらの線形補間された値が含まれます。
 
@@ -175,7 +175,7 @@ OpenGLでは、`view volume` は次のように表されます。
 
 `[-1, 1]` の外側にあるものはクリップされます。
 
-link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_depth_clip_control.html[VK_EXT_depth_clip_control] 拡張機能は、Vulkan 上で OpenGL を効率的にレイヤ化するために追加されました。`VkPipeline` の作成時に `VkPipelineViewportDepthClipControlCreateInfoEXT::negativeOneToOne` を `VK_TRUE` に設定すると、OpenGL `[-1, 1]` ビューボリュームを使用するようになります。
+link:https://www.khronos.org/registry/vulkan/specs/latest/man/html/VK_EXT_depth_clip_control.html[VK_EXT_depth_clip_control] 拡張機能は、Vulkan 上で OpenGL を効率的にレイヤ化するために追加されました。`VkPipeline` の作成時に `VkPipelineViewportDepthClipControlCreateInfoEXT::negativeOneToOne` を `VK_TRUE` に設定すると、OpenGL `[-1, 1]` ビューボリュームを使用するようになります。
 
 `VK_EXT_depth_clip_control` が利用できない場合、link:https://github.com/KhronosGroup/Vulkan-Docs/issues/1054#issuecomment-547202276[現在の回避策]はラスタライズ前のシェーダで変換を実行することです。
 
@@ -194,7 +194,7 @@ position.z = (position.z + position.w) * 0.5;
 
 [NOTE]
 ====
-ビューポートの値は、`VK_DYNAMIC_STATE_VIEWPORT` または link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_extended_dynamic_state.html[VK_EXT_extended_dynamic_state] の `VK_DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT` を使って動的に設定することができます。
+ビューポートの値は、`VK_DYNAMIC_STATE_VIEWPORT` または link:https://www.khronos.org/registry/vulkan/specs/latest/man/html/VK_EXT_extended_dynamic_state.html[VK_EXT_extended_dynamic_state] の `VK_DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT` を使って動的に設定することができます。
 ====
 
 [[depth-range]]
@@ -207,7 +207,7 @@ position.z = (position.z + position.w) * 0.5;
 名前に反して、`minDepth` は `maxDepth` よりも小さくても、等しくても、大きくても問題ありません。
 ====
 
-`minDepth` と `maxDepth` は、`0.0` から `1.0` に含まれるように制限されています。link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_depth_range_unrestricted.html[VK_EXT_depth_range_unrestricted] が有効な場合、この制限はなくなります。
+`minDepth` と `maxDepth` は、`0.0` から `1.0` に含まれるように制限されています。link:https://www.khronos.org/registry/vulkan/specs/latest/man/html/VK_EXT_depth_range_unrestricted.html[VK_EXT_depth_range_unrestricted] が有効な場合、この制限はなくなります。
 
 フレームバッファの深度座標 `Zf` は次のように表される。
 
@@ -228,7 +228,7 @@ Zf = Pz * Zd + Oz
 
 ポリゴンのラスタライズによって生成されたすべてのフラグメントの深度値は、そのポリゴンに対して計算された単一の値によってオフセットすることができます。描画時に `VkPipelineRasterizationStateCreateInfo::depthBiasEnable` が `VK_FALSE` である場合、深度バイアスは適用されません。
 
-`VkPipelineRasterizationStateCreateInfo` の `depthBiasConstantFactor`、`depthBiasClamp`、`depthBiasSlopeFactor` を使って、深度バイアスをlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-depthbias[算出することができます]。
+`VkPipelineRasterizationStateCreateInfo` の `depthBiasConstantFactor`、`depthBiasClamp`、`depthBiasSlopeFactor` を使って、深度バイアスをlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#primsrast-depthbias[算出することができます]。
 
 [NOTE]
 ====
@@ -237,7 +237,7 @@ Zf = Pz * Zd + Oz
 
 [NOTE]
 ====
-深度バイアス値は、`VK_DYNAMIC_STATE_DEPTH_BIAS` または link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_extended_dynamic_state2.html[VK_EXT_extended_dynamic_state2] の `VK_DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT` を使ってxref:{chapters}dynamic_state.adoc[動的に]設定することができます。
+深度バイアス値は、`VK_DYNAMIC_STATE_DEPTH_BIAS` または link:https://www.khronos.org/registry/vulkan/specs/latest/man/html/VK_EXT_extended_dynamic_state2.html[VK_EXT_extended_dynamic_state2] の `VK_DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT` を使ってxref:{chapters}dynamic_state.adoc[動的に]設定することができます。
 ====
 
 [[post-rasterization]]
@@ -283,9 +283,9 @@ layout(depth_unchanged) out float gl_FragDepth;
 [[per-sample-processing-and-coverage-mask]]
 === サンプル毎の処理とカバレッジマスク
 
-次のラスタライズ後の処理は、「サンプルごと」に行われます。つまり、カラーアタッチメントを使用してlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-covg[マルチサンプリング]を行う場合、同様に使用される「深度バッファ」 `VkImage` も、同じ `VkSampleCountFlagBits` 値で作成されていなければなりません。
+次のラスタライズ後の処理は、「サンプルごと」に行われます。つまり、カラーアタッチメントを使用してlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#fragops-covg[マルチサンプリング]を行う場合、同様に使用される「深度バッファ」 `VkImage` も、同じ `VkSampleCountFlagBits` 値で作成されていなければなりません。
 
-各フラグメントには、そのフラグメント内のサンプルが、そのフラグメントを生成したプリミティブの領域内にあると判断されるlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask[カバレッジマスク]が設定されています。フラグメント操作の結果、カバレッジマスクのすべてのビットが `0` になった場合、そのフラグメントは破棄されます。
+各フラグメントには、そのフラグメント内のサンプルが、そのフラグメントを生成したプリミティブの領域内にあると判断されるlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#primsrast-multisampling-coverage-mask[カバレッジマスク]が設定されています。フラグメント操作の結果、カバレッジマスクのすべてのビットが `0` になった場合、そのフラグメントは破棄されます。
 
 [[resolving-depth-buffer]]
 ==== 深度バッファの解決
@@ -300,11 +300,11 @@ xref:{chapters}extensions/cleanup.adoc#vk_khr_depth_stencil_resolve[VK_KHR_depth
 `VkPhysicalDeviceFeatures::depthBounds` の機能がサポートされている必要があります。
 ====
 
-`VkPipelineDepthStencilStateCreateInfo::depthBoundsTestEnable` が使用されると、深度アタッチメントの各 `Za` を取り、それが `VkPipelineDepthStencilStateCreateInfo::minDepthBounds` および `VkPipelineDepthStencilStateCreateInfo::maxDepthBounds` によって設定された範囲内にあるかどうかをチェックします。値が境界内にない場合は、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask[カバレッジマスク]はゼロに設定されます。
+`VkPipelineDepthStencilStateCreateInfo::depthBoundsTestEnable` が使用されると、深度アタッチメントの各 `Za` を取り、それが `VkPipelineDepthStencilStateCreateInfo::minDepthBounds` および `VkPipelineDepthStencilStateCreateInfo::maxDepthBounds` によって設定された範囲内にあるかどうかをチェックします。値が境界内にない場合は、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#primsrast-multisampling-coverage-mask[カバレッジマスク]はゼロに設定されます。
 
 [NOTE]
 ====
-深度境界値は、`VK_DYNAMIC_STATE_DEPTH_BOUNDS` または link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_extended_dynamic_state.html[VK_EXT_extended_dynamic_state] の `VK_DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT` を使ってxref:{chapters}dynamic_state.adoc[動的に]設定することができます。
+深度境界値は、`VK_DYNAMIC_STATE_DEPTH_BOUNDS` または link:https://www.khronos.org/registry/vulkan/specs/latest/man/html/VK_EXT_extended_dynamic_state.html[VK_EXT_extended_dynamic_state] の `VK_DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT` を使ってxref:{chapters}dynamic_state.adoc[動的に]設定することができます。
 ====
 
 [[depth-test]]
@@ -329,17 +329,17 @@ image::../../../chapters/images/depth_test.png[depth_test]
 
 [NOTE]
 ====
-link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_extended_dynamic_state.html[VK_EXT_extended_dynamic_state] の `VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT` と `VK_DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT` を使って、 `depthTestEnable` と `depthCompareOp` の値をxref:{chapters}dynamic_state.adoc[動的に]設定することができます。
+link:https://www.khronos.org/registry/vulkan/specs/latest/man/html/VK_EXT_extended_dynamic_state.html[VK_EXT_extended_dynamic_state] の `VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT` と `VK_DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT` を使って、 `depthTestEnable` と `depthCompareOp` の値をxref:{chapters}dynamic_state.adoc[動的に]設定することができます。
 ====
 
 [[depth-buffer-writes]]
 ==== 深度バッファの書き込み
 
-深度テストに合格しても、`VkPiplineDexpersStencilStateCreateInfo::depthWriteEnable` が `VK_FALSE` に設定されていると、深度アタッチメントに値が書き込まれません。この主な理由は、深度テスト自体が、特定のレンダリング技術に使用できるlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask[カバレッジマスク]を設定するためです。
+深度テストに合格しても、`VkPiplineDexpersStencilStateCreateInfo::depthWriteEnable` が `VK_FALSE` に設定されていると、深度アタッチメントに値が書き込まれません。この主な理由は、深度テスト自体が、特定のレンダリング技術に使用できるlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#primsrast-multisampling-coverage-mask[カバレッジマスク]を設定するためです。
 
 [NOTE]
 ====
-`depthWriteEnable` の値は、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_EXT_extended_dynamic_state.html[VK_EXT_extended_dynamic_state] の `VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT` を使ってxref:{chapters}dynamic_state.adoc[動的に]設定することができます。
+`depthWriteEnable` の値は、link:https://www.khronos.org/registry/vulkan/specs/latest/man/html/VK_EXT_extended_dynamic_state.html[VK_EXT_extended_dynamic_state] の `VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT` を使ってxref:{chapters}dynamic_state.adoc[動的に]設定することができます。
 ====
 
 [[depth-clamping]]

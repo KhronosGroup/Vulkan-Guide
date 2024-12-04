@@ -15,7 +15,7 @@ ifndef::images[:images: images/]
 
 == 유효한 사용(Valid Usage: VU)
 
-**VU**는 명시적으로 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-validusage[Vulkan 사양서에서 다음과 같이 정의됩니다]:
+**VU**는 명시적으로 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-validusage[Vulkan 사양서에서 다음과 같이 정의됩니다]:
 
 [NOTE]
 ====
@@ -36,7 +36,7 @@ ifndef::images[:images: images/]
 
 `VUID` 는 각 유효한 사용 사례에 부여된 고유 ID입니다. 이를 통해 사양서에서 유효한 사용법을 쉽게 찾을 수 있습니다.
 
-`VUID-vkBindImageMemory-memoryOffset-01046` 을 예로 들면, HTML 버전의 사양서(link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VUID-vkBindImageMemory-memoryOffset-01046[vkspec.html#VUID-vkBindImageMemory-memoryOffset-01046])에서 앵커에 VUID를 추가하는 것만큼 간단하며 바로 VUID로 이동할 수 있습니다.
+`VUID-vkBindImageMemory-memoryOffset-01046` 을 예로 들면, HTML 버전의 사양서(link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VUID-vkBindImageMemory-memoryOffset-01046[vkspec.html#VUID-vkBindImageMemory-memoryOffset-01046])에서 앵커에 VUID를 추가하는 것만큼 간단하며 바로 VUID로 이동할 수 있습니다.
 
 [[khronos-validation-layer]]
 == 크로노스 유효성 검사 레이어
@@ -63,7 +63,7 @@ Vulkan은 오류 검사를 수행하지 않으므로, 개발 시 link:https://gi
 
 === 예제 1 - 암시적 유효한 사용법
 
-이 예제는 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-implicit-validity[암시적 VU]가 트리거되는 경우를 보여줍니다. VUID 끝에는 숫자가 없습니다.
+이 예제는 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-implicit-validity[암시적 VU]가 트리거되는 경우를 보여줍니다. VUID 끝에는 숫자가 없습니다.
 
 [source]
 ----
@@ -77,8 +77,8 @@ html/vkspec.html#VUID-vkBindBufferMemory-memory-parameter)
   * 가장 먼저 눈에 띄는 것은 메시지에서 VUID가 가장 먼저 나열된다는 점입니다(`VUID-vkBindBufferMemory-memory-parameter`)
   ** 메시지 말미에 사양서에 있는 VUID로 연결되는 링크도 있습니다
   * `The Vulkan spec states:` 은 사양서에서 인용한 VUID 입니다.
-  * The `VK_OBJECT_TYPE_INSTANCE` 는 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#_debugging[VkObjectType] 입니다
-  * `Invalid VkDeviceMemory Object 0x60000000006` 는 어떤 `VkDeviceMemory` 핸들이 오류의 원인인지 보여주는 데 도움을 주는 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-objectmodel-overview[디스패치 가능한 핸들] 입니다.
+  * The `VK_OBJECT_TYPE_INSTANCE` 는 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#_debugging[VkObjectType] 입니다
+  * `Invalid VkDeviceMemory Object 0x60000000006` 는 어떤 `VkDeviceMemory` 핸들이 오류의 원인인지 보여주는 데 도움을 주는 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-objectmodel-overview[디스패치 가능한 핸들] 입니다.
 
 === 예제 2 - 명시적 유효한 사용법
 
@@ -154,7 +154,7 @@ endif::VK_VERSION_1_2,VK_EXT_descriptor_indexing[]
 
 == 특수 용도 태그
 
-link:https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html[레이어 모범 사례]는 애플리케이션이 link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse[특수 용도 태그]가 있는 확장 기능을 사용하려고 할 때 경고를 표시합니다. 이러한 확장 기능의 예로서 에뮬레이션 레이어 전용으로 설계된 xref:{chapters}extensions/translation_layer_extensions.adoc#vk_ext_transform_feedback[VK_EXT_transform_feedback]이 있습니다. 애플리케이션의 사용 목적이 특수 용도에 해당하는 경우 아래와 같은 접근 방식을 사용하면 경고를 무시할 수 있습니다.
+link:https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html[레이어 모범 사례]는 애플리케이션이 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-compatibility-specialuse[특수 용도 태그]가 있는 확장 기능을 사용하려고 할 때 경고를 표시합니다. 이러한 확장 기능의 예로서 에뮬레이션 레이어 전용으로 설계된 xref:{chapters}extensions/translation_layer_extensions.adoc#vk_ext_transform_feedback[VK_EXT_transform_feedback]이 있습니다. 애플리케이션의 사용 목적이 특수 용도에 해당하는 경우 아래와 같은 접근 방식을 사용하면 경고를 무시할 수 있습니다.
 
 `VK_EXT_debug_report` 로 특수 용도 경고 무시하기
 
