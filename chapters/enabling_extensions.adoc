@@ -19,7 +19,7 @@ image::{images}enabling_extensions_instance_extension.png[enabling_extensions_in
 
 == Check for support
 
-An application can link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-extensions[query the physical device] first to check if the extension is **supported** with `vkEnumerateInstanceExtensionProperties` or `vkEnumerateDeviceExtensionProperties`.
+An application can link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-extensions[query the physical device] first to check if the extension is **supported** with `vkEnumerateInstanceExtensionProperties` or `vkEnumerateDeviceExtensionProperties`.
 
 [source,cpp]
 ----
@@ -78,7 +78,7 @@ This means after enabling the extension, an application will still need to xref:
 
 == Promotion Process
 
-When minor versions of xref:{chapters}vulkan_release_summary.adoc#vulkan-release-summary[Vulkan are released], some extensions are link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-compatibility-promotion[promoted as defined in the spec]. The goal of promotion is to have extended functionality, that the Vulkan Working Group has decided is widely supported, to be in the core Vulkan spec. More details about Vulkan versions can be found in the xref:{chapters}versions.adoc#versions[version chapter].
+When minor versions of xref:{chapters}vulkan_release_summary.adoc#vulkan-release-summary[Vulkan are released], some extensions are link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-compatibility-promotion[promoted as defined in the spec]. The goal of promotion is to have extended functionality, that the Vulkan Working Group has decided is widely supported, to be in the core Vulkan spec. More details about Vulkan versions can be found in the xref:{chapters}versions.adoc#versions[version chapter].
 
 An example would be something such as `VK_KHR_get_physical_device_properties2` which is used for most other extensions. In Vulkan 1.0, an application has to query for support of `VK_KHR_get_physical_device_properties2` before being able to call a function such as `vkGetPhysicalDeviceFeatures2KHR`. Starting in Vulkan 1.1, the `vkGetPhysicalDeviceFeatures2` function is guaranteed to be supported.
 
@@ -86,9 +86,9 @@ Another way to look at promotion is with the `VK_KHR_8bit_storage` as an example
 
 === Promotion Change of Behavior
 
-It is important to realize there is a subtle difference for **some** extension that are promoted. link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-compatibility-promotion[The spec describes] how promotion **can** involve minor changes such as in the extension's "`Feature advertisement/enablement`". To best describe the subtlety of this, `VK_KHR_8bit_storage` can be used as a use case.
+It is important to realize there is a subtle difference for **some** extension that are promoted. link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-compatibility-promotion[The spec describes] how promotion **can** involve minor changes such as in the extension's "`Feature advertisement/enablement`". To best describe the subtlety of this, `VK_KHR_8bit_storage` can be used as a use case.
 
-The link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#_differences_relative_to_vk_khr_8bit_storage[Vulkan spec describes the change] for `VK_KHR_8bit_storage` for Vulkan 1.2 where it states:
+The link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#_differences_relative_to_vk_khr_8bit_storage[Vulkan spec describes the change] for `VK_KHR_8bit_storage` for Vulkan 1.2 where it states:
 
 ____
 If the VK_KHR_8bit_storage extension is not supported, support for the SPIR-V StorageBuffer8BitAccess capability in shader modules is optional.
@@ -99,4 +99,4 @@ ____
   * If `VK_KHR_8bit_storage` is found in `vkEnumerateDeviceExtensionProperties` then the `storageBuffer8BitAccess` feature is **guaranteed** to be supported.
   * If `VK_KHR_8bit_storage` is **not** found in `vkEnumerateDeviceExtensionProperties` then the `storageBuffer8BitAccess` feature **might** be supported and can be checked by querying `VkPhysicalDeviceVulkan12Features::storageBuffer8BitAccess`.
 
-The list of all feature changes to promoted extensions can be found in the link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#versions[version appendix of the spec].
+The list of all feature changes to promoted extensions can be found in the link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#versions[version appendix of the spec].

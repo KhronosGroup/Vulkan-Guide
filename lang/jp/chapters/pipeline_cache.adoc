@@ -6,7 +6,7 @@ ifndef::chapters[:chapters:]
 [[pipeline-cache]]
 = パイプラインキャッシュ
 
-パイプラインキャッシングとは、link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#VkPipelineCache[VkPipelineCache] オブジェクトを使って、すでに作成されたパイプラインを再利用する技術です。パイプラインの作成には多少のコストがかかります。たとえば、作成時にシェーダをコンパイルする必要があります。パイプラインキャッシュの大きな利点は、パイプラインの状態をファイルに保存して、アプリケーションの実行間に使用することができるので、作成時のコストを取り除くことができます。SIGGRAPH 2016のパイプラインキャッシュに関する Khronos のlink:https://www.khronos.org/assets/uploads/developers/library/2016-siggraph/3D-BOF-SIGGRAPH_Jul16.pdf[プレゼンテーション]（link:https://www.youtube.com/watch?v=owuJRPKIUAg&t=1045s[動画]）がスライド140からあります。
+パイプラインキャッシングとは、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VkPipelineCache[VkPipelineCache] オブジェクトを使って、すでに作成されたパイプラインを再利用する技術です。パイプラインの作成には多少のコストがかかります。たとえば、作成時にシェーダをコンパイルする必要があります。パイプラインキャッシュの大きな利点は、パイプラインの状態をファイルに保存して、アプリケーションの実行間に使用することができるので、作成時のコストを取り除くことができます。SIGGRAPH 2016のパイプラインキャッシュに関する Khronos のlink:https://www.khronos.org/assets/uploads/developers/library/2016-siggraph/3D-BOF-SIGGRAPH_Jul16.pdf[プレゼンテーション]（link:https://www.youtube.com/watch?v=owuJRPKIUAg&t=1045s[動画]）がスライド140からあります。
 
 image::../../../chapters/images/pipeline_cache_cache.png[pipeline_cache_cache.png]
 

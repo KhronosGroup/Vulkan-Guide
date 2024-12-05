@@ -16,7 +16,7 @@ Vulkan を初めて使う方は、Vulkan Spec のあちこちにある `pNext` �
 
 == 2つの基本構造体
 
-Vulkan API は、`VkBaseInStructure` と `VkBaseOutStructure` というlink:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#fundamentals-validusage-pNext[2つの基本構造体を提供]し、構造体ポインタチェーンを辿るために使用されます。
+Vulkan API は、`VkBaseInStructure` と `VkBaseOutStructure` というlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#fundamentals-validusage-pNext[2つの基本構造体を提供]し、構造体ポインタチェーンを辿るために使用されます。
 
 `VkBaseInStructure` の `In` は、`pNext` が `const *` であることを意味し、受け取ったローダ、レイヤ、ドライバでは読み取り専用となります。`VkBaseOutStructure` の `Out` は、`pNext` がアプリケーションにデータを返すために使用されることを指します。
 
@@ -89,7 +89,7 @@ void vkGetValue(VkA* pA) {
                 LOG("Unsupported sType %d", next->sType);
         }
 
-        // これが動くのは、連鎖可能な Vulkan 構造体の最初の2つの値が 
+        // これが動くのは、連鎖可能な Vulkan 構造体の最初の2つの値が
         // "sType" と "pNext" であり、pNext のオフセットが同じであるため
         next = reinterpret_cast<VkBaseOutStructure*>(next->pNext);
     }

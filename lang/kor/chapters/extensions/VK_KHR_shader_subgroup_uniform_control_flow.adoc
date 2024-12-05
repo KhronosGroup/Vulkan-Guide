@@ -9,7 +9,7 @@ ifndef::images[:images: ../images/]
 
 == 개요
 
-link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_shader_subgroup_uniform_control_flow.html[VK_KHR_shader_subgroup_uniform_control_flow]는 쉐이더에서 호출의 재수렴을 더욱 강력하게 보장합니다.+
+link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_subgroup_uniform_control_flow.html[VK_KHR_shader_subgroup_uniform_control_flow]는 쉐이더에서 호출의 재수렴을 더욱 강력하게 보장합니다.+
 확장이 지원되는 경우 쉐이더를 수정하여 더 강력한 보장을 제공하는 새로운 속성을 포함할 수 있습니다(link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_subgroup_uniform_control_flow.txt[GL_EXT_subgroup_uniform_control_flow] 참조).+
 이 속성은 서브그룹 작업을 지원하는 쉐이더 스테이지에만 적용할 수 있습니다.
 (`VkPhysicalDeviceSubgroupProperties::supportedStages` 또는

@@ -9,11 +9,11 @@ ifndef::images[:images: ../images/]
 
 Vulkan API에서 레이 트레이싱을 지원하는 상호 연관된 5가지 확장 기능 세트를 제공합니다.
 
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_acceleration_structure.html[VK_KHR_acceleration_structure]
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_ray_tracing_pipeline.html[VK_KHR_ray_tracing_pipeline]
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_ray_query.html[VK_KHR_ray_query]
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_pipeline_library.html[VK_KHR_pipeline_library]
-  * link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_deferred_host_operations.html[VK_KHR_deferred_host_operations]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_acceleration_structure.html[VK_KHR_acceleration_structure]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_ray_tracing_pipeline.html[VK_KHR_ray_tracing_pipeline]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_ray_query.html[VK_KHR_ray_query]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_pipeline_library.html[VK_KHR_pipeline_library]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_deferred_host_operations.html[VK_KHR_deferred_host_operations]
 
 추가적으로 SPIR-V 및 GLSL 확장 기능도 쉐이더에 필요한 프로그래밍 가능한 기능을 제공합니다:
 

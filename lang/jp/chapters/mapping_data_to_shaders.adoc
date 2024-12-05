@@ -12,7 +12,7 @@ ifndef::chapters[:chapters:]
 全ての SPIR-V アセンブリは glslangValidator で生成されています。
 ====
 
-この章では、データをマッピングするための link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces[Vulkan と SPIR-V のインターフェイス]の方法について説明します。`vkAllocateMemory` から割り当てられた `VkDeviceMemory` オブジェクトを使って、Vulkan からのデータを SPIR-V シェーダが正しく利用できるように適切にマッピングするのは、アプリケーションの責任です。
+この章では、データをマッピングするための link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#interfaces[Vulkan と SPIR-V のインターフェイス]の方法について説明します。`vkAllocateMemory` から割り当てられた `VkDeviceMemory` オブジェクトを使って、Vulkan からのデータを SPIR-V シェーダが正しく利用できるように適切にマッピングするのは、アプリケーションの責任です。
 
 コア Vulkan では、Vulkan アプリケーションのデータを SPIR-V とのインターフェイスにマッピングするための基本的な方法が5つあります。
 
@@ -101,11 +101,11 @@ vkEndCommandBuffer();
 [[descriptors]]
 == ディスクリプタ
 
-link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets[リソースディスクリプタ]は、ユニフォームバッファ、ストレージバッファ、サンプラなどのデータを Vulkan の任意のシェーダステージにマッピングするためのコアとなる方法です。概念的には、ディスプリプタはシェーダが使用できるメモリへのポインタと考えられます。
+link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#descriptorsets[リソースディスクリプタ]は、ユニフォームバッファ、ストレージバッファ、サンプラなどのデータを Vulkan の任意のシェーダステージにマッピングするためのコアとなる方法です。概念的には、ディスプリプタはシェーダが使用できるメモリへのポインタと考えられます。
 
-Vulkan にはさまざまなlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VkDescriptorType[ディスクリプタタイプ]があり、それぞれが何を許可しているのかlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-types[詳細に説明されています]。
+Vulkan にはさまざまなlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VkDescriptorType[ディスクリプタタイプ]があり、それぞれが何を許可しているのかlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#descriptorsets-types[詳細に説明されています]。
 
-ディスクリプタは、シェーダにバインドされるlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sets[ディスクリプタセット]にまとめられます。ディスクリプタセットの中に1つのディスクリプタしかない場合でも、シェーダにバインドする際には `VkDescriptorSet` 全体が使用されます。
+ディスクリプタは、シェーダにバインドされるlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#descriptorsets-sets[ディスクリプタセット]にまとめられます。ディスクリプタセットの中に1つのディスクリプタしかない場合でも、シェーダにバインドする際には `VkDescriptorSet` 全体が使用されます。
 
 === 例
 
@@ -181,9 +181,9 @@ image::../../../chapters/images/mapping_data_to_shaders_descriptor_2.png[mapping
 [[descriptor-types]]
 === ディスクリプタタイプ
 
-Vulkan Spec にはlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-storage-class-correspondence[シェーダリソースとストレージクラスの対応表]があり、SPIR-V で各ディスクリプタタイプをどのようにマッピングするかが記載されています。
+Vulkan Spec にはlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#interfaces-resources-storage-class-correspondence[シェーダリソースとストレージクラスの対応表]があり、SPIR-V で各ディスクリプタタイプをどのようにマッピングするかが記載されています。
 
-link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-types[ディスクリプタタイプ]のそれぞれに GLSL と SPIR-V をマッピングした場合の例を以下に示します。
+link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#descriptorsets-types[ディスクリプタタイプ]のそれぞれに GLSL と SPIR-V をマッピングした場合の例を以下に示します。
 
 GLSL については、link:https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf[GLSL Spec - 12.2.4. Vulkan Only: Samplers, Images, Textures, and Buffers] から詳細をご覧いただけます。
 
@@ -459,7 +459,7 @@ OpDecorate %inputAttachment InputAttachmentIndex 0
 [[specialization-constants]]
 == 特殊化定数
 
-link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-specialization-constants[特殊化定数]とは、`VkPipeline` の作成時に SPIR-V の定数値を指定できる仕組みです。これは、高レベルのシェーディング言語（GLSL、HLSLなど）でプリプロセッサマクロを行うという考えを置き換えるもので、強力です。
+link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#pipelines-specialization-constants[特殊化定数]とは、`VkPipeline` の作成時に SPIR-V の定数値を指定できる仕組みです。これは、高レベルのシェーディング言語（GLSL、HLSLなど）でプリプロセッサマクロを行うという考えを置き換えるもので、強力です。
 
 === 例
 
@@ -561,13 +561,13 @@ vkCreateGraphicsPipelines(&pipelineInfo);
 [[physical-storage-buffer]]
 == 物理ストレージバッファ
 
-Vulkan 1.2で採用された link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_KHR_buffer_device_address.html#_description[VK_KHR_buffer_device_address] 拡張により、「シェーダ内のポインタ」を持つ機能が追加されました。SPIR-V の `PhysicalStorageBuffer` ストレージクラスを使って、アプリケーションは `vkGetBufferDeviceAddress` を呼び出し、メモリへの `VkDeviceAddress` を返すことができます。
+Vulkan 1.2で採用された link:https://www.khronos.org/registry/vulkan/specs/latest/man/html/VK_KHR_buffer_device_address.html#_description[VK_KHR_buffer_device_address] 拡張により、「シェーダ内のポインタ」を持つ機能が追加されました。SPIR-V の `PhysicalStorageBuffer` ストレージクラスを使って、アプリケーションは `vkGetBufferDeviceAddress` を呼び出し、メモリへの `VkDeviceAddress` を返すことができます。
 
 これはデータをシェーダにマッピングする方法ではありますが、シェーダとのインターフェイスになるわけではありません。たとえば、アプリケーションがユニフォームバッファでこれを使用したい場合、 `VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT` と `VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT` の両方を持つ `VkBuffer` を作成する必要があります。この例では、Vulkan はシェーダとのインターフェイスにディスクリプタを使用しますが、その後、物理ストレージバッファを使用して値を更新することができます。
 
 == 制限
 
-Vulkan には、一度にバインドできるデータ量にlink:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits[制限]があることが重要です。
+Vulkan には、一度にバインドできるデータ量にlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#limits[制限]があることが重要です。
 
   * 入力属性
   ** `maxVertexInputAttributes`

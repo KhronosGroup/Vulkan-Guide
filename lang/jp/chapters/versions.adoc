@@ -7,13 +7,13 @@ ifndef::chapters[:chapters:]
 [[versions]]
 = バージョン
 
-Vulkan は、link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#extendingvulkan-coreversions-versionnumbers[メジャー、マイナー、パッチ]に分かれたバージョンシステムを採用しています。現在は4つのマイナーバージョン（1.0、1.1、1.2、1.3）がリリースされており、それぞれ後方互換性があります。アプリケーションはlink:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#vkEnumerateInstanceVersion[vkEnumerateInstanceVersion] を使用して、サポートされている Vulkan インスタンスのバージョンを確認することができます。また、LunarG によるlink:https://www.lunarg.com/wp-content/uploads/2019/02/Vulkan-1.1-Compatibility-Statement_01_19.pdf[ホワイトペーパー]では、サポートされているバージョンをクエリして確認する方法が紹介されています。マイナーバージョンをまたいで作業する場合は、いくつか注意すべき点があります。
+Vulkan は、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#extendingvulkan-coreversions-versionnumbers[メジャー、マイナー、パッチ]に分かれたバージョンシステムを採用しています。現在は4つのマイナーバージョン（1.0、1.1、1.2、1.3）がリリースされており、それぞれ後方互換性があります。アプリケーションはlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vkEnumerateInstanceVersion[vkEnumerateInstanceVersion] を使用して、サポートされている Vulkan インスタンスのバージョンを確認することができます。また、LunarG によるlink:https://www.lunarg.com/wp-content/uploads/2019/02/Vulkan-1.1-Compatibility-Statement_01_19.pdf[ホワイトペーパー]では、サポートされているバージョンをクエリして確認する方法が紹介されています。マイナーバージョンをまたいで作業する場合は、いくつか注意すべき点があります。
 
 == インスタンスとデバイス
 
 インスタンスレベルのバージョンと、デバイスレベルのバージョンには違いがあるということが重要です。ローダと実装が異なるバージョンをサポートする可能性があります。
 
-Vulkan Spec の link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#extendingvulkan-coreversions-queryingversionsupport[バージョンサポートのクエリ]では、インスタンスレベルとデバイスレベルの両方でサポートされているバージョンをクエリする方法を詳しく説明しています。
+Vulkan Spec の link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#extendingvulkan-coreversions-queryingversionsupport[バージョンサポートのクエリ]では、インスタンスレベルとデバイスレベルの両方でサポートされているバージョンをクエリする方法を詳しく説明しています。
 
 == ヘッダ
 
@@ -23,7 +23,7 @@ Vulkan Spec の link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vksp
 
 == 拡張機能
 
-Vulkan のマイナーバージョン間では、link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#versions-1.1[一部の拡張機能]がlink:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#extendingvulkan-coreversions[コア]にlink:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#extendingvulkan-compatibility-promotions[昇格] します。新しいマイナーバージョンの Vulkan をターゲットにする場合、アプリケーションはインスタンスやデバイスの作成時に新しく昇格した拡張機能を有効にする必要はありません。ただし、アプリケーションが後方互換性を維持したい場合は、拡張機能を有効にする必要があります。
+Vulkan のマイナーバージョン間では、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#versions-1.1[一部の拡張機能]がlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#extendingvulkan-coreversions[コア]にlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#extendingvulkan-compatibility-promotions[昇格] します。新しいマイナーバージョンの Vulkan をターゲットにする場合、アプリケーションはインスタンスやデバイスの作成時に新しく昇格した拡張機能を有効にする必要はありません。ただし、アプリケーションが後方互換性を維持したい場合は、拡張機能を有効にする必要があります。
 
 各バージョンの新機能の概要については、xref:{chapters}vulkan_release_summary.adoc#vulkan-release-summary[Vulkan Release Summary] をご覧ください。
 
@@ -53,17 +53,17 @@ typedef void (VKAPI_PTR *PFN_vkGetPhysicalDeviceFeatures2KHR)(VkPhysicalDevice p
 
 == 機能
 
-マイナーバージョン間で、いくつかの機能ビットが追加されたり、削除されたり、オプションになったり、必須になったりする可能性があります。変更された機能の詳細は、link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#versions[Core Revisions] のセクションに記載されています。
+マイナーバージョン間で、いくつかの機能ビットが追加されたり、削除されたり、オプションになったり、必須になったりする可能性があります。変更された機能の詳細は、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#versions[Core Revisions] のセクションに記載されています。
 
-Vulkan Spec の link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-requirements[Feature Requirements] セクションでは、マイナーバージョン間で実装に要求されている機能のリストを見ることができます。
+Vulkan Spec の link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#features-requirements[Feature Requirements] セクションでは、マイナーバージョン間で実装に要求されている機能のリストを見ることができます。
 
 == 制限
 
-現在、Vulkanのすべてのバージョンで、最小/最大の制限要件は同じですが、変更があった場合は Vulkan Spec の link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-minmax[Limit Requirements] セクションに記載されます。
+現在、Vulkanのすべてのバージョンで、最小/最大の制限要件は同じですが、変更があった場合は Vulkan Spec の link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#limits-minmax[Limit Requirements] セクションに記載されます。
 
 == SPIR-V
 
-すべての Vulkan のマイナーバージョンは、link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#spirvenv[サポートされなければならない SPIR-V] のバージョンに対応しています。
+すべての Vulkan のマイナーバージョンは、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#spirvenv[サポートされなければならない SPIR-V] のバージョンに対応しています。
 
   * Vulkan 1.0は SPIR-V 1.0をサポートしています。
   * Vulkan 1.1は SPIR-V 1.3以下をサポートしています。

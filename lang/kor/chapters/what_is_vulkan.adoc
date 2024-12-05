@@ -16,7 +16,7 @@ Vulkan은 회사나 언어가 아니라 개발자가 크로스 플랫폼 및 크
 
 == Vulkan의 핵심
 
-본질적으로 Vulkan은 적합한 하드웨어 구현이 따르는 link:https://registry.khronos.org/vulkan/#apispecs[API 사양]입니다. 공개된 사양은 link:https://github.com/KhronosGroup/Vulkan-Docs[Vulkan-Doc]에 있는 Vulkan Specification 저장소의 공식 공개 사본에 있는 link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/xml/vk.xml[./xml/vk.xml] Vulkan Registry 파일에서 생성됩니다. 또한 link:https://registry.khronos.org/vulkan/specs/1.3/registry.html[XML 스키마]에 대한 문서도 제공됩니다.
+본질적으로 Vulkan은 적합한 하드웨어 구현이 따르는 link:https://registry.khronos.org/vulkan/#apispecs[API 사양]입니다. 공개된 사양은 link:https://github.com/KhronosGroup/Vulkan-Docs[Vulkan-Doc]에 있는 Vulkan Specification 저장소의 공식 공개 사본에 있는 link:https://github.com/KhronosGroup/Vulkan-Docs/blob/main/xml/vk.xml[./xml/vk.xml] Vulkan Registry 파일에서 생성됩니다. 또한 link:https://registry.khronos.org/vulkan/specs/latest/registry.html[XML 스키마]에 대한 문서도 제공됩니다.
 
 크로노스 그룹은 Vulkan 사양과 함께 개발자가 Vulkan API와 인터페이스하는 데 사용할 수 있는 link:https://registry.khronos.org/vulkan/#apiregistry[API Registry]에서 생성된 link:https://www.open-std.org/jtc1/sc22/wg14/www/standards[C99] link:https://github.com/KhronosGroup/Vulkan-Headers/tree/main/include/vulkan[header files]을 공개합니다.
 

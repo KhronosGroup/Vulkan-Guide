@@ -11,13 +11,13 @@ ifndef::chapters[:chapters:]
 SPIR-V の詳細については、link:https://github.com/KhronosGroup/SPIRV-Guide[SPIRV-Guide] をご覧ください。
 ====
 
-link:https://www.khronos.org/registry/SPIR-V/[SPIR-V] は、グラフィックスシェーダステージとコンピュートカーネルのバイナリ中間表現です。Vulkan では、アプリケーションは GLSL や xref:{chapters}hlsl.adoc[HLSL] などの高レベルシェーディング言語でシェーダを書くことができますが、link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#vkCreateShaderModule[vkCreateShaderModule] を使用する際には SPIR-V のバイナリが必要です。Khronos は、SPIR-V とその利点、および表現の高レベルな説明についてのlink:https://www.khronos.org/registry/SPIR-V/papers/WhitePaper.pdf[ホワイトペーパー]を用意しています。また、Vulkan DevDay 2016での2つの素晴らしい Khronos のプレゼンテーションがlink:https://www.khronos.org/assets/uploads/developers/library/2016-vulkan-devday-uk/3-Intro-to-spir-v-shaders.pdf[こちら]とlink:https://www.khronos.org/assets/uploads/developers/library/2016-vulkan-devday-uk/4-Using-spir-v-with-spirv-cross.pdf[こちら]（link:https://www.youtube.com/watch?v=XRpVwdduzgU[両方の動画]）です。
+link:https://www.khronos.org/registry/SPIR-V/[SPIR-V] は、グラフィックスシェーダステージとコンピュートカーネルのバイナリ中間表現です。Vulkan では、アプリケーションは GLSL や xref:{chapters}hlsl.adoc[HLSL] などの高レベルシェーディング言語でシェーダを書くことができますが、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vkCreateShaderModule[vkCreateShaderModule] を使用する際には SPIR-V のバイナリが必要です。Khronos は、SPIR-V とその利点、および表現の高レベルな説明についてのlink:https://www.khronos.org/registry/SPIR-V/papers/WhitePaper.pdf[ホワイトペーパー]を用意しています。また、Vulkan DevDay 2016での2つの素晴らしい Khronos のプレゼンテーションがlink:https://www.khronos.org/assets/uploads/developers/library/2016-vulkan-devday-uk/3-Intro-to-spir-v-shaders.pdf[こちら]とlink:https://www.khronos.org/assets/uploads/developers/library/2016-vulkan-devday-uk/4-Using-spir-v-with-spirv-cross.pdf[こちら]（link:https://www.youtube.com/watch?v=XRpVwdduzgU[両方の動画]）です。
 
 == SPIR-V のインターフェイスと機能
 
-Vulkan には、link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#interfaces[Vulkan と SPIR-V シェーダとのインターフェイス]を定義するセクションがあります。SPIR-V とのインターフェイスは、ほとんどの場合シェーダが一緒にコンパイルされるパイプラインの作成時に使用されます。
+Vulkan には、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#interfaces[Vulkan と SPIR-V シェーダとのインターフェイス]を定義するセクションがあります。SPIR-V とのインターフェイスは、ほとんどの場合シェーダが一緒にコンパイルされるパイプラインの作成時に使用されます。
 
-SPIR-V は Vulkan だけでなく他のターゲットも持っているため、多くの機能を持っています。Vulkan が必要とする機能については、link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#spirvenv-capabilities[付録]を参照してください。Vulkan のいくつかの拡張機能と機能は、SPIR-V の機能がサポートされているかどうかをチェックするために用意されています。
+SPIR-V は Vulkan だけでなく他のターゲットも持っているため、多くの機能を持っています。Vulkan が必要とする機能については、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities[付録]を参照してください。Vulkan のいくつかの拡張機能と機能は、SPIR-V の機能がサポートされているかどうかをチェックするために用意されています。
 
 == コンパイラ
 

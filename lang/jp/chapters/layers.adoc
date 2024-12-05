@@ -6,7 +6,7 @@ ifndef::chapters[:chapters:]
 [[layers]]
 = レイヤ
 
-レイヤは、Vulkan システムを補強するオプション要素です。レイヤは、アプリケーションからハードウェアに至るまで、既存の Vulkan 関数をインターセプトし、評価し、修正することができます。レイヤのプロパティは、アプリケーションから link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#vkEnumerateInstanceLayerProperties[vkEnumerateInstanceLayerProperties] でクエリできます。
+レイヤは、Vulkan システムを補強するオプション要素です。レイヤは、アプリケーションからハードウェアに至るまで、既存の Vulkan 関数をインターセプトし、評価し、修正することができます。レイヤのプロパティは、アプリケーションから link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vkEnumerateInstanceLayerProperties[vkEnumerateInstanceLayerProperties] でクエリできます。
 
 == レイヤの使い方
 
@@ -20,7 +20,7 @@ Windows、Linux、macOS の開発者は、Vulkan Configurator（vkconfig）を�
 
 == デバイスレイヤの非推奨化
 
-かつてはインスタンスレイヤとデバイスレイヤの両方がありましたが、デバイスレイヤは Vulkan の初期段階でlink:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#extendingvulkan-layers-devicelayerdeprecation[非推奨]となっているため、避けてください。
+かつてはインスタンスレイヤとデバイスレイヤの両方がありましたが、デバイスレイヤは Vulkan の初期段階でlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#extendingvulkan-layers-devicelayerdeprecation[非推奨]となっているため、避けてください。
 
 == レイヤの作成
 

@@ -10,7 +10,7 @@ ifndef::images[:images: images/]
 [NOTE]
 .Notice
 ====
-Currently a provisional link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_KHR_portability_subset.html[VK_KHR_portability_subset] extension specification is available with the link:https://github.com/KhronosGroup/Vulkan-Headers/blob/main/include/vulkan/vulkan_beta.h[vulkan_beta.h] headers. More information can found in the link:https://www.khronos.org/blog/fighting-fragmentation-vulkan-portability-extension-released-implementations-shipping[press release].
+Currently a provisional link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_portability_subset.html[VK_KHR_portability_subset] extension specification is available with the link:https://github.com/KhronosGroup/Vulkan-Headers/blob/main/include/vulkan/vulkan_beta.h[vulkan_beta.h] headers. More information can found in the link:https://www.khronos.org/blog/fighting-fragmentation-vulkan-portability-extension-released-implementations-shipping[press release].
 ====
 
 The link:https://www.vulkan.org/porting#vulkan-portability-initiative[Vulkan Portability Initiative] is an effort inside the Khronos Group to develop resources to define and evolve the link:https://github.com/KhronosGroup/Vulkan-Portability[subset] of Vulkan capabilities that can be made universally available at native performance levels across all major platforms, including those not currently served by Vulkan native drivers. In a nutshell, this initiative is about making Vulkan viable on platforms that do not natively support the API (e.g MacOS and iOS).

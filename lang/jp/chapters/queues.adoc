@@ -31,12 +31,12 @@ ifndef::chapters[:chapters:]
 
 `VkQueue` がサポートできる操作にはさまざまな種類があります。「キューファミリ」とは、`VkQueueFamilyProperties` で示されているように、共通のプロパティを持ち、同じ機能をサポートする `VkQueue` のセットを表しています。
 
-link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkQueueFlagBits.html[VkQueueFlagBits] に記載されているキューの操作を以下に示します。
+link:https://www.khronos.org/registry/vulkan/specs/latest/man/html/VkQueueFlagBits.html[VkQueueFlagBits] に記載されているキューの操作を以下に示します。
 
   * `VK_QUEUE_GRAPHICS_BIT` は `vkCmdDraw*` とグラフィックパイプラインのコマンドに使用されます。
   * `VK_QUEUE_COMPUTE_BIT` は `vkCmdDispatch*` や `vkCmdTraceRays*` といったコンピュートパイプライン関連のコマンドに使用されます。
   * `VK_QUEUE_TRANSFER_BIT` は全ての転送コマンドに使用されます。
-  ** 仕様書の link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPipelineStageFlagBits.html[VK_PIPELINE_STAGE_TRANSFER_BIT] には「転送コマンド」が記載されています。
+  ** 仕様書の link:https://www.khronos.org/registry/vulkan/specs/latest/man/html/VkPipelineStageFlagBits.html[VK_PIPELINE_STAGE_TRANSFER_BIT] には「転送コマンド」が記載されています。
   ** `VK_QUEUE_TRANSFER_BIT` のみを持つキューファミリは、通常、link:https://en.wikipedia.org/wiki/Direct_memory_access[DMA] を使用して、ホストとディスクリート GPU 上のデバイスメモリ間で非同期にデータを転送するためのもので、独立したグラフィックス/コンピュート処理と同時に転送を行うことができます。
   ** `VK_QUEUE_GRAPHICS_BIT` および `VK_QUEUE_COMPUTE_BIT` は、常に `VK_QUEUE_TRANSFER_BIT` コマンドを暗黙的に受け入れることができます。
   * `VK_QUEUE_SPARSE_BINDING_BIT` は、xref:{chapters}sparse_resources.adoc#sparse-resources[スパースリソース（sparse resources）] を `vkQueueBindSparse` でメモリにバインドする際に使用されます。
