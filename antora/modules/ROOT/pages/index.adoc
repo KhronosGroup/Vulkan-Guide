@@ -1,8 +1,10 @@
-# Copyright 2022-2024 The Khronos Group Inc.
-# SPDX-License-Identifier: CC-BY-4.0
+// Copyright 2022-2024 The Khronos Group Inc.
+// SPDX-License-Identifier: CC-BY-4.0
 
+ifndef::site-gen-antora[]
 image::vulkan_logo.png[Vulkan Logo]
 image::khronos_logo.png[Khronos logo]
+endif::[]
 
 // Extracted from boilerplate at start of guide.adoc
 
