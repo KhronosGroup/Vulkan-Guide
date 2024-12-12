@@ -159,6 +159,12 @@ Vulkan에서 사용하는 특수한 용어에 대한 혼란을 막기 위해 명
 
 // include::{chapters}protected.adoc[]
 
+=== xref:{chapters}buffer_device_address.adoc[Buffer Device Address]
+
+// include::{chapters}buffer_device_address.adoc[]
+
+  * `VK_KHR_buffer_device_address`, `VK_EXT_buffer_device_address`
+
 == xref:{chapters}pipeline_cache.adoc[파이프라인 캐싱/파생]
 
 // include::{chapters}pipeline_cache.adoc[]
