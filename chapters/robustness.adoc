@@ -1,4 +1,4 @@
-// Copyright 2019-2022 The Khronos Group, Inc.
+// Copyright 2019-2025 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
@@ -15,7 +15,11 @@ image::{images}robustness_flow.png[robustness_flow.png]
 
 == When to use
 
-The nature of some Vulkan applications requires the ability run shader code that cannot be guaranteed to avoid bad memory accesses. Robustness is needed for these applications.
+Some common cases for using robustness are
+
+1. Need to prevent malicious memory accesses (ex. WebGPU).
+2. Can't guarantee your shader will not be out-of-bounds
+3. Mimic out-of-bounds behavior observed elsewhere
 
 [NOTE]
 .Important
@@ -27,11 +31,32 @@ Turning on robustness may incur a runtime performance cost. Application writers 
 
 All Vulkan implementations are required to support the `robustBufferAccess` feature. The link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-robustBufferAccess[spec describes what is considered out-of-bounds] and also how it should be handled. Implementations are given some amount of flexibility for `robustBufferAccess`. An example would be accessing a `vec4(x,y,z,w)` where the `w` value is out-of-bounds as the spec allows the implementation to decide if the `x`, `y`, and `z` are also considered out-of-bounds or not.
 
-If dealing with the update after bind functionality found in `VK_EXT_descriptor_indexing` (which is core as of Vulkan 1.2) it is important to be aware of the link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-robustBufferAccessUpdateAfterBind[robustBufferAccessUpdateAfterBind] which indicates if an implementation can support both `robustBufferAccess` and the ability to update the descriptor after binding it.
-
 The `robustBufferAccess` feature has some limitations as it only covers buffers and not images. It also allows out-of-bounds writes and atomics to modify the data of the buffer being accessed. For applications looking for a stronger form of robustness, there is link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_robustness2.html[VK_EXT_robustness2].
 
 When images are out-of-bounds core Vulkan link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-output-coordinate-validation[provides the guarantee] that stores and atomics have no effect on the memory being accessed.
+
+== robustBufferAccess
+
+The following is an example of using `robustBufferAccess`. (link:https://godbolt.org/z/d5rqK1aqK[Try Online])
+
+[source,glsl]
+----
+#version 450
+layout(set = 0, binding = 0) buffer SSBO {
+    // The VkBuffer is only 64 bytes large
+    // indexing from [0:63] is valid, rest is OOB
+    uint data[128];
+};
+
+void main() {
+    // will be OOB at runtime
+    // will be discarded with robustBufferAccess
+    data[96] = 0;
+
+    // will return zero with robustBufferAccess
+    uint x = data[127];
+}
+----
 
 == VK_EXT_image_robustness
 
@@ -74,3 +99,7 @@ Because robustness can come at a performance cost for some implementations, the 
 At `VkPipeline` creation time one or more `VkPipelineRobustnessCreateInfoEXT` structures can be passed to specify the desired robustness behavior of accesses to buffer, image, and vertex input resources, either for the pipeline as a whole or on a per-pipeline-stage basis.
 
 This extension also provides `VkPhysicalDevicePipelineRobustnessPropertiesEXT` which queries the implementation for what behavior it provides as default when no robustness features are enabled.
+
+== VK_EXT_descriptor_indexing
+
+If dealing with the update after bind functionality found in `VK_EXT_descriptor_indexing` (which is core as of Vulkan 1.2) it is important to be aware of the link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-robustBufferAccessUpdateAfterBind[robustBufferAccessUpdateAfterBind] which indicates if an implementation can support both `robustBufferAccess` and the ability to update the descriptor after binding it.

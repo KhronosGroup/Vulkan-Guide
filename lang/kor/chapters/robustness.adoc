@@ -1,4 +1,4 @@
-// Copyright 2019-2022 The Khronos Group, Inc.
+// Copyright 2019-2025 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
@@ -27,11 +27,32 @@ image::../../../chapters/images/robustness_flow.png[robustness_flow.png]
 
 모든 Vulkan 구현은 `robustBufferAccess` 기능을 지원해야 합니다. link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-robustBufferAccess[사양서는 어떤 것이 범위를 벗어난 것으로 간주되는지] 그리고 어떻게 처리해야 하는지를 설명합니다.구현에는 `robustBufferAccess` 에 대해 어느 정도의 유연성이 부여됩니다. 예를 들어 `w` 값이 범위를 벗어난 `vec4(x,y,z,w)` 에 접근하는 경우, `x`, `y`, `z` 도 범위를 벗어난 것으로 간주할지 여부를 구현에서 결정할 수 있도록 사양에서 허용하고 있기 때문입니다.
 
-(Vulkan 1.2의 핵심인) `VK_EXT_descriptor_indexing` 에 있는 바인딩 후 업데이트 기능을 다루는 경우, 구현이 `robustBufferAccess` 와 바인딩 후 디스크립터를 업데이트하는 기능을 모두 지원할 수 있는지를 나타내는 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-robustBufferAccessUpdateAfterBind[robustBufferAccessUpdateAfterBind]를 알아두는 것이 중요합니다.
-
 `robustBufferAccess` 기능은 이미지가 아닌 버퍼만 다루기 때문에 몇 가지 제한이 있습니다. 또한 접근 중인 버퍼의 데이터를 수정하기 위해 범위를 벗어난 쓰기나 아토믹을 허용해버립니다. 더 강력한 형태의 견고성을 원하는 애플리케이션의 경우, link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_robustness2.html[VK_EXT_robustness2]가 있습니다.
 
 이미지가 범위를 벗어난 경우, 코어 Vulkan에서는 스토어나 아토믹이 접근하려는 메모리에 영향을 주지 않는 것이 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-output-coordinate-validation[보장되어 있습니다].
+
+== robustBufferAccess
+
+다음은 `robustBufferAccess`를 사용하는 예제입니다. (link:https://godbolt.org/z/d5rqK1aqK[온라인 체험])
+
+[source,glsl]
+----
+#version 450
+layout(set = 0, binding = 0) buffer SSBO {
+    // Vk버퍼의 크기는 64바이트에 불과합니다.
+    // [0:63]부터의 인덱싱이 유효하고 나머지는 OOB입니다.
+    uint data[128];
+};
+
+void main() {
+    // 런타임에 OOB가 됩니다.
+    // robustBufferAccess와 함께 버려집니다.
+    data[96] = 0;
+
+    // robustBufferAccess를 사용하면 0을 반환합니다.
+    uint x = data[127];
+}
+----
 
 == VK_EXT_image_robustness
 
@@ -74,3 +95,7 @@ link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-
 `VkPipeline` 생성 시 파이프라인 전체 또는 파이프라인 스테이지별로 버퍼, 이미지 및 정점 입력 리소스에 접근하려는 견고성 동작을 지정하기 위해 하나 이상의 `VkPipelineRobustnessCreateInfoEXT` 구조체를 전달할 수 있습니다.
 
 이 확장 기능은 견고성 기능이 활성화되지 않았을 때 어떤 동작을 기본으로 제공하는지 구현에 쿼리하는 `VkPhysicalDevicePipelineRobustnessPropertiesEXT` 도 제공합니다.
+
+== VK_EXT_descriptor_indexing
+
+(Vulkan 1.2의 핵심인) `VK_EXT_descriptor_indexing` 에 있는 바인딩 후 업데이트 기능을 다루는 경우, 구현이 `robustBufferAccess` 와 바인딩 후 디스크립터를 업데이트하는 기능을 모두 지원할 수 있는지를 나타내는 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-robustBufferAccessUpdateAfterBind[robustBufferAccessUpdateAfterBind]를 알아두는 것이 중요합니다.
