@@ -1,4 +1,4 @@
-// Copyright 2019-2022 The Khronos Group, Inc.
+// Copyright 2019-2025 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 // Required for both single-page and combined guide xrefs to work
@@ -20,89 +20,38 @@ Vulkan Spec は、どのバージョンでも、どのような拡張機能の�
 
 Vulkan Spec をビルドする際には、どのバージョン用か、どの拡張機能を含めるかを指定します。拡張機能を含まない Vulkan Spec はlink:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html#extendingvulkan-coreversions[コアバージョン]とも呼ばれ、link:./../../../chapters/vulkan_cts.md[適合]するために実装がサポートするべき最小限の Vulkan となります。
 
+== Vulkan Spec バージョン
+
+Vulkan 1.0から1.3までは、スペックの専用バージョンがありました。ビルドの順列を減らすために、Vulkan 1.4から、常にVulkanの最新バージョンに更新される`latest`バージョンが存在するようになりました。
+
+リンク:https://vulkan.lunarg.com/doc/sdk/1.4.304.0/windows/1.4-extensions/vkspec.html[Vulkan SDK]は、常にそれが作成された仕様のバージョンを含んでいます。
+
 == Vulkan Spec フォーマット
 
 Vulkan Spec は、さまざまなフォーマットに対応しています。
 
-=== HTML チャンク
+=== Antora
 
-Vulkan Spec のサイズは大きいため、デフォルトの `index.html` ページにアクセスすると、チャンク版がデフォルトで表示されます。
+様々なリソースを統合し、ナビゲーションを改善するために、link:https://docs.vulkan.org/spec/latest/index.html[AntoraでビルドされたバージョンのSpec]の使用が推奨されています。
 
-例：link:https://www.khronos.org/registry/vulkan/specs/1.3/html/[https://www.khronos.org/registry/vulkan/specs/1.3/html/]
+=== HTML
 
-ビルド済み HTML チャンク Vulkan Spec
+Vulkan Spec 全体を HTML で見るには、`html/vkspec.html` ファイルを表示します。
 
-  * Vulkan SDK には、チャンク版の仕様書がパッケージされています。各バージョンの Vulkan SDK には、対応するバージョンの仕様書が含まれています。最新の Vulkan SDK については、link:https://vulkan.lunarg.com/doc/sdk/latest/windows/chunked_spec/index.html[Chunked Specification] をご覧ください。 
-  * Vulkan 1.0 Specification
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.0/html/[コア]
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/[コアと拡張機能]
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/html/[コアと WSI 拡張機能]
-  * Vulkan 1.1 Specification
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.1/html/[コア]
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/[コアと拡張機能]
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.1-khr-extensions/html/[コアと KHR 拡張機能]
-  * Vulkan 1.2 Specification
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.2/html/[コア]
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/[コアと拡張機能]
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.2-khr-extensions/html/[コアと KHR 拡張機能]
-  * Vulkan 1.3 Specification
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.3/html/[コア]
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/[コアと拡張機能]
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-khr-extensions/html/[コアと KHR 拡張機能]
+https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html
 
-=== HTML フル
-
-Vulkan Spec 全体を HTML で見るには、`vkspec.html` ファイルを表示します。
-
-例： https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html
-
-ビルド済み HTML フル Vulkan Spec 
-
-  * Vulkan SDK には、対応したバージョンの Vulkan Spec が HTML として丸ごとパッケージされています。最新の Vulkan SDK に対応するバージョンの link:https://vulkan.lunarg.com/doc/sdk/latest/windows/vkspec.html[HTML 版の Specification] をご覧ください。（注意：読み込みに時間がかかります。フル HTML 版の利点は検索機能です。） 
-  * Vulkan 1.0 Specification 
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.0/html/vkspec.html[コア] 
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html[コアと拡張機能] 
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/html/vkspec.html[コアと WSI 拡張機能] 
-  * Vulkan 1.1 Specification 
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.1/html/vkspec.html[コア] 
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html[コアと拡張機能] 
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.1-khr-extensions/html/vkspec.html[コアと KHR 拡張機能] 
-  * Vulkan 1.2 Specification 
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html[コア] 
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html[コアと拡張機能] 
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.2-khr-extensions/html/vkspec.html[コアと KHR 拡張機能]
-  * Vulkan 1.3 Specification
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.3/html/vkspec.html[コア]
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html[コアと拡張機能]
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-khr-extensions/html/vkspec.html[コアと KHR 拡張機能]
+Vulkan SDK には、対応したバージョンの Vulkan Spec が HTML として丸ごとパッケージされています。最新の Vulkan SDK に対応するバージョンの link:https://vulkan.lunarg.com/doc/sdk/latest/windows/vkspec.html[HTML 版の Specification] をご覧ください。
 
 === PDF
 
 PDF フォーマットは `pdf/vkspec.pdf` ファイルをご覧ください。
 
-例： https://www.khronos.org/registry/vulkan/specs/1.3/pdf/vkspec.pdf
+https://registry.khronos.org/vulkan/specs/latest/pdf/vkspec.pdf
 
-ビルド済み PDF Vulkan Spec 
-
-  * Vulkan 1.0 Specification 
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.0/pdf/vkspec.pdf[コア] 
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.0-extensions/pdf/vkspec.pdf[コアと拡張機能] 
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/pdf/vkspec.pdf[コアと WSI 拡張機能] 
-  * Vulkan 1.1 Specification 
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.1/pdf/vkspec.pdf[コア] 
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.1-extensions/pdf/vkspec.pdf[コアと拡張機能] 
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.1-khr-extensions/pdf/vkspec.pdf[コアと KHR 拡張機能] 
-  * Vulkan 1.2 Specification 
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.2/pdf/vkspec.pdf[コア] 
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/pdf/vkspec.pdf[コアと拡張機能] 
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.2-khr-extensions/pdf/vkspec.pdf[コアと KHR 拡張機能]
-  * Vulkan 1.3 Specification
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.3/pdf/vkspec.pdf[コア]
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/pdf/vkspec.pdf[コアと拡張機能]
-  ** link:https://www.khronos.org/registry/vulkan/specs/1.3-khr-extensions/pdf/vkspec.pdf[コアと KHR 拡張機能]
+Vulkan SDKにもPDF版が付属しています（https://vulkan.lunarg.com/doc/sdk/1.4.304.0/windows/1.4-extensions/vkspec.pdf）。
 
 === マニュアルページ
 
-Khronos Group は現在、最新バージョンの1.3仕様のすべての拡張機能を含む Vulkan Man Pages のみを link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/[オンラインレジストリ]でホストしています。
+Khronos Group は現在、最新バージョンの仕様のすべての拡張機能を含む Vulkan Man Pages のみを link:https://registry.khronos.org/vulkan/specs/latest/man/html/[オンラインレジストリ]でホストしています。
 
 また、Vulkan Man Pages は、各バージョンの Vulkan SDK にも掲載されています。最新の Vulkan SDK の link:https://vulkan.lunarg.com/doc/sdk/latest/windows/apispec.html[マニュアルページ] をご覧ください。
