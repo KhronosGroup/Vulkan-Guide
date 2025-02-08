@@ -147,7 +147,7 @@ All descriptors in a binding use the same maximum `combinedImageSamplerDescripto
 
 For example, consider a descriptor set layout binding with two descriptors and immutable samplers for multi-planar formats that have `VkSamplerYcbcrConversionImageFormatProperties::combinedImageSamplerDescriptorCount` values of `2` and `3` respectively. There are two descriptors in the binding and the maximum `combinedImageSamplerDescriptorCount` is `3`, so descriptor sets with this layout consume `6` descriptors from the descriptor pool. To create a descriptor pool that allows allocating `4` descriptor sets with this layout, `descriptorCount` must be at least `24`.
 
-Currently, link:https://github.com/KhronosGroup/Vulkan-Docs/issues/2139[there is no way] to tell what the largest `combinedImageSamplerDescriptorCount` can be. In practice, this value will be `3`, but can be `4` when using some external formats with Alpha components.
+If you have the `VK_KHR_maintenance6` extension enabled, you can use the `VkPhysicalDeviceMaintenance6Properties::maxCombinedImageSamplerDescriptorCount` value to know the max value. In practice, this value will be `3`, but could be `4` for some device that might have to handle external formats with Alpha components.
 
 Some pseudo code how to query for the `combinedImageSamplerDescriptorCount`:
 
