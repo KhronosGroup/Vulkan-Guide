@@ -11,6 +11,8 @@ This chapter is an overview of the link:https://docs.vulkan.org/spec/latest/chap
 
 It is also important to remember that Vulkan is a tool that can be used in different ways. The following are examples for educational purposes of how vertex data **can** be laid out.
 
+For more information about `Location` and `Component`, see the xref:{chapters}location_component_interface.adoc[Location and Component Interface] chapter.
+
 == Binding and Locations
 
 A `binding` is tied to a position in the vertex buffer from which the vertex shader will start reading data out of during a `vkCmdDraw*` call. Changing the `bindings` does **not** require making any alterations to an app's vertex shader source code.
