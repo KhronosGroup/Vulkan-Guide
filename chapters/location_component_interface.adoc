@@ -9,9 +9,11 @@ ifndef::images[:images: images/]
 
 This chapter is an overview of the link:https://docs.vulkan.org/spec/latest/chapters/interfaces.html#interfaces-iointerfaces-locations[Location and Component Assignment] chapter to help give examples, especially around some of the more extreme edge cases.
 
-The simplest way to think about a `Location` is that it is made up of four 32-bit `Components`. This means a `vec4`/`float4`/`uvec4`/etc will fit perfectly in a single `Location`.
+The simplest way to think about a `Location` is that it is made up of four 32-bit `Components`.
+This means a `vec4`/`float4`/`uvec4`/etc will fit perfectly in a single `Location`.
+Multiple variables can be packed into the same `Location` if they are specified for unique components.
 
-`Location` are used for both the `Input` and `Output` to interface between shaders stages when possible.
+Locations are used for both the `Input` and `Output` to interface between shaders stages when possible.
 
 == Basic Example
 
@@ -28,7 +30,7 @@ image::{images}location_example_basic.svg[location_example_basic]
 
 == 16-bit
 
-When using 16-bit value, they consume a full 32-bit `Component` for each 16-bit element. So a 16-bit wide vector will look the same as a 32-bit vector.
+16-bit values always consume a full 32-bit `Component`. So a vector with 16-bit elements will consume the same resources as a vector with 32-bit elements; they are not tightly packed.
 
 [source,glsl]
 ----
@@ -39,7 +41,8 @@ image::{images}location_example_16bit.svg[location_example_16bit]
 
 == Crossing Location Boundaries
 
-All 16-bit and 32-bit vectors must be inside a single `Location`, so the following in **not** allowed.
+All 16-bit and 32-bit vectors must be inside a single `Location`, so the following is **not** allowed.
+The last two elements would consume `component = 4` and `component = 5`, which do not exist.
 
 [source,glsl]
 ----
@@ -69,13 +72,24 @@ layout(location=0) in vec2 in_a;
 layout(location=0, component=1) in float in_f;
 ----
 
+The following modification would make it legal as multiple variable can share a `Location`, just not a `Component
+`
+[source,patch]
+----
+layout(location=0) in vec2 in_a;
+- layout(location=0, component=1) in float in_f;
++ layout(location=0, component=2) in float in_f;
+----
+
 == Array
 
-Arrays will consume the entire `Location` for a given element in the array, as an example
+An element of an array will consume all every `Component` in a `Location` that it would consume as a non-arrayed value, with each subsequent element consuming the next available `Location`.
+
+For example:
 
 [source,glsl]
 ----
-layout(location=0, component=1) in float a[3];
+layout(location=0) in float a[3];
 ----
 
 image::{images}location_example_array.svg[location_example_array]
@@ -86,9 +100,11 @@ It is **not** allowed to use any other `Component` in a `Location` that is being
 
 [source,glsl]
 ----
-layout(location=0, component=1) in float a[3];
+layout(location=0) in float a[3];
 layout(location=2, component=2) in float b;
 ----
+
+`float b` is invalid because the array consumes all of `Location` 2.
 
 image::{images}location_example_array2.svg[location_example_array2]
 
@@ -96,3 +112,35 @@ image::{images}location_example_array2.svg[location_example_array2]
 ====
 Some shader stages, like geometry shaders, have an array around its interface matching, this array is disregarded for the above examples.
 ====
+
+== Matrix
+
+A matrix is viewed as an array, which consume all 4 components.
+
+So something like
+
+[source,glsl]
+----
+layout(location = 0) in mat3x2 a;
+----
+
+From a `Location`/`Component` point-of-view looks like
+
+[source,glsl]
+----
+// N == 3
+// Arrays consume whole Location
+layout(location = 0) in vec2 a[3];
+----
+
+As stated above, arrays consume the whole `Location` so the following is **not** allowed.
+
+[source,glsl]
+----
+layout(location = 0) in mat3x2 a;
+layout(location = 2, component = 2) in float b;
+----
+
+`float b` is invalid because the implicit array of the matrix consumes all of `Location` 2.
+
+image::{images}location_example_matrix.svg[location_example_matrix]
