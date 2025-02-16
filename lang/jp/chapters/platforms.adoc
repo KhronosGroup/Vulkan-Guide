@@ -53,4 +53,4 @@ Vulkan は、Windows 7、Windows 8、および Windows 10 でサポートされ�
 
 == Others
 
-組込みシステムの中には Vulkan をサポートしているものもあり、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#display[ディスプレイに直接]表示できます。
+組込みシステムの中には Vulkan をサポートしているものもあり、link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#display[ディスプレイに直接]表示できます。

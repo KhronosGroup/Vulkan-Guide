@@ -19,7 +19,7 @@ image::../../../chapters/images/enabling_extensions_instance_extension.png[enabl
 
 == 지원 확인
 
-애플리케이션은 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-extensions[물리적 장치에 대한 쿼리]를 통해 먼저 `vkEnumerateInstanceExtensionProperties` 또는 `vkEnumerateDeviceExtensionProperties` 로 확장 기능이 **지원**되는지 확인할 수 있습니다.
+애플리케이션은 link:https://docs.vulkan.org/spec/latest/chapters/extensions.html#extendingvulkan-extensions[물리적 장치에 대한 쿼리]를 통해 먼저 `vkEnumerateInstanceExtensionProperties` 또는 `vkEnumerateDeviceExtensionProperties` 로 확장 기능이 **지원**되는지 확인할 수 있습니다.
 
 [source,cpp]
 ----
@@ -78,7 +78,7 @@ This means after enabling the extension, an application will still need to xref:
 
 == 승격 과정
 
-xref:{chapters}vulkan_release_summary.adoc#vulkan-release-summary[Vulkan의 마니어 버전이 출시되면], 일부 확장 기능이 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-compatibility-promotion[사양서에 정의된 대로 승격]됩니다. 승격의 목적은 Vulkan을 사용하는 여러 단체에서 광범위하게 지원하기로 결정한 확장 기능을 Vulkan 핵심 사양에 포함시키는 것입니다. Vulkan 버전에 대한 자세한 내용은 xref:{chapters}versions.adoc#versions[버전 챕터]에서 확인할 수 있습니다.
+xref:{chapters}vulkan_release_summary.adoc#vulkan-release-summary[Vulkan의 마니어 버전이 출시되면], 일부 확장 기능이 link:https://docs.vulkan.org/spec/latest/chapters/extensions.html#extendingvulkan-compatibility-promotion[사양서에 정의된 대로 승격]됩니다. 승격의 목적은 Vulkan을 사용하는 여러 단체에서 광범위하게 지원하기로 결정한 확장 기능을 Vulkan 핵심 사양에 포함시키는 것입니다. Vulkan 버전에 대한 자세한 내용은 xref:{chapters}versions.adoc#versions[버전 챕터]에서 확인할 수 있습니다.
 
 예를 들어 대부분의 다른 확장 기능에 사용되고 있는 `VK_KHR_get_physical_device_properties2` 와 같은 것이 있습니다. Vulkan 1.0에서는 애플리케이션이 `vkGetPhysicalDeviceFeatures2KHR` 과 같은 함수를 호출하기 전에 `VK_KHR_get_physical_device_properties2` 의 지원 여부를 쿼리해야합니다. Vulakn 1.1부터는 `vkGetPhysicalDeviceFeatures2` 함수가 지원되도록 보장됩니다.
 
@@ -86,9 +86,9 @@ xref:{chapters}vulkan_release_summary.adoc#vulkan-release-summary[Vulkan의 마�
 
 === 승격에 따른 행동 변화
 
-승격되는 **일부** 확장 기능에는 미묘한 차이가 있음을 인식하는 것이 중요합니다. 승격에는 확장 기능의 "`Feature advertisement/enablement`" 와 같은 작은 변경점이 포함될 수 있다고 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-compatibility-promotion[사양서에 설명되어 있습니다]. `VK_KHR_8bit_storage` 를 사용한 사례가 이 작은 차이점을 가장 잘 설명할 수 있습니다.
+승격되는 **일부** 확장 기능에는 미묘한 차이가 있음을 인식하는 것이 중요합니다. 승격에는 확장 기능의 "`Feature advertisement/enablement`" 와 같은 작은 변경점이 포함될 수 있다고 link:https://docs.vulkan.org/spec/latest/chapters/extensions.html#extendingvulkan-compatibility-promotion[사양서에 설명되어 있습니다]. `VK_KHR_8bit_storage` 를 사용한 사례가 이 작은 차이점을 가장 잘 설명할 수 있습니다.
 
- Vulkan 1.2의 `VK_KHR_8bit_storage` 에 대한 변경 사항은 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#_differences_relative_to_vk_khr_8bit_storage[Vulkan 사양서에 설명되어 있습니다]:
+ Vulkan 1.2의 `VK_KHR_8bit_storage` 에 대한 변경 사항은 link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_8bit_storage.html#_promotion_to_vulkan_1_2[Vulkan 사양서에 설명되어 있습니다]:
 
 ____
 VK_KHR_8bit_storage 확장 기능이 지원되지 않는 경우 쉐이더 모듈에서 SPIR-V StorageBuffer8BitAccess 기능에 대한 지원은 선택 사항입니다.
@@ -99,4 +99,4 @@ ____
   * `vkEnumerateDeviceExtensionProperties` 에서 `VK_KHR_8bit_storage` 가 발견된 경우에는 `storageBuffer8BitAccess` 기능이 지원되는 것이 **보장**됩니다.
   * `vkEnumerateDeviceExtensionProperties` 에서 `VK_KHR_8bit_storage` 를 **찾을 수 없는** 경우에는 `storageBuffer8BitAccess` 기능이 지원되고 **있을 수도** 있으며, `VkPhysicalDeviceVulkan12Features::storageBuffer8BitAccess` 를 쿼리하여 확인할 수 있습니다.
 
-승격된 확장 기능의 모든 기능 변경 사항 목록은 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#versions[버전 부록]에서 확인할 수 있습니다.
+승격된 확장 기능의 모든 기능 변경 사항 목록은 link:https://docs.vulkan.org/spec/latest/appendices/versions.html[버전 부록]에서 확인할 수 있습니다.

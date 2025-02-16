@@ -6,7 +6,7 @@ ifndef::chapters[:chapters:]
 [[wsi]]
 = Window System Integration (WSI)
 
-Vulkan API は結果を表示しなくても使用できるため、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#wsi[オプションの Vulkan 拡張機能] を使用することで WSI を提供しています。ほとんどの実装には WSI の対応が含まれています。WSI の設計は、各プラットフォームのウィンドウメカニズムをコアの Vulkan API から抽象化するために作成されました。
+Vulkan API は結果を表示しなくても使用できるため、link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html[オプションの Vulkan 拡張機能] を使用することで WSI を提供しています。ほとんどの実装には WSI の対応が含まれています。WSI の設計は、各プラットフォームのウィンドウメカニズムをコアの Vulkan API から抽象化するために作成されました。
 
 image::../../../chapters/images/wsi_setup.png[wsi_setup]
 
@@ -16,25 +16,25 @@ image::../../../chapters/images/wsi_setup.png[wsi_setup]
 
 Vulkan Surface をサポートする各プラットフォームは、それぞれのプラットフォーム固有の API から `VkSurfaceKHR` オブジェクトを作成する独自の方法を持っています。
 
-  * Android - link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vkCreateAndroidSurfaceKHR[vkCreateAndroidSurfaceKHR]
-  * DirectFB - link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vkCreateDirectFBSurfaceEXT[vkCreateDirectFBSurfaceEXT]
-  * Fuchsia - link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vkCreateImagePipeSurfaceFUCHSIA[vkCreateImagePipeSurfaceFUCHSIA]
-  * iOS - link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vkCreateIOSSurfaceMVK[vkCreateIOSSurfaceMVK]
-  * macOS - link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vkCreateMacOSSurfaceMVK[vkCreateMacOSSurfaceMVK]
-  * Metal - link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vkCreateMetalSurfaceEXT[vkCreateMetalSurfaceEXT]
-  * VI - link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vkCreateViSurfaceNN[vkCreateViSurfaceNN]
-  * Wayland - link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vkWaylandSurfaceCreateInfoKHR[vkWaylandSurfaceCreateInfoKHR]
+  * Android - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateAndroidSurfaceKHR[vkCreateAndroidSurfaceKHR]
+  * DirectFB - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateDirectFBSurfaceEXT[vkCreateDirectFBSurfaceEXT]
+  * Fuchsia - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateImagePipeSurfaceFUCHSIA[vkCreateImagePipeSurfaceFUCHSIA]
+  * iOS - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateIOSSurfaceMVK[vkCreateIOSSurfaceMVK]
+  * macOS - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateMacOSSurfaceMVK[vkCreateMacOSSurfaceMVK]
+  * Metal - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateMetalSurfaceEXT[vkCreateMetalSurfaceEXT]
+  * VI - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateViSurfaceNN[vkCreateViSurfaceNN]
+  * Wayland - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkWaylandSurfaceCreateInfoKHR[vkWaylandSurfaceCreateInfoKHR]
   * QNX - link:https://www.khronos.org/registry/vulkan/specs/latest/man/html/vkCreateScreenSurfaceQNX.html[vkCreateScreenSurfaceQNX]
-  * Windows - link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vkCreateWin32SurfaceKHR[vkCreateWin32SurfaceKHR]
-  * XCB - link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vkCreateXcbSurfaceKHR[vkCreateXcbSurfaceKHR]
-  * Xlib - link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vkCreateXlibSurfaceKHR[vkCreateXlibSurfaceKHR]
-  * Direct-to-Display - link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vkCreateDisplayPlaneSurfaceKHR[vkCreateDisplayPlaneSurfaceKHR]
+  * Windows - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateWin32SurfaceKHR[vkCreateWin32SurfaceKHR]
+  * XCB - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateXcbSurfaceKHR[vkCreateXcbSurfaceKHR]
+  * Xlib - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateXlibSurfaceKHR[vkCreateXlibSurfaceKHR]
+  * Direct-to-Display - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateDisplayPlaneSurfaceKHR[vkCreateDisplayPlaneSurfaceKHR]
 
-`VkSurfaceKHR` には、さまざまなlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vkGetPhysicalDeviceSurfaceCapabilitiesKHR[機能]、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vkGetPhysicalDeviceSurfaceFormatsKHR[フォーマット]、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vkGetPhysicalDeviceSurfacePresentModesKHR[表示モード]があり、それらをクエリすることができます。
+`VkSurfaceKHR` には、さまざまなlink:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkGetPhysicalDeviceSurfaceCapabilitiesKHR[機能]、link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkGetPhysicalDeviceSurfaceFormatsKHR[フォーマット]、link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkGetPhysicalDeviceSurfacePresentModesKHR[表示モード]があり、それらをクエリすることができます。
 
 == スワップチェーン
 
-`VkSwapchainKHR` オブジェクトは、`VkImage` オブジェクトの配列を通じてレンダリング結果をサーフェスに表示する機能を提供します。スワップチェーンのさまざまな link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VkPresentModeKHR[表示モード]は、表示エンジンがどのように実装されるかを決定します。
+`VkSwapchainKHR` オブジェクトは、`VkImage` オブジェクトの配列を通じてレンダリング結果をサーフェスに表示する機能を提供します。スワップチェーンのさまざまな link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#VkPresentModeKHR[表示モード]は、表示エンジンがどのように実装されるかを決定します。
 
 image::../../../chapters/images/wsi_engine.png[wsi_engine]
 

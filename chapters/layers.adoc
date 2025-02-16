@@ -7,7 +7,7 @@ ifndef::images[:images: images/]
 [[layers]]
 = Layers
 
-Layers are optional components that augment the Vulkan system. They can intercept, evaluate, and modify existing Vulkan functions on their way from the application down to the hardware. Layer properties can be queried from an application with link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkEnumerateInstanceLayerProperties[vkEnumerateInstanceLayerProperties].
+Layers are optional components that augment the Vulkan system. They can intercept, evaluate, and modify existing Vulkan functions on their way from the application down to the hardware. Layer properties can be queried from an application with link:https://docs.vulkan.org/spec/latest/chapters/extensions.html#vkEnumerateInstanceLayerProperties[vkEnumerateInstanceLayerProperties].
 
 == Using Layers
 
@@ -22,7 +22,7 @@ Please see the link:https://vulkan.lunarg.com/doc/sdk/latest/windows/vkconfig.ht
 
 == Device Layers Deprecation
 
-There used to be both instance layers and device layers, but device layers were link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-layers-devicelayerdeprecation[deprecated] early in Vulkan's life and should be avoided.
+There used to be both instance layers and device layers, but device layers were link:https://docs.vulkan.org/spec/latest/chapters/extensions.html#extendingvulkan-layers-devicelayerdeprecation[deprecated] early in Vulkan's life and should be avoided.
 
 == Creating a Layer
 

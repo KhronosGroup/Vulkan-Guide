@@ -8,7 +8,7 @@ ifndef::images[:images: images/]
 [[vulkan-release-summary]]
 = Vulkan Release 요약
 
-Vulkan의 각 마이너 릴리즈 버전은 서로 다른 확장 기능 세트를 코어로 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-compatibility-promotion[승격]했습니다. 즉, 애플리케이션이 최소한 해당 Vulkan 버전을 요청하는 경우(해당 버전이 구현에서 지원되는 경우) 승격된 기능을 사용하기 위해 확장 기능을 활성화할 필요가 없데 되었습니다.
+Vulkan의 각 마이너 릴리즈 버전은 서로 다른 확장 기능 세트를 코어로 link:https://docs.vulkan.org/spec/latest/chapters/extensions.html#extendingvulkan-compatibility-promotion[승격]했습니다. 즉, 애플리케이션이 최소한 해당 Vulkan 버전을 요청하는 경우(해당 버전이 구현에서 지원되는 경우) 승격된 기능을 사용하기 위해 확장 기능을 활성화할 필요가 없데 되었습니다.
 
 다음 요약에는 각 코어 버전에 추가된 확장 기능 목록과 추가된 이유가 포함되어 있습니다. 이 목록은 link:https://docs.vulkan.org/spec/latest/appendices/versions.html[Vulkan] 사양서에서 가져온 것이지만 링크는 Vulkan 가이드의 다양한 부분으로 이동됩니다
 

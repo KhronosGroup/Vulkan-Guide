@@ -14,7 +14,7 @@ ifndef::chapters[:chapters:]
 
 == 有効な使用法（Valid Usage: VU）
 
-**VU** は Vulkan Spec で次のように明確にlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#fundamentals-validusage[定義]されています。
+**VU** は Vulkan Spec で次のように明確にlink:https://docs.vulkan.org/spec/latest/chapters/fundamentals.html#fundamentals-validusage[定義]されています。
 
 [NOTE]
 ====
@@ -35,7 +35,7 @@ ifndef::chapters[:chapters:]
 
 `VUID` は、有効な使用法ごとに与えられる唯一の ID です。これにより、仕様書の中の有効な使用法を簡単に探すことができます。
 
-`VUID-vkBindImageMemory-memoryOffset-01046` を例にとると、HTML 版仕様書のアンカーに VUID を追加する（link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VUID-vkBindImageMemory-memoryOffset-01046[vkspec.html#VUID-vkBindImageMemory-memoryOffset-01046]）だけで、VUID にジャンプすることができます。
+`VUID-vkBindImageMemory-memoryOffset-01046` を例にとると、HTML 版仕様書のアンカーに VUID を追加する（link:https://docs.vulkan.org/spec/latest/chapters/resources.html#VUID-vkBindImageMemory-memoryOffset-01046[vkspec.html#VUID-vkBindImageMemory-memoryOffset-01046]）だけで、VUID にジャンプすることができます。
 
 [[khronos-validation-layer]]
 == Khronos Validation Layer
@@ -62,22 +62,21 @@ Khronos Validation Layer は、以前は複数のレイヤで構成されてい�
 
 === 例1 - 暗黙的な有効な使用法
 
-この例では、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#fundamentals-implicit-validity[暗黙的な有効な使用法] がトリガーされる場合を示しています。VUID の最後には数字が入りません。
+この例では、link:https://docs.vulkan.org/spec/latest/chapters/fundamentals.html#fundamentals-implicit-validity[暗黙的な有効な使用法] がトリガーされる場合を示しています。VUID の最後には数字が入りません。
 
 [source]
 ----
 Validation Error: [ VUID-vkBindBufferMemory-memory-parameter ] Object 0: handle =
 0x20c8650, type = VK_OBJECT_TYPE_INSTANCE; | MessageID = 0xe9199965 | Invalid
 VkDeviceMemory Object 0x60000000006. The Vulkan spec states: memory must be a valid
-VkDeviceMemory handle (https://www.khronos.org/registry/vulkan/specs/1.1-extensions/
-html/vkspec.html#VUID-vkBindBufferMemory-memory-parameter)
+VkDeviceMemory handle (https://docs.vulkan.org/spec/latest/chapters/resources.html#VUID-vkBindBufferMemory-memory-parameter)
 ----
 
   * 最初に気付くのは、VUID がメッセージの最初に表示されていることです。（`VUID-vkBindBufferMemory-memory-parameter`）
   ** また、メッセージの最後には、仕様の VUID へのリンクがあります。
   * `The Vulkan spec states:` は、スペックから引用したVUIDです。
-  * `VK_OBJECT_TYPE_INSTANCE` は、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#_debugging[VkObjectType] です。
-  * `Invalid VkDeviceMemory Object 0x60000000006` は、どの `VkDeviceMemory` ハンドルがエラーの原因であるかを示すのに役立つ link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#fundamentals-objectmodel-overview[Dispatchable Handle] です。
+  * `VK_OBJECT_TYPE_INSTANCE` は、link:https://docs.vulkan.org/spec/latest/chapters/debugging.html#VkObjectType[VkObjectType] です。
+  * `Invalid VkDeviceMemory Object 0x60000000006` は、どの `VkDeviceMemory` ハンドルがエラーの原因であるかを示すのに役立つ link:https://docs.vulkan.org/spec/latest/chapters/fundamentals.html#fundamentals-objectmodel-overview[Dispatchable Handle] です。
 
 === 例2 - 明示的な有効な使用法
 
@@ -92,8 +91,7 @@ name = myIconMemory, type = VK_OBJECT_TYPE_DEVICE_MEMORY; | MessageID = 0x6f3eac
 In vkBindImageMemory(), attempting to bind VkDeviceMemory 0x90000000009[myTextureMemory]
 to VkImage 0x70000000007[] which has already been bound to VkDeviceMemory
 0x90000000006[myIconMemory]. The Vulkan spec states: image must not already be
-backed by a memory object (https://www.khronos.org/registry/vulkan/specs/1.1-extensions/
-html/vkspec.html#VUID-vkBindImageMemory-image-01044)
+backed by a memory object (https://docs.vulkan.org/spec/latest/chapters/resources.html#VUID-vkBindImageMemory-image-01044)
 ----
 
   * 例2は例1とほぼ同じですが、オブジェクトに `name` （`name = myTextureMemory`）が付けられています。これは、link:https://www.lunarg.com/new-tutorial-for-vulkan-debug-utilities-extension/[VK_EXT_debug_utils] 拡張機能を使用して行われました（link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions/debug_utils[拡張機能の使用方法のサンプル]）。なお、`VK_EXT_debug_utils` をサポートしていないレガシーデバイスでは、link:https://www.saschawillems.de/blog/2016/05/28/tutorial-on-using-vulkans-vk_ext_debug_marker-with-renderdoc/[VK_EXT_debug_report] を使う古い方法が必要になるかもしれません。
@@ -117,43 +115,9 @@ html/vkspec.html#VUID-vkBindImageMemory-image-01044)
   * 仕様に記載されている有効な使用法の全文
   * 有効な使用法へのリンク
 
-== 複数の VUID
-
-[NOTE]
-====
-以下は理想的ではなく、よりシンプルにする方法を検討しています。
-====
-
-現在、仕様書はxref:{chapters}vulkan_spec.adoc#vulkan-spec-variations[ビルドされたバージョンと拡張機能]に応じた VUID のみを表示するように設計されています。簡単に言うと、拡張機能やバージョンの追加により、VU が（新しいAPIアイテムの追加により）変更され、別の VUID が作成される可能性があります。
-
-この例として、link:https://github.com/KhronosGroup/Vulkan-Docs[Vulkan-Docs] には、以下からxref:{chapters}vulkan_spec.adoc#vulkan-spec[仕様書が生成]されています。
-
-[source,c]
-----
-ifndef::VK_VERSION_1_2,VK_EXT_descriptor_indexing[]
-  * [[VUID-VkPipelineLayoutCreateInfo-pSetLayouts-00287]]
-    ...
-endif::VK_VERSION_1_2,VK_EXT_descriptor_indexing[]
-ifdef::VK_VERSION_1_2,VK_EXT_descriptor_indexing[]
-  * [[VUID-VkPipelineLayoutCreateInfo-descriptorType-03016]]
-    ...
-endif::VK_VERSION_1_2,VK_EXT_descriptor_indexing[]
-----
-
-これにより、2つの非常に似た VUID が作成されます。
-
-この例では、両方の VUID は非常に似ていますが、唯一の違いは、 `VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT` が一方で参照されており、もう一方では参照されていないということです。これは、Vulkan 1.2の一部である `VK_EXT_descriptor_indexing` の追加に伴って列挙型が追加されたためです。
-
-つまり、2つの有効なxref:{chapters}vulkan_spec.adoc#html-full[仕様書の html リンク]は以下のようになります。
-
-  * `1.1/html/vkspec.html#VUID-VkPipelineLayoutCreateInfo-pSetLayouts-00287`
-  * `1.2/html/vkspec.html#VUID-VkPipelineLayoutCreateInfo-descriptorType-03016`
-
-検証レイヤは、アプリケーションのデバイスプロパティを使用して、どちらを表示するかを決定します。つまりこの場合、Vulkan 1.2の実装や、`VK_EXT_descriptor_indexing` をサポートするデバイス上で動作していれば、VUID `03016` を表示します。
-
 == 特殊用途タグ
 
-link:https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html[ベストプラクティスレイヤ]は、アプリケーションがlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#extendingvulkan-compatibility-specialuse[特殊用途タグ]を持つ拡張機能を使用しようとすると、警告を発生させます。このような拡張機能の例として、エミュレーションレイヤのためだけに設計された xref:{chapters}extensions/translation_layer_extensions.adoc#vk_ext_transform_feedback[VK_EXT_transform_feedback] が挙げられます。アプリケーションの使用目的が特殊用途に該当する場合、以下の方法で警告を無視することができます。
+link:https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html[ベストプラクティスレイヤ]は、アプリケーションがlink:https://docs.vulkan.org/spec/latest/chapters/extensions.html#extendingvulkan-compatibility-specialuse[特殊用途タグ]を持つ拡張機能を使用しようとすると、警告を発生させます。このような拡張機能の例として、エミュレーションレイヤのためだけに設計された xref:{chapters}extensions/translation_layer_extensions.adoc#vk_ext_transform_feedback[VK_EXT_transform_feedback] が挙げられます。アプリケーションの使用目的が特殊用途に該当する場合、以下の方法で警告を無視することができます。
 
 `VK_EXT_debug_report` による特殊用途に関する警告の無視
 

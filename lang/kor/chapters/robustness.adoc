@@ -25,11 +25,11 @@ image::../../../chapters/images/robustness_flow.png[robustness_flow.png]
 
 == Vulkan이 코어로 제공하는 것
 
-모든 Vulkan 구현은 `robustBufferAccess` 기능을 지원해야 합니다. link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-robustBufferAccess[사양서는 어떤 것이 범위를 벗어난 것으로 간주되는지] 그리고 어떻게 처리해야 하는지를 설명합니다.구현에는 `robustBufferAccess` 에 대해 어느 정도의 유연성이 부여됩니다. 예를 들어 `w` 값이 범위를 벗어난 `vec4(x,y,z,w)` 에 접근하는 경우, `x`, `y`, `z` 도 범위를 벗어난 것으로 간주할지 여부를 구현에서 결정할 수 있도록 사양에서 허용하고 있기 때문입니다.
+모든 Vulkan 구현은 `robustBufferAccess` 기능을 지원해야 합니다. link:https://docs.vulkan.org/spec/latest/chapters/features.html#features-robustBufferAccess[사양서는 어떤 것이 범위를 벗어난 것으로 간주되는지] 그리고 어떻게 처리해야 하는지를 설명합니다.구현에는 `robustBufferAccess` 에 대해 어느 정도의 유연성이 부여됩니다. 예를 들어 `w` 값이 범위를 벗어난 `vec4(x,y,z,w)` 에 접근하는 경우, `x`, `y`, `z` 도 범위를 벗어난 것으로 간주할지 여부를 구현에서 결정할 수 있도록 사양에서 허용하고 있기 때문입니다.
 
 `robustBufferAccess` 기능은 이미지가 아닌 버퍼만 다루기 때문에 몇 가지 제한이 있습니다. 또한 접근 중인 버퍼의 데이터를 수정하기 위해 범위를 벗어난 쓰기나 아토믹을 허용해버립니다. 더 강력한 형태의 견고성을 원하는 애플리케이션의 경우, link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_robustness2.html[VK_EXT_robustness2]가 있습니다.
 
-이미지가 범위를 벗어난 경우, 코어 Vulkan에서는 스토어나 아토믹이 접근하려는 메모리에 영향을 주지 않는 것이 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#textures-output-coordinate-validation[보장되어 있습니다].
+이미지가 범위를 벗어난 경우, 코어 Vulkan에서는 스토어나 아토믹이 접근하려는 메모리에 영향을 주지 않는 것이 link:https://docs.vulkan.org/spec/latest/chapters/textures.html#textures-output-coordinate-validation[보장되어 있습니다].
 
 == robustBufferAccess
 
@@ -58,7 +58,7 @@ void main() {
 
 === robustImageAccess
 
-link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_EXT_image_robustness[VK_EXT_image_robustness] 의 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-robustImageAccess[robustImageAccess] 기능은 이미지 뷰 크기에 대한 범위를 넘는 접근을 검사할 수 있습니다. 이미지 범위에 접근이 있는 경우 `(0, 0, 0, 0)` 또는 `(0, 0, 0, 1)` 를 반환합니다.
+link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_image_robustness.html[VK_EXT_image_robustness] 의 link:https://docs.vulkan.org/spec/latest/chapters/features.html#features-robustImageAccess[robustImageAccess] 기능은 이미지 뷰 크기에 대한 범위를 넘는 접근을 검사할 수 있습니다. 이미지 범위에 접근이 있는 경우 `(0, 0, 0, 0)` 또는 `(0, 0, 0, 1)` 를 반환합니다.
 
 `robustImageAccess` 기능은 유효하지 않은 LOD에 접근할 때 반환되는 값에 대한 보장을 제공하지 않으며, 아직 정의되지 않은 동작입니다.
 
@@ -68,15 +68,15 @@ D3D12와 같은 다른 API에서 포팅된 애플리케이션과 같은 일부 �
 
 === robustBufferAccess2
 
-link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-robustBufferAccess2[robustBufferAccess2] 기능은 `robustBufferAccess` 의 상위 집합으로 볼 수 있습니다.
+link:https://docs.vulkan.org/spec/latest/chapters/features.html#features-robustBufferAccess2[robustBufferAccess2] 기능은 `robustBufferAccess` 의 상위 집합으로 볼 수 있습니다.
 
-이 기능을 활성화하면, 모든 범위를 벗어난 쓰기나 아토믹이 메모리 백업 버퍼를 수정할 수 없게 됩니다. 또한 `robustBufferAccess2` 기능은 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-robustBufferAccess[사양서에 설명된 대로] 범위를 벗어난 접근을 할 때 다양한 유형의 버퍼에 대해 반환해야 하는 값을 강제 적용합니다.
+이 기능을 활성화하면, 모든 범위를 벗어난 쓰기나 아토믹이 메모리 백업 버퍼를 수정할 수 없게 됩니다. 또한 `robustBufferAccess2` 기능은 link:https://docs.vulkan.org/spec/latest/chapters/features.html#features-robustBufferAccess[사양서에 설명된 대로] 범위를 벗어난 접근을 할 때 다양한 유형의 버퍼에 대해 반환해야 하는 값을 강제 적용합니다.
 
 버퍼가 바인딩되는 위치의 정렬은 구현마다 다르므로, link:https://registry.khronos.org/vulkan/specs/latest/man/html/VkPhysicalDeviceRobustness2PropertiesEXT.html[VkPhysicalDeviceRobustness2PropertiesEXT]에서 `robustUniformBufferAccessSizeAlignment` 및 `robustStorageBufferAccessSizeAlignment` 를 쿼리하는 것이 중요합니다.
 
 === robustImageAccess2
 
-link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-robustImageAccess2[robustImageAccess2] 기능은 `robustImageAccess` 의 상위 집합으로 볼 수 있습니다. 이 기능은 접근하는 이미지 뷰의 차원에 대한 범위를 벗어난 검사를 기반으로 하며, 반환할 수 있는 값에 대해 더 엄격한 요구 사항을 추가합니다.
+link:https://docs.vulkan.org/spec/latest/chapters/features.html#features-robustImageAccess2[robustImageAccess2] 기능은 `robustImageAccess` 의 상위 집합으로 볼 수 있습니다. 이 기능은 접근하는 이미지 뷰의 차원에 대한 범위를 벗어난 검사를 기반으로 하며, 반환할 수 있는 값에 대해 더 엄격한 요구 사항을 추가합니다.
 
 `robustImageAccess2` 를 사용하여 R, RG, 또는 RGB 포맷에 대한 범위를 벗어난 접근은 `(0, 0, 0, 1)` 을 반환합니다. `VK_FORMAT_R8G8B8A8_UNORM` 과 같은 RGBA 포맷의 경우, `(0, 0, 0, 0)` 을 반환합니다.
 
@@ -84,7 +84,7 @@ link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-
 
 === nullDescriptor
 
-link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-nullDescriptor[nullDescriptor] 기능이 활성화되지 않은 경우, `VkDescriptorSet` 을 업데이트할 때, 쉐이더에서 정적으로 사용되지 않은 디스크립터라도 이를 지원하는 모든 리소스는 null이 아니어야 합니다. 이 기능을 사용하면 null 리소스 또는 뷰가 디스크립터를 지원할 수 있습니다. null 디스크립터에서 로드하면 0 값이 반환되고 null 디스크립터에 대한 스토어 및 아토믹이 삭제됩니다.
+link:https://docs.vulkan.org/spec/latest/chapters/features.html#features-nullDescriptor[nullDescriptor] 기능이 활성화되지 않은 경우, `VkDescriptorSet` 을 업데이트할 때, 쉐이더에서 정적으로 사용되지 않은 디스크립터라도 이를 지원하는 모든 리소스는 null이 아니어야 합니다. 이 기능을 사용하면 null 리소스 또는 뷰가 디스크립터를 지원할 수 있습니다. null 디스크립터에서 로드하면 0 값이 반환되고 null 디스크립터에 대한 스토어 및 아토믹이 삭제됩니다.
 
 `nullDescriptor` 기능을 사용하면 `vkCmdBindVertexBuffers::pBuffers` 가 null인 정점 입력 바인딩에 접근을 가능하게 합니다.
 
@@ -98,4 +98,4 @@ link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-
 
 == VK_EXT_descriptor_indexing
 
-(Vulkan 1.2의 핵심인) `VK_EXT_descriptor_indexing` 에 있는 바인딩 후 업데이트 기능을 다루는 경우, 구현이 `robustBufferAccess` 와 바인딩 후 디스크립터를 업데이트하는 기능을 모두 지원할 수 있는지를 나타내는 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-robustBufferAccessUpdateAfterBind[robustBufferAccessUpdateAfterBind]를 알아두는 것이 중요합니다.
+(Vulkan 1.2의 핵심인) `VK_EXT_descriptor_indexing` 에 있는 바인딩 후 업데이트 기능을 다루는 경우, 구현이 `robustBufferAccess` 와 바인딩 후 디스크립터를 업데이트하는 기능을 모두 지원할 수 있는지를 나타내는 link:https://docs.vulkan.org/spec/latest/chapters/limits.html#limits-robustBufferAccessUpdateAfterBind[robustBufferAccessUpdateAfterBind]를 알아두는 것이 중요합니다.

@@ -6,7 +6,7 @@ ifndef::chapters[:chapters:]
 [[descriptor-dynamic-offset]]
 = ディスクリプタ動的オフセット
 
-Vulkanは、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#descriptorsets-binding-dynamicoffsets[仕様で定義されている]ように、バインド時にオフセットを調整できる2種類のディスクリプタを提供しています。
+Vulkanは、link:https://docs.vulkan.org/spec/latest/chapters/descriptorsets.html#descriptorsets-binding-dynamicoffsets[仕様で定義されている]ように、バインド時にオフセットを調整できる2種類のディスクリプタを提供しています。
 
 * 動的ユニフォームバッファ (`VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC`)
 * 動的ストレージバッファ (`VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC`)

@@ -7,7 +7,7 @@ ifndef::chapters[:chapters:]
 [[vulkan-release-summary]]
 = Vulkan Release Summary
 
-Vulkan のマイナーリリースバージョンは、それぞれ異なる拡張機能をコアにlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#extendingvulkan-compatibility-promotion[昇格]させました。つまり、アプリケーションが少なくともその Vulkan バージョンを要求していれば（そのバージョンが実装でサポートされていれば）、昇格された機能を使用するために拡張機能を有効にする必要はなくなりました。
+Vulkan のマイナーリリースバージョンは、それぞれ異なる拡張機能をコアにlink:https://docs.vulkan.org/spec/latest/chapters/extensions.html#extendingvulkan-compatibility-promotion[昇格]させました。つまり、アプリケーションが少なくともその Vulkan バージョンを要求していれば（そのバージョンが実装でサポートされていれば）、昇格された機能を使用するために拡張機能を有効にする必要はなくなりました。
 
 以下の要約には、それぞれのコアバージョンに追加された拡張機能のリストと、その理由が記載されています。このリストは link:https://docs.vulkan.org/spec/latest/appendices/versions.html[Vulkan Spec] から引用していますが、リンクは Vulkan Guide のさまざまなページにジャンプします。
 

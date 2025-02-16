@@ -8,7 +8,7 @@ ifndef::images[:images: images/]
 [[synchronization]]
 = 동기화
 
-동기화는 Vulkan을 사용할 때 가장 강력하지만 가장 복잡한 부분 중 하나입니다. 이제 애플리케이션 개발자는 다양한 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization[Vulkan 동기화 기본 요소]를 사용하여 동기화를 관리할 책임이 있습니다. 동기화를 부적절하게 사용하면 찾기 어려운 버그가 발생할 수 있을 뿐만 아니라 GPU가 불필요하게 idle 상태가 되어 성능이 저하될 수 있습니다.
+동기화는 Vulkan을 사용할 때 가장 강력하지만 가장 복잡한 부분 중 하나입니다. 이제 애플리케이션 개발자는 다양한 link:https://docs.vulkan.org/spec/latest/chapters/synchronization.html#synchronization-pipeline-barriersVulkan 동기화 기본 요소]를 사용하여 동기화를 관리할 책임이 있습니다. 동기화를 부적절하게 사용하면 찾기 어려운 버그가 발생할 수 있을 뿐만 아니라 GPU가 불필요하게 idle 상태가 되어 성능이 저하될 수 있습니다.
 
 크로노스 그룹에서 제공하는 link:https://github.com/KhronosGroup/Vulkan-Docs/wiki/Synchronization-Examples[예제 세트]와 link:https://www.khronos.org/blog/understanding-vulkan-synchronization[Vulkan 동기화 이해] 블로그에서 일부 동기화 프리미티브의 사용법을 확인할 수 있습니다. 지난 Vulkan talks에서 Tobias Hector의 프레젠테이션도 있습니다: link:https://www.khronos.org/assets/uploads/developers/library/2017-vulkan-devu-vancouver/009%20-%20Synchronization%20-%20Keeping%20Your%20Device%20Fed.pdf[part 1 slides] (link:https://www.youtube.com/watch?v=YkJ4hKCPjm0[video]) 및 link:https://www.khronos.org/assets/uploads/developers/library/2018-vulkanised/06-Keeping%20Your%20Device%20Fed%20v4_Vulkanised2018.pdf[part 2 slides] (link:https://www.youtube.com/watch?v=5GDg4OxkSEc[video]).
 
@@ -22,7 +22,7 @@ image::../../../chapters/images/synchronization_overview.png[synchronization_ove
 
 == 파이프라인 장벽(Pipeline Barriers)
 
-link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#synchronization-pipeline-barriers[파이프라인 장벽]은 커맨드 버퍼가 실행될 때 어떤 파이프라인 스테이지가 이전 파이프라인 스테이지를 기다려야 하는지 제어합니다.
+link:https://docs.vulkan.org/spec/latest/chapters/synchronization.html#synchronization-pipeline-barriers[파이프라인 장벽]은 커맨드 버퍼가 실행될 때 어떤 파이프라인 스테이지가 이전 파이프라인 스테이지를 기다려야 하는지 제어합니다.
 
 image::../../../chapters/images/synchronization_pipeline_barrieres.png[synchronization_pipeline_barrieres.png]
 

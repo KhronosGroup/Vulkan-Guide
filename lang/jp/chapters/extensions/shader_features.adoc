@@ -170,7 +170,7 @@ Vulkan 1.2でコアに昇格
 link:https://www.khronos.org/blog/comparing-the-vulkan-spir-v-memory-model-to-cs/[Comparing the Vulkan SPIR-V memory model to C's]
 ====
 
-link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#memory-model[Vulkan Memory Model] は、複数のシェーダ呼び出しによる同じメモリロケーションへのメモリアクセスを同期させる方法を公式に定義しています。この拡張機能では、実装がその対応を示すためのブール値を公開しています。これは、Vulkan/SPIR-V をターゲットにした多くの製品では、アプリケーションによって最適化されたメモリ転送操作が実装間で壊れないようにするために重要です。
+link:https://docs.vulkan.org/spec/latest/appendices/memorymodel.html[Vulkan Memory Model] は、複数のシェーダ呼び出しによる同じメモリロケーションへのメモリアクセスを同期させる方法を公式に定義しています。この拡張機能では、実装がその対応を示すためのブール値を公開しています。これは、Vulkan/SPIR-V をターゲットにした多くの製品では、アプリケーションによって最適化されたメモリ転送操作が実装間で壊れないようにするために重要です。
 
 [[VK_EXT_shader_viewport_index_layer]]
 == VK_EXT_shader_viewport_index_layer

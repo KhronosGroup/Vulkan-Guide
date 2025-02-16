@@ -9,7 +9,7 @@ ifndef::images[:images: images/]
 
 [NOTE]
 ====
-link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-dynamic-state[Vulkan Spec chapter]
+link:https://docs.vulkan.org/spec/latest/chapters/pipelines.html#pipelines-dynamic-state[Vulkan Spec chapter]
 ====
 
 == Overview
@@ -38,7 +38,7 @@ vkCmdDraw();
 vkEndCommandBuffer();
 ----
 
-When the `VkPipeline` uses link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-dynamic-state[dynamic state], some pipeline information can be omitted at creation time and instead set during recording of the command buffer. The new logical flow is:
+When the `VkPipeline` uses link:https://docs.vulkan.org/spec/latest/chapters/pipelines.html#pipelines-dynamic-state[dynamic state], some pipeline information can be omitted at creation time and instead set during recording of the command buffer. The new logical flow is:
 
 [source,cpp]
 ----
@@ -87,7 +87,7 @@ Some implementations might have a performance loss using some certain `VkDynamic
 [[dynamic-state-lifetime]]
 == Dynamic state lifetime
 
-The spec talks about how there is a link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#dynamic-state-lifetime[dynamic state lifetime]. The following best describes it in some examples:
+The spec talks about how there is a link:https://docs.vulkan.org/spec/latest/chapters/pipelines.html#dynamic-state-lifetime[dynamic state lifetime]. The following best describes it in some examples:
 
 [source,cpp]
 ----
@@ -130,6 +130,6 @@ vkCmdDraw()
 [[states-that-are-dynamic]]
 == What states are dynamic
 
-The full list of possible dynamic states can be found in link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VkDynamicState[VkDynamicState].
+The full list of possible dynamic states can be found in link:https://docs.vulkan.org/spec/latest/chapters/pipelines.html#VkDynamicState[VkDynamicState].
 
 The `VK_EXT_extended_dynamic_state`, `VK_EXT_extended_dynamic_state2`, `VK_EXT_extended_dynamic_state3`, `VK_EXT_vertex_input_dynamic_state`, `VK_EXT_attachment_feedback_loop_dynamic_state` and `VK_EXT_color_write_enable` extensions were added with the goal to support applications that need to reduce the number of pipeline state objects they compile and bind.

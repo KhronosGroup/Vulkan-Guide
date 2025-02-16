@@ -7,7 +7,7 @@ ifndef::images[:images: images/]
 [[wsi]]
 = Window System Integration (WSI)
 
-Since the Vulkan API can be used without displaying results, WSI is provided through the use of link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#wsi[optional Vulkan extensions]. Most implementations will include WSI support. The WSI design was created to abstract each platform's windowing mechanism from the core Vulkan API.
+Since the Vulkan API can be used without displaying results, WSI is provided through the use of link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html[optional Vulkan extensions]. Most implementations will include WSI support. The WSI design was created to abstract each platform's windowing mechanism from the core Vulkan API.
 
 image::{images}wsi_setup.png[wsi_setup]
 
@@ -17,25 +17,25 @@ The `VkSurfaceKHR` object is platform agnostic and designed so the rest of the V
 
 Each platform that supports a Vulkan Surface has its own way to create a `VkSurfaceKHR` object from its respective platform-specific API.
 
-  * Android - link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkCreateAndroidSurfaceKHR[vkCreateAndroidSurfaceKHR]
-  * DirectFB - link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkCreateDirectFBSurfaceEXT[vkCreateDirectFBSurfaceEXT]
-  * Fuchsia - link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkCreateImagePipeSurfaceFUCHSIA[vkCreateImagePipeSurfaceFUCHSIA]
-   * iOS - link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkCreateIOSSurfaceMVK[vkCreateIOSSurfaceMVK]
-  * macOS - link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkCreateMacOSSurfaceMVK[vkCreateMacOSSurfaceMVK]
-  * Metal - link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkCreateMetalSurfaceEXT[vkCreateMetalSurfaceEXT]
-  * VI - link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkCreateViSurfaceNN[vkCreateViSurfaceNN]
-  * Wayland - link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkWaylandSurfaceCreateInfoKHR[vkWaylandSurfaceCreateInfoKHR]
+  * Android - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateAndroidSurfaceKHR[vkCreateAndroidSurfaceKHR]
+  * DirectFB - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateDirectFBSurfaceEXT[vkCreateDirectFBSurfaceEXT]
+  * Fuchsia - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateImagePipeSurfaceFUCHSIA[vkCreateImagePipeSurfaceFUCHSIA]
+   * iOS - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateIOSSurfaceMVK[vkCreateIOSSurfaceMVK]
+  * macOS - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateMacOSSurfaceMVK[vkCreateMacOSSurfaceMVK]
+  * Metal - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateMetalSurfaceEXT[vkCreateMetalSurfaceEXT]
+  * VI - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateViSurfaceNN[vkCreateViSurfaceNN]
+  * Wayland - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkWaylandSurfaceCreateInfoKHR[vkWaylandSurfaceCreateInfoKHR]
   * QNX - link:https://registry.khronos.org/vulkan/specs/latest/man/html/vkCreateScreenSurfaceQNX.html[vkCreateScreenSurfaceQNX]
-  * Windows - link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkCreateWin32SurfaceKHR[vkCreateWin32SurfaceKHR]
-  * XCB - link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkCreateXcbSurfaceKHR[vkCreateXcbSurfaceKHR]
-  * Xlib - link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkCreateXlibSurfaceKHR[vkCreateXlibSurfaceKHR]
-  * Direct-to-Display - link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkCreateDisplayPlaneSurfaceKHR[vkCreateDisplayPlaneSurfaceKHR]
+  * Windows - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateWin32SurfaceKHR[vkCreateWin32SurfaceKHR]
+  * XCB - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateXcbSurfaceKHR[vkCreateXcbSurfaceKHR]
+  * Xlib - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateXlibSurfaceKHR[vkCreateXlibSurfaceKHR]
+  * Direct-to-Display - link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkCreateDisplayPlaneSurfaceKHR[vkCreateDisplayPlaneSurfaceKHR]
 
-Once a `VkSurfaceKHR` is created there are various link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkGetPhysicalDeviceSurfaceCapabilitiesKHR[capabilities], link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkGetPhysicalDeviceSurfaceFormatsKHR[formats], and link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkGetPhysicalDeviceSurfacePresentModesKHR[presentation modes] to query for.
+Once a `VkSurfaceKHR` is created there are various link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkGetPhysicalDeviceSurfaceCapabilitiesKHR[capabilities], link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkGetPhysicalDeviceSurfaceFormatsKHR[formats], and link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#vkGetPhysicalDeviceSurfacePresentModesKHR[presentation modes] to query for.
 
 == Swapchain
 
-The `VkSwapchainKHR` object provides the ability to present rendering results to a surface through an array of `VkImage` objects. The swapchain's various link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VkPresentModeKHR[present modes] determine how the presentation engine is implemented.
+The `VkSwapchainKHR` object provides the ability to present rendering results to a surface through an array of `VkImage` objects. The swapchain's various link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#VkPresentModeKHR[present modes] determine how the presentation engine is implemented.
 
 image::{images}wsi_engine.png[wsi_engine]
 

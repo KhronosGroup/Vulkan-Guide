@@ -9,7 +9,7 @@ ifndef::images[:images: images/]
 
 [NOTE]
 ====
-link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-dynamic-state[Vulkan Spec chapter]
+link:https://docs.vulkan.org/spec/latest/chapters/pipelines.html#pipelines-dynamic-state[Vulkan Spec chapter]
 ====
 
 == Overview
@@ -38,7 +38,7 @@ vkCmdDraw();
 vkEndCommandBuffer();
 ----
 
-`VkPipeline` 가 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#pipelines-dynamic-state[동적인 상태]를 사용하고 있는 경우, 일부 파이프라인 정보를 작성할 때 생략하는 대신 커맨드 버퍼를 기록하는 동안 설정할 수 있습니다. 새로운 로직 흐름은 다음과 같습니다:
+`VkPipeline` 가 link:https://docs.vulkan.org/spec/latest/chapters/pipelines.html#pipelines-dynamic-state[동적인 상태]를 사용하고 있는 경우, 일부 파이프라인 정보를 작성할 때 생략하는 대신 커맨드 버퍼를 기록하는 동안 설정할 수 있습니다. 새로운 로직 흐름은 다음과 같습니다:
 
 [source,cpp]
 ----
@@ -87,7 +87,7 @@ Vulkan은 대부분의 도구가 그렇듯이 하나의 정답이 있는 것은 
 [[states-that-are-dynamic]]
 == 동적인 상태란
 
-동적으로 할 수 있는 상태 목록은 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VkDynamicState[VkDynamicState]에 있습니다.
+동적으로 할 수 있는 상태 목록은 link:https://docs.vulkan.org/spec/latest/chapters/pipelines.html#VkDynamicState[VkDynamicState]에 있습니다.
 
 The `VK_EXT_extended_dynamic_state`, `VK_EXT_extended_dynamic_state2`, `VK_EXT_extended_dynamic_state3`, `VK_EXT_vertex_input_dynamic_state`, `VK_EXT_attachment_feedback_loop_dynamic_state` and `VK_EXT_color_write_enable`
 확장 기능은 컴파일하고 바인드하는 파이프라인 상태 객체의 수를 줄이기 위해 추가되었습니다.

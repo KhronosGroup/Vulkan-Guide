@@ -33,7 +33,7 @@ A small bank of values writable via the API and accessible in shaders. Push cons
 [[pc-shader-code]]
 === Shader Code
 
-From a shader perspective, push constant are similar to a uniform buffer. The spec provides details for the link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#interfaces-resources-pushconst[push constant interface] between Vulkan and SPIR-V.
+From a shader perspective, push constant are similar to a uniform buffer. The spec provides details for the link:https://docs.vulkan.org/spec/latest/chapters/interfaces.html#interfaces-resources-pushconst[push constant interface] between Vulkan and SPIR-V.
 
 A simple GLSL fragment shader example (link:https://godbolt.org/z/93WaYd8dE[Try Online]):
 
@@ -68,7 +68,7 @@ Which when looking at parts of the disassembled SPIR-V
 %access_chain   = OpAccessChain %pc_v4float_ptr %pc_var %int_0
 ----
 
-it matches the link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#interfaces-resources-pushconst[Vulkan spec] description of being an `OpTypeStruct` type with a `Block` decoration.
+it matches the link:https://docs.vulkan.org/spec/latest/chapters/interfaces.html#interfaces-resources-pushconst[Vulkan spec] description of being an `OpTypeStruct` type with a `Block` decoration.
 
 [[pc-pipeline-layout]]
 === Pipeline layout
@@ -158,14 +158,14 @@ image::{images}push_constant_offset.png[push_constant_offset]
 [[pc-pipeline-layout-compatibility]]
 == Pipeline layout compatibility
 
-The Vulkan spec defines what link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#descriptorsets-compatibility[Compatibility for push constants] as
+The Vulkan spec defines what link:https://docs.vulkan.org/spec/latest/chapters/descriptorsets.html#descriptorsets-compatibility[Compatibility for push constants] as
 
 [NOTE]
 ====
 if they were created with identical push constant ranges
 ====
 
-This means before a link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#pipeline-bindpoint-commands[bound pipeline command is issued] (`vkCmdDraw`, `vkCmdDispatch`, etc) the `VkPipelineLayout` used in the last `vkCmdPushConstants` and `vkCmdBindPipeline` (for the appropriate `VkPipelineBindPoint`) must have had **identical** `VkPushConstantRange`.
+This means before a link:https://docs.vulkan.org/spec/latest/chapters/pipelines.html#pipelines-bindpoint-commands[bound pipeline command is issued] (`vkCmdDraw`, `vkCmdDispatch`, etc) the `VkPipelineLayout` used in the last `vkCmdPushConstants` and `vkCmdBindPipeline` (for the appropriate `VkPipelineBindPoint`) must have had **identical** `VkPushConstantRange`.
 
 [[pc-lifetime]]
 == Lifetime of push constants
@@ -180,7 +180,7 @@ There are some CTS under `dEQP-VK.pipeline.push_constant.lifetime.*`
 [[pc-binding-descriptor-sets]]
 === Binding descriptor sets has no effect
 
-Because push constants are not tied to descriptors, the use of `vkCmdBindDescriptorSets` has no effect on the lifetime or link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#descriptorsets-compatibility[pipeline layout compatibility] of push constants.
+Because push constants are not tied to descriptors, the use of `vkCmdBindDescriptorSets` has no effect on the lifetime or link:https://docs.vulkan.org/spec/latest/chapters/descriptorsets.html#descriptorsets-compatibility[pipeline layout compatibility] of push constants.
 
 [[pc-mixing-bind-points]]
 === Mixing bind points

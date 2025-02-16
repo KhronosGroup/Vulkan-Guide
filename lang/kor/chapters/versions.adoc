@@ -8,13 +8,13 @@ ifndef::images[:images: images/]
 [[versions]]
 = 버전(Versions)
 
-Vulkan은 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-coreversions-versionnumbers[메이저(major), 마이너(minor), 패치(patch)] 버전관리 시스템으로 작동합니다. 현재 Vulkan에는 서로 하위호환되는 3개의 부 버전 릴리즈 (1.0, 1.1, 1.2, 1.3)가 있습니다. 애플리케이션은 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkEnumerateInstanceVersion[vkEnumerateInstanceVersion]을 사용하여 어떤 버전의 Vulkan 인스턴스가 지원되는지 확인할 수 있습니다. 지원되는 버전을쿼리하고 확인하는 방법에 대한 LunarG의 link:https://www.lunarg.com/wp-content/uploads/2019/02/Vulkan-1.1-Compatibility-Statement_01_19.pdf[백서(white paper)]도 있습니다. 부 버전에서 작업할 때 주의해야 할 몇 가지 미묘한 사항이 있습니다.
+Vulkan은 link:https://docs.vulkan.org/spec/latest/chapters/extensions.html#extendingvulkan-coreversions-versionnumbers[메이저(major), 마이너(minor), 패치(patch)] 버전관리 시스템으로 작동합니다. 현재 Vulkan에는 서로 하위호환되는 3개의 부 버전 릴리즈 (1.0, 1.1, 1.2, 1.3)가 있습니다. 애플리케이션은 link:https://docs.vulkan.org/spec/latest/chapters/initialization.html#vkEnumerateInstanceVersion[vkEnumerateInstanceVersion]을 사용하여 어떤 버전의 Vulkan 인스턴스가 지원되는지 확인할 수 있습니다. 지원되는 버전을쿼리하고 확인하는 방법에 대한 LunarG의 link:https://www.lunarg.com/wp-content/uploads/2019/02/Vulkan-1.1-Compatibility-Statement_01_19.pdf[백서(white paper)]도 있습니다. 부 버전에서 작업할 때 주의해야 할 몇 가지 미묘한 사항이 있습니다.
 
 == 인스턴스와 장치
 
 인스턴스 레벨 버전과 디바이스 레벨 버전에는 차이가 있다는 점이 중요합니다. 로더와 구현이 서로 다른 버전을 지원할 수 있습니다.
 
-Vulkan 사양서의 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-coreversions-queryingversionsupport[버전 지원 쿼리] 섹션에서는 인스턴스 및 장치 레벨에서 지원되는 버전을 쿼리하는 방법에 대해 자세히 설명합니다.
+Vulkan 사양서의 link:https://docs.vulkan.org/spec/latest/chapters/extensions.html#extendingvulkan-coreversions-queryingversionsupport[버전 지원 쿼리] 섹션에서는 인스턴스 및 장치 레벨에서 지원되는 버전을 쿼리하는 방법에 대해 자세히 설명합니다.
 
 == 헤더
 
@@ -24,7 +24,7 @@ Vulkan 사양서의 link:https://registry.khronos.org/vulkan/specs/latest/html/v
 
 == 확장 기능
 
-Vulkan의 마이너 버전 사이에서 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#versions-1.1[일부 확장 기능]은 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-coreversions[코어 버전]으로 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-compatibility-promotions[승격됩니다]. Vulkan의 최신 마이너 버전을 대상으로 하는 애플리케이션은 인스턴스 및 장치 생성 시 새로 승격된 확장 기능을 활성화할 필요가 없습니다. 그러나 애플리케이션이 이전 버전과의 호환성을 유지하려면 확장 기능을 활성화해야 합니다.
+Vulkan의 마이너 버전 사이에서 link:https://docs.vulkan.org/spec/latest/appendices/versions.html#versions-1.1[일부 확장 기능]은 link:https://docs.vulkan.org/spec/latest/chapters/extensions.html#extendingvulkan-coreversions[코어 버전]으로 link:https://docs.vulkan.org/spec/latest/chapters/extensions.html#extendingvulkan-compatibility-promotion[승격됩니다]. Vulkan의 최신 마이너 버전을 대상으로 하는 애플리케이션은 인스턴스 및 장치 생성 시 새로 승격된 확장 기능을 활성화할 필요가 없습니다. 그러나 애플리케이션이 이전 버전과의 호환성을 유지하려면 확장 기능을 활성화해야 합니다.
 
 각 버전의 새로운 기능에 대한 요약은 xref:{chapters}vulkan_release_summary.adoc#vulkan-release-summary[Vulkan 랄리즈 요약]을 확인하세요.
 
@@ -54,17 +54,17 @@ Vulkan 1.0 구현에서 `vkGetPhysicalDeviceFeatures2KHR` 함수는 확장 기�
 
 == 기능(Features)
 
-마이너 버전 간에 몇 가지 기능 비트가 추가, 제거, 선택/필수 사항으로 변경될 수 있습니다. 변경된 기능에 대한 자세한 내용은 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#versions[핵심 개정 사항] 섹션에 설명되어 있습니다.
+마이너 버전 간에 몇 가지 기능 비트가 추가, 제거, 선택/필수 사항으로 변경될 수 있습니다. 변경된 기능에 대한 자세한 내용은 link:https://docs.vulkan.org/spec/latest/appendices/versions.html[핵심 개정 사항] 섹션에 설명되어 있습니다.
 
-Vulkan 사양서의 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#features-requirements[기능 요구사항] 섹션에서 마이너 버전 구현에 필요한 기능 목록을 확인할 수 있습니다.
+Vulkan 사양서의 link:https://docs.vulkan.org/spec/latest/chapters/features.html#features-requirements[기능 요구사항] 섹션에서 마이너 버전 구현에 필요한 기능 목록을 확인할 수 있습니다.
 
 == 제한
 
-현재 Vulkan의 모든 버전은 최소/최대 제한 요구 사항을 동일하게 공유하지만, 변경 사항이 있을 경우 Vulkan 사양서의 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#limits-minmax[제한 요구사항] 섹션에 기재됩니다.
+현재 Vulkan의 모든 버전은 최소/최대 제한 요구 사항을 동일하게 공유하지만, 변경 사항이 있을 경우 Vulkan 사양서의 link:https://docs.vulkan.org/spec/latest/chapters/limits.html#limits-minmax[제한 요구사항] 섹션에 기재됩니다.
 
 == SPIR-V
 
-모든 Vulkan의 마이너 버전은 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv[지원해야 하는 SPIR-V] 버전에 매핑됩니다.
+모든 Vulkan의 마이너 버전은 link:https://docs.vulkan.org/spec/latest/appendices/spirvenv.html[지원해야 하는 SPIR-V] 버전에 매핑됩니다.
 
   * Vulkan 1.0은 SPIR-V 1.0 을 지원합니다
   * Vulkan 1.1은 SPIR-V 1.3 이하를 지원합니다
