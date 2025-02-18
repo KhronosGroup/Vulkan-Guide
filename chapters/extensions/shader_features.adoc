@@ -170,7 +170,7 @@ Promoted to core in Vulkan 1.2
 link:https://www.khronos.org/blog/comparing-the-vulkan-spir-v-memory-model-to-cs/[Comparing the Vulkan SPIR-V memory model to C's]
 ====
 
-The link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-model[Vulkan Memory Model] formally defines how to synchronize memory accesses to the same memory locations performed by multiple shader invocations and this extension exposes a boolean to let implementations to indicate support for it. This is important because with many things targeting Vulkan/SPIR-V it is important that any memory transfer operations an application might attempt to optimize doesn't break across implementations.
+The link:https://docs.vulkan.org/spec/latest/appendices/memorymodel.html[Vulkan Memory Model] formally defines how to synchronize memory accesses to the same memory locations performed by multiple shader invocations and this extension exposes a boolean to let implementations to indicate support for it. This is important because with many things targeting Vulkan/SPIR-V it is important that any memory transfer operations an application might attempt to optimize doesn't break across implementations.
 
 [[VK_EXT_shader_viewport_index_layer]]
 == VK_EXT_shader_viewport_index_layer

@@ -13,17 +13,17 @@ ifndef::chapters[:chapters:]
 Vulkan のすべての機能は、3つのセクションに分類されます。
 
   1. コア1.0機能
-  ** Vulkan 1.0の初期リリースから利用可能な機能をまとめたものです。機能のリストは、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VkPhysicalDeviceFeatures[VkPhysicalDeviceFeatures]に記載されています。
+  ** Vulkan 1.0の初期リリースから利用可能な機能をまとめたものです。機能のリストは、link:https://docs.vulkan.org/spec/latest/chapters/features.html#VkPhysicalDeviceFeatures[VkPhysicalDeviceFeatures]に記載されています。
   2. 将来のコアバージョンの機能
   ** Vulkan 1.1以上では、いくつかの新機能が Vulkan のコアバージョンに追加されました。`VkPhysicalDeviceFeatures` のサイズの後方互換性を保つために、機能のグループを保持するための新しい構造体が作成されました。
-  ** link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VkPhysicalDeviceVulkan11Features[VkPhysicalDeviceVulkan11Features]
-  ** link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VkPhysicalDeviceVulkan12Features[VkPhysicalDeviceVulkan12Features]
+  ** link:https://docs.vulkan.org/spec/latest/chapters/features.html#VkPhysicalDeviceVulkan11Features[VkPhysicalDeviceVulkan11Features]
+  ** link:https://docs.vulkan.org/spec/latest/chapters/features.html#VkPhysicalDeviceVulkan12Features[VkPhysicalDeviceVulkan12Features]
   3. 拡張機能の機能
   ** 拡張機能には、その拡張機能のある側面を有効にするための機能が含まれていることがあります。これらはすべて `VkPhysicalDevice[ExtensionName]Features` とラベル付けされているので、簡単に見つけることができます。
 
 == 機能を有効にするには
 
-すべての機能は、`VkDevice` 作成時に link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VkDeviceCreateInfo[VkDeviceCreateInfo] 構造体内で有効にする必要があります。
+すべての機能は、`VkDevice` 作成時に link:https://docs.vulkan.org/spec/latest/chapters/devsandqueues.html#VkDeviceCreateInfo[VkDeviceCreateInfo] 構造体内で有効にする必要があります。
 
 [NOTE]
 ====

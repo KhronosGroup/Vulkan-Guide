@@ -11,7 +11,7 @@ Vulkan을 처음 접하는 사람들은 Vulkan 사양서 곳곳에서 `pNext` �
 
 == 기본 구조체 2가지
 
-Vulkan API는 `VkBaseInStructure` 와 `VkBaseOutStructure` 라는 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-validusage-pNext[두 가지 기본 구조체를 제공]하여, 구조체 포인터 체인을 반복하는 편리한 방법으로 사용됩니다.
+Vulkan API는 `VkBaseInStructure` 와 `VkBaseOutStructure` 라는 link:https://docs.vulkan.org/spec/latest/chapters/fundamentals.html#fundamentals-validusage-pNext[두 가지 기본 구조체를 제공]하여, 구조체 포인터 체인을 반복하는 편리한 방법으로 사용됩니다.
 
 `VkBaseInStructure` 의 `In` 은 `pNext` 가 `const *` 이며 이를 수신하는 로더, 레이어 및 드라이버에 대해 읽기 전용이라는 사실을 나타냅니다. `VkBaseOutStructure`의 `Out` 은 데이터를 애플리케이션에 다시 반환하는 데 사용되는 `pNext` 를 나타냅니다.
 

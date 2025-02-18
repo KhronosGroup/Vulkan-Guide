@@ -12,14 +12,14 @@ ifndef::images[:images: images/]
 Please read the link:https://github.com/KhronosGroup/SPIRV-Guide[SPIRV-Guide] for more in detail information about SPIR-V
 ====
 
-link:https://registry.khronos.org/SPIR-V/[SPIR-V] is a binary intermediate representation for graphical-shader stages and compute kernels. With Vulkan, an application can still write their shaders in a high-level shading language such as GLSL or xref:{chapters}hlsl.adoc[HLSL], but a SPIR-V binary is needed when using link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkCreateShaderModule[vkCreateShaderModule]. Khronos has a very nice link:https://registry.khronos.org/SPIR-V/papers/WhitePaper.pdf[white paper] about SPIR-V and its advantages, and a high-level description of the representation. There are also two great Khronos presentations from Vulkan DevDay 2016 link:https://www.khronos.org/assets/uploads/developers/library/2016-vulkan-devday-uk/3-Intro-to-spir-v-shaders.pdf[here] and link:https://www.khronos.org/assets/uploads/developers/library/2016-vulkan-devday-uk/4-Using-spir-v-with-spirv-cross.pdf[here]
+link:https://registry.khronos.org/SPIR-V/[SPIR-V] is a binary intermediate representation for graphical-shader stages and compute kernels. With Vulkan, an application can still write their shaders in a high-level shading language such as GLSL or xref:{chapters}hlsl.adoc[HLSL], but a SPIR-V binary is needed when using link:https://docs.vulkan.org/spec/latest/chapters/shaders.html#vkCreateShaderModule[vkCreateShaderModule]. Khronos has a very nice link:https://registry.khronos.org/SPIR-V/papers/WhitePaper.pdf[white paper] about SPIR-V and its advantages, and a high-level description of the representation. There are also two great Khronos presentations from Vulkan DevDay 2016 link:https://www.khronos.org/assets/uploads/developers/library/2016-vulkan-devday-uk/3-Intro-to-spir-v-shaders.pdf[here] and link:https://www.khronos.org/assets/uploads/developers/library/2016-vulkan-devday-uk/4-Using-spir-v-with-spirv-cross.pdf[here]
 (link:https://www.youtube.com/watch?v=XRpVwdduzgU[video of both]).
 
 == SPIR-V Interface and Capabilities
 
-Vulkan has an entire section that defines how link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#interfaces[Vulkan interfaces with SPIR-V shaders]. Most valid usages of interfacing with SPIR-V occur during pipeline creation when shaders are compiled together.
+Vulkan has an entire section that defines how link:https://docs.vulkan.org/spec/latest/chapters/interfaces.html[Vulkan interfaces with SPIR-V shaders]. Most valid usages of interfacing with SPIR-V occur during pipeline creation when shaders are compiled together.
 
-SPIR-V has many capabilities as it has other targets than just Vulkan. To see the supported capabilities Vulkan requires, one can reference the link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities[Appendix]. Some extensions and features in Vulkan are just designed to check if some SPIR-V capabilities are supported or not.
+SPIR-V has many capabilities as it has other targets than just Vulkan. To see the supported capabilities Vulkan requires, one can reference the link:https://docs.vulkan.org/spec/latest/appendices/spirvenv.html#spirvenv-capabilities[Appendix]. Some extensions and features in Vulkan are just designed to check if some SPIR-V capabilities are supported or not.
 
 == Compilers
 

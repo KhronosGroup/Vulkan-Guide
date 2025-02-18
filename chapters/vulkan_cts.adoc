@@ -15,4 +15,4 @@ The link:https://github.com/KhronosGroup/VK-GL-CTS/tree/master/external/vulkanct
 
 image::{images}vulkan_cts_overview.png[vulkan_cts_overview.png]
 
-An application can query the version of CTS passed for an implementation using the link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VkConformanceVersion[VkConformanceVersion] property via the `VK_KHR_driver_properties` extension (this was promoted to core in Vulkan 1.2).
+An application can query the version of CTS passed for an implementation using the link:https://docs.vulkan.org/spec/latest/chapters/devsandqueues.html#VkConformanceVersion[VkConformanceVersion] property via the `VK_KHR_driver_properties` extension (this was promoted to core in Vulkan 1.2).

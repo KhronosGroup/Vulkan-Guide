@@ -39,13 +39,13 @@ Vulkan には、現在は存在しない新機能が望まれることが多々�
 詳しくはxref:{chapters}enabling_features.adoc#enabling-features[機能の有効化]の章をご覧ください。
 ====
 
-機能は、一部の実装でサポートされていない機能を表します。機能は、`VkDevice` の作成時にlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#vkGetPhysicalDeviceFeatures[クエリ]し、有効にすることができます。link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#features[すべての機能のリスト]に加えて、より新しい Vulkan バージョンや拡張機能の使用により、link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#features-requirements[必須となる機能]があります。
+機能は、一部の実装でサポートされていない機能を表します。機能は、`VkDevice` の作成時にlink:https://docs.vulkan.org/spec/latest/chapters/features.html#vkGetPhysicalDeviceFeatures[クエリ]し、有効にすることができます。link:https://docs.vulkan.org/spec/latest/chapters/features.html[すべての機能のリスト]に加えて、より新しい Vulkan バージョンや拡張機能の使用により、link:https://docs.vulkan.org/spec/latest/chapters/features.html#features-requirements[必須となる機能]があります。
 
 一般的な手法としては、拡張機能が `pNext` に渡すことのできる新しい構造体を公開することで、クエリ可能な機能を増やすことができます。
 
 == 制限
 
-制限とは、アプリケーションが注意しなければならない実装依存の最小値、最大値、その他のデバイス特性のことです。link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#limits[すべての制限のリスト]に加えて、いくつかの制限には Vulkan の実装で保証されるlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#limits-minmax[最小/最大の必要な値]があります。
+制限とは、アプリケーションが注意しなければならない実装依存の最小値、最大値、その他のデバイス特性のことです。link:https://docs.vulkan.org/spec/latest/chapters/limits.html[すべての制限のリスト]に加えて、いくつかの制限には Vulkan の実装で保証されるlink:https://docs.vulkan.org/spec/latest/chapters/limits.html#limits-minmax[最小/最大の必要な値]があります。
 
 == フォーマット
 

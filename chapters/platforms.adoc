@@ -54,4 +54,4 @@ Vulkan is supported on Windows 7, Windows 8, Windows 10, and Windows 11.
 
 == Others
 
-Some embedded systems support Vulkan by allowing presentation link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#display[directly-to-display].
+Some embedded systems support Vulkan by allowing presentation link:https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#display[directly-to-display].

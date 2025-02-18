@@ -37,11 +37,11 @@ link:https://en.wikipedia.org/wiki/General-purpose_computing_on_graphics_process
 
 레이 트레이싱은 빛의 물리적 동작을 시뮬레이션하는 개념을 기반으로 하는 대체 렌더링 기법입니다.
 
-레이 트레이싱에 대한 크로스 벤더 API 지원이 1.2.162 사양에서 확장 기능 세트가 Vulkan에 추가되었습니다. 주로 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_ray_tracing_pipeline[`VK_KHR_ray_tracing_pipeline`], link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_ray_query[`VK_KHR_ray_query`], link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_acceleration_structure[`VK_KHR_acceleration_structure`]가 이에 해당합니다.
+레이 트레이싱에 대한 크로스 벤더 API 지원이 1.2.162 사양에서 확장 기능 세트가 Vulkan에 추가되었습니다. 주로 link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_ray_tracing_pipeline.html[`VK_KHR_ray_tracing_pipeline`], link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_ray_query.html[`VK_KHR_ray_query`], link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_acceleration_structure.html[`VK_KHR_acceleration_structure`]가 이에 해당합니다.
 
 [NOTE]
 ====
-레이 트레이싱 구현을 공개하는 이전 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_NV_ray_tracing[NVIDIA 벤더 확장 기능]도 있습니다. 이 확장 기능은 제조사 간 확장 기능보다 먼저 출시되었습니다. 신규 개발의 경우 최신 KHR 확장 기능을 사용하는 것이 좋습니다.
+레이 트레이싱 구현을 공개하는 이전 link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_NV_ray_tracing.html[NVIDIA 벤더 확장 기능]도 있습니다. 이 확장 기능은 제조사 간 확장 기능보다 먼저 출시되었습니다. 신규 개발의 경우 최신 KHR 확장 기능을 사용하는 것이 좋습니다.
 ====
 
 == Video

@@ -170,7 +170,7 @@ Vulkan 1.2에서 코어로 승격됨
 link:https://www.khronos.org/blog/comparing-the-vulkan-spir-v-memory-model-to-cs/[Comparing the Vulkan SPIR-V memory model to C's]
 ====
 
-The link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#memory-model[Vulkan Memory Model]은 여러 쉐이더 호출에 의해 수행되는 동일한 메모리 위치에 대한 메모리 액세스를 동기화하는 방법이라고 공식적으로 정의하며, 이 확장 기능은 부울(boolean) 값을 공개하여 구현이 이를 지원할 수 있도록 합니다. 이는 Vulkan/SPIR-V를 대상으로 하는 많은 것들에서 애플리케이션이 최적화하려고 시도하는 메모리 전송 작업이 구현 간에 중단되지 않도록 하는 것이 중요하기 때문입니다.
+The link:https://docs.vulkan.org/spec/latest/appendices/memorymodel.html[Vulkan Memory Model]은 여러 쉐이더 호출에 의해 수행되는 동일한 메모리 위치에 대한 메모리 액세스를 동기화하는 방법이라고 공식적으로 정의하며, 이 확장 기능은 부울(boolean) 값을 공개하여 구현이 이를 지원할 수 있도록 합니다. 이는 Vulkan/SPIR-V를 대상으로 하는 많은 것들에서 애플리케이션이 최적화하려고 시도하는 메모리 전송 작업이 구현 간에 중단되지 않도록 하는 것이 중요하기 때문입니다.
 
 [[VK_EXT_shader_viewport_index_layer]]
 == VK_EXT_shader_viewport_index_layer

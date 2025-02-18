@@ -12,11 +12,11 @@ Vulkan を初めて使う方は、Vulkan Spec のあちこちにある `pNext` �
 
 // `void* pNext` は、構造体間の Linked List を作成することで、Vulkan Spec を拡張するために使用されます。
 // `VkStructureType sType` はローダー、レイヤー、実装が `pNext` から渡された構造体のタイプを知るために使用されます。pNext` は、新しい構造体を公開する拡張機能を扱う際に使用されることがほとんどです。
-// Vulkan Spec の link:https://www.khronos.org/registry/vulkan/specs/1.2/html/vkspec.html#fundamentals-validusage-pNext[pNext の有効な使用法]セクションでは、`pNext` 構造体の2つの異なるバリエーションについて詳しく説明しています。`VkStructureType sType` は、ローダ、レイヤ、および実装で、`pNext` で渡された構造体の型を知るために使用されます。`pNext` は主に、新しい構造体を公開する拡張機能を扱うときに使用されます。
+// Vulkan Spec の link:https://docs.vulkan.org/spec/latest/chapters/fundamentals.html#fundamentals-validusage-pNext[pNext の有効な使用法]セクションでは、`pNext` 構造体の2つの異なるバリエーションについて詳しく説明しています。`VkStructureType sType` は、ローダ、レイヤ、および実装で、`pNext` で渡された構造体の型を知るために使用されます。`pNext` は主に、新しい構造体を公開する拡張機能を扱うときに使用されます。
 
 == 2つの基本構造体
 
-Vulkan API は、`VkBaseInStructure` と `VkBaseOutStructure` というlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#fundamentals-validusage-pNext[2つの基本構造体を提供]し、構造体ポインタチェーンを辿るために使用されます。
+Vulkan API は、`VkBaseInStructure` と `VkBaseOutStructure` というlink:https://docs.vulkan.org/spec/latest/chapters/fundamentals.html#fundamentals-validusage-pNext[2つの基本構造体を提供]し、構造体ポインタチェーンを辿るために使用されます。
 
 `VkBaseInStructure` の `In` は、`pNext` が `const *` であることを意味し、受け取ったローダ、レイヤ、ドライバでは読み取り専用となります。`VkBaseOutStructure` の `Out` は、`pNext` がアプリケーションにデータを返すために使用されることを指します。
 

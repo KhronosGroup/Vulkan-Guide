@@ -14,4 +14,4 @@ link:https://github.com/KhronosGroup/VK-GL-CTS/tree/master/external/vulkancts[Vu
 
 image::../../../chapters/images/vulkan_cts_overview.png[vulkan_cts_overview.png]
 
-アプリケーションは `VK_KHR_driver_properties` 拡張機能により、 link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VkConformanceVersion[VkConformanceVersion] プロパティを使用して、実装が合格した CTS のバージョンをクエリすることができます（これは Vulkan 1.2でコアに昇格しました）。
+アプリケーションは `VK_KHR_driver_properties` 拡張機能により、 link:https://docs.vulkan.org/spec/latest/chapters/devsandqueues.html#VkConformanceVersion[VkConformanceVersion] プロパティを使用して、実装が合格した CTS のバージョンをクエリすることができます（これは Vulkan 1.2でコアに昇格しました）。

@@ -7,7 +7,7 @@ ifndef::chapters[:chapters:]
 [[synchronization]]
 = 同期
 
-同期は、Vulkan を使用する上で最も強力な部分の一つですが、同時に最も複雑な部分でもあります。アプリケーションは、さまざまな link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#synchronization[Vulkan 同期プリミティブ]を使用して同期を管理する責任があります。同期の使い方を誤ると、見つけにくいバグが発生したり、GPUが不必要にアイドル状態になってパフォーマンスが低下したりします。
+同期は、Vulkan を使用する上で最も強力な部分の一つですが、同時に最も複雑な部分でもあります。アプリケーションは、さまざまな link:https://docs.vulkan.org/spec/latest/chapters/synchronization.html#synchronization-pipeline-barriersVulkan 同期プリミティブ]を使用して同期を管理する責任があります。同期の使い方を誤ると、見つけにくいバグが発生したり、GPUが不必要にアイドル状態になってパフォーマンスが低下したりします。
 
 link:https://github.com/KhronosGroup/Vulkan-Docs/wiki/Synchronization-Examples[同期の例]とlink:https://www.khronos.org/blog/understanding-vulkan-synchronization[Vulkan Synchronization の理解]というブログ記事が Khronos によって提供されており、同期プリミティブの使用方法が紹介されています。また、Tobias Hector 氏による過去の Vulkan に関する講演のプレゼンテーションもあります。link:https://www.khronos.org/assets/uploads/developers/library/2017-vulkan-devu-vancouver/009%20-%20Synchronization%20-%20Keeping%20Your%20Device%20Fed.pdf[パート1スライド] (link:https://www.youtube.com/watch?v=YkJ4hKCPjm0[動画]) とlink:https://www.khronos.org/assets/uploads/developers/library/2018-vulkanised/06-Keeping%20Your%20Device%20Fed%20v4_Vulkanised2018.pdf[パート2スライド] (link:https://www.youtube.com/watch?v=5GDg4OxkSEc[動画])
 
@@ -21,7 +21,7 @@ Khronos Validation Layer は、link:https://vulkan.lunarg.com/doc/sdk/latest/win
 
 == パイプラインバリア
 
-link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#synchronization-pipeline-barriers[パイプラインバリア]は、コマンドバッファが実行される際に、どのパイプラインステージが前のパイプラインステージを待つ必要があるかを制御します。
+link:https://docs.vulkan.org/spec/latest/chapters/synchronization.html#synchronization-pipeline-barriers[パイプラインバリア]は、コマンドバッファが実行される際に、どのパイプラインステージが前のパイプラインステージを待つ必要があるかを制御します。
 
 image::../../../chapters/images/synchronization_pipeline_barrieres.png[synchronization_pipeline_barrieres.png]
 

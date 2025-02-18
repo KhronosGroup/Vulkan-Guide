@@ -11,7 +11,7 @@ People new to Vulkan will start to notice the `pNext` and `sType` variables all 
 
 == Two Base Structures
 
-The Vulkan API link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#fundamentals-validusage-pNext[provides two base structures], `VkBaseInStructure` and `VkBaseOutStructure`, to be used as a convenient way to iterate through a structure pointer chain.
+The Vulkan API link:https://docs.vulkan.org/spec/latest/chapters/fundamentals.html#fundamentals-validusage-pNext[provides two base structures], `VkBaseInStructure` and `VkBaseOutStructure`, to be used as a convenient way to iterate through a structure pointer chain.
 
 The `In` of `VkBaseInStructure` refers to the fact `pNext` is a `const *` and are read-only to loader, layers, and driver receiving them. The `Out` of `VkBaseOutStructure` refers the `pNext` being used to return data back to the application.
 

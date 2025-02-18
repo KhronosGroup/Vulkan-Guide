@@ -7,7 +7,7 @@ ifndef::images[:images: images/]
 [[layers]]
 = 레이어(Layers)
 
-레이어는 Vulkan 시스템을 보강하는 옵션 요소입니다. 레이어는 애플리케이션에서 하드웨어에 이르기까지 기존의 Vulkan 함수를 가로채고, 평가하고, 수정할 수 있습니다. 레이어 속성은 애플리케이션에서 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#vkEnumerateInstanceLayerProperties[vkEnumerateInstanceLayerProperties]를 사용하여 쿼리할 수 있습니다.
+레이어는 Vulkan 시스템을 보강하는 옵션 요소입니다. 레이어는 애플리케이션에서 하드웨어에 이르기까지 기존의 Vulkan 함수를 가로채고, 평가하고, 수정할 수 있습니다. 레이어 속성은 애플리케이션에서 link:https://docs.vulkan.org/spec/latest/chapters/extensions.html#vkEnumerateInstanceLayerProperties[vkEnumerateInstanceLayerProperties]를 사용하여 쿼리할 수 있습니다.
 
 == 레이어 사용
 
@@ -22,7 +22,7 @@ Vulkan Configurator 사용에 대한 자세한 내용은 link:https://vulkan.lun
 
 == 장치 레이어 사용 중단(Device Layers Deprecation)
 
-예전에는 인스턴스 레이어와 장치 레이어가 모두 있었지만, 디바이스 레이어는 Vulkan 초기에 link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#extendingvulkan-layers-devicelayerdeprecation[사용 중단]되어있으므로 피해야 합니다.
+예전에는 인스턴스 레이어와 장치 레이어가 모두 있었지만, 디바이스 레이어는 Vulkan 초기에 link:https://docs.vulkan.org/spec/latest/chapters/extensions.html#extendingvulkan-layers-devicelayerdeprecation[사용 중단]되어있으므로 피해야 합니다.
 
 == 레이어 작성
 

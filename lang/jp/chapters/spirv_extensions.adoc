@@ -36,11 +36,11 @@ OpExtension  "SPV_KHR_8bit_storage"
 
 シェーダの機能によっては、`OpExtension` または `OpCapability` だけが必要な場合があります。この例では、`UniformAndStorageBuffer8BitAccess` は link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage] 拡張機能に含まれます。
 
-SPIR-V 拡張機能がサポートされているかどうかを確認するには、Vulkan Spec のlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#spirvenv-extensions[対応している SPIR-V 拡張機能表]をご覧ください。
+SPIR-V 拡張機能がサポートされているかどうかを確認するには、Vulkan Spec のlink:https://docs.vulkan.org/spec/latest/appendices/spirvenv.html#spirvenv-extensions[対応している SPIR-V 拡張機能表]をご覧ください。
 
 image::../../../chapters/images/spirv_extensions_8bit_extension.png[spirv_extensions_8bit_extension]
 
-また、Vulkan Spec のlink:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities[対応している SPIR-V 機能表]もご覧ください。
+また、Vulkan Spec のlink:https://docs.vulkan.org/spec/latest/appendices/spirvenv.html#spirvenv-capabilities[対応している SPIR-V 機能表]もご覧ください。
 
 image::../../../chapters/images/spirv_extensions_8bit_capability.png[spirv_extensions_8bit_capability]
 

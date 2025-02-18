@@ -33,7 +33,7 @@ API를 통해 작성할 수 있고 쉐이더에서 액세스할 수 있는 작�
 [[pc-shader-code]]
 === 쉐이더 코드
 
-쉐이더 관점에서 푸시 상수는 유니폼 버퍼와 유사합니다. Vulkan과 SPIR-V 사이의 link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#interfaces-resources-pushconst[푸시 상수 인터페이스]는 사양서에 자세하게 설명되어 있습니다.
+쉐이더 관점에서 푸시 상수는 유니폼 버퍼와 유사합니다. Vulkan과 SPIR-V 사이의 link:https://docs.vulkan.org/spec/latest/chapters/interfaces.html#interfaces-resources-pushconst[푸시 상수 인터페이스]는 사양서에 자세하게 설명되어 있습니다.
 
 간단한 GLSL 프래그먼트 쉐이더 예제 (link:https://godbolt.org/z/93WaYd8dE[온라인 체험]):
 
@@ -68,7 +68,7 @@ void main() {
 %access_chain   = OpAccessChain %pc_v4float_ptr %pc_var %int_0
 ----
 
-이것은 `Block` 수식을 가진 `OpTypeStruct` 타입이라는 link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#interfaces-resources-pushconst[Vulkan spec]의 기술과 일치합니다.
+이것은 `Block` 수식을 가진 `OpTypeStruct` 타입이라는 link:https://docs.vulkan.org/spec/latest/chapters/interfaces.html#interfaces-resources-pushconst[Vulkan spec]의 기술과 일치합니다.
 
 [[pc-pipeline-layout]]
 === 파이프라인 레이아웃
@@ -158,14 +158,14 @@ image::../../../chapters/images/push_constant_offset.png[push_constant_offset]
 [[pc-pipeline-layout-compatibility]]
 == 파이프라인 레이아웃 호환성
 
-Vulkan 사양서에는 link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#descriptorsets-compatibility[푸시 상수에 대한 호환성]을 다음과 같이 정의합니다
+Vulkan 사양서에는 link:https://docs.vulkan.org/spec/latest/chapters/descriptorsets.html#descriptorsets-compatibility[푸시 상수에 대한 호환성]을 다음과 같이 정의합니다
 
 [NOTE]
 ====
 파이프라인 레이아웃이 동일한 푸시 상수 범위로 생성된 경우
 ====
 
-즉, link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#pipeline-bindpoint-commands[바인딩된 파이프라인 커맨드] (`vkCmdDraw`, `vkCmdDispatch` 등)가 실행되기 직전의 `vkCmdPushConstants` 와 `vkCmdBindPipeline` (적절한 `VkPipelineBindPoint` 용으로)에서 사용된 `VkPipelineLayout` 은 **동일한** `VkPushConstantRange` 를 가지고 있어야 한다는 것을 뜻합니다.
+즉, link:https://docs.vulkan.org/spec/latest/chapters/pipelines.html#pipelines-bindpoint-commands[바인딩된 파이프라인 커맨드] (`vkCmdDraw`, `vkCmdDispatch` 등)가 실행되기 직전의 `vkCmdPushConstants` 와 `vkCmdBindPipeline` (적절한 `VkPipelineBindPoint` 용으로)에서 사용된 `VkPipelineLayout` 은 **동일한** `VkPushConstantRange` 를 가지고 있어야 한다는 것을 뜻합니다.
 
 [[pc-lifetime]]
 == 푸시 상수의 수명
@@ -180,7 +180,7 @@ Vulkan 사양서에는 link:https://www.khronos.org/registry/vulkan/specs/latest
 [[pc-binding-descriptor-sets]]
 === 디스크립터 세트가 바인딩에 미치는 영향은 없습니다
 
-푸시 상수는 디스크립터에 연결되지 않으므로 `vkCmdBindDescriptorSets` 를 사용해도 푸시 상수의 수명이나 link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#descriptorsets-compatibility[파이프라인 레이아웃 호환성]에 영향을 미치지 않습니다.
+푸시 상수는 디스크립터에 연결되지 않으므로 `vkCmdBindDescriptorSets` 를 사용해도 푸시 상수의 수명이나 link:https://docs.vulkan.org/spec/latest/chapters/descriptorsets.html#descriptorsets-compatibility[파이프라인 레이아웃 호환성]에 영향을 미치지 않습니다.
 
 [[pc-mixing-bind-points]]
 === 바인딩 포인트 혼합

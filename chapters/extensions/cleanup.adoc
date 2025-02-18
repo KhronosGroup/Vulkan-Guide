@@ -21,7 +21,7 @@ These are extensions that are unofficially called "`cleanup extension`". The Vul
 Promoted to core in Vulkan 1.2
 ====
 
-This extension adds more information to query about each implementation. The link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VkDriverId[VkDriverId] will be a registered vendor's ID for the implementation. The link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VkConformanceVersion[VkConformanceVersion] displays which version of xref:{chapters}vulkan_cts.adoc#vulkan-cts[the Vulkan Conformance Test Suite] the implementation passed.
+This extension adds more information to query about each implementation. The link:https://docs.vulkan.org/spec/latest/chapters/devsandqueues.html#VkDriverId[VkDriverId] will be a registered vendor's ID for the implementation. The link:https://docs.vulkan.org/spec/latest/chapters/devsandqueues.html#VkConformanceVersion[VkConformanceVersion] displays which version of xref:{chapters}vulkan_cts.adoc#vulkan-cts[the Vulkan Conformance Test Suite] the implementation passed.
 
 [[VK_EXT_host_query_reset]]
 == VK_EXT_host_query_reset
@@ -129,12 +129,14 @@ The maintenance extensions add a collection of minor features that were intentio
 
 Currently, there are 6 maintenance extensions. The first 3 were bundled in Vulkan 1.1 as core. All the details for each are well defined in the extension appendix page.
 
-  * link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_maintenance1[VK_KHR_maintenance1] - core in Vulkan 1.1
-  * link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_maintenance2[VK_KHR_maintenance2] - core in Vulkan 1.1
-  * link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_maintenance3[VK_KHR_maintenance3] - core in Vulkan 1.1
-  * link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_maintenance4[VK_KHR_maintenance4] - core in Vulkan 1.3
-  * link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_maintenance5[VK_KHR_maintenance5] - extension only
-  * link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_maintenance6[VK_KHR_maintenance6] - extension only
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance1.html[VK_KHR_maintenance1] - core in Vulkan 1.1
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance2.html[VK_KHR_maintenance2] - core in Vulkan 1.1
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance3.html[VK_KHR_maintenance3] - core in Vulkan 1.1
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance4.html[VK_KHR_maintenance4] - core in Vulkan 1.3
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance5.html[VK_KHR_maintenance5] - core in Vulkan 1.4
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance6.html[VK_KHR_maintenance6] - core in Vulkan 1.4
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance7.html[VK_KHR_maintenance7] - extension only
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance8.html[VK_KHR_maintenance8] - extension only
 
 [[pnext-expansions]]
 == pNext Expansions

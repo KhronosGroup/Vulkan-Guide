@@ -20,7 +20,7 @@ ifndef::chapters[:chapters: ../]
 Vulkan 1.2でコアに昇格
 ====
 
-この拡張機能は、各実装に関するクエリに、より多くの情報を追加します。link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VkDriverId[VkDriverId] は、その実装の登録ベンダーの ID になります。link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VkConformanceVersion[VkConformanceVersion] は、実装が合格した Vulkan Conformance Test Suite のバージョンを表示します。
+この拡張機能は、各実装に関するクエリに、より多くの情報を追加します。link:https://docs.vulkan.org/spec/latest/chapters/devsandqueues.html#VkDriverId[VkDriverId] は、その実装の登録ベンダーの ID になります。link:https://docs.vulkan.org/spec/latest/chapters/devsandqueues.html#VkConformanceVersion[VkConformanceVersion] は、実装が合格した Vulkan Conformance Test Suite のバージョンを表示します。
 
 [[VK_EXT_host_query_reset]]
 == VK_EXT_host_query_reset
@@ -128,12 +128,14 @@ Vulkan 1.3でコアに昇格
 
 現在、6つのメンテナンス拡張機能があり、最初の3つは Vulkan 1.1にコアとしてバンドルされています。各拡張機能の詳細は、拡張機能の付録ページに記載されています。
 
-  * link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VK_KHR_maintenance1[VK_KHR_maintenance1] - Vulkan 1.1コア
-  * link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VK_KHR_maintenance2[VK_KHR_maintenance2] - Vulkan 1.1コア
-  * link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VK_KHR_maintenance3[VK_KHR_maintenance3] - Vulkan 1.1コア
-  * link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VK_KHR_maintenance4[VK_KHR_maintenance4] - Vulkan 1.3コア
-  * link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VK_KHR_maintenance5[VK_KHR_maintenance5]
-  * link:https://www.khronos.org/registry/vulkan/specs/latest/html/vkspec.html#VK_KHR_maintenance6[VK_KHR_maintenance6]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance1.html[VK_KHR_maintenance1] - Vulkan 1.1コア
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance2.html[VK_KHR_maintenance2] - Vulkan 1.1コア
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance3.html[VK_KHR_maintenance3] - Vulkan 1.1コア
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance4.html[VK_KHR_maintenance4] - Vulkan 1.3コア
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance5.html[VK_KHR_maintenance5] - Vulkan 1.4コア
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance6.html[VK_KHR_maintenance6] - Vulkan 1.4コア
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance7.html[VK_KHR_maintenance7]
+  * link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance8.html[VK_KHR_maintenance8]
 
 [[pnext-expansions]]
 == pNext 拡張機能

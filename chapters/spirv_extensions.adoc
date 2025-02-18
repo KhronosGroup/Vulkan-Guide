@@ -37,11 +37,11 @@ Breaking down each step in more detail:
 
 Depending on the shader feature there might only be a `OpExtension` or `OpCapability` that is needed. For this example, the `UniformAndStorageBuffer8BitAccess` is part of the link:http://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/KHR/SPV_KHR_8bit_storage.html[SPV_KHR_8bit_storage] extension.
 
-To check if the SPIR-V extension is supported take a look at the link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-extensions[Supported SPIR-V Extension Table] in the Vulkan Spec.
+To check if the SPIR-V extension is supported take a look at the link:https://docs.vulkan.org/spec/latest/appendices/spirvenv.html#spirvenv-extensions[Supported SPIR-V Extension Table] in the Vulkan Spec.
 
 image::{images}spirv_extensions_8bit_extension.png[spirv_extensions_8bit_extension]
 
-Also, take a look at the link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#spirvenv-capabilities[Supported SPIR-V Capabilities Table] in the Vulkan Spec.
+Also, take a look at the link:https://docs.vulkan.org/spec/latest/appendices/spirvenv.html#spirvenv-capabilities[Supported SPIR-V Capabilities Table] in the Vulkan Spec.
 
 image::{images}spirv_extensions_8bit_capability.png[spirv_extensions_8bit_capability]
 
