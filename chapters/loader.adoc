@@ -15,7 +15,7 @@ Anyone can create their own Vulkan Loader, as long as they follow the link:https
 
 == Linking Against the Loader
 
-The link:https://github.com/KhronosGroup/Vulkan-Headers[Vulkan headers] only provide the Vulkan function prototypes. When building a Vulkan application you have to link it to the loader or you will get errors about undefined references to the Vulkan functions. There are two ways of linking the loader, link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md#directly-linking-to-the-loader[directly] and link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md#indirectly-linking-to-the-loader[indirectly], which should not be confused with "`static and dynamic linking`".
+The link:https://github.com/KhronosGroup/Vulkan-Headers[Vulkan headers] only provide the Vulkan function prototypes. When building a Vulkan application you have to link it to the loader or you will get errors about undefined references to the Vulkan functions. There are two ways of linking the loader, link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/docs/LoaderApplicationInterface.md#directly-linking-to-the-loader[directly] and link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/docs/LoaderApplicationInterface.md#indirectly-linking-to-the-loader[indirectly], which should not be confused with "`static and dynamic linking`".
 
   * link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/docs/LoaderApplicationInterface.md#directly-linking-to-the-loader[Directly linking] at compile time
   ** This requires having a built Vulkan Loader (either as a static or dynamic library) that your build system can find.

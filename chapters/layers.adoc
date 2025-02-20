@@ -11,7 +11,7 @@ Layers are optional components that augment the Vulkan system. They can intercep
 
 == Using Layers
 
-Layers are packaged as shared libraries that get dynamically loaded in by the loader and inserted between it and the application. The two things needed to use layers are the location of the binary files and which layers to enable. The layers to use can be either explicitly enabled by the application or implicitly enabled by telling the loader to use them. More details about implicit and explicit layers can be found in the link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md#implicit-vs-explicit-layers[Loader and Layer Interface].
+Layers are packaged as shared libraries that get dynamically loaded in by the loader and inserted between it and the application. The two things needed to use layers are the location of the binary files and which layers to enable. The layers to use can be either explicitly enabled by the application or implicitly enabled by telling the loader to use them. More details about implicit and explicit layers can be found in the link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/docs/LoaderApplicationInterface.md#implicit-vs-explicit-layers[Loader and Layer Interface].
 
 The link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK] contains a link:https://vulkan.lunarg.com/doc/sdk/latest/windows/layer_configuration.html[layer configuration document] that is very specific to how to discover and configure layers on each of the platforms.
 
@@ -26,7 +26,7 @@ There used to be both instance layers and device layers, but device layers were 
 
 == Creating a Layer
 
-Anyone can create a layer as long as it follows the link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md#loader-and-layer-interface[loader to layer interface] which is how the loader and layers agree to communicate with each other.
+Anyone can create a layer as long as it follows the link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/docs/LoaderApplicationInterface.md#loader-and-layer-interface[loader to layer interface] which is how the loader and layers agree to communicate with each other.
 
 == Platform Variations
 
