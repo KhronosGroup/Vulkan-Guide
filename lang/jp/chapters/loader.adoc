@@ -10,16 +10,16 @@ ifndef::chapters[:chapters:]
 
 image::../../../chapters/images/loader_overview.png[loader_overview.png]
 
-link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md[ローダインターフェイス]に沿っていれば、誰でも独自の Vulkan Loader を作ることができます。link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/BUILD.md[リファレンスローダ]をビルドすることもできますし、特定のプラットフォーム用の link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK] からビルドされたバージョンを取得することもできます。
+link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/docs/LoaderApplicationInterface.md[ローダインターフェイス]に沿っていれば、誰でも独自の Vulkan Loader を作ることができます。link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/BUILD.md[リファレンスローダ]をビルドすることもできますし、特定のプラットフォーム用の link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK] からビルドされたバージョンを取得することもできます。
 
 == ローダへのリンク
 
-link:https://github.com/KhronosGroup/Vulkan-Headers[Vulkan ヘッダ]は、Vulkan 関数のプロトタイプを提供するだけです。Vulkan アプリケーションをビルドする際には、ローダにリンクしなければ、Vulkan 関数への未定義の参照に関するエラーが発生します。ローダをリンクするには、link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md#directly-linking-to-the-loader[直接リンク]とlink:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md#indirectly-linking-to-the-loader[間接リンク]の2つの方法がありますが、これを「静的リンクと動的リンク」と混同してはいけません。
+link:https://github.com/KhronosGroup/Vulkan-Headers[Vulkan ヘッダ]は、Vulkan 関数のプロトタイプを提供するだけです。Vulkan アプリケーションをビルドする際には、ローダにリンクしなければ、Vulkan 関数への未定義の参照に関するエラーが発生します。ローダをリンクするには、link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/docs/LoaderApplicationInterface.md#directly-linking-to-the-loader[直接リンク]とlink:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/docs/LoaderApplicationInterface.md#indirectly-linking-to-the-loader[間接リンク]の2つの方法がありますが、これを「静的リンクと動的リンク」と混同してはいけません。
 
-  * コンパイル時のlink:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md#directly-linking-to-the-loader[直接リンク]
+  * コンパイル時のlink:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/docs/LoaderApplicationInterface.md#directly-linking-to-the-loader[直接リンク]
   ** このためには、ビルドシステムが見つけることのできる、ビルドされた Vulkan Loader（静的または動的ライブラリ）が必要です。
   ** ビルドシステム（Visual Studio、CMakeなど）には、ライブラリへのリンク方法に関するドキュメントがあります。オンラインで "(InsertBuildSystem) link to external library" と検索してみてください。
-  * 実行時のlink:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md#indirectly-linking-to-the-loader[間接リンク]
+  * 実行時のlink:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/docs/LoaderApplicationInterface.md#indirectly-linking-to-the-loader[間接リンク]
   ** 動的シンボルルックアップ（ `dlsym` や `dlopen` などのシステムコールを用いる）を使用することで、アプリケーションは独自のディスパッチテーブルを初期化することができます。これにより、ローダが見つからない場合はアプリケーションが正常に失敗できます。また、アプリケーションが Vulkan 関数を呼び出すための最速のメカニズムを提供します。
   ** link:https://github.com/zeux/volk/[Volk]は、このプロセスを簡素化するためのメタローダのオープンソース実装です。
 

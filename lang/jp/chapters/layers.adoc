@@ -10,7 +10,7 @@ ifndef::chapters[:chapters:]
 
 == レイヤの使い方
 
-レイヤは共有ライブラリとしてパッケージ化されており、ローダによって動的に読み込まれ、ローダとアプリケーションの間に挿入されます。レイヤを使用するために必要なのは、バイナリファイルの場所と、どのレイヤを有効にするかという2点です。使用するレイヤには、アプリケーションが明示的に使用するものと、ローダに指示して暗黙的に使用するものがあります。暗黙的なレイヤと明示的なレイヤの詳細については、link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md#implicit-vs-explicit-layers[ローダとレイヤのインターフェイス]を参照してください。
+レイヤは共有ライブラリとしてパッケージ化されており、ローダによって動的に読み込まれ、ローダとアプリケーションの間に挿入されます。レイヤを使用するために必要なのは、バイナリファイルの場所と、どのレイヤを有効にするかという2点です。使用するレイヤには、アプリケーションが明示的に使用するものと、ローダに指示して暗黙的に使用するものがあります。暗黙的なレイヤと明示的なレイヤの詳細については、link:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/docs/LoaderApplicationInterface.md#implicit-vs-explicit-layers[ローダとレイヤのインターフェイス]を参照してください。
 
 link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK] には、各プラットフォームでのレイヤの検出と設定方法に特化したlink:https://vulkan.lunarg.com/doc/sdk/latest/windows/layer_configuration.html[レイヤ設定ドキュメント]が含まれています。
 
@@ -24,7 +24,7 @@ Windows、Linux、macOS の開発者は、Vulkan Configurator（vkconfig）を�
 
 == レイヤの作成
 
-ローダとレイヤが相互に通信することに同意する方法であるlink:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/loader/LoaderAndLayerInterface.md#loader-and-layer-interface[ローダからレイヤへのインターフェイス]に従う限り、誰でもレイヤを作成することができます。
+ローダとレイヤが相互に通信することに同意する方法であるlink:https://github.com/KhronosGroup/Vulkan-Loader/blob/main/docs/LoaderApplicationInterface.md#loader-and-layer-interface[ローダからレイヤへのインターフェイス]に従う限り、誰でもレイヤを作成することができます。
 
 == プラットフォームのバリエーション
 
