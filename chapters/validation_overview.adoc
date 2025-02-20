@@ -36,7 +36,7 @@ When an application supplies invalid input, according to the valid usages in the
 
 A `VUID` is an unique ID given to each valid usage. This allows a way to point to a valid usage in the spec easily.
 
-Using `VUID-vkBindImageMemory-memoryOffset-01046` as an example, it is as simple as adding the VUID to an anchor in the HMTL version of the spec (link:https://docs.vulkan.org/spec/latest/chapters/resources.html#VUID-vkBindImageMemory-memoryOffset-01046[vkspec.html#VUID-vkBindImageMemory-memoryOffset-01046]) and it will jump right to the VUID.
+Using `VUID-vkBindImageMemory-memoryOffset-01046` as an example, it is as simple as adding the VUID to an anchor in the HTML version of the spec (link:https://docs.vulkan.org/spec/latest/chapters/resources.html#VUID-vkBindImageMemory-memoryOffset-01046[vkspec.html#VUID-vkBindImageMemory-memoryOffset-01046]) and it will jump right to the VUID.
 
 [[khronos-validation-layer]]
 == Khronos Validation Layer
