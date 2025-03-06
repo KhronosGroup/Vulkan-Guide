@@ -179,6 +179,10 @@ include::{chapters}vertex_input_data_processing.adoc[]
 
 include::{chapters}descriptor_dynamic_offset.adoc[]
 
+// === Location and Component Interface
+
+include::{chapters}location_component_interface.adoc[]
+
 // === Push Constants
 
 include::{chapters}push_constants.adoc[]
