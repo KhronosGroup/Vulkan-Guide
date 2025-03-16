@@ -15,7 +15,7 @@ link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Regist
 
 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_nonuniform_qualifier.txt[GLSL - GL_EXT_nonuniform_qualifier]
 
-Presentation from Montreal Developer Day (link:https://www.youtube.com/watch?v=tXipcoeuNh4[video] and link:https://www.khronos.org/assets/uploads/developers/library/2018-vulkan-devday/11-DescriptorUpdateTemplates.pdf[slides])
+Presentation from Montreal Developer Day (link:https://www.youtube.com/watch?v=tXipcoeuNh4[video] and link:https://www.khronos.org/assets/uploads/developers/library/2018-vulkan-devday/10-DescriptorIndexing.pdf[slides])
 ====
 
 This extension was designed to be broken down into a few different, smaller features to allow implementations to add support for the each feature when possible.
