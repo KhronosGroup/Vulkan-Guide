@@ -9,7 +9,7 @@ ifndef::images[:images: images/]
 
 [NOTE]
 ====
-link:https://docs.vulkan.org/spec/latest/chapters/pipelines.html#pipelines-dynamic-state[Vulkan Spec chapter]
+xref:{chapters}dynamic_state_map.adoc[세부 정보가 포함된 모든 동적 상태 목록]
 ====
 
 == Overview
