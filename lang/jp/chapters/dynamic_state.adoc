@@ -8,7 +8,7 @@ ifndef::chapters[:chapters:]
 
 [NOTE]
 ====
-link:https://docs.vulkan.org/spec/latest/chapters/pipelines.html#pipelines-dynamic-state[Vulkan Spec の章]
+xref:{chapters}dynamic_state_map.adoc[すべての動的状態のリストと詳細]
 ====
 
 == 概要
