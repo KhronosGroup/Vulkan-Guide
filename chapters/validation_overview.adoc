@@ -1,4 +1,4 @@
-// Copyright 2019-2022 The Khronos Group, Inc.
+// Copyright 2019-2025 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 // Required for both single-page and combined guide xrefs to work
@@ -32,11 +32,34 @@ When an application supplies invalid input, according to the valid usages in the
 
 **VERY IMPORTANT**: While undefined behavior might seem to work on one implementation, there is a good chance it will fail on another.
 
+=== Undefined Value
+
+There are few spots that will be __undefined value__. These are situation where it is not invalid to do something, but the value returned from the hardware might be garbage. Imagine the following code
+
+[source,cpp]
+----
+int x;
+print(x)
+----
+
+It will never crash, but the value can be anything and relying on the undefined value to be something like `0` is dangerous.
+
 == Valid Usage ID (VUID)
 
 A `VUID` is an unique ID given to each valid usage. This allows a way to point to a valid usage in the spec easily.
 
 Using `VUID-vkBindImageMemory-memoryOffset-01046` as an example, it is as simple as adding the VUID to an anchor in the HTML version of the spec (link:https://docs.vulkan.org/spec/latest/chapters/resources.html#VUID-vkBindImageMemory-memoryOffset-01046[vkspec.html#VUID-vkBindImageMemory-memoryOffset-01046]) and it will jump right to the VUID.
+
+=== Implicit vs Explicit
+
+__Implicit Validation__ is the validation that is generated from the `vk.xml`. It will be the "obvious" things such as "`device` must be a valid `VkDevice` handle".
+
+__Explicit Validation__ are the handwritten VUs found everywhere else
+
+Simple way to detect which is which is by looking for a number in the VUID
+
+- `VUID-vkBindImageMemory-image-01044` is explicit
+- `VUID-vkBindImageMemory-memory-parameter` is implicit
 
 [[khronos-validation-layer]]
 == Khronos Validation Layer
@@ -59,62 +82,7 @@ The Validation Layers are constantly being updated and improved so it is always 
 
 == Breaking Down a Validation Error Message
 
-The Validation Layers attempt to supply as much useful information as possible when an error occurs. The following examples are to help show how to get the most information out of the Validation Layers
-
-=== Example 1 - Implicit Valid Usage
-
-This example shows a case where an link:https://docs.vulkan.org/spec/latest/chapters/fundamentals.html#fundamentals-implicit-validity[implicit VU] is triggered. There will not be a number at the end of the VUID.
-
-[source]
-----
-Validation Error: [ VUID-vkBindBufferMemory-memory-parameter ] Object 0: handle =
-0x20c8650, type = VK_OBJECT_TYPE_INSTANCE; | MessageID = 0xe9199965 | Invalid
-VkDeviceMemory Object 0x60000000006. The Vulkan spec states: memory must be a valid
-VkDeviceMemory handle (https://docs.vulkan.org/spec/latest/chapters/resources.html#VUID-vkBindBufferMemory-memory-parameter))
-----
-
-  * The first thing to notice is the VUID is listed first in the message (`VUID-vkBindBufferMemory-memory-parameter`)
-  ** There is also a link at the end of the message to the VUID in the spec
-  * `The Vulkan spec states:` is the quoted VUID from the spec.
-  * The `VK_OBJECT_TYPE_INSTANCE` is the link:https://docs.vulkan.org/spec/latest/chapters/debugging.html#VkObjectType[VkObjectType]
-  * `Invalid VkDeviceMemory Object 0x60000000006` is the link:https://docs.vulkan.org/spec/latest/chapters/fundamentals.html#fundamentals-objectmodel-overview[Dispatchable Handle] to help show which `VkDeviceMemory` handle was the cause of the error.
-
-=== Example 2 - Explicit Valid Usage
-
-This example shows an error where some `VkImage` is trying to be bound to 2 different `VkDeviceMemory` objects
-
-[source]
-----
-Validation Error: [ VUID-vkBindImageMemory-image-01044 ] Object 0: handle =
-0x90000000009, name = myTextureMemory, type = VK_OBJECT_TYPE_DEVICE_MEMORY; Object 1:
-handle = 0x70000000007, type = VK_OBJECT_TYPE_IMAGE; Object 2: handle = 0x90000000006,
-name = myIconMemory, type = VK_OBJECT_TYPE_DEVICE_MEMORY; | MessageID = 0x6f3eac96 |
-In vkBindImageMemory(), attempting to bind VkDeviceMemory 0x90000000009[myTextureMemory]
-to VkImage 0x70000000007[] which has already been bound to VkDeviceMemory
-0x90000000006[myIconMemory]. The Vulkan spec states: image must not already be
-backed by a memory object (https://docs.vulkan.org/spec/latest/chapters/resources.html#VUID-vkBindImageMemory-image-01044)
-----
-
-  * Example 2 is about the same as Example 1 with the exception that the `name` that was attached to the object (`name = myTextureMemory`). This was done using the link:https://www.lunarg.com/new-tutorial-for-vulkan-debug-utilities-extension/[VK_EXT_debug_util] extension (link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions/debug_utils[Sample of how to use the extension]). Note that the old way of using link:https://www.saschawillems.de/blog/2016/05/28/tutorial-on-using-vulkans-vk_ext_debug_marker-with-renderdoc/[VK_EXT_debug_report] might be needed on legacy devices that don't support `VK_EXT_debug_util`.
-  * There were 3 objects involved in causing this error.
-  ** Object 0 is a `VkDeviceMemory` named `myTextureMemory`
-  ** Object 1 is a `VkImage` with no name
-  ** Object 2 is a `VkDeviceMemory` named `myIconMemory`
-  * With the names it is easy to see "`In `vkBindImageMemory()`, the `myTextureMemory` memory was attempting to bind to an image already been bound to the `myIconMemory` memory`".
-
-Each error message contains a uniform logging pattern. This allows information to be easily found in any error. The pattern is as followed:
-
-  * Log status (ex. `Error:`, `Warning:`, etc)
-  * The VUID
-  * Array of objects involved
-  ** Index of array
-  ** Dispatch Handle value
-  ** Optional name
-  ** Object Type
-  * Function or struct error occurred in
-  * Message the layer has created to help describe the issue
-  * The full Valid Usage from the spec
-  * Link to the Valid Usage
+This information can be found in the link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/main/docs/error_messages.md[Validation Layers documentation].
 
 == Special Usage Tags
 
