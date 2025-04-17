@@ -123,21 +123,24 @@ Vulkan 1.0 (SPIR-V 1.0이 필요)을 대상으로 하는 경우, glslang `--targ
 
 [source,swift]
 ----
-    Decorate 7(ssbo) BufferBlock
-8:  TypePointer Uniform 7(ssbo)
-9:  8(ptr) Variable Uniform
-12: TypePointer Uniform 6(int)
+       OpDecorate %ssbo BufferBlock
+%ptr = OpTypePointer Uniform %ssbo
+%var = OpVariable %ptr Uniform
 ----
 
 SPIR-V 1.3에 `SPV_KHR_storage_buffer_storage_class` 가 추가되었으므로, (SPIR-V 1.3이 필요) Vulkan 1.1을 타깃으로 하는 경우, glslang `--target-env vulkan1.1` 을 사용하면 새로운 `StorageBuffer` 클래스를 사용합니다.
 
 [source,swift]
 ----
-    Decorate 7(ssbo) Block
-8:  TypePointer StorageBuffer 7(ssbo)
-9:  8(ptr) Variable StorageBuffer
-12: TypePointer StorageBuffer 6(int)
+       OpDecorate %ssbo Block
+%ptr = OpTypePointer StorageBuffer %ssbo
+%var = OpVariable %ptr StorageBuffer
 ----
+
+[NOTE]
+====
+link:https://godbolt.org/z/a8WMEeejs[온라인 체험]
+====
 
 [[VK_KHR_variable_pointers]]
 == VK_KHR_variable_pointers
