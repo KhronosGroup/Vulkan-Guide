@@ -31,6 +31,7 @@
 ** xref:{chapters}pnext_and_stype.adoc[]
 ** xref:{chapters}synchronization.adoc[]
 *** xref:{chapters}extensions/VK_KHR_synchronization2.adoc[]
+*** xref:{chapters}swapchain_semaphore_reuse.adoc[]
 *** xref:{chapters}synchronization_examples.adoc[]
 ** xref:{chapters}memory_allocation.adoc[]
 ** xref:{chapters}sparse_resources.adoc[]
