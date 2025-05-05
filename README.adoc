@@ -142,6 +142,10 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 // include::{chapters}extensions/synchronization_examples.adoc[]
 
+=== xref:{chapters}swapchain_semaphore_reuse.adoc[Swapchain Semaphore Reuse]
+
+// include::{chapters}extensions/swapchain_semaphore_reuse.adoc[]
+
 == xref:{chapters}memory_allocation.adoc[Memory Allocation Strategy]
 
 // include::{chapters}memory_allocation.adoc[]

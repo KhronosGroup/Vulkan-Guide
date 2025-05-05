@@ -1,0 +1,140 @@
+// Copyright 2025 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[swapchain-semaphore-reuse]]
+= Swapchain Semaphore Reuse
+
+It is very easy to misuse the `vkQueuePresentKHR` wait semaphore, but luckily it's also usually easy to fix things by allocating one "submit finished" semaphore per swapchain image instead of per in-flight frame.
+
+== Problem Statement
+
+This chapter discusses one way to safely reuse `vkQueuePresentKHR` wait semaphores (the ones specified in `VkPresentInfoKHR::pWaitSemaphores`). In this context, *safely* means that the Vulkan specification guarantees the semaphore is no longer in use and can be reused. Since Vulkan SDK 1.4.313, the validation layer reports cases where the present wait semaphore is not used safely.
+
+[NOTE]
+====
+This is currently reported as `VUID-vkQueueSubmit-pSignalSemaphores-00067` or you may see "your VkSemaphore is being signaled by VkQueue, but it may still be in use by VkSwapchainKHR"
+====
+
+First, let's see if there's something special about present wait semaphores. The essence of Vulkan synchronization and synchronization in general is ordering. In Vulkan, this is done by *waiting* for signals, polling, etc. The entity we wait for must signal a status change or provide a query mechanism. For example, `vkQueueSubmit` allows you to specify a fence that will be signaled when workload is done and the application can wait for this signal on the CPU (host) side. `vkQueueSubmit` can also signal semaphores which are waitable only on the GPU (device) side (or host if using timeline semaphores).
+
+`vkQueuePresentKHR` is different from the `vkQueueSubmit` family of functions in that it does not provide a way to signal a semaphore or a fence (without additional extensions). This means there is no way to wait for the presentation signal directly. It also means we don't know whether `VkPresentInfoKHR::pWaitSemaphores` are still in use by the presentation operation. If `vkQueuePresentKHR` could signal, then waiting on that signal would confirm that the present queue operation has finished -- including the wait on `VkPresentInfoKHR::pWaitSemaphores`.
+
+In summary, it's not obvious when it's safe to reuse present wait semaphores.
+
+== Discussion of Solution
+
+The good news is there's a simple way to guarantee that the presentation operation has finished, though less direct than an explicit wait. Acquiring the image index from `vkAcquireNextImageKHR` and then waiting on its semaphore or fence guarantees that the previous presentation operation that used the just-acquired image index has completed, which includes the wait on `VkPresentInfoKHR::pWaitSemaphores`, so the corresponding semaphores can be reused.
+
+You can probably see that there is nothing special with reusing present wait semaphores safely. Call `vkAcquireNextImageKHR` to get the image index. Wait on the semaphore from `vkAcquireNextImageKHR` in one of `vkQueueSubmit` batches (you can also wait on the fence, but that introduces additional host sync point). After the wait it's safe to reuse semaphores.
+
+Why do so many apps get this wrong? The likely reason is that even a small deviation from the most obvious way to synchronize things (you signal, I wait) adds enough complexity to make things not obvious. And if something isn't obvious (even if it's simple), it's easy to miss.
+
+A common mistake is applying a buffering scheme based on the number of frames in flight (such as double or triple buffering) to present wait semaphores. Often, to synchronize with in-flight frames, the application uses a `vkQueueSubmit` fence. By waiting on that fence, we know that the corresponding command buffers and other frame resources are no longer in use. However, the Vulkan specification does not guarantee that waiting on a `vkQueueSubmit` fence also synchronizes presentation operations. The reuse of presentation resources should rely on `vkAcquireNextImageKHR` or additional extensions (will be mentioned at the end of this article), rather than on `vkQueueSubmit` fences.
+
+Here's pseudocode that demonstrates a common issue (and yes, it often works with specific drivers but this violates Vulkan specification):
+
+[source, c]
+----
+// !! BAD CODE WARNING !!
+const kNumberOfFramesInFlight = 2
+VkSemaphore submit_semaphores[kNumberOfFramesInFlight]
+
+while (!quit) {
+    // Wait on the frame fence.
+    // This allows to reuse frame resources, but this does not include presentation resources
+    VkFence frame_fence = frame_fences[frame_index]
+    vkWaitForFences(frame_fence)
+    vkResetFences(frame_fence)
+
+    ...
+
+    // WARNING: this code uses current in-flight frame index to get unused submit semaphore.
+    // Usually, the assumption is that if we wait on the previous frame then submit_semaphores
+    // are not used by the vkQueuePresentKHR from that frame anymore. That's not necessarily true.
+    VkSemaphore submit_semaphore = submit_semaphores[frame_index]
+
+    VkSubmitInfo submit_info
+    submit_info.pSignalSemaphores = &submit_semaphore
+    vkQueueSubmit(queue, &submit_info)
+
+    // WARNING: submit_semaphore may still be in use by one of the previous presentation operations
+    VkPresentInfo present_info
+    present_info.pWaitSemaphores = &submit_semaphore
+    vkQueuePresentKHR(queue, &present_info)
+
+    frame_index = (frame_index + 1) % kNumberOfFramesInFlight
+}
+----
+
+It is very simple to fix the above code by doing:
+
+1. Allocate the `submit_semaphores` array based on the number of swapchain images (instead of the number of in-flight frames)
+2. Index this array using the acquired swapchain image index (instead of the current in-flight frame index)
+
+While fixing simpler apps like `vkcube`, applying the fix really was as straightforward as described. Of course, for complex engine setups it can be a different experience. link:https://github.com/kennyalive/vulkan-base/commit/27bcaad9d519cc2f9c5cde4872742d4a5212eee6[Here's an example] of what the fix looks like in the "hello-world" style Vulkan application.
+
+Here's pseudocode showing how to set up a rendering frame that correctly reuses presentation wait semaphores. This works with all Vulkan versions.
+
+[source, c]
+----
+// !! GOOD CODE EXAMPLE !!
+VkImage swapchain_images[num_swapchain_images]
+
+// Resources indexed by the current in-flight frame index
+const kNumberOfFramesInFlight = 2
+VkFence frame_fences[kNumberOfFramesInFlight];
+VkSemaphore acquire_semaphores[kNumberOfFramesInFlight];
+VkCommandBuffer command_buffers[kNumberOfFramesInFlight];
+int frame_index = 0; // 0..kNumberOfFramesInFlight-1
+
+// Semaphores that are waited on by QueuePresent are buffered based on the number of swapchain images
+VkSemaphore submit_semaphores[swapchain_image_count]
+
+while (!quit) {
+    VkFence frame_fence = frame_fences[frame_index]
+    vkWaitForFences(frame_fence)
+    vkResetFences(frame_fence)
+
+    uint32_t image_index;
+    VkSemaphore acquire_semaphore = acquire_semaphores[frame_index]
+    vkAcquireNextImageKHR(swapchain, acquire_semaphore, &image_index)
+
+    // Index submit semaphore with the acquired swapchain image index.
+    // It's the only resource in this example indexed by image_index.
+    // All other resources, including acquire_semaphore, are indexed with current in-flight frame index.
+    VkSemaphore submit_semaphore = submit_semaphores[image_index]
+
+    VkCommandBuffer command_buffer = command_buffers[frame_index]
+    vkBeginCommandBuffer(command_buffer)
+    RecordCommands(command_buffer)
+    vkEndCommandBuffer(command_buffer)
+
+    VkSubmitInfo submit_info
+    submit_info.pWaitSemaphores = &acquire_semaphore
+    submit_info.pCommandBuffers = &command_buffer
+    submit_info.pSignalSemaphores = &submit_semaphore
+    vkQueueSubmit(queue, &submit_info, frame_fence)
+
+    VkPresentInfo present_info
+    present_info.pWaitSemaphores = &submit_semaphore
+    present_info.pSwapchains = &swapchain
+    present_info.pImageIndices = &image_index
+    vkQueuePresent(queue, &present_info)
+
+    frame_index = (frame_index + 1) % kNumberOfFramesInFlight
+}
+----
+
+== VK_EXT_swapchain_maintenance1 extension
+
+The purpose of the above code is to explain how to handle swapchain wait semaphores without additional extensions, although implementations that support the link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_swapchain_maintenance1.html[VK_EXT_swapchain_maintenance1] extension do provide an alternative solution. This extension makes `vkQueuePresentKHR` more similar to `vkQueueSubmit`, allowing it to specify a fence that the application can wait on.
+
+`VK_EXT_swapchain_maintenance1` also addresses a problem that has no good solution in unextended Vulkan: releasing swapchain resources during shutdown. Typically, applications call `vkDeviceWaitIdle` or `vkQueueWaitIdle` and assume it's safe to delete swapchain semaphores and the swapchain itself. The problem is that WaitIdle functions are defined in terms of fences - they only wait for workloads submitted through functions that accept a fence. Unextended `vkQueuePresent` does not provide a fence parameter.
+
+In theory, this means `vkDeviceWaitIdle` can't guarantee that it's safe to delete swapchain resources. In practice, applications do this because there is no better alternative. That's also the reason why the validation layer does not trigger an error in this case.
+
+The `VK_EXT_swapchain_maintenance1` extension fixes this problem. By waiting on the presentation fence, the application can safely release swapchain resources. **When** `VK_EXT_swapchain_maintenance1` **is enabled** the validation layer will report an error if the application shutdown sequence relies on `vkDeviceWaitIdle` or `vkQueueWaitIdle` to release swapchain resources instead of using a presentation fence.

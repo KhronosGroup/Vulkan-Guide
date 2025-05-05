@@ -141,6 +141,8 @@ include::{chapters}extensions/VK_KHR_synchronization2.adoc[]
 
 include::{chapters}synchronization_examples.adoc[]
 
+include::{chapters}swapchain_semaphore_reuse.adoc[]
+
 :imagesdir: chapters
 
 // == Memory Allocation Strategy
