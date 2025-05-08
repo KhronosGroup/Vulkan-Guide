@@ -157,6 +157,10 @@ include::{chapters}sparse_resources.adoc[]
 
 include::{chapters}protected.adoc[]
 
+// === Buffer Device Address
+
+include::{chapters}buffer_device_address.adoc[]
+
 // == Pipeline Caching/Derivatives
 
 include::{chapters}pipeline_cache.adoc[]
