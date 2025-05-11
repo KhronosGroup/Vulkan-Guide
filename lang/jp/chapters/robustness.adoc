@@ -30,7 +30,7 @@ image::../../../chapters/images/robustness_flow.png[robustness_flow.png]
 
 すべての Vulkan の実装は `robustBufferAccess` 機能をサポートする必要があります。仕様では、link:https://docs.vulkan.org/spec/latest/chapters/features.html#features-robustBufferAccess[何が境界を越えたとみなされるか]、またどのように処理されるべきかが説明されています。`robustBufferAccess` については、実装にある程度の柔軟性が与えられています。たとえば、`vec4(x,y,z,w)` へのアクセスで `w` の値が境界を越えた場合、仕様では `x`、`y`、`z` も境界を越えたとみなすかどうかを実装が決定できるようになっています。
 
-`robustBufferAccess` 機能は、バッファのみを対象としており、イメージは対象外であるため、いくつかの制限があります。また、アクセスされているバッファのデータを変更する境界を越えた書き込みやアトミックを許可してしまいます。より強力な堅牢性を求めるアプリケーションのために、link:https://www.khronos.org/registry/vulkan/specs/latest/man/html/VK_EXT_robustness2.html[VK_EXT_robustness2] があります。
+`robustBufferAccess` 機能は、バッファのみを対象としており、イメージは対象外であるため、いくつかの制限があります。また、アクセスされているバッファのデータを変更する境界を越えた書き込みやアトミックを許可してしまいます。より強力な堅牢性を求めるアプリケーションのために、link:https://www.khronos.org/registry/vulkan/specs/latest/man/html/VK_KHR_robustness2.html[VK_KHR_robustness2] があります。
 
 イメージが境界を越えた場合、コア Vulkan では、ストアやアトミックがアクセスされるメモリに影響を与えないことがlink:https://docs.vulkan.org/spec/latest/chapters/textures.html#textures-output-coordinate-validation[保証されています]。
 
@@ -65,9 +65,15 @@ link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_image_robu
 
 `robustImageAccess` 機能は、無効な LOD へのアクセスに対して返される値については何の保証もありません。
 
-== VK_EXT_robustness2
+== VK_KHR_robustness2
 
-D3D12 などの他の API から移植されるアプリケーションなどでは、`robustBufferAccess` や `robustImageAccess` が提供するものよりも厳しい保証が必要になる場合があります。link:https://www.khronos.org/registry/vulkan/specs/latest/man/html/VK_EXT_robustness2.html[VK_EXT_robustness2] 拡張機能では、以下のセクションで説明する3つの新しい堅牢性機能を公開することで、保証を追加しています。一部の実装では、これらの追加保証はパフォーマンスを犠牲にしています。追加の堅牢性を必要としないアプリケーションでは、可能な限り `robustBufferAccess` や `robustImageAccess` を代わりに使用することをお勧めします。
+[NOTE]
+.Important
+====
+VK_EXT_robustness2も同様に動作します
+====
+
+D3D12 などの他の API から移植されるアプリケーションなどでは、`robustBufferAccess` や `robustImageAccess` が提供するものよりも厳しい保証が必要になる場合があります。link:https://www.khronos.org/registry/vulkan/specs/latest/man/html/VK_KHR_robustness2.html[VK_KHR_robustness2] 拡張機能では、以下のセクションで説明する3つの新しい堅牢性機能を公開することで、保証を追加しています。一部の実装では、これらの追加保証はパフォーマンスを犠牲にしています。追加の堅牢性を必要としないアプリケーションでは、可能な限り `robustBufferAccess` や `robustImageAccess` を代わりに使用することをお勧めします。
 
 === robustBufferAccess2
 
