@@ -27,7 +27,7 @@ image::../../../chapters/images/robustness_flow.png[robustness_flow.png]
 
 모든 Vulkan 구현은 `robustBufferAccess` 기능을 지원해야 합니다. link:https://docs.vulkan.org/spec/latest/chapters/features.html#features-robustBufferAccess[사양서는 어떤 것이 범위를 벗어난 것으로 간주되는지] 그리고 어떻게 처리해야 하는지를 설명합니다.구현에는 `robustBufferAccess` 에 대해 어느 정도의 유연성이 부여됩니다. 예를 들어 `w` 값이 범위를 벗어난 `vec4(x,y,z,w)` 에 접근하는 경우, `x`, `y`, `z` 도 범위를 벗어난 것으로 간주할지 여부를 구현에서 결정할 수 있도록 사양에서 허용하고 있기 때문입니다.
 
-`robustBufferAccess` 기능은 이미지가 아닌 버퍼만 다루기 때문에 몇 가지 제한이 있습니다. 또한 접근 중인 버퍼의 데이터를 수정하기 위해 범위를 벗어난 쓰기나 아토믹을 허용해버립니다. 더 강력한 형태의 견고성을 원하는 애플리케이션의 경우, link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_robustness2.html[VK_EXT_robustness2]가 있습니다.
+`robustBufferAccess` 기능은 이미지가 아닌 버퍼만 다루기 때문에 몇 가지 제한이 있습니다. 또한 접근 중인 버퍼의 데이터를 수정하기 위해 범위를 벗어난 쓰기나 아토믹을 허용해버립니다. 더 강력한 형태의 견고성을 원하는 애플리케이션의 경우, link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_robustness2.html[VK_KHR_robustness2]가 있습니다.
 
 이미지가 범위를 벗어난 경우, 코어 Vulkan에서는 스토어나 아토믹이 접근하려는 메모리에 영향을 주지 않는 것이 link:https://docs.vulkan.org/spec/latest/chapters/textures.html#textures-output-coordinate-validation[보장되어 있습니다].
 
@@ -62,9 +62,16 @@ link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_image_robu
 
 `robustImageAccess` 기능은 유효하지 않은 LOD에 접근할 때 반환되는 값에 대한 보장을 제공하지 않으며, 아직 정의되지 않은 동작입니다.
 
-== VK_EXT_robustness2
+== VK_KHR_robustness2
 
-D3D12와 같은 다른 API에서 포팅된 애플리케이션과 같은 일부 애플리케이션은 `robustBufferAccess` 와 `robustImageAccess` 가 제공하는 것보다 더 엄격한 보장을 필요로 합니다. 다음 섹션에서 설명하는 3 가지 새로운 견고성 기능을 공개하여 link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_robustness2.html[VK_EXT_robustness2] 확장 기능을 추가합니다. 일부 구현의 경우 이러한 추가 보장은 성능 저하를 초래할 수 있습니다. 추가 견고성이 필요하지 않은 애플리케이션은 가능하면 `robustBufferAccess` 및/또는 `robustImageAccess` 를 대신 사용하는 것이 좋습니다.
+
+[NOTE]
+.Important
+====
+VK_EXT_robustness2는 같은 방식으로 작동합니다.
+====
+
+D3D12와 같은 다른 API에서 포팅된 애플리케이션과 같은 일부 애플리케이션은 `robustBufferAccess` 와 `robustImageAccess` 가 제공하는 것보다 더 엄격한 보장을 필요로 합니다. 다음 섹션에서 설명하는 3 가지 새로운 견고성 기능을 공개하여 link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_robustness2.html[VK_KHR_robustness2] 확장 기능을 추가합니다. 일부 구현의 경우 이러한 추가 보장은 성능 저하를 초래할 수 있습니다. 추가 견고성이 필요하지 않은 애플리케이션은 가능하면 `robustBufferAccess` 및/또는 `robustImageAccess` 를 대신 사용하는 것이 좋습니다.
 
 === robustBufferAccess2
 

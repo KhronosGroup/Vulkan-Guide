@@ -174,7 +174,7 @@ Vulkan Guide は、`asciidoctor guide.adoc` を使って1つのページとし�
 
 // include::{chapters}robustness.adoc[]
 
-  * `VK_EXT_image_robustness`, `VK_EXT_robustness2`
+  * `VK_EXT_image_robustness`, `VK_KHR_robustness2`, `VK_EXT_pipeline_robustness`
 
 == xref:{chapters}dynamic_state.adoc[動的な状態（Dynamic State）]
 
