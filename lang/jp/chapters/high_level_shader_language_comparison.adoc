@@ -254,7 +254,7 @@ layout (set = <set-index>, binding = <binding-index>) uniform <type> <name>
 [source,glsl]
 ----
 // Uniform buffer
-layout (set = 0, binding = 0) uniform UBO 
+layout (set = 0, binding = 0) uniform UBO
 {
     mat4 projection;
 } ubo;
@@ -762,7 +762,7 @@ ConstantBuffer<SBT> sbt;
 | gl_ObjectToWorld3x4EXT | ObjectToWorld3x4 |
 | gl_RayFlagsNoneEXT | RAY_FLAG_NONE  |
 | gl_RayFlagsOpaqueEXT | RAY_FLAG_FORCE_OPAQUE |
-| gl_RayFlagsNoOpaqueEXT | AY_FLAG_FORCE_NON_OPAQUE |
+| gl_RayFlagsNoOpaqueEXT | RAY_FLAG_FORCE_NON_OPAQUE |
 | gl_RayFlagsTerminateOnFirstHitEXT | RAY_FLAG_ACCEPT_FIRST_HIT_AND_END_SEARCH |
 | gl_RayFlagsSkipClosestHitShaderEXT | RAY_FLAG_SKIP_CLOSEST_HIT_SHADER |
 | gl_RayFlagsCullBackFacingTrianglesEXT | RAY_FLAG_CULL_BACK_FACING_TRIANGLES |
@@ -995,7 +995,7 @@ GroupMemoryBarrierWithGroupSync();
 | imageAtomicExchange | InterlockedExchange |
 | nonuniformEXT | NonUniformResourceIndex |
 | gl_BaryCoordEXT | SV_Barycentrics |
-| gl_BaryCoordNoPerspEXT | SV_Barycentrics with noperspective | 
+| gl_BaryCoordNoPerspEXT | SV_Barycentrics with noperspective |
 |====
 
 == 関数
@@ -1003,12 +1003,12 @@ GroupMemoryBarrierWithGroupSync();
 [NOTE]
 ====
 ほとんどのGLSL関数はHLSLでも利用可能で、その逆も同様です。この章では名前が異なる関数を一覧にしています。1対1で対応する関数（例：`isNan`）は記載していません。
-==== 
+====
 
 [options="header"]
 |====
 | *GLSL* | *HLSL*
-| dFdx | ddx 
+| dFdx | ddx
 | dFdxCoarse | ddx_coarse
 | dFdxFine | ddx_fine
 | dFdy | ddy

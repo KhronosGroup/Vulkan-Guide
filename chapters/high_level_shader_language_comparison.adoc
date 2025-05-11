@@ -757,7 +757,7 @@ ConstantBuffer<SBT> sbt;
 | gl_ObjectToWorld3x4EXT | ObjectToWorld3x4 |
 | gl_RayFlagsNoneEXT | RAY_FLAG_NONE  |
 | gl_RayFlagsOpaqueEXT | RAY_FLAG_FORCE_OPAQUE |
-| gl_RayFlagsNoOpaqueEXT | AY_FLAG_FORCE_NON_OPAQUE |
+| gl_RayFlagsNoOpaqueEXT | RAY_FLAG_FORCE_NON_OPAQUE |
 | gl_RayFlagsTerminateOnFirstHitEXT | RAY_FLAG_ACCEPT_FIRST_HIT_AND_END_SEARCH |
 | gl_RayFlagsSkipClosestHitShaderEXT | RAY_FLAG_SKIP_CLOSEST_HIT_SHADER |
 | gl_RayFlagsCullBackFacingTrianglesEXT | RAY_FLAG_CULL_BACK_FACING_TRIANGLES |
