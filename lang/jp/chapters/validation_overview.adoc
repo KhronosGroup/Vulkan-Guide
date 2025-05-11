@@ -52,9 +52,9 @@ Khronos Validation Layer は、以前は複数のレイヤで構成されてい�
 検証レイヤは常に更新・改良されているので、ソースを入手してlink:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/main/BUILD.md[自分でビルド]することも可能です。ビルド済みのバージョンが必要な場合は、対応プラットフォーム毎に様々なオプションが用意されています。
 
   * **Android** - バイナリは link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/releases[GitHub] で最新のバージョンが公開されています。また、NDK には検証レイヤが組み込まれており、そのlink:https://developer.android.com/ndk/guides/graphics/validation-layer[使用方法]に関する情報も含まれています。
-  * **Linux** - link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK] には検証レイヤが組み込まれており、link:https://vulkan.lunarg.com/doc/sdk/latest/linux/validation_layers.html[Linux] での使用方法が記載されています。
-  * **MacOS** - link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK] には検証レイヤが組み込まれており、link:https://vulkan.lunarg.com/doc/sdk/latest/mac/validation_layers.html[MacOS] での使用方法が記載されています。
-  * **Windows** - link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK] には検証レイヤが組み込まれており、link:https://vulkan.lunarg.com/doc/sdk/latest/windows/validation_layers.html[Windows] での使用方法が記載されています。
+  * **Linux** - link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK] には検証レイヤが組み込まれており、link:https://vulkan.lunarg.com/doc/sdk/latest/linux/khronos_validation_layer.html[Linux] での使用方法が記載されています。
+  * **MacOS** - link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK] には検証レイヤが組み込まれており、link:https://vulkan.lunarg.com/doc/sdk/latest/mac/khronos_validation_layer.html[MacOS] での使用方法が記載されています。
+  * **Windows** - link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK] には検証レイヤが組み込まれており、link:https://vulkan.lunarg.com/doc/sdk/latest/windows/khronos_validation_layer.html[Windows] での使用方法が記載されています。
 
 == 検証のエラーメッセージを分解する
 

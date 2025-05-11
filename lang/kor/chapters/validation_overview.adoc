@@ -53,9 +53,9 @@ Vulkan은 오류 검사를 수행하지 않으므로, 개발 시 link:https://gi
 유효성 검사 레이어는 지속적으로 업데이트되고 있으므로 언제든지 소스를 가져와서 link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/main/BUILD.md[직접 빌드]할 수 있습니다. 미리 빌드된 버전을 원하는 경우, 지원되는 모든 플랫폼에 대한 다양한 옵션이 있습니다:
 
   * **Android** - 바이너리는 대부분 최신 버전으로 link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/releases[GitHub에 릴리즈]되어 있습니다. NDK에는 유효성 검사 레이어가 빌드되어 있으며 link:https://developer.android.com/ndk/guides/graphics/validation-layer[사용 방법에 대한 정보]도 함께 제공됩니다.
-  * **Linux** - link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK]에는 유효성 검사 레이어가 빌드되어 있으며 link:https://vulkan.lunarg.com/doc/sdk/latest/linux/validation_layers.html[Linux]에서 이를 사용하는 방법에 대한 가이드가 함께 제공됩니다.
-  * **MacOS** - link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK]에는 유효성 검사 레이어가 빌드되어 있으며 link:https://vulkan.lunarg.com/doc/sdk/latest/mac/validation_layers.html[MacOS]에서 이를 사용하는 방법에 대한 가이드가 함께 제공됩니다.
-  * **Windows** - link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK]에는 유효성 검사 레이어가 빌드되어 있으며 link:https://vulkan.lunarg.com/doc/sdk/latest/windows/validation_layers.html[Windows]에서 이를 사용하는 방법에 대한 가이드가 함께 제공됩니다.
+  * **Linux** - link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK]에는 유효성 검사 레이어가 빌드되어 있으며 link:https://vulkan.lunarg.com/doc/sdk/latest/linux/khronos_validation_layer.html[Linux]에서 이를 사용하는 방법에 대한 가이드가 함께 제공됩니다.
+  * **MacOS** - link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK]에는 유효성 검사 레이어가 빌드되어 있으며 link:https://vulkan.lunarg.com/doc/sdk/latest/mac/khronos_validation_layer.html[MacOS]에서 이를 사용하는 방법에 대한 가이드가 함께 제공됩니다.
+  * **Windows** - link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK]에는 유효성 검사 레이어가 빌드되어 있으며 link:https://vulkan.lunarg.com/doc/sdk/latest/windows/khronos_validation_layer.html[Windows]에서 이를 사용하는 방법에 대한 가이드가 함께 제공됩니다.
 
 == 유효성 검사 오류 메시지 분석
 
