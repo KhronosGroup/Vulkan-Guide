@@ -158,6 +158,12 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 // include::{chapters}protected.adoc[]
 
+=== xref:{chapters}buffer_device_address.adoc[Buffer Device Address]
+
+// include::{chapters}buffer_device_address.adoc[]
+
+  * `VK_KHR_buffer_device_address`, `VK_EXT_buffer_device_address`
+
 == xref:{chapters}pipeline_cache.adoc[Pipeline Caching/Derivatives]
 
 // include::{chapters}pipeline_cache.adoc[]
