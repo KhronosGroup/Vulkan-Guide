@@ -44,7 +44,7 @@ Vulkan의 provoking vertex 기본 규칙은 "`첫 번째 정점`" 인 반면, Op
 [[VK_EXT_transform_feedback]]
 == VK_EXT_transform_feedback
 
-변환 피드백(Transform-feedback)에 필요한 모든 것은 Vulkan의 컴퓨트 쉐이더를 통해 수행할 수 있습니다. 변환 피드백이 왜 끔찍하고 피해야 하는지에 대한 https://www.jlekstrand.net/jason/blog/2018/10/transform-feedback-is-terrible-so-why/[Jason Ekstrand의 훌륭한 블로그]도 있습니다.
+변환 피드백(Transform-feedback)에 필요한 모든 것은 Vulkan의 컴퓨트 쉐이더를 통해 수행할 수 있습니다.
 
 [[VK_EXT_image_view_min_lod]]
 == VK_EXT_image_view_min_lod

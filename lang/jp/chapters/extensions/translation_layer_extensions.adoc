@@ -43,7 +43,7 @@ Vulkan のデフォルトでは、provoking vertex の規約は「最初の頂�
 [[VK_EXT_transform_feedback]]
 == VK_EXT_transform_feedback
 
-変換フィードバックに必要なことはすべて、Vulkan のコンピュートシェーダで行うことができます。また、変換フィードバックを避けるべき理由についてのlink:https://www.jlekstrand.net/jason/blog/2018/10/transform-feedback-is-terrible-so-why/[Jason Ekstrand による素晴らしいブログ]もあります。
+変換フィードバックに必要なことはすべて、Vulkan のコンピュートシェーダで行うことができます。
 
 [[VK_EXT_image_view_min_lod]]
 == VK_EXT_image_view_min_lod
