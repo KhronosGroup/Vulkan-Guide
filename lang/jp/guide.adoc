@@ -202,6 +202,10 @@ include::{chapters}shader_memory_layout.adoc[]
 
 include::{chapters}atomics.adoc[]
 
+// == Image Copies
+
+include::{chapters}image_copies.adoc[]
+
 // == Common Pitfalls
 
 include::{chapters}common_pitfalls.adoc[]
