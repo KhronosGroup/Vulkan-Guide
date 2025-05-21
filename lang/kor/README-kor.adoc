@@ -229,6 +229,10 @@ Vulkan에서 사용하는 특수한 용어에 대한 혼란을 막기 위해 명
 
   * `VK_KHR_shader_atomic_int64`, `VK_EXT_shader_image_atomic_int64`, `VK_EXT_shader_atomic_float`, `VK_EXT_shader_atomic_float2`
 
+== xref:{chapters}image_copies.adoc[Image Copies]
+
+// include::{chapters}image_copies.adoc[]
+
 == xref:{chapters}common_pitfalls.adoc[흔히하는 함정/실수]
 
 // include::{chapters}common_pitfalls.adoc[]

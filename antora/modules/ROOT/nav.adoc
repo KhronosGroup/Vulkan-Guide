@@ -52,6 +52,7 @@
 ** xref:{chapters}subgroups.adoc[]
 ** xref:{chapters}shader_memory_layout.adoc[]
 ** xref:{chapters}atomics.adoc[]
+** xref:{chapters}image_copies.adoc[]
 ** xref:{chapters}common_pitfalls.adoc[]
 ** xref:{chapters}hlsl.adoc[]
 ** xref:{chapters}high_level_shader_language_comparison.adoc[]
