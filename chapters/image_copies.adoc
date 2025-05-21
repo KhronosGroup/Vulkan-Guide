@@ -17,9 +17,9 @@ There are 3 main ways to copy to/from a `VkImage`
 [options="header"]
 |===
 | Copy Type | Original (Vulkan 1.0) | `VK_KHR_copy_commands2` (Vulkan 1.3) - Added a missing `pNext` in the structs | `VK_EXT_host_image_copy` (Vulkan 1.4) - allows copies on host without a `VkBuffer` or `VkCommandBuffer`
-| Buffer ↔ Image   | `vkCmdCopyBufferToImage`      | `vkCmdCopyBufferToImage2`                | `vkCopyMemoryToImage`
-| Image ↔ Buffer   | `vkCmdCopyImageToBuffer`      | `vkCmdCopyImageToBuffer2`                | `vkCopyImageToMemory`
-| Image ↔ Image    | `vkCmdCopyImage`              | `vkCmdCopyImage2`                        | `vkCopyImageToImage`
+| Buffer to Image   | `vkCmdCopyBufferToImage` | `vkCmdCopyBufferToImage2` | `vkCopyMemoryToImage`
+| Image to Buffer   | `vkCmdCopyImageToBuffer` | `vkCmdCopyImageToBuffer2` | `vkCopyImageToMemory`
+| Image to Image    | `vkCmdCopyImage`         | `vkCmdCopyImage2`         | `vkCopyImageToImage`
 |===
 
 == Image Subresource
@@ -38,6 +38,8 @@ The reason you need a subresource of the image is because the image is an opaque
 When creating an image, the memory is not always going to be tightly packed together.
 When dealing with a CPU, you can normally assume a 2D or 3D image is just laid out in as large 1D buffer.
 GPU hardware has various memory alignment requirements, and will adjust the memory as required.
+
+While buffers and CPU memory are addressed with a single linear offset, images are addressed in multiple dimensions (ex. 2D image needs an `x` and `y` offset). When copying data in or out of images, each of these dimensions must be specified to describe the data being copied.
 
 The following is a small example to show how two GPU can represent a `VkImage` layout differently.
 
@@ -124,6 +126,8 @@ where the `extent.depth` is `8`, which is allowed for a 2D image because it has 
 
 You might be thinking what the difference is between a 3D image and 2D image with layers. One main difference is the mipchains they generate.
 
+Each miplevel the `x`,`y`, and `z` are are halved at each mip level, while the layer count is not.
+
 As an example, let's try to copy `miplevel 1`:
 
 - The 3D extent would be `{4, 4, 4}`
@@ -150,7 +154,7 @@ copy.srcSubresource.mipLevel = 1;
 
 == Compressed Image Copies
 
-Dealing with compress images can be a bit tricky, the main thing is to first grasp the terminology of `texel` vs `texel block`
+Dealing with compressed images can be a bit tricky, the main thing is to first grasp the terminology of `texel` vs `texel block`
 
 image::{images}image_copies_compressed_terminology.svg[image_copies_compressed_terminology.svg]
 
@@ -167,7 +171,7 @@ Copying to and from a `VkBuffer`/`VkDeviceMemory` is straight forward, the `exte
 
 image::{images}image_copies_compressed_buffer.svg[image_copies_compressed_buffer.svg]
 
-The tricky part is when you deal with a uncompressed image that has a block extent of `{1, 1, 1}`, here you will set the `VkImageCopy::extent` to match the `srcImage` (link:https://docs.vulkan.org/spec/latest/chapters/formats.html#formats-size-compatibility[details in spec]).
+The tricky part is when you deal with a uncompressed image that has a block extent of `{1, 1, 1}`. You will set the `VkImageCopy::extent` to match the `texels` in the `srcImage`, and the `dstImage` is scaled link:https://docs.vulkan.org/spec/latest/chapters/formats.html#formats-size-compatibility[as described in the spec].
 
 image::{images}image_copies_uncompress_to_compress.svg[image_copies_uncompress_to_compress.svg]
 
@@ -185,7 +189,7 @@ image::{images}image_copies_dst_offset.svg[image_copies_dst_offset.svg]
 
 === Partial Texel Block
 
-When using a compressed image, it is possible you might even up with a partially full texel block.
+When using a compressed image, it is possible you might end up with a partially full texel block.
 
 This can be from just setting the original extent that is not a multiple of the texel block extent.
 
