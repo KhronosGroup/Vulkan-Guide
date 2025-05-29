@@ -187,6 +187,10 @@ Vulkan에서 사용하는 특수한 용어에 대한 혼란을 막기 위해 명
 
 // include::{chapters}vertex_input_data_processing.adoc[]
 
+=== xref:{chapters}descriptor_arrays.adoc[Descriptor Arrays]
+
+// include::{chapters}descriptor_arrays.adoc[]
+
 === xref:{chapters}descriptor_dynamic_offset.adoc[디스크립터 동적 오프셋]
 
 // include::{chapters}descriptor_dynamic_offset.adoc[]

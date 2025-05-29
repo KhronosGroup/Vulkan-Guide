@@ -181,6 +181,10 @@ include::{chapters}mapping_data_to_shaders.adoc[]
 
 include::{chapters}vertex_input_data_processing.adoc[]
 
+// === Descriptor Array
+
+include::{chapters}descriptor_arrays.adoc[]
+
 // === Descriptor Dynamic Offset
 
 include::{chapters}descriptor_dynamic_offset.adoc[]
