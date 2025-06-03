@@ -25,7 +25,7 @@ The main thing to take away here is the last pre-rasterization stage might be an
 
 == Types of Primitive
 
-One of the goals of pre-rasterization is to get all the `primitives` ready for rasterization. The `primitive` are smallest organized unit of consecutive vertices. The `topology` of these primitives can be defined with the values in link:https://docs.vulkan.org/spec/latest/chapters/drawing.html#VkPrimitiveTopology[VkPrimitiveTopology].
+One of the goals of pre-rasterization is to get all the `primitives` ready for rasterization. The `primitive` is the smallest organized unit of vertices forming a basic geometric shape that's processed by the rasterizer. The `topology` of these primitives can be defined with the values in link:https://docs.vulkan.org/spec/latest/chapters/drawing.html#VkPrimitiveTopology[VkPrimitiveTopology].
 
 The following shows a basic example how 6 vertices can be connected in different `VkPrimitiveTopology`
 
@@ -96,14 +96,14 @@ layout(line_strip) out;
 layout(triangle_strip) out;
 ----
 
-=== Pologon Mode
+=== Polygon Mode
 
 Once you have your primitives created you can set the link:https://docs.vulkan.org/spec/latest/chapters/primsrast.html#VkPolygonMode[VkPolygonMode]. This allows you to "fill in" the primitive.
 
-image::{images}primitive_topology_pologon_mode.svg[primitive_topology_pologon_mode.svg]
+image::{images}primitive_topology_polygon_mode.svg[primitive_topology_polygon_mode.svg]
 
 If you have a vertex shader that has `VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST` input and then during rasterization uses `VK_POLYGON_MODE_LINE`, the effective topology is the Line link:https://docs.vulkan.org/spec/latest/chapters/drawing.html#drawing-primitive-topology-class[Topology Class] at time. This means something like `lineWidth` would be applied when filling in the polygon with `VK_POLYGON_MODE_LINE`.
 
 == rasterizerDiscardEnable
 
-`VkPipelineRasterizationStateCreateInfo::rasterizerDiscardEnable` (or set dynamically with `vkCmdSetRasterizerDiscardEnable`) will controls whether primitives are discarded immediately before the rasterization stage. This is important because when this is set to `VK_TRUE` the rasterization hardware is not excuated. There are many Validation Usage errors that will not occur if this is set to `VK_TRUE` because some topology hardware is unused and can be ignored.
+`VkPipelineRasterizationStateCreateInfo::rasterizerDiscardEnable` (or set dynamically with `vkCmdSetRasterizerDiscardEnable`) will controls whether primitives are discarded immediately before the rasterization stage. This is important because when this is set to `VK_TRUE` the rasterization hardware is not executed. There are many Validation Usage errors that will not occur if this is set to `VK_TRUE` because some topology hardware is unused and can be ignored.
