@@ -1,0 +1,11 @@
+// Copyright 2025 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[descriptor-arrays]]
+= Descriptor Arrays
+
+죄송합니다, 아직 번역이 필요합니다.
