@@ -106,4 +106,9 @@ If you have a vertex shader that has `VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST` input
 
 == rasterizerDiscardEnable
 
-`VkPipelineRasterizationStateCreateInfo::rasterizerDiscardEnable` (or set dynamically with `vkCmdSetRasterizerDiscardEnable`) will controls whether primitives are discarded immediately before the rasterization stage. This is important because when this is set to `VK_TRUE` the rasterization hardware is not executed. There are many Validation Usage errors that will not occur if this is set to `VK_TRUE` because some topology hardware is unused and can be ignored.
+`VkPipelineRasterizationStateCreateInfo::rasterizerDiscardEnable` (or set dynamically with `vkCmdSetRasterizerDiscardEnable`) controls whether primitives are discarded immediately before the rasterization stage. This is important because when this is set to `VK_TRUE` the rasterization hardware is not executed. There are many Validation Usage errors that will not occur if this is set to `VK_TRUE` because some topology hardware is unused and can be ignored.
+
+[NOTE]
+====
+Enabling this state is meant for very specific use cases. Prior to compute shaders, this was a common technique for writting geometry shader output to a buffer. It can be used to debug/profile non-rasterization bottle necks.
+====
