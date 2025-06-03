@@ -1,0 +1,114 @@
+// Copyright 2025 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[primitive-topology]]
+= Primitive Topology
+
+When using a graphics pipeline there are 2 types of shaders, link:https://docs.vulkan.org/spec/latest/chapters/pipelines.html#pipelines-graphics-subsets-pre-rasterization[pre-rasterization shaders] and fragment shaders.
+
+[[pre-rasterization-stages]]
+== Pre-Rasterization stages
+
+The following are the various shader stages that can be used in pre-rasterization.
+
+image::{images}primitive_topology_stages.svg[primitive_topology_stages.svg]
+
+The main thing to take away here is the last pre-rasterization stage might be any of the following:
+
+- VK_SHADER_STAGE_VERTEX_BIT
+- VK_SHADER_STAGE_MESH_BIT_EXT
+- VK_SHADER_STAGE_GEOMETRY_BIT
+- VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT (must always be with a tessellation control stage)
+
+== Types of Primitive
+
+One of the goals of pre-rasterization is to get all the `primitives` ready for rasterization. The `primitive` is the smallest organized unit of vertices forming a basic geometric shape that's processed by the rasterizer. The `topology` of these primitives can be defined with the values in link:https://docs.vulkan.org/spec/latest/chapters/drawing.html#VkPrimitiveTopology[VkPrimitiveTopology].
+
+The following shows a basic example how 6 vertices can be connected in different `VkPrimitiveTopology`
+
+image::{images}primitive_topology_example.svg[primitive_topology_example.svg]
+
+== Various Effective Topology
+
+It is possible for the multiple link:https://docs.vulkan.org/spec/latest/chapters/drawing.html#drawing-primitive-topology-class[Topology Class] to be used during the graphics pipeline. It is important to know where in the pipeline you are when discussing "topology".
+
+=== Vertex Input Assembly
+
+`VkPipelineInputAssemblyStateCreateInfo::topology` (or set dynamically with `vkCmdSetPrimitiveTopology`) is what is provided as an input for the vertex shader.
+
+When using mesh shaders, this value is ignored.
+
+[NOTE]
+====
+If you want to set `VK_DYNAMIC_STATE_PRIMITIVE_TOPOLOGY` in your pipeline, make sure to be aware of the `dynamicPrimitiveTopologyUnrestricted` property. Some hardware can only let you dynamically adjust the input assembly primitive topology to be in the same link:https://docs.vulkan.org/spec/latest/chapters/drawing.html#drawing-primitive-topology-class[Topology Class]
+====
+
+=== Shader Execution Mode
+
+Some stages have `Execution Mode` (SPIR-V term) that are defined in the shader code itself. This allows shader authors to determine the topology the shader will output.
+
+It is possible to have multiple stages such as tessellation and geometry together. In this case the effective topology is only the `Execution Mode` set by the last shader stage in the pipeline.
+
+==== Mesh output Execution Mode
+
+The mesh stage will set either `OutputPoints`, `OutputLinesEXT`, or `OutputTrianglesEXT`
+
+link:https://godbolt.org/z/jhhsoTfnT[Try Online]
+
+[source,glsl]
+----
+#extension GL_EXT_mesh_shader : require
+
+// Only 1 of the 3 is allowed
+layout(points) out;
+layout(lines) out;
+layout(triangles) out;
+----
+
+==== Tessellation output Execution Mode
+
+The tessellation evaluation stage will set either `Triangles`, `Quads`, or `Isolines`
+
+link:https://godbolt.org/z/PbPT4WWrr[Try Online]
+
+[source,glsl]
+----
+// Only 1 of the 3 is allowed
+layout(quads) in;
+layout(isolines) in;
+layout(triangles) in;
+----
+
+==== Geometry output Execution Mode
+
+A geometry stage will set either `OutputPoints`, `OutputLineStrip`, or `OutputTriangleStrip`
+
+link:https://godbolt.org/z/K9nn98oGv[Try Online]
+
+[source,glsl]
+----
+// Only 1 of the 3 is allowed
+layout(points) out;
+layout(line_strip) out;
+layout(triangle_strip) out;
+----
+
+=== Polygon Mode
+
+Once you have your primitives created you can set the link:https://docs.vulkan.org/spec/latest/chapters/primsrast.html#VkPolygonMode[VkPolygonMode]. This allows you to "fill in" the primitive.
+
+image::{images}primitive_topology_polygon_mode.svg[primitive_topology_polygon_mode.svg]
+
+If you have a vertex shader that has `VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST` input and then during rasterization uses `VK_POLYGON_MODE_LINE`, the effective topology is the Line link:https://docs.vulkan.org/spec/latest/chapters/drawing.html#drawing-primitive-topology-class[Topology Class] at time. This means something like `lineWidth` would be applied when filling in the polygon with `VK_POLYGON_MODE_LINE`.
+
+== rasterizerDiscardEnable
+
+`VkPipelineRasterizationStateCreateInfo::rasterizerDiscardEnable` (or set dynamically with `vkCmdSetRasterizerDiscardEnable`) controls whether primitives are discarded immediately before the rasterization stage. This is important because when this is set to `VK_TRUE` the rasterization hardware is not executed. There are many Validation Usage errors that will not occur if this is set to `VK_TRUE` because some topology hardware is unused and can be ignored.
+
+[NOTE]
+====
+Enabling this state is meant for very specific use cases. Prior to compute shaders, this was a common technique for writting geometry shader output to a buffer. It can be used to debug/profile non-rasterization bottle necks.
+====

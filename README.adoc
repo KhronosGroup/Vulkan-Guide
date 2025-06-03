@@ -178,6 +178,10 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
   * `VK_EXT_depth_range_unrestricted`, `VK_EXT_depth_clip_enable`, `VK_EXT_depth_clip_control`
 
+== xref:{chapters}primitive_topology.adoc[Primitive Topology]
+
+// include::{chapters}primitive_topology.adoc[]
+
 == xref:{chapters}mapping_data_to_shaders.adoc[Mapping Data to Shaders]
 
 // include::{chapters}mapping_data_to_shaders.adoc[]

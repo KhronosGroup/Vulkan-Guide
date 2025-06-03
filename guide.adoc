@@ -173,6 +173,10 @@ include::{chapters}threading.adoc[]
 
 include::{chapters}depth.adoc[]
 
+// == Primitive Topology
+
+include::{chapters}primitive_topology.adoc[]
+
 // == Mapping Data to Shaders
 
 include::{chapters}mapping_data_to_shaders.adoc[]

@@ -179,6 +179,10 @@ Vulkan에서 사용하는 특수한 용어에 대한 혼란을 막기 위해 명
 
   * `VK_EXT_depth_range_unrestricted`, `VK_EXT_depth_clip_enable`, `VK_EXT_depth_clip_control`
 
+== xref:{chapters}primitive_topology.adoc[Primitive Topology]
+
+// include::{chapters}primitive_topology.adoc[]
+
 == xref:{chapters}mapping_data_to_shaders.adoc[쉐이더에 대한 데이터 매핑]
 
 // include::{chapters}mapping_data_to_shaders.adoc[]
