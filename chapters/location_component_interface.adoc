@@ -104,7 +104,12 @@ image::{images}location_example_array.svg[location_example_array]
 
 As seen, using a scalar or something such as a `vec2`/`float2` will leave many `Component` slots unused.
 
-It is **not** allowed to use any other `Component` in a `Location` that is being consumed by an array
+It is **allowed** to use any other `Component` in a `Location` that is being consumed by an array
+
+[NOTE]
+====
+This behavior is guaranteed to work correctly with CTS 1.4.4.0 and higher compliant drivers.
+====
 
 [source,glsl]
 ----
@@ -112,7 +117,7 @@ layout(location=0) in float a[3];
 layout(location=2, component=2) in float b;
 ----
 
-`float b` is invalid because the array consumes all of `Location` 2.
+`float b` is still valid because the array consumes only the first part of `Location` 2.
 
 image::{images}location_example_array2.svg[location_example_array2]
 
