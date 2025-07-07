@@ -244,6 +244,10 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
   * `VK_KHR_shader_atomic_int64`, `VK_EXT_shader_image_atomic_int64`, `VK_EXT_shader_atomic_float`, `VK_EXT_shader_atomic_float2`
 
+== xref:{chapters}storage_image_and_texel_buffers.adoc[Storage Image and Texel Buffers]
+
+// include::{chapters}storage_image_and_texel_buffers.adoc[]
+
 == xref:{chapters}image_copies.adoc[Image Copies]
 
 // include::{chapters}image_copies.adoc[]

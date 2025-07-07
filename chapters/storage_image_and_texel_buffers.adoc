@@ -126,6 +126,7 @@ if (!(formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_STORAGE_IMAGE_B
 ----
 
 Common formats that typically support storage operations include:
+
 - `VK_FORMAT_R32G32B32A32_SFLOAT`
 - `VK_FORMAT_R32G32B32A32_UINT`
 - `VK_FORMAT_R32G32B32A32_SINT`
@@ -342,6 +343,11 @@ if (!(formatProperties.bufferFeatures & VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_B
 }
 ----
 
+[NOTE]
+====
+The code above is using the `bufferFeatures` member of `VkFormatProperties` to check for texel buffer support, as opposed to `optimalTilingFeatures` or `linearTilingFeatures` which are used for images.
+====
+
 === Synchronization with Texel Buffers
 
 When using storage texel buffers, proper synchronization is crucial to avoid race conditions.
@@ -459,7 +465,7 @@ This difference means that storage images have stricter format requirements than
 
 === SPIR-V Image Format and Vulkan Format Compatibility
 
-The Vulkan Specification defines a table of [Compatibility Between SPIR-V Image Formats and Vulkan Formats](https://docs.vulkan.org/spec/latest/chapters/textures.html#formats-compatibility-classes) that shows the exact mapping between SPIR-V Image Formats and Vulkan Formats.
+The Vulkan Specification defines a table of link:https://docs.vulkan.org/spec/latest/chapters/textures.html#formats-compatibility-classes[Compatibility Between SPIR-V Image Formats and Vulkan Formats] that shows the exact mapping between SPIR-V Image Formats and Vulkan Formats.
 
 ==== Storage Images Format Requirements
 
@@ -540,13 +546,13 @@ There are different approaches to fix format mismatches depending on the resourc
    - For example, if your shader uses `rgba8` (SPIR-V format `Rgba8`), create your VkImageView with `VK_FORMAT_R8G8B8A8_UNORM`.
    - If you need to work with a different format (e.g., `VK_FORMAT_B8G8R8A8_UNORM`), you'll need to manually swizzle the components in your shader code:
 
-   [source,glsl]
-   ----
-   // Manual swizzling for BGRA to RGBA conversion
-   vec4 value = imageLoad(storageImage, texelCoord);
-   vec4 swizzled = value.bgra; // Manually swizzle components
-   // Use swizzled value
-   ----
+[source,glsl]
+----
+// Manual swizzling for BGRA to RGBA conversion
+vec4 value = imageLoad(storageImage, texelCoord);
+vec4 swizzled = value.bgra; // Manually swizzle components
+// Use swizzled value
+----
 
 2. **Use the Unknown Format in SPIR-V**: If you need flexibility in the formats you use, you can use the `Unknown` format in SPIR-V, which is compatible with any Vulkan format.
    - This requires enabling the `shaderStorageImageWriteWithoutFormat` feature.
