@@ -193,6 +193,11 @@ For GLSL, more information can be found in the link:https://registry.khronos.org
 
 `VK_DESCRIPTOR_TYPE_STORAGE_IMAGE`
 
+[NOTE]
+====
+More details found in xref:{chapters}storage_image_and_texel_buffers.adoc[Storage Image chapter]
+====
+
 link:https://godbolt.org/z/7KPe11GPs[Try Online]
 
 [source,glsl]
@@ -374,6 +379,11 @@ OpDecorate %ssbo Binding 0
 
 `VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER`
 
+[NOTE]
+====
+More details found in xref:{chapters}storage_image_and_texel_buffers.adoc[Texel Buffer chapter]
+====
+
 link:https://godbolt.org/z/ob4T9d3E4[Try Online]
 
 [source,glsl]
@@ -399,6 +409,11 @@ OpDecorate %uniformTexelBuffer Binding 0
 ==== Storage Texel Buffer
 
 `VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER`
+
+[NOTE]
+====
+More details found in xref:{chapters}storage_image_and_texel_buffers.adoc[Texel Buffer chapter]
+====
 
 link:https://godbolt.org/z/zoeMxsKjq[Try Online]
 
