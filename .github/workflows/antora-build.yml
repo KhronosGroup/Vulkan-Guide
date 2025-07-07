@@ -63,7 +63,7 @@ jobs:
 
       # Archive the build artifacts
       - name: Archive Antora build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: antora-site
           path: build/site
