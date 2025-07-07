@@ -75,3 +75,4 @@
 ** xref:{chapters}extensions/VK_KHR_imageless_framebuffer.adoc[]
 ** xref:{chapters}extensions/VK_KHR_sampler_ycbcr_conversion.adoc[]
 ** xref:{chapters}extensions/VK_KHR_shader_subgroup_uniform_control_flow.adoc[]
+** xref:{chapters}extensions/VK_KHR_debug_utils.adoc[]
