@@ -1,0 +1,69 @@
+# Copyright 2021 The Khronos Group, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
+# Github workflow file for Antora documentation build
+
+name: Antora Build
+
+# Controls when the action will run.
+on:
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+  # Triggers the workflow on push or manual dispatch
+  push:
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  antora-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can
+      # access it
+      - uses: actions/checkout@v3
+
+      # Set up Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      # Install Antora CLI and site generator
+      - name: Install Antora
+        run: npm i -g @antora/cli@3.1 @antora/site-generator@3.1
+
+      # Setup Antora directory structure
+      - name: Setup Antora directory structure
+        run: |
+          cd antora
+          make setup
+
+      # Create a simple Antora playbook
+      - name: Create Antora playbook
+        run: |
+          echo "site:
+            title: Vulkan Guide
+            url: https://github.com/KhronosGroup/Vulkan-Guide
+            start_page: guide::index.adoc
+          content:
+            sources:
+            - url: .
+              start_path: antora
+          ui:
+            bundle:
+              url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
+              snapshot: true" > antora-playbook.yml
+
+      # Run Antora build
+      - name: Build Antora site
+        run: antora --stacktrace antora-playbook.yml
+
+      # Archive the build artifacts
+      - name: Archive Antora build
+        uses: actions/upload-artifact@v3
+        with:
+          name: antora-site
+          path: build/site
