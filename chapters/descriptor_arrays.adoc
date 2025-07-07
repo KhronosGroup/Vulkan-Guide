@@ -66,7 +66,7 @@ it is pretty easy to set up. You just need to set your `VkDescriptorSetLayoutBin
 
 When you update you have 2 options
 
-1. Use an array of 4 `VkDescriptorBufferInfo` (likely easier way)
+* Use an array of 4 `VkDescriptorBufferInfo` (likely easier way)
 
 [source,c++]
 ----
@@ -84,7 +84,7 @@ writes.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 writes.pBufferInfo = buffer_infos;
 ----
 
-2. Use an array of 4 `VkWriteDescriptorSet`
+* Use an array of 4 `VkWriteDescriptorSet`
 
 [source,c++]
 ----

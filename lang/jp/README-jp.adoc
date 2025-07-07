@@ -32,207 +32,113 @@ Vulkan Guide は、`asciidoctor guide.adoc` を使って1つのページとし�
 
 == xref:{chapters}what_is_vulkan.adoc[Vulkan とは？]
 
-// include::{chapters}what_is_vulkan.adoc[]
-
 == xref:{chapters}what_vulkan_can_do.adoc[Vulkan で出来ること]
-
-// include::{chapters}what_vulkan_can_do.adoc[]
 
 == xref:{chapters}vulkan_spec.adoc[Vulkan Spec]
 
-// include::{chapters}vulkan_spec.adoc[]
-
 == xref:{chapters}platforms.adoc[プラットフォーム]
-
-// include::{chapters}platforms.adoc[]
 
 == xref:{chapters}checking_for_support.adoc[対応の確認]
 
-// include::{chapters}checking_for_support.adoc[]
-
 == xref:{chapters}versions.adoc[バージョン]
-
-// include::{chapters}versions.adoc[]
 
 == xref:{chapters}vulkan_release_summary.adoc[Vulkan Release Summary]
 
-// include::{chapters}vulkan_release_summary.adoc[]
-
 == xref:{chapters}what_is_spirv.adoc[SPIR-V とは？]
-
-// include::{chapters}what_is_spirv.adoc[]
 
 == xref:{chapters}portability_initiative.adoc[移植性に関わるイニシアチブ]
 
-// include::{chapters}portability_initiative.adoc[]
-
 == xref:{chapters}vulkan_cts.adoc[Vulkan CTS]
-
-// include::{chapters}vulkan_cts.adoc[]
 
 == xref:{chapters}development_tools.adoc[Vulkan 開発ツール]
 
-// include::{chapters}development_tools.adoc[]
-
 == xref:{chapters}validation_overview.adoc[Vulkan Validation の概要]
 
-// include::{chapters}validation_overview.adoc[]
-
 == xref:{chapters}decoder_ring.adoc[Vulkan で使われる用語の対応表 (GL、GLES、DirectX、Metal)]
-
-// include::{chapters}decoder_ring.adoc[]
 
 = Vulkan の使い方
 
 == xref:{chapters}loader.adoc[ローダ]
 
-// include::{chapters}loader.adoc[]
-
 == xref:{chapters}layers.adoc[レイヤ]
-
-// include::{chapters}layers.adoc[]
 
 == xref:{chapters}querying_extensions_features.adoc[プロパティ、拡張機能、機能、制限、フォーマットのクエリ]
 
-// include::{chapters}querying_extensions_features.adoc[]
-
 === xref:{chapters}enabling_extensions.adoc[Vulkan 拡張機能の有効化]
-
-// include::{chapters}enabling_extensions.adoc[]
 
 === xref:{chapters}enabling_features.adoc[Vulkan 機能の有効化]
 
-// include::{chapters}enabling_features.adoc[]
-
 === xref:{chapters}spirv_extensions.adoc[SPIR-V 拡張機能の使い方]
-
-// include::{chapters}spirv_extensions.adoc[]
 
 === xref:{chapters}formats.adoc[フォーマット]
 
-// include::{chapters}formats.adoc[]
-
 == xref:{chapters}queues.adoc[キューとキューファミリ]
-
-// include::{chapters}queues.adoc[]
 
 == xref:{chapters}wsi.adoc[WSI]
 
-// include::{chapters}wsi.adoc[]
-
 == xref:{chapters}pnext_and_stype.adoc[pNext と sType]
-
-// include::{chapters}pnext_and_stype.adoc[]
 
 == xref:{chapters}synchronization.adoc[同期]
 
-// include::{chapters}synchronization.adoc[]
-
 === xref:{chapters}extensions/VK_KHR_synchronization2.adoc[VK_KHR_synchronization2 への移植]
-
-// include::{chapters}extensions/VK_KHR_synchronization2.adoc[]
 
 == xref:{chapters}memory_allocation.adoc[メモリ割り当ての戦略]
 
-// include::{chapters}memory_allocation.adoc[]
-
 === xref:{chapters}sparse_resources.adoc[スパースリソース（Sparse Resources）]
-
-// include::{chapters}sparse_resources.adoc[]
 
 === xref:{chapters}protected.adoc[保護されたメモリ]
 
-// include::{chapters}protected.adoc[]
-
 === xref:{chapters}buffer_device_address.adoc[Buffer Device Address]
-
-// include::{chapters}buffer_device_address.adoc[]
 
   * `VK_KHR_buffer_device_address`, `VK_EXT_buffer_device_address`
 
 == xref:{chapters}pipeline_cache.adoc[パイプライン キャッシング/派生]
 
-// include::{chapters}pipeline_cache.adoc[]
-
 == xref:{chapters}threading.adoc[スレッド化]
 
-// include::{chapters}threading.adoc[]
-
 == xref:{chapters}depth.adoc[深度]
-
-// include::{chapters}depth.adoc[]
 
   * `VK_EXT_depth_range_unrestricted`, `VK_EXT_depth_clip_enable`, `VK_EXT_depth_clip_control`
 
 == xref:{chapters}primitive_topology.adoc[Primitive Topology]
 
-// include::{chapters}primitive_topology.adoc[]
-
 == xref:{chapters}mapping_data_to_shaders.adoc[シェーダへのデータマッピング]
-
-// include::{chapters}mapping_data_to_shaders.adoc[]
 
 === xref:{chapters}vertex_input_data_processing.adoc[頂点入力データ処理]
 
-// include::{chapters}vertex_input_data_processing.adoc[]
-
 === xref:{chapters}descriptor_arrays.adoc[Descriptor Arrays]
-
-// include::{chapters}descriptor_arrays.adoc[]
 
 === xref:{chapters}descriptor_dynamic_offset.adoc[ディスクリプタ動的オフセット]
 
-// include::{chapters}descriptor_dynamic_offset.adoc[]
-
 == xref:{chapters}robustness.adoc[堅牢性]
-
-// include::{chapters}robustness.adoc[]
 
   * `VK_EXT_image_robustness`, `VK_KHR_robustness2`, `VK_EXT_pipeline_robustness`
 
 == xref:{chapters}dynamic_state.adoc[動的な状態（Dynamic State）]
 
-// include::{chapters}dynamic_state.adoc[]
-
   * `VK_EXT_extended_dynamic_state`, `VK_EXT_extended_dynamic_state2`, `VK_EXT_extended_dynamic_state3`, `VK_EXT_vertex_input_dynamic_state`, `VK_EXT_color_write_enable`, `VK_EXT_attachment_feedback_loop_dynamic_state`
 
 === xref:{chapters}dynamic_state_map.adoc[動的な状態のマップ（Dynamic State Map）]
 
-// include::{chapters}dynamic_state_map.adoc[]
-
 == xref:{chapters}subgroups.adoc[サブグループ]
-
-// include::{chapters}subgroups.adoc[]
 
   * `VK_EXT_subgroup_size_control`, `VK_KHR_shader_subgroup_extended_types`, `VK_EXT_shader_subgroup_ballot`, `VK_EXT_shader_subgroup_vote`
 
 == xref:{chapters}shader_memory_layout.adoc[シェーダメモリレイアウト]
 
-// include::{chapters}shader_memory_layout.adoc[]
-
   * `VK_KHR_uniform_buffer_standard_layout`, `VK_KHR_relaxed_block_layout`, `VK_EXT_scalar_block_layout`
 
 == xref:{chapters}atomics.adoc[アトミック]
-
-// include::{chapters}atomics.adoc[]
 
   * `VK_KHR_shader_atomic_int64`, `VK_EXT_shader_image_atomic_int64`, `VK_EXT_shader_atomic_float`, `VK_EXT_shader_atomic_float2`
 
 == xref:{chapters}image_copies.adoc[Image Copies]
 
-// include::{chapters}image_copies.adoc[]
-
 == xref:{chapters}common_pitfalls.adoc[よくある落とし穴]
-
-// include::{chapters}common_pitfalls.adoc[]
 
 == xref:{chapters}hlsl.adoc[HLSL シェーダの使い方]
 
-// include::{chapters}hlsl.adoc[]
-
 == xref:{chapters}high_level_shader_language_comparison.adoc[高レベルシェーダ言語の比較]
-
-// include::{chapters}high_level_shader_language_comparison.adoc[]
 
 = 拡張機能を使うタイミングと理由
 
@@ -245,77 +151,47 @@ Vulkan Guide は、`asciidoctor guide.adoc` を使って1つのページとし�
 
   * `VK_EXT_4444_formats`, `VK_KHR_bind_memory2`, `VK_KHR_create_renderpass2`, `VK_KHR_dedicated_allocation`, `VK_KHR_driver_properties`, `VK_KHR_get_memory_requirements2`, `VK_KHR_get_physical_device_properties2`, `VK_EXT_host_query_reset`, `VK_KHR_maintenance1`, `VK_KHR_maintenance2`, `VK_KHR_maintenance3`, `VK_KHR_maintenance4`, `VK_KHR_maintenance5`, `VK_KHR_maintenance6`, `VK_KHR_separate_depth_stencil_layouts`, `VK_KHR_depth_stencil_resolve`, `VK_EXT_separate_stencil_usage`, `VK_EXT_sampler_filter_minmax`, `VK_KHR_sampler_mirror_clamp_to_edge`, `VK_EXT_ycbcr_2plane_444_formats`, `VK_KHR_format_feature_flags2`, `VK_EXT_rgba10x6_formats`, `VK_KHR_copy_commands2`
 
-// include::{chapters}extensions/cleanup.adoc[]
-
 == xref:{chapters}extensions/device_groups.adoc[デバイスグループ]
 
   * `VK_KHR_device_group`, `VK_KHR_device_group_creation`
-
-// include::{chapters}extensions/device_groups.adoc[]
 
 == xref:{chapters}extensions/external.adoc[外部メモリと同期]
 
   * `VK_KHR_external_fence`, `VK_KHR_external_memory`, `VK_KHR_external_semaphore`
 
-// include::{chapters}extensions/external.adoc[]
-
 == xref:{chapters}extensions/ray_tracing.adoc[レイトレーシング]
 
   * `VK_KHR_acceleration_structure`, `VK_KHR_ray_tracing_pipeline`, `VK_KHR_ray_query`, `VK_KHR_pipeline_library`, `VK_KHR_deferred_host_operations`
-
-// include::{chapters}extensions/ray_tracing.adoc[]
 
 == xref:{chapters}extensions/shader_features.adoc[シェーダ機能]
 
   * `VK_KHR_8bit_storage`, `VK_KHR_16bit_storage`, `VK_KHR_shader_clock`, `VK_EXT_shader_demote_to_helper_invocation`, `VK_KHR_shader_draw_parameters`, `VK_KHR_shader_float16_int8`, `VK_KHR_shader_float_controls`, `VK_KHR_shader_non_semantic_info`, `VK_EXT_shader_stencil_export`, `VK_KHR_shader_terminate_invocation`, `VK_EXT_shader_viewport_index_layer`, `VK_KHR_spirv_1_4`, `VK_KHR_storage_buffer_storage_class`, `VK_KHR_variable_pointers`, `VK_KHR_vulkan_memory_model`, `VK_KHR_workgroup_memory_explicit_layout`, `VK_KHR_zero_initialize_workgroup_memory`
 
-// include::{chapters}extensions/shader_features.adoc[]
-
 == xref:{chapters}extensions/translation_layer_extensions.adoc[変換レイヤ拡張機能]
 
   * `VK_EXT_custom_border_color`, `VK_EXT_border_color_swizzle`, `VK_EXT_depth_clip_enable`, `VK_EXT_depth_clip_control`, `VK_EXT_provoking_vertex`, `VK_EXT_transform_feedback`, `VK_EXT_image_view_min_lod`
 
-// include::{chapters}extensions/translation_layer_extensions.adoc[]
-
 == xref:{chapters}extensions/VK_EXT_descriptor_indexing.adoc[VK_EXT_descriptor_indexing]
-
-// include::{chapters}extensions/VK_EXT_descriptor_indexing.adoc[]
 
 == xref:{chapters}extensions/VK_EXT_inline_uniform_block.adoc[VK_EXT_inline_uniform_block]
 
-// include::{chapters}extensions/VK_EXT_inline_uniform_block.adoc[]
-
 == xref:{chapters}extensions/VK_EXT_memory_priority.adoc[VK_EXT_memory_priority]
-
-// include::{chapters}extensions/VK_EXT_memory_priority.adoc[]
 
 == xref:{chapters}extensions/VK_KHR_descriptor_update_template.adoc[VK_KHR_descriptor_update_template]
 
-// include::{chapters}extensions/VK_KHR_descriptor_update_template.adoc[]
-
 == xref:{chapters}extensions/VK_KHR_draw_indirect_count.adoc[VK_KHR_draw_indirect_count]
-
-// include::{chapters}extensions/VK_KHR_draw_indirect_count.adoc[]
 
 == xref:{chapters}extensions/VK_KHR_image_format_list.adoc[VK_KHR_image_format_list]
 
-// include::{chapters}extensions/VK_KHR_image_format_list.adoc[]
-
 == xref:{chapters}extensions/VK_KHR_imageless_framebuffer.adoc[VK_KHR_imageless_framebuffer]
 
-// include::{chapters}extensions/VK_KHR_imageless_framebuffer.adoc[]
-
 == xref:{chapters}extensions/VK_KHR_sampler_ycbcr_conversion.adoc[VK_KHR_sampler_ycbcr_conversion]
-
-// include::{chapters}extensions/VK_KHR_sampler_ycbcr_conversion.adoc[]
 
 == link:https://www.khronos.org/blog/vulkan-timeline-semaphores[VK_KHR_timeline_semaphore]
 
 == link:https://www.khronos.org/blog/streamlining-render-passes[VK_KHR_dynamic_rendering]
 
 == xref:{chapters}extensions/VK_KHR_shader_subgroup_uniform_control_flow.adoc[VK_KHR_shader_subgroup_uniform_control_flow]
-
-// include::{chapters}extensions/VK_KHR_shader_subgroup_uniform_control_flow.adoc[]
 
 = link:CONTRIBUTING.adoc[貢献]
 
