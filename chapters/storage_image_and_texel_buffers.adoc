@@ -542,9 +542,12 @@ There are different approaches to fix format mismatches depending on the resourc
 
 ==== For Storage Images
 
-1. **Match the Formats Exactly**: Ensure that the VkImageView format exactly matches the SPIR-V Image Format as defined in the compatibility table.
-   - For example, if your shader uses `rgba8` (SPIR-V format `Rgba8`), create your VkImageView with `VK_FORMAT_R8G8B8A8_UNORM`.
-   - If you need to work with a different format (e.g., `VK_FORMAT_B8G8R8A8_UNORM`), you'll need to manually swizzle the components in your shader code:
+* **Match the Formats Exactly**: Ensure that the VkImageView format exactly
+matches the SPIR-V Image Format as defined in the compatibility table.
+   - For example, if your shader uses `rgba8` (SPIR-V format `Rgba8`),
+   create your VkImageView with `VK_FORMAT_R8G8B8A8_UNORM`.
+   - If you need to work with a different format (e.g.,
+   `VK_FORMAT_B8G8R8A8_UNORM`), you'll need to manually swizzle the components in your shader code:
 
 [source,glsl]
 ----
@@ -554,15 +557,16 @@ vec4 swizzled = value.bgra; // Manually swizzle components
 // Use swizzled value
 ----
 
-2. **Use the Unknown Format in SPIR-V**: If you need flexibility in the formats you use, you can use the `Unknown` format in SPIR-V, which is compatible with any Vulkan format.
+* **Use the Unknown Format in SPIR-V**: If you need flexibility in the
+formats you use, you can use the `Unknown` format in SPIR-V, which is compatible with any Vulkan format.
    - This requires enabling the `shaderStorageImageWriteWithoutFormat` feature.
    - In GLSL, this means omitting the format qualifier:
 
-   [source,glsl]
-   ----
-   // No format specified, uses Unknown in SPIR-V
-   layout(set = 0, binding = 0) uniform image2D storageImage;
-   ----
+[source,glsl]
+----
+// No format specified, uses Unknown in SPIR-V
+layout(set = 0, binding = 0) uniform image2D storageImage;
+----
 
    - Note that when using the Unknown format, you're responsible for ensuring that the data you read from or write to the image is compatible with the actual format of the image.
 
