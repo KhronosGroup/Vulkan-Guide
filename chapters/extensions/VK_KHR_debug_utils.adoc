@@ -1,0 +1,649 @@
+// Copyright 2019-2024 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../../]
+ifndef::images[:images: ../../images/]
+
+[[VK_KHR_debug_utils]]
+= VK_KHR_debug_utils
+
+[NOTE]
+====
+Promoted to core in Vulkan 1.3
+====
+
+The `VK_KHR_debug_utils` extension provides developers with a powerful set of tools for debugging Vulkan applications. This extension allows for attaching debug information to Vulkan objects, setting up debug messengers for receiving validation messages, and inserting debug markers and labels to help identify specific operations in debugging tools.
+
+== Overview
+
+Debugging GPU applications can be challenging due to the asynchronous nature of GPU execution. The `VK_KHR_debug_utils` extension helps bridge this gap by providing mechanisms to:
+
+* Label Vulkan objects with debug names
+* Insert debug markers in command buffers
+* Add debug regions to command buffers
+* Receive debug messages through callbacks
+
+These features are particularly useful when working with external debugging tools like RenderDoc, NVIDIA Nsight, or AMD Radeon GPU Profiler, as they can display these debug annotations to help developers identify specific parts of their rendering pipeline.
+
+== Debug Messenger
+
+The debug messenger is the core component for receiving validation and debug messages from the Vulkan implementation. It allows applications to be notified of validation layer messages, performance warnings, and other debug information.
+
+=== Creating a Debug Messenger
+
+[source,cpp]
+----
+// Function to create the debug messenger
+VkResult CreateDebugUtilsMessengerEXT(
+    VkInstance instance,
+    const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
+    const VkAllocationCallbacks* pAllocator,
+    VkDebugUtilsMessengerEXT* pMessenger) {
+
+    auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(
+        instance, "vkCreateDebugUtilsMessengerEXT");
+
+    if (func != nullptr) {
+        return func(instance, pCreateInfo, pAllocator, pMessenger);
+    } else {
+        return VK_ERROR_EXTENSION_NOT_PRESENT;
+    }
+}
+
+// Callback function for handling debug messages
+VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
+    VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+    VkDebugUtilsMessageTypeFlagsEXT messageType,
+    const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+    void* pUserData) {
+
+    std::cerr << "Validation layer: " << pCallbackData->pMessage << std::endl;
+
+    // Return VK_FALSE to indicate the Vulkan call should not be aborted
+    return VK_FALSE;
+}
+
+// Setting up the debug messenger
+VkDebugUtilsMessengerCreateInfoEXT createInfo{};
+createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+createInfo.messageSeverity =
+    VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
+    VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
+    VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+createInfo.messageType =
+    VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+    VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+    VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+createInfo.pfnUserCallback = debugCallback;
+createInfo.pUserData = nullptr; // Optional user data
+
+VkDebugUtilsMessengerEXT debugMessenger;
+if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
+    throw std::runtime_error("Failed to set up debug messenger!");
+}
+----
+
+=== Destroying a Debug Messenger
+
+[source,cpp]
+----
+void DestroyDebugUtilsMessengerEXT(
+    VkInstance instance,
+    VkDebugUtilsMessengerEXT messenger,
+    const VkAllocationCallbacks* pAllocator) {
+
+    auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(
+        instance, "vkDestroyDebugUtilsMessengerEXT");
+
+    if (func != nullptr) {
+        func(instance, messenger, pAllocator);
+    }
+}
+----
+
+== Object Naming
+
+One of the most useful features of the extension is the ability to assign names to Vulkan objects. This makes it much easier to identify objects in validation messages and debugging tools.
+
+[source,cpp]
+----
+// Function to set a debug name for a Vulkan object
+void SetDebugUtilsObjectName(
+    VkDevice device,
+    VkObjectType objectType,
+    uint64_t objectHandle,
+    const char* name) {
+
+    VkDebugUtilsObjectNameInfoEXT nameInfo{};
+    nameInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT;
+    nameInfo.objectType = objectType;
+    nameInfo.objectHandle = objectHandle;
+    nameInfo.pObjectName = name;
+
+    auto func = (PFN_vkSetDebugUtilsObjectNameEXT)vkGetInstanceProcAddr(
+        instance, "vkSetDebugUtilsObjectNameEXT");
+
+    if (func != nullptr) {
+        func(device, &nameInfo);
+    }
+}
+
+// Example: Naming a buffer
+VkBuffer buffer; // Your buffer handle
+SetDebugUtilsObjectName(
+    device,
+    VK_OBJECT_TYPE_BUFFER,
+    (uint64_t)buffer,
+    "My Vertex Buffer"
+);
+----
+
+== Debug Markers and Regions
+
+Debug markers and regions allow you to annotate command buffer operations, making it easier to identify specific operations in debugging tools.
+
+=== Inserting Debug Markers
+
+[source,cpp]
+----
+// Insert a debug marker into a command buffer
+void CmdInsertDebugMarker(
+    VkCommandBuffer commandBuffer,
+    const char* markerName,
+    const float color[4]) {
+
+    VkDebugUtilsLabelEXT markerInfo{};
+    markerInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT;
+    markerInfo.pLabelName = markerName;
+    memcpy(markerInfo.color, color, sizeof(float) * 4);
+
+    auto func = (PFN_vkCmdInsertDebugUtilsLabelEXT)vkGetInstanceProcAddr(
+        instance, "vkCmdInsertDebugUtilsLabelEXT");
+
+    if (func != nullptr) {
+        func(commandBuffer, &markerInfo);
+    }
+}
+
+// Example usage
+float color[4] = {1.0f, 0.0f, 0.0f, 1.0f}; // Red color
+CmdInsertDebugMarker(commandBuffer, "Important Draw Call", color);
+----
+
+=== Debug Regions
+
+Debug regions allow you to group a set of commands together, which can be invaluable for identifying specific passes or stages in your rendering pipeline.
+
+[source,cpp]
+----
+// Begin a debug region
+void CmdBeginDebugRegion(
+    VkCommandBuffer commandBuffer,
+    const char* regionName,
+    const float color[4]) {
+
+    VkDebugUtilsLabelEXT labelInfo{};
+    labelInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT;
+    labelInfo.pLabelName = regionName;
+    memcpy(labelInfo.color, color, sizeof(float) * 4);
+
+    auto func = (PFN_vkCmdBeginDebugUtilsLabelEXT)vkGetInstanceProcAddr(
+        instance, "vkCmdBeginDebugUtilsLabelEXT");
+
+    if (func != nullptr) {
+        func(commandBuffer, &labelInfo);
+    }
+}
+
+// End a debug region
+void CmdEndDebugRegion(VkCommandBuffer commandBuffer) {
+    auto func = (PFN_vkCmdEndDebugUtilsLabelEXT)vkGetInstanceProcAddr(
+        instance, "vkCmdEndDebugUtilsLabelEXT");
+
+    if (func != nullptr) {
+        func(commandBuffer);
+    }
+}
+
+// Example usage
+float shadowPassColor[4] = {0.0f, 0.0f, 0.0f, 1.0f}; // Black color
+CmdBeginDebugRegion(commandBuffer, "Shadow Pass", shadowPassColor);
+// Record shadow pass commands...
+CmdEndDebugRegion(commandBuffer);
+
+float geometryPassColor[4] = {0.0f, 1.0f, 0.0f, 1.0f}; // Green color
+CmdBeginDebugRegion(commandBuffer, "Geometry Pass", geometryPassColor);
+// Record geometry pass commands...
+CmdEndDebugRegion(commandBuffer);
+----
+
+== Queue Labels
+
+Similar to command buffer markers, you can also label queue operations:
+
+[source,cpp]
+----
+// Begin a queue label
+void QueueBeginDebugRegion(
+    VkQueue queue,
+    const char* regionName,
+    const float color[4]) {
+
+    VkDebugUtilsLabelEXT labelInfo{};
+    labelInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT;
+    labelInfo.pLabelName = regionName;
+    memcpy(labelInfo.color, color, sizeof(float) * 4);
+
+    auto func = (PFN_vkQueueBeginDebugUtilsLabelEXT)vkGetInstanceProcAddr(
+        instance, "vkQueueBeginDebugUtilsLabelEXT");
+
+    if (func != nullptr) {
+        func(queue, &labelInfo);
+    }
+}
+
+// Insert a queue label
+void QueueInsertDebugMarker(
+    VkQueue queue,
+    const char* markerName,
+    const float color[4]) {
+
+    VkDebugUtilsLabelEXT markerInfo{};
+    markerInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT;
+    markerInfo.pLabelName = markerName;
+    memcpy(markerInfo.color, color, sizeof(float) * 4);
+
+    auto func = (PFN_vkQueueInsertDebugUtilsLabelEXT)vkGetInstanceProcAddr(
+        instance, "vkQueueInsertDebugUtilsLabelEXT");
+
+    if (func != nullptr) {
+        func(queue, &markerInfo);
+    }
+}
+
+// End a queue label
+void QueueEndDebugRegion(VkQueue queue) {
+    auto func = (PFN_vkQueueEndDebugUtilsLabelEXT)vkGetInstanceProcAddr(
+        instance, "vkQueueEndDebugUtilsLabelEXT");
+
+    if (func != nullptr) {
+        func(queue);
+    }
+}
+----
+
+== Best Practices
+
+=== When to Use Debug Utils
+
+* **Development and Debugging**: Always enable debug utils during development to help identify and fix issues.
+* **Performance Testing**: Disable debug utils for performance testing, as they can introduce overhead.
+* **Release Builds**: Remove or disable debug utils in release builds to avoid unnecessary overhead.
+
+=== Naming Conventions
+
+Establish consistent naming conventions for your debug labels to make them more useful:
+
+* Use hierarchical naming for related objects (e.g., "Scene/Characters/Hero/Mesh")
+* Include type information in names (e.g., "VertexBuffer: Characters")
+* For debug regions, name them after the rendering pass or operation they represent
+
+=== Integration with External Tools
+
+Many external debugging tools support `VK_KHR_debug_utils` annotations:
+
+* **RenderDoc**: Displays debug markers and regions in its event timeline
+* **NVIDIA Nsight**: Shows debug labels in its frame debugger
+* **AMD Radeon GPU Profiler**: Uses debug regions to organize GPU workloads
+
+== Using Debugging Tools with VK_KHR_debug_utils
+
+The `VK_KHR_debug_utils` extension becomes even more powerful when used in conjunction with external debugging tools. This section focuses on using RenderDoc, one of the most popular graphics debugging tools, with Vulkan applications.
+
+=== RenderDoc Overview
+
+RenderDoc is an open-source graphics debugging tool that allows developers to capture and analyze frames from their applications. It supports Vulkan and can display debug markers, object names, and regions that were set using the `VK_KHR_debug_utils` extension.
+
+=== Setting Up RenderDoc with Vulkan
+
+To use RenderDoc with your Vulkan application:
+
+1. Download and install RenderDoc from the official website: https://renderdoc.org/
+2. Launch RenderDoc
+3. Either:
+   * Launch your application through RenderDoc by clicking "Launch Application" and selecting your executable
+   * Inject RenderDoc into an already running application by clicking "Inject into Process"
+
+[NOTE]
+====
+RenderDoc can also be integrated directly into your application using its in-application API, which allows you to programmatically trigger captures.
+====
+
+=== Capturing Frames
+
+Once your application is running with RenderDoc:
+
+1. Press F12 (default hotkey) or click the "Capture Frame" button to capture the current frame
+2. The captured frame will appear in the "Captures" panel
+3. Double-click on the capture to open it for analysis
+
+
+=== Analyzing Captured Frames
+
+RenderDoc provides several views to analyze a captured frame:
+
+==== Event Browser
+
+The Event Browser shows all Vulkan API calls in the captured frame. If you've used debug markers and regions with `VK_KHR_debug_utils`, they will appear in this timeline, making it easier to identify specific parts of your rendering pipeline.
+
+Debug regions (created with `vkCmdBeginDebugUtilsLabelEXT` and `vkCmdEndDebugUtilsLabelEXT`) appear as collapsible sections in the Event Browser, and debug markers (created with `vkCmdInsertDebugUtilsLabelEXT`) appear as individual events.
+
+==== Pipeline State
+
+The Pipeline State view shows the current state of the graphics pipeline at the selected event. Object names set with `vkSetDebugUtilsObjectNameEXT` will be displayed here, making it easier to identify resources.
+
+
+==== Resource Inspector
+
+The Resource Inspector allows you to examine the contents of buffers, textures, and other resources. Named objects are easier to find in the resource list.
+
+
+=== Common Debugging Workflows
+
+Here are some common workflows for debugging Vulkan applications with RenderDoc:
+
+1. **Identifying rendering issues**:
+   * Capture a frame
+   * Use the Event Browser to locate the draw call with the issue
+   * Examine the Pipeline State to check shader bindings, vertex inputs, and render states
+   * Use the Texture Viewer to see the output at each stage
+
+2. **Tracking down resource issues**:
+   * Use object naming to identify resources in the Resource Inspector
+   * Check buffer contents and image data
+   * Verify that resources are being updated correctly
+
+3. **Optimizing performance**:
+   * Use debug regions to mark different passes in your renderer
+   * Compare the time taken by different regions
+   * Look for redundant state changes or unnecessary work
+
+4. **Debugging shader issues**:
+   * Select a draw call in the Event Browser
+   * Go to the Shader Viewer
+   * Inspect input and output variables
+   * Step through shader execution if needed
+
+=== Best Practices for Debugging with RenderDoc
+
+1. **Use meaningful names for debug markers and regions**:
+   * Name regions after rendering passes (e.g., "Shadow Pass", "Geometry Pass")
+   * Use hierarchical naming for nested regions
+   * Include relevant information in marker names (e.g., "Drawing Character #42")
+
+2. **Name important objects**:
+   * Give descriptive names to framebuffers, render passes, pipelines, and other key resources
+   * Include purpose and type information in names (e.g., "Main Scene Depth Buffer")
+
+3. **Structure your rendering code with debugging in mind**:
+   * Wrap logical groups of commands in debug regions
+   * Insert markers at key points
+   * Consider using different colors for different types of operations
+
+4. **Be selective with captures**:
+   * Capturing frames with complex scenes can result in large capture files
+   * Focus on specific frames that demonstrate the issue you're investigating
+   * Use the in-application API to capture specific frames programmatically
+
+== Comparison with VK_EXT_debug_report
+
+The `VK_KHR_debug_utils` extension is the successor to the older `VK_EXT_debug_report` extension. It provides several advantages:
+
+* More detailed message information
+* Object naming capabilities
+* Command buffer and queue labeling
+* Debug regions for grouping operations
+* More granular message filtering
+
+If you're currently using `VK_EXT_debug_report`, it's recommended to migrate to `VK_KHR_debug_utils` for these enhanced debugging capabilities.
+
+== Migrating from VK_EXT_debug_report to VK_KHR_debug_utils
+
+This section provides guidance on how to migrate from the older `VK_EXT_debug_report` extension to the newer and more feature-rich `VK_KHR_debug_utils` extension.
+
+=== Enabling the Extension
+
+First, you need to enable the `VK_KHR_debug_utils` extension instead of `VK_EXT_debug_report`:
+
+[source,cpp]
+----
+// Old way with VK_EXT_debug_report
+const char* extensions[] = { "VK_EXT_debug_report", ... };
+
+// New way with VK_KHR_debug_utils
+const char* extensions[] = { "VK_KHR_debug_utils", ... };
+----
+
+=== Creating a Debug Callback
+
+The process of creating a debug callback has changed:
+
+[source,cpp]
+----
+// Old way with VK_EXT_debug_report
+VkDebugReportCallbackCreateInfoEXT createInfo = {};
+createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT;
+createInfo.flags = VK_DEBUG_REPORT_ERROR_BIT_EXT |
+                   VK_DEBUG_REPORT_WARNING_BIT_EXT;
+createInfo.pfnCallback = debugReportCallback;
+
+VkDebugReportCallbackEXT callback;
+auto vkCreateDebugReportCallbackEXT = (PFN_vkCreateDebugReportCallbackEXT)
+    vkGetInstanceProcAddr(instance, "vkCreateDebugReportCallbackEXT");
+vkCreateDebugReportCallbackEXT(instance, &createInfo, nullptr, &callback);
+
+// New way with VK_KHR_debug_utils
+VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
+createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT |
+                            VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT;
+createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+                         VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+createInfo.pfnUserCallback = debugUtilsCallback;
+
+VkDebugUtilsMessengerEXT messenger;
+auto vkCreateDebugUtilsMessengerEXT = (PFN_vkCreateDebugUtilsMessengerEXT)
+    vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+vkCreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &messenger);
+----
+
+=== Converting the Callback Function
+
+The callback function signature and parameters have changed:
+
+[source,cpp]
+----
+// Old callback for VK_EXT_debug_report
+VKAPI_ATTR VkBool32 VKAPI_CALL debugReportCallback(
+    VkDebugReportFlagsEXT flags,
+    VkDebugReportObjectTypeEXT objectType,
+    uint64_t object,
+    size_t location,
+    int32_t messageCode,
+    const char* pLayerPrefix,
+    const char* pMessage,
+    void* pUserData) {
+
+    std::cerr << "Validation layer: " << pMessage << std::endl;
+    return VK_FALSE;
+}
+
+// New callback for VK_KHR_debug_utils
+VKAPI_ATTR VkBool32 VKAPI_CALL debugUtilsCallback(
+    VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+    VkDebugUtilsMessageTypeFlagsEXT messageType,
+    const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+    void* pUserData) {
+
+    std::cerr << "Validation layer: " << pCallbackData->pMessage << std::endl;
+    return VK_FALSE;
+}
+----
+
+=== Mapping Message Severity
+
+The message severity flags have been renamed and expanded:
+
+[source,cpp]
+----
+// VK_EXT_debug_report severity flags
+VK_DEBUG_REPORT_INFORMATION_BIT_EXT
+VK_DEBUG_REPORT_WARNING_BIT_EXT
+VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT
+VK_DEBUG_REPORT_ERROR_BIT_EXT
+VK_DEBUG_REPORT_DEBUG_BIT_EXT
+
+// VK_KHR_debug_utils severity flags (more granular)
+VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
+VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT
+VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
+VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
+----
+
+Mapping between the two:
+
+* `VK_DEBUG_REPORT_INFORMATION_BIT_EXT` → `VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT`
+* `VK_DEBUG_REPORT_WARNING_BIT_EXT` → `VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT`
+* `VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT` → `VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT` with `VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT`
+* `VK_DEBUG_REPORT_ERROR_BIT_EXT` → `VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT`
+* `VK_DEBUG_REPORT_DEBUG_BIT_EXT` → `VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT`
+
+=== Message Types
+
+`VK_KHR_debug_utils` introduces message types which didn't exist in `VK_EXT_debug_report`:
+
+[source,cpp]
+----
+VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
+VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
+VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
+----
+
+For most validation layer messages, you'll want to use `VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT`.
+
+=== Destroying the Debug Callback
+
+The destruction function has also changed:
+
+[source,cpp]
+----
+// Old way with VK_EXT_debug_report
+auto vkDestroyDebugReportCallbackEXT = (PFN_vkDestroyDebugReportCallbackEXT)
+    vkGetInstanceProcAddr(instance, "vkDestroyDebugReportCallbackEXT");
+vkDestroyDebugReportCallbackEXT(instance, callback, nullptr);
+
+// New way with VK_KHR_debug_utils
+auto vkDestroyDebugUtilsMessengerEXT = (PFN_vkDestroyDebugUtilsMessengerEXT)
+    vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+vkDestroyDebugUtilsMessengerEXT(instance, messenger, nullptr);
+----
+
+=== Object Naming
+
+One of the biggest advantages of `VK_KHR_debug_utils` is the ability to name Vulkan objects, which wasn't possible with `VK_EXT_debug_report`:
+
+[source,cpp]
+----
+// Not available in VK_EXT_debug_report
+
+// New capability in VK_KHR_debug_utils
+VkDebugUtilsObjectNameInfoEXT nameInfo = {};
+nameInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT;
+nameInfo.objectType = VK_OBJECT_TYPE_BUFFER;
+nameInfo.objectHandle = (uint64_t)buffer;
+nameInfo.pObjectName = "My Vertex Buffer";
+
+auto vkSetDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)
+    vkGetInstanceProcAddr(instance, "vkSetDebugUtilsObjectNameEXT");
+vkSetDebugUtilsObjectNameEXT(device, &nameInfo);
+----
+
+=== Debug Markers and Regions
+
+Another major feature in `VK_KHR_debug_utils` that wasn't in `VK_EXT_debug_report` is the ability to insert debug markers and regions:
+
+[source,cpp]
+----
+// Not available in VK_EXT_debug_report
+
+// New capability in VK_KHR_debug_utils for command buffer labeling
+VkDebugUtilsLabelEXT labelInfo = {};
+labelInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT;
+labelInfo.pLabelName = "Draw Skybox";
+float color[4] = {0.0f, 0.0f, 1.0f, 1.0f}; // Blue
+memcpy(labelInfo.color, color, sizeof(float) * 4);
+
+auto vkCmdBeginDebugUtilsLabelEXT = (PFN_vkCmdBeginDebugUtilsLabelEXT)
+    vkGetInstanceProcAddr(instance, "vkCmdBeginDebugUtilsLabelEXT");
+vkCmdBeginDebugUtilsLabelEXT(commandBuffer, &labelInfo);
+
+// Record commands...
+
+auto vkCmdEndDebugUtilsLabelEXT = (PFN_vkCmdEndDebugUtilsLabelEXT)
+    vkGetInstanceProcAddr(instance, "vkCmdEndDebugUtilsLabelEXT");
+vkCmdEndDebugUtilsLabelEXT(commandBuffer);
+----
+
+=== Filtering Messages
+
+Both extensions allow filtering messages, but `VK_KHR_debug_utils` provides more granular control:
+
+[source,cpp]
+----
+// VK_EXT_debug_report filtering (limited)
+VkBool32 debugReportCallback(/* ... */) {
+    // Filter based on message content
+    if (strstr(pMessage, "specialuse-extension") != NULL) {
+        return VK_FALSE;
+    }
+    // ...
+}
+
+// VK_KHR_debug_utils filtering (more options)
+VkBool32 debugUtilsCallback(
+    VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+    VkDebugUtilsMessageTypeFlagsEXT messageType,
+    const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+    void* pUserData) {
+
+    // Filter based on severity
+    if (messageSeverity < VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
+        return VK_FALSE; // Ignore verbose and info messages
+    }
+
+    // Filter based on type
+    if (!(messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT)) {
+        return VK_FALSE; // Only show validation messages
+    }
+
+    // Filter based on message ID
+    if (strstr(pCallbackData->pMessageIdName, "specialuse-extension") != NULL) {
+        return VK_FALSE;
+    }
+
+    // ...
+}
+----
+
+== Conclusion
+
+The `VK_KHR_debug_utils` extension represents a significant advancement in Vulkan debugging capabilities. By providing a comprehensive set of tools for object naming, command annotation, and validation feedback, it addresses critical challenges in GPU application development.
+
+Integration of this extension into development workflows yields tangible benefits:
+
+* Enhanced error identification through detailed validation messages
+* Reduced debugging time via precise object and operation labeling
+* Improved collaboration through standardized debugging annotations
+* Seamless integration with industry-standard graphics debugging tools
+
+For production-grade Vulkan applications, implementing `VK_KHR_debug_utils` should be considered an essential practice rather than an optional enhancement. The minimal runtime overhead during development is far outweighed by the significant productivity gains in complex graphics pipeline troubleshooting.

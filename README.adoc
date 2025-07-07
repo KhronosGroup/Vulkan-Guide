@@ -343,6 +343,10 @@ These are supplemental references for the various Vulkan Extensions. Please cons
 
 // include::{chapters}extensions/VK_KHR_shader_subgroup_uniform_control_flow.adoc[]
 
+== xref:{chapters}extensions/VK_KHR_debug_utils.adoc[VK_KHR_debug_utils]
+
+// include::{chapters}extensions/VK_KHR_debug_utils.adoc[]
+
 = link:CONTRIBUTING.adoc[Contributing]
 
 = link:LICENSE[License]
