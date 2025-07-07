@@ -38,6 +38,29 @@ jobs:
       # Setup Antora directory structure
       - name: Setup Antora directory structure
         run: |
+          # Debug: Print directory structure
+          echo "Current directory: $(pwd)"
+          echo "Contents of current directory:"
+          ls -la
+          echo "Contents of chapters directory:"
+          ls -la chapters
+          echo "Contents of antora directory:"
+          ls -la antora
+
+          # Create directories if they don't exist
+          mkdir -p antora/modules/ROOT/pages
+          mkdir -p antora/modules/ROOT/pages/extensions
+          mkdir -p antora/modules/ROOT/images
+          mkdir -p antora/modules/ROOT/images/extensions
+
+          # Copy files directly instead of using make
+          cp chapters/[A-Za-z]*.adoc antora/modules/ROOT/pages/
+          cp chapters/extensions/[A-Za-z]*.adoc antora/modules/ROOT/pages/extensions/
+          cp chapters/images/[A-Za-z]*.png antora/modules/ROOT/images/
+          cp images/[A-Za-z]*.png antora/modules/ROOT/images/
+          cp chapters/images/extensions/[A-Za-z]*.png antora/modules/ROOT/images/extensions/
+
+          # Now run make setup which should succeed since files are already copied
           cd antora
           make setup
 
