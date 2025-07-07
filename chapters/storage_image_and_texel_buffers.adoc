@@ -1,0 +1,527 @@
+// Copyright 2019-2024 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[storage-image-and-texel-buffers]]
+= Storage Image and Texel Buffers
+
+This chapter covers storage images and texel buffers in Vulkan, explaining their purpose, how to use them, and best practices.
+
+== Storage Images
+
+A storage image is a descriptor type (`VK_DESCRIPTOR_TYPE_STORAGE_IMAGE`) that allows shaders to read from and write to an image without using a fixed-function graphics pipeline. This is particularly useful for compute shaders and advanced rendering techniques.
+
+=== Creating a Storage Image
+
+To create a storage image, you need to:
+
+1. Create a `VkImage` with the `VK_IMAGE_USAGE_STORAGE_BIT` flag
+2. Create a `VkImageView` for the image
+3. Create a descriptor set layout with a binding of type `VK_DESCRIPTOR_TYPE_STORAGE_IMAGE`
+4. Update the descriptor set with the image view
+
+[source,c]
+----
+// Create the image with storage usage flag
+VkImageCreateInfo imageInfo = {};
+imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+imageInfo.imageType = VK_IMAGE_TYPE_2D;
+imageInfo.format = VK_FORMAT_R32G32B32A32_SFLOAT; // Choose a format that supports storage operations
+imageInfo.extent = {width, height, 1};
+imageInfo.mipLevels = 1;
+imageInfo.arrayLayers = 1;
+imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+imageInfo.usage = VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
+// Create image view
+VkImageViewCreateInfo viewInfo = {};
+viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+viewInfo.image = storageImage;
+viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+viewInfo.format = VK_FORMAT_R32G32B32A32_SFLOAT;
+viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+viewInfo.subresourceRange.baseMipLevel = 0;
+viewInfo.subresourceRange.levelCount = 1;
+viewInfo.subresourceRange.baseArrayLayer = 0;
+viewInfo.subresourceRange.layerCount = 1;
+----
+
+=== Using Storage Images in Shaders
+
+In GLSL, storage images are declared using the `image` type with a format qualifier. The `imageLoad` and `imageStore` functions are used to read from and write to the image.
+
+[source,glsl]
+----
+// VK_FORMAT_R32G32B32A32_SFLOAT
+layout(set = 0, binding = 0, rgba32f) uniform image2D storageImage;
+
+void main() {
+    ivec2 texelCoord = ivec2(gl_GlobalInvocationID.xy);
+
+    // Read from the image
+    vec4 value = imageLoad(storageImage, texelCoord);
+
+    // Modify the value
+    value = value * 2.0;
+
+    // Write back to the image
+    imageStore(storageImage, texelCoord, value);
+}
+----
+
+In Slang, storage images are declared similarly to HLSL, using the `RWTexture2D` type. The `Load` and `Store` methods are used to read from and write to the image.
+
+[source,slang]
+----
+// VK_FORMAT_R32G32B32A32_SFLOAT
+[[vk::binding(0, 0)]]
+[[vk::image_format("rgba32f")]]
+RWTexture2D<float4> storageImage;
+
+[numthreads(8, 8, 1)]
+void main(uint3 dispatchThreadID : SV_DispatchThreadID)
+{
+    int2 texelCoord = int2(dispatchThreadID.xy);
+
+    // Read from the image
+    float4 value = storageImage.Load(texelCoord);
+
+    // Modify the value
+    value = value * 2.0;
+
+    // Write back to the image
+    storageImage[texelCoord] = value;
+}
+----
+
+The corresponding SPIR-V assembly:
+
+[source,swift]
+----
+OpDecorate %storageImage DescriptorSet 0
+OpDecorate %storageImage Binding 0
+
+%rgba32f      = OpTypeImage %float 2D 0 0 0 2 Rgba32f
+%ptr          = OpTypePointer UniformConstant %rgba32f
+%storageImage = OpVariable %ptr UniformConstant
+----
+
+=== Image Formats for Storage Images
+
+Not all image formats support storage operations. The `VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT` flag in `VkFormatProperties` indicates whether a format can be used for storage images.
+
+[source,c]
+----
+VkFormatProperties formatProperties;
+vkGetPhysicalDeviceFormatProperties(physicalDevice, format, &formatProperties);
+if (!(formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT)) {
+    // Format does not support storage image operations
+}
+----
+
+Common formats that typically support storage operations include:
+- `VK_FORMAT_R32G32B32A32_SFLOAT`
+- `VK_FORMAT_R32G32B32A32_UINT`
+- `VK_FORMAT_R32G32B32A32_SINT`
+- `VK_FORMAT_R8G8B8A8_UNORM`
+- `VK_FORMAT_R8G8B8A8_UINT`
+
+=== Synchronization with Storage Images
+
+When using storage images, proper synchronization is crucial to avoid race conditions. Storage images typically use the `VK_IMAGE_LAYOUT_GENERAL` layout for both reading and writing.
+
+[source,c]
+----
+VkImageMemoryBarrier barrier = {};
+barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+barrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+barrier.newLayout = VK_IMAGE_LAYOUT_GENERAL;
+barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+barrier.image = storageImage;
+barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+barrier.subresourceRange.baseMipLevel = 0;
+barrier.subresourceRange.levelCount = 1;
+barrier.subresourceRange.baseArrayLayer = 0;
+barrier.subresourceRange.layerCount = 1;
+barrier.srcAccessMask = 0;
+barrier.dstAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+
+vkCmdPipelineBarrier(
+    commandBuffer,
+    VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+    VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+    0,
+    0, nullptr,
+    0, nullptr,
+    1, &barrier
+);
+----
+
+When transitioning between compute shader writes and reads:
+
+[source,c]
+----
+barrier.srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+
+vkCmdPipelineBarrier(
+    commandBuffer,
+    VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+    VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+    0,
+    0, nullptr,
+    0, nullptr,
+    1, &barrier
+);
+----
+
+== Texel Buffers
+
+Texel buffers are a way to access buffer data with texture-like operations in shaders. There are two types of texel buffers:
+
+1. **Uniform Texel Buffers** (`VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER`): Read-only access
+2. **Storage Texel Buffers** (`VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER`): Read-write access
+
+=== Creating a Texel Buffer
+
+To create a texel buffer, you need to:
+
+1. Create a `VkBuffer` with appropriate usage flags
+2. Create a `VkBufferView` for the buffer
+3. Create a descriptor set layout with a binding of the appropriate texel buffer type
+4. Update the descriptor set with the buffer view
+
+[source,c]
+----
+// Create buffer
+VkBufferCreateInfo bufferInfo = {};
+bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+bufferInfo.size = size;
+bufferInfo.usage = VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT; // or VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT
+bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+// Create buffer view
+VkBufferViewCreateInfo viewInfo = {};
+viewInfo.sType = VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO;
+viewInfo.buffer = buffer;
+viewInfo.format = VK_FORMAT_R32G32B32A32_SFLOAT; // Choose a format that supports texel buffer operations
+viewInfo.offset = 0;
+viewInfo.range = size;
+
+VkBufferView bufferView;
+vkCreateBufferView(device, &viewInfo, nullptr, &bufferView);
+----
+
+=== Using Uniform Texel Buffers in Shaders
+
+In GLSL, uniform texel buffers are declared using the `textureBuffer` type. The `texelFetch` function is used to read from the buffer.
+
+[source,glsl]
+----
+layout(set = 0, binding = 0) uniform textureBuffer uniformTexelBuffer;
+
+void main() {
+    // Read from the texel buffer
+    vec4 value = texelFetch(uniformTexelBuffer, int(gl_GlobalInvocationID.x));
+
+    // Use the value
+    // ...
+}
+----
+
+In Slang, uniform texel buffers are declared using the `Buffer` type. The `Load` method is used to read from the buffer.
+
+[source,slang]
+----
+[[vk::binding(0, 0)]]
+Buffer<float4> uniformTexelBuffer;
+
+[numthreads(64, 1, 1)]
+void main(uint3 dispatchThreadID : SV_DispatchThreadID)
+{
+    // Read from the texel buffer
+    float4 value = uniformTexelBuffer.Load(dispatchThreadID.x);
+
+    // Use the value
+    // ...
+}
+----
+
+The corresponding SPIR-V assembly:
+
+[source,swift]
+----
+OpDecorate %uniformTexelBuffer DescriptorSet 0
+OpDecorate %uniformTexelBuffer Binding 0
+
+%texelBuffer        = OpTypeImage %float Buffer 0 0 0 1 Unknown
+%ptr                = OpTypePointer UniformConstant %texelBuffer
+%uniformTexelBuffer = OpVariable %ptr UniformConstant
+----
+
+=== Using Storage Texel Buffers in Shaders
+
+In GLSL, storage texel buffers are declared using the `imageBuffer` type with a format qualifier. The `imageLoad` and `imageStore` functions are used to read from and write to the buffer.
+
+[source,glsl]
+----
+// VK_FORMAT_R32G32B32A32_SFLOAT
+layout(set = 0, binding = 0, rgba32f) uniform imageBuffer storageTexelBuffer;
+
+void main() {
+    int index = int(gl_GlobalInvocationID.x);
+
+    // Read from the texel buffer
+    vec4 value = imageLoad(storageTexelBuffer, index);
+
+    // Modify the value
+    value = value * 2.0;
+
+    // Write back to the texel buffer
+    imageStore(storageTexelBuffer, index, value);
+}
+----
+
+In Slang, storage texel buffers are declared using the `RWBuffer` type. The `Load` method and array indexing are used to read from and write to the buffer.
+
+[source,slang]
+----
+// VK_FORMAT_R32G32B32A32_SFLOAT
+[[vk::binding(0, 0)]]
+[[vk::image_format("rgba32f")]]
+RWBuffer<float4> storageTexelBuffer;
+
+[numthreads(64, 1, 1)]
+void main(uint3 dispatchThreadID : SV_DispatchThreadID)
+{
+    int index = int(dispatchThreadID.x);
+
+    // Read from the texel buffer
+    float4 value = storageTexelBuffer.Load(index);
+
+    // Modify the value
+    value = value * 2.0;
+
+    // Write back to the texel buffer
+    storageTexelBuffer[index] = value;
+}
+----
+
+The corresponding SPIR-V assembly:
+
+[source,swift]
+----
+OpDecorate %storageTexelBuffer DescriptorSet 0
+OpDecorate %storageTexelBuffer Binding 0
+
+%rgba32f           = OpTypeImage %float Buffer 0 0 0 2 Rgba32f
+%ptr               = OpTypePointer UniformConstant %rgba32f
+%storageTexelBuffer = OpVariable %ptr UniformConstant
+----
+
+=== Formats for Texel Buffers
+
+Not all formats support texel buffer operations. The `VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT` and `VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT` flags in `VkFormatProperties` indicate whether a format can be used for uniform and storage texel buffers, respectively.
+
+[source,c]
+----
+VkFormatProperties formatProperties;
+vkGetPhysicalDeviceFormatProperties(physicalDevice, format, &formatProperties);
+if (!(formatProperties.bufferFeatures & VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT)) {
+    // Format does not support uniform texel buffer operations
+}
+if (!(formatProperties.bufferFeatures & VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT)) {
+    // Format does not support storage texel buffer operations
+}
+----
+
+=== Synchronization with Texel Buffers
+
+When using storage texel buffers, proper synchronization is crucial to avoid race conditions.
+
+[source,c]
+----
+VkBufferMemoryBarrier barrier = {};
+barrier.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
+barrier.srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+barrier.buffer = buffer;
+barrier.offset = 0;
+barrier.size = VK_WHOLE_SIZE;
+
+vkCmdPipelineBarrier(
+    commandBuffer,
+    VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+    VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+    0,
+    0, nullptr,
+    1, &barrier,
+    0, nullptr
+);
+----
+
+== Comparison with Other Buffer Types
+
+=== Storage Image vs. Storage Buffer
+
+While both storage images and storage buffers allow for read-write access in shaders, they have different use cases:
+
+- **Storage Images**: Ideal for 2D or 3D data that benefits from texture operations like filtering or addressing modes.
+- **Storage Buffers**: Better for arbitrary structured data or when you need to access data in a non-uniform pattern.
+
+=== Texel Buffer vs. Storage Buffer
+
+Texel buffers and storage buffers also have different strengths:
+
+- **Texel Buffers**: Provide texture-like access to buffer data, allowing for operations like filtering.
+- **Storage Buffers**: More flexible for general-purpose data storage and manipulation.
+
+== Considerations for Tile-Based Renderers
+
+Many mobile GPUs and some desktop GPUs use a tile-based rendering architecture, which has important implications for how storage images and texel buffers should be used.
+
+=== What is Tile-Based Rendering?
+
+In tile-based rendering (TBR) or tile-based deferred rendering (TBDR), the GPU divides the framebuffer into small rectangular regions called tiles. Each tile is processed completely (all draw calls affecting that tile) before moving to the next tile. This approach:
+
+- Reduces memory bandwidth by keeping tile data in fast on-chip memory
+- Improves power efficiency, which is particularly important for mobile devices
+- Allows for efficient implementation of certain rendering techniques
+
+=== Storage Images in Tile-Based Renderers
+
+When using storage images with tile-based renderers, consider the following:
+
+1. **Tile Memory Flushing**: Writing to storage images may cause the GPU to flush tile memory to main memory, reducing the benefits of tile-based rendering.
+   - This can significantly impact performance, especially if done frequently
+   - Try to batch storage image operations to minimize tile memory flushes
+
+2. **Transient Attachments**: Some tile-based renderers support special "transient" attachments that exist only in tile memory.
+   - These cannot be used as storage images since they don't have backing memory
+   - If you need to process render results, consider using input attachments instead where possible
+
+3. **Pixel Local Storage Extensions**: Some tile-based GPUs offer extensions like `VK_EXT_shader_pixel_local_storage` that provide more efficient alternatives to storage images for certain use cases.
+   - These extensions allow shaders to access per-pixel data that stays in tile memory
+   - Check for and use these extensions when available on tile-based hardware
+
+4. **Render Pass Coherency**: In tile-based renderers, data written to storage images during a render pass may not be visible to subsequent draw calls in the same render pass.
+   - Use appropriate memory barriers or split your work into multiple render passes
+   - Be aware that these barriers may be more expensive on tile-based renderers
+
+=== Texel Buffers in Tile-Based Renderers
+
+Texel buffers generally work similarly on tile-based and immediate mode renderers, but there are still some considerations:
+
+1. **Cache Coherency**: Tile-based renderers may have different caching behaviors for texel buffer access.
+   - Ensure proper synchronization when writing to and reading from texel buffers
+   - Be aware that cache flushes may be more expensive on tile-based architectures
+
+2. **Memory Access Patterns**: Tile-based renderers may be more sensitive to non-coherent memory access patterns.
+   - Organize your data to maximize locality for the tile being processed
+   - Consider the tile size when designing your algorithms
+
+=== Performance Optimization for Tile-Based Renderers
+
+1. **Minimize Framebuffer Resolves**: Each time you need to access framebuffer contents as a storage image, the tile-based renderer must "resolve" (write) the tile memory to main memory.
+   - Try to complete all operations that modify a particular image before reading from it
+   - Consider using subpasses and input attachments instead of storage images for operations within a render pass
+
+2. **Prefer Render Passes Over Compute for Image Processing**: On tile-based renderers, operations within a render pass can often be more efficient than compute shaders using storage images.
+   - Consider implementing image processing as fragment shaders in a render pass
+   - Use multiple subpasses to keep intermediate results in tile memory
+
+3. **Be Careful with Mixed Access Patterns**: Mixing reads and writes to the same storage image can be particularly expensive on tile-based renderers.
+   - Try to separate read and write phases
+   - Consider double-buffering techniques to avoid read-after-write hazards
+
+== Best Practices
+
+=== Performance Considerations
+
+1. **Format Selection**: Choose formats that are natively supported by the hardware for better performance.
+   - Prefer formats with native hardware support (check `VkFormatProperties`)
+   - For storage images, 32-bit formats (`R32_*`) often have better performance than packed formats
+   - Consider using single-channel formats when only one channel is needed to reduce memory bandwidth
+
+2. **Memory Access Patterns**: Try to ensure coalesced memory access patterns when reading from or writing to storage images and texel buffers.
+   - Group memory accesses to adjacent locations to maximize cache efficiency
+   - In compute shaders, align work group sizes with hardware warp/wavefront sizes
+   - Consider the memory layout when accessing 2D images (row-major vs. column-major access)
+   - For texel buffers, sequential access is generally faster than random access
+
+3. **Synchronization**: Use the minimal necessary synchronization to avoid performance penalties.
+   - Use the most specific access flags and pipeline stages possible
+   - Batch operations to reduce the number of barriers needed
+   - Consider using `VK_PIPELINE_STAGE_ALL_COMMANDS_BIT` only when absolutely necessary
+   - For compute workloads, try to design algorithms that minimize synchronization points
+
+4. **Resource Reuse**: Reuse storage images and texel buffers when possible to reduce memory allocation overhead.
+   - Consider implementing a resource pool for frequently created/destroyed resources
+   - Use double or triple buffering techniques for resources that are updated every frame
+
+5. **Workload Balancing**: Distribute work evenly across compute shader invocations.
+   - Choose appropriate workgroup sizes based on your hardware (typically multiples of 32 or 64)
+   - Avoid divergent execution paths within a workgroup
+   - Consider tiled processing for large images to improve cache locality
+
+=== Common Pitfalls
+
+1. **Format Support**: Not all formats support storage operations. Always check format features.
+   - Use `vkGetPhysicalDeviceFormatProperties` to verify format support before creating resources
+   - Some formats may support storage operations but with reduced performance
+   - Be aware that format support can vary between different hardware vendors
+
+2. **Memory Barriers**: Missing or incorrect memory barriers can lead to race conditions and undefined behavior.
+   - Always use appropriate memory barriers between writes and subsequent reads
+   - Remember that barriers are needed even when operations are in the same shader
+   - For compute shaders, use `memoryBarrierImage()` or `memoryBarrierBuffer()` in GLSL when appropriate
+   - Be careful with multiple queue submissions that access the same resources
+
+3. **Layout Transitions**: Storage images typically use `VK_IMAGE_LAYOUT_GENERAL`, but transitioning to this layout is still required.
+   - Always transition images to the correct layout before use
+   - Be aware that `VK_IMAGE_LAYOUT_GENERAL` may be less efficient than specialized layouts
+   - Consider using `VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL` if you only need read access
+
+4. **Atomic Operations**: Atomic operations on storage images and buffers can be expensive.
+   - Minimize the use of atomic operations when possible
+   - Consider alternative algorithms that don't require atomics
+   - Be aware that atomic performance varies significantly between hardware vendors
+   - Group atomic operations to minimize memory contention
+
+5. **Resource Limits**: Be aware of device limits for storage images and texel buffers.
+   - Check `maxPerStageDescriptorStorageImages` and related limits
+   - Some devices may have restrictions on the number of storage resources that can be written to
+   - Consider the impact on descriptor set layout when using many storage resources
+
+6. **Validation Layers**: Use validation layers during development to catch common errors.
+   - Enable synchronization validation to detect barrier issues
+   - Pay attention to warnings about format support and usage flags
+   - Test on multiple hardware vendors if possible to catch implementation-specific issues
+
+7. **Shader Compilation**: Be aware of shader compilation implications.
+   - Complex storage image and texel buffer operations may increase register pressure
+   - Consider splitting complex shaders into multiple passes
+   - Profile shader performance to identify bottlenecks
+
+== Example Use Cases
+
+=== Image Processing with Storage Images
+
+Storage images are ideal for image processing tasks like filters, blurs, and other post-processing effects.
+
+=== Particle Systems with Storage Texel Buffers
+
+Storage texel buffers can be used to store and update particle data in a compute shader, which can then be read by a vertex shader for rendering.
+
+=== Lookup Tables with Uniform Texel Buffers
+
+Uniform texel buffers are useful for implementing lookup tables that need to be accessed with texture-like operations.

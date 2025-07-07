@@ -181,6 +181,10 @@ include::{chapters}primitive_topology.adoc[]
 
 include::{chapters}mapping_data_to_shaders.adoc[]
 
+// == Storage Image and Texel Buffers
+
+include::{chapters}storage_image_and_texel_buffers.adoc[]
+
 // === Vertex Input Data Processing
 
 include::{chapters}vertex_input_data_processing.adoc[]
