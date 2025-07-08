@@ -776,7 +776,7 @@ ConstantBuffer<SBT> sbt;
 [[vk::ext_builtin_input(HitTriangleVertexPositionsKHR)]]
 ----
   | Requires `GL_EXT_ray_tracing_position_fetch`
-| shadercallcoherent | n.a.
+| shadercallcoherent | n.a. |
 |====
 
 === Compute
