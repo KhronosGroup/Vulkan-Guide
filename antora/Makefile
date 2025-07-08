@@ -23,6 +23,7 @@ setup_spec:
 	$(CP) $(wildcard chapters/extensions/[A-Za-z]*.adoc) $(ROOT)/pages/extensions/
 	mkdir -p $(ROOT)/images
 	$(CP) $(wildcard chapters/images/[A-Za-z]*.png) $(ROOT)/images/
+	$(CP) $(wildcard chapters/images/[A-Za-z]*.svg) $(ROOT)/images/
 	$(CP) $(wildcard images/[A-Za-z]*.png) $(ROOT)/images/
 	mkdir -p $(ROOT)/images/extensions
 	$(CP) $(wildcard chapters/images/extensions/[A-Za-z]*.png) $(ROOT)/images/extensions
