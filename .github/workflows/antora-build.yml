@@ -58,7 +58,26 @@ jobs:
 
       # Run Antora build
       - name: Build Antora site
-        run: antora --stacktrace antora-playbook.yml
+        run: |
+          # Run Antora and capture output and exit code
+          OUTPUT=$(antora --stacktrace antora-playbook.yml 2>&1)
+          EXIT_CODE=$?
+
+          # Print the output
+          echo "$OUTPUT"
+
+          # Check for errors or warnings in the output
+          # Look for patterns that indicate warnings or errors in Antora output
+          if echo "$OUTPUT" | grep -i -E "(WARN|WARNING|ERROR):"; then
+            echo "::error::Antora build produced errors or warnings. Failing the build."
+            exit 1
+          fi
+
+          # Also fail if the Antora command itself failed
+          if [ $EXIT_CODE -ne 0 ]; then
+            echo "::error::Antora build failed with exit code $EXIT_CODE"
+            exit $EXIT_CODE
+          fi
 
       # Archive the build artifacts
       - name: Archive Antora build
