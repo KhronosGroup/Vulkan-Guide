@@ -68,8 +68,8 @@ jobs:
 
           # Check for errors or warnings in the output
           # Look for patterns that indicate warnings or errors in Antora output
-          # Match both "ERROR:" and "ERROR (" patterns (like "ERROR (asciidoctor): ...")
-          if echo "$OUTPUT" | grep -q -i -E "(WARN|WARNING|ERROR)( |\:)"; then
+          # Using a simpler approach to check for ERROR or WARN in the output
+          if [[ "$OUTPUT" == *"ERROR"* || "$OUTPUT" == *"WARN"* || "$OUTPUT" == *"WARNING"* ]]; then
             echo "::error::Antora build produced errors or warnings. Failing the build."
             exit 1
           fi
