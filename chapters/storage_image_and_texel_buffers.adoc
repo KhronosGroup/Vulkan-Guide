@@ -327,6 +327,29 @@ OpDecorate %storageTexelBuffer Binding 0
 %storageTexelBuffer = OpVariable %ptr UniformConstant
 ----
 
+==== Using non-rgba Format for Texel Buffer 
+
+A common mistake when dealing with Texel Buffers is forgetting you are accessing a single texel at a time. 
+This texel format can have 1 to 4 components (`R8` vs `RGBA8`).
+Some shading languages, such as GLSL, require you to write all 4 components where the extra components are ignored.
+
+[source,glsl]
+----
+// VK_FORMAT_R32_UINT
+layout(set = 0, binding = 0, r32ui) uniform uimageBuffer storageTexelBuffer;
+
+void main() {
+    // Invalid in GLSL, need to use a uvec4
+    uint a = 1;
+    imageStore(storageTexelBuffer, 0, a);
+
+    // Common mistake is to assume this will write all 4 values to 4 consecutive texels.
+    // Only "1" is written and the other 3 components are discarded because the format only contains 1 component
+    uvec4 b = uvec4(1, 2, 3, 4);
+    imageStore(storageTexelBuffer, 0, b);
+}
+----
+
 === Formats for Texel Buffers
 
 Not all formats support texel buffer operations. The `VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT` and `VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT` flags in `VkFormatProperties` indicate whether a format can be used for uniform and storage texel buffers, respectively.
