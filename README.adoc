@@ -46,7 +46,7 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 == xref:{chapters}checking_for_support.adoc[Checking for Support]
 
-== xref:{chapters}versions.adoc[Versions]
+== xref:{chapters}versions.adoc[Vulkan Versions & Porting Guide]
 
 == xref:{chapters}vulkan_release_summary.adoc[Vulkan Release Summary]
 
