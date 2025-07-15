@@ -1,0 +1,481 @@
+// Copyright 2025 Holochip, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[vulkan-profiles]]
+= Vulkan Profiles
+
+Vulkan Profiles is a mechanism that allows developers to target a specific set of features, extensions, and limits that are guaranteed to be supported by a range of Vulkan implementations. This is particularly useful for cross-platform development where you want to ensure your application works consistently across different devices.
+
+For detailed information, refer to the link:https://docs.vulkan.org/spec/latest/appendices/profiles.html[Vulkan Profiles] section in the Vulkan Specification.
+
+== What are Vulkan Profiles?
+
+A Vulkan Profile is a well-defined set of capabilities, (features, extensions, formats, queue families, etc.) that can be used as a baseline for application development. Profiles are defined in JSON format and can be used to:
+
+* Simplify development by providing a known set of capabilities
+* Ensure compatibility across a range of devices
+* Reduce the need for complex capability checking and fallback code
+* Provide a clear target for both developers and hardware vendors
+
+The Khronos Group maintains a set of official profiles, and vendors can also define their own profiles for their specific hardware.
+
+=== History and Purpose
+
+Vulkan Profiles were introduced to address the challenge of fragmentation in the Vulkan ecosystem. With many different devices supporting various combinations of features and extensions, developers faced difficulties in:
+
+* Determining which features to target for maximum device compatibility
+* Managing fallback paths for devices with limited capabilities
+* Communicating requirements clearly to hardware vendors
+
+Profiles solve these problems by providing a standardized way to define and reference sets of Vulkan capabilities. They serve as a contract between application developers and hardware vendors, ensuring that devices claiming support for a profile will provide all the capabilities defined in that profile.
+
+=== Relationship with Vulkan Versions
+
+Vulkan Profiles are complementary to Vulkan versions. While Vulkan versions (1.0, 1.1, 1.2, etc.) define the core API functionality, profiles define specific subsets of features, extensions, and limits that may span across different Vulkan versions.
+
+For example:
+
+* The Android Baseline 2022 profile requires Vulkan 1.1 core functionality
+* The Baseline 2022 profile for desktop platforms requires Vulkan 1.1 with specific extensions
+* Future profiles may target newer Vulkan versions as they become more widely supported
+
+This approach allows developers to target specific capability sets without being tied to a particular Vulkan version, providing more flexibility in application development.
+
+== Official Profiles
+
+The Khronos Group maintains several official profiles, which are defined in the link:https://github.com/KhronosGroup/Vulkan-Profiles/tree/main/profiles[Vulkan-Profiles repository]:
+
+* *Baseline 2022* - A baseline profile for desktop platforms (link:https://docs.vulkan.org/spec/latest/appendices/profiles.html#profile-VP_KHR_BASELINE_2022[Specification], link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/profiles/VP_KHR_BASELINE_2022.json[JSON Definition])
+* *Android Baseline 2022* - A baseline profile specifically for Android devices (link:https://docs.vulkan.org/spec/latest/appendices/profiles.html#profile-VP_ANDROID_BASELINE_2022[Specification], link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/profiles/VP_ANDROID_BASELINE_2022.json[JSON Definition])
+* *Roadmap 2022* - A forward-looking profile that hardware vendors are encouraged to support in future implementations (link:https://docs.vulkan.org/spec/latest/appendices/profiles.html#profile-VP_KHR_ROADMAP_2022[Specification], link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/profiles/VP_KHR_ROADMAP_2022.json[JSON Definition])
+
+These profiles are versioned by year to allow for evolution over time while maintaining backward compatibility. You can find sample code demonstrating the use of these profiles in the link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/api/profiles[Vulkan-Samples repository].
+
+=== Baseline 2022 Profile Details
+
+The Baseline 2022 profile (`VP_KHR_BASELINE_2022`) is designed for desktop platforms and includes:
+
+* Core Vulkan 1.1 functionality
+* Key extensions such as:
+** `VK_KHR_maintenance1`, `VK_KHR_maintenance2`, `VK_KHR_maintenance3`
+** `VK_KHR_create_renderpass2`
+** `VK_KHR_image_format_list`
+** `VK_KHR_sampler_mirror_clamp_to_edge`
+* Specific feature requirements include:
+** `robustBufferAccess`
+** `fullDrawIndexUint32`
+** `imageCubeArray`
+** `independentBlend`
+** And many more core features
+
+This profile ensures that applications focusing on it will work consistently across a wide range of desktop GPUs from different vendors.
+
+=== Android Baseline 2022 Profile Details
+
+The Android Baseline 2022 profile (`VP_ANDROID_BASELINE_2022`) is tailored specifically for Android devices and includes:
+
+* Core Vulkan 1.1 functionality
+* Android-specific extensions such as:
+** `VK_KHR_android_surface`
+** `VK_ANDROID_external_memory_android_hardware_buffer`
+* Common rendering extensions:
+** `VK_KHR_swapchain`
+** `VK_KHR_maintenance1`, `VK_KHR_maintenance2`, `VK_KHR_maintenance3`
+** `VK_KHR_dedicated_allocation`
+* Mobile-optimized limits and features
+
+This profile is particularly valuable for Android game developers who want to ensure their applications run on a wide range of Android devices without having to implement complex device-specific code paths.
+
+=== Roadmap 2022 Profile
+
+The Roadmap 2022 profile (`VP_KHR_ROADMAP_2022`) is a forward-looking profile that defines capabilities that hardware vendors are encouraged to support in future implementations. It includes:
+
+* More advanced features and extensions beyond the baseline profiles
+* Higher minimum limits for various resources
+* Support for newer Vulkan functionality
+
+By targeting this profile, developers can prepare their applications for future hardware capabilities while still maintaining compatibility with current devices through fallback mechanisms.
+
+=== Profile Versioning Strategy
+
+Profiles use a year-based versioning scheme (e.g., 2022, 2023) to indicate when they were defined. This approach:
+
+* Provides clear temporal context for each profile
+* Allows for the creation of new profiles that reflect evolving hardware capabilities
+* Maintains backward compatibility, as older profiles remain valid even as new ones are introduced
+
+When a new yearly profile is released, it typically includes all the capabilities of the previous year's profile plus additional features and possibly higher limits, reflecting the advancement of hardware capabilities.
+
+== Using Vulkan Profiles
+
+There are two main ways to use Vulkan Profiles:
+
+=== 1. Using the Vulkan Profiles header
+
+The simplest way to use Vulkan Profiles is through the Vulkan Profiles header (`vulkan_profiles.hpp`), which is available in the link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK]. This header provides a C++ API that simplifies working with profiles. The header is documented in the link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/library/README.md[Vulkan-Profiles library documentation]:
+
+[source,cpp]
+----
+#include <vulkan/vulkan.hpp>
+#include <vulkan/vulkan_profiles.hpp>
+
+// Create a profile instance for the Android baseline profile
+vkp::AndroidBaseline2022Profile profile;
+
+// Check if the profile is supported on this device
+VkBool32 supported = VK_FALSE;
+profile.CheckSupport(physicalDevice, &supported);
+if (supported) {
+    // The device supports the Android baseline profile
+    // Use the profile to create a device
+    VkDeviceCreateInfo deviceCreateInfo = {};
+    profile.ConfigureDeviceCreation(physicalDevice, deviceCreateInfo);
+
+    // Create the device with the profile-configured create info
+    VkDevice device;
+    vkCreateDevice(physicalDevice, &deviceCreateInfo, nullptr, &device);
+}
+----
+
+=== 2. Using the Vulkan Profiles, JSON files directly
+
+For more advanced use cases, you can work with the JSON profile definitions directly. The JSON schema is documented in the link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/schema/README.md[Vulkan-Profiles schema documentation]. You can find example code that loads and uses JSON profiles in the link:https://github.com/KhronosGroup/Vulkan-Profiles/tree/main/library/test[Vulkan-Profiles test directory]:
+
+[source,cpp]
+----
+// Load a profile from a JSON file
+VkpProfilesFileLoader loader;
+loader.LoadFromFile("android_baseline_2022.json");
+
+// Get the profile
+VkpProfile profile = loader.GetProfile("VP_ANDROID_BASELINE_2022");
+
+// Use the profile to check support and create a device
+// (similar to the header-based approach)
+----
+
+=== Understanding Profile JSON Structure
+
+Vulkan Profiles are defined in JSON format with a specific structure. Understanding this structure is important for developers who want to create custom profiles or modify existing ones. The full JSON schema is defined in the link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/schema/profiles-schema.json[profiles-schema.json] file and documented in the link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/schema/README.md[schema documentation]. Here's a simplified example of a profile JSON structure:
+
+[source,json]
+----
+{
+    "file_format_version": "1.0.0",
+    "profiles": {
+        "VP_EXAMPLE_PROFILE": {
+            "version": 1,
+            "api_version": "1.1.0",
+            "label": "Example Profile",
+            "description": "A simple example profile",
+            "capabilities": [
+                {
+                    "extensions": {
+                        "VK_KHR_swapchain": 1,
+                        "VK_KHR_maintenance1": 1
+                    },
+                    "features": {
+                        "VkPhysicalDeviceFeatures": {
+                            "robustBufferAccess": true,
+                            "fullDrawIndexUint32": true
+                        }
+                    },
+                    "properties": {
+                        "VkPhysicalDeviceProperties": {
+                            "limits": {
+                                "maxImageDimension2D": 4096,
+                                "maxFramebufferWidth": 4096
+                            }
+                        }
+                    },
+                    "formats": {
+                        "VK_FORMAT_R8G8B8A8_UNORM": {
+                            "VkFormatProperties": {
+                                "linearTilingFeatures": [
+                                    "VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT"
+                                ],
+                                "optimalTilingFeatures": [
+                                    "VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT",
+                                    "VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT"
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
+----
+
+The key parts of a profile definition include:
+
+* *Profile Metadata*: Name, version, API version, label, and description
+* *Capabilities*: The core of the profile, defining what the profile supports
+  * *Extensions*: Required extensions and their minimum versions
+  * *Features*: Required features that must be supported
+  * *Properties*: Required properties and limits
+  * *Formats*: Required format support with specific capabilities
+
+=== Creating Custom Profiles
+
+Developers can create custom profiles to target specific hardware configurations or to define a baseline for their own applications. The process is documented in the link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/CUSTOM_PROFILES.md[Creating Custom Profiles] guide. To create a custom profile:
+
+1. Start with an existing profile as a template (see link:https://github.com/KhronosGroup/Vulkan-Profiles/tree/main/profiles[official profiles])
+2. Modify the capabilities to match your requirements
+3. Save the profile as a JSON file
+4. Use the profile in your application using either the header-based or JSON-based approach
+
+You can find examples of custom profiles in the link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/api/profiles[Vulkan-Samples profiles examples].
+
+Custom profiles are particularly useful for:
+
+* Internal development teams working on multiple applications
+* Defining minimum requirements for specific application categories
+* Creating hardware-specific optimized profiles
+
+Example of creating and using a custom profile:
+
+[source,cpp]
+----
+// Define a custom profile (typically done offline and saved to a JSON file)
+std::string customProfileJson = R"(
+{
+    "file_format_version": "1.0.0",
+    "profiles": {
+        "VP_CUSTOM_GAME_PROFILE": {
+            "version": 1,
+            "api_version": "1.1.0",
+            "label": "Custom Game Profile",
+            "description": "Profile for our game engine",
+            "capabilities": [
+                // ... custom capabilities ...
+            ]
+        }
+    }
+}
+)";
+
+// Load the custom profile
+VkpProfilesFileLoader loader;
+loader.LoadFromString(customProfileJson);
+
+// Use the custom profile
+VkpProfile profile = loader.GetProfile("VP_CUSTOM_GAME_PROFILE");
+// ... use the profile as before ...
+----
+
+== Android Baseline Profile
+
+The Android Baseline Profile is particularly useful for Android developers as it provides a guaranteed set of features that are available on a wide range of Android devices. This profile is documented in the link:https://docs.vulkan.org/spec/latest/appendices/profiles.html#profile-VP_ANDROID_BASELINE_2022[Vulkan Specification] and the link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/profiles/VP_ANDROID_BASELINE_2022.json[JSON definition]. This profile includes:
+
+* Core Vulkan 1.1 functionality
+* Essential extensions for Android development
+* Minimum guaranteed limits and features
+
+For Android-specific examples, see the link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/api/profiles[Vulkan-Samples profiles examples] and the link:https://developer.android.com/ndk/guides/graphics/vulkan-profiles[Android NDK documentation on Vulkan Profiles].
+
+By targeting the Android Baseline Profile, developers can:
+
+* Reduce the need for device-specific code paths
+* Ensure consistent behavior across different Android devices
+* Simplify testing and validation
+
+=== Example: Targeting Android Baseline Profile
+
+[source,cpp]
+----
+#include <vulkan/vulkan.hpp>
+#include <vulkan/vulkan_profiles.hpp>
+
+void SetupVulkanWithAndroidProfile() {
+    // Create a Vulkan instance
+    vk::InstanceCreateInfo instanceCreateInfo;
+    vk::Instance instance = vk::createInstance(instanceCreateInfo);
+
+    // Get a physical device
+    vk::PhysicalDevice physicalDevice = instance.enumeratePhysicalDevices().front();
+
+    // Create a profile instance for the Android baseline profile
+    vkp::AndroidBaseline2022Profile profile;
+
+    // Check if the profile is supported
+    VkBool32 supported = VK_FALSE;
+    profile.CheckSupport(physicalDevice, &supported);
+
+    if (supported) {
+        // Configure device creation with the profile
+        vk::DeviceCreateInfo deviceCreateInfo;
+        profile.ConfigureDeviceCreation(physicalDevice, deviceCreateInfo);
+
+        // Create the device
+        vk::Device device = physicalDevice.createDevice(deviceCreateInfo);
+
+        // Now you can use the device with the guaranteed set of features
+        // defined in the Android Baseline Profile
+    } else {
+        // Handle the case where the profile is not supported
+        // This might involve falling back to a simpler rendering approach
+        // or showing an error message
+    }
+}
+----
+
+== Integration with Existing Applications
+
+Integrating Vulkan Profiles into an existing Vulkan application involves several steps, which are described in the link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/library/README.md#integrating-with-existing-applications[Vulkan-Profiles library documentation]:
+
+1. *Identify Target Profiles*: Determine which profiles best match your application's requirements
+2. *Add Profile Support*: Incorporate the Vulkan Profiles header or JSON handling
+3. *Modify Device Creation*: Update your device creation code to use profiles
+4. *Add Fallback Paths*: Implement fallback strategies for devices that don't support your target profile
+
+For examples of integrating profiles with existing applications, see the link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/api/profiles[Vulkan-Samples profiles examples] and the link:https://github.com/KhronosGroup/Vulkan-Profiles/tree/main/library/test[Vulkan-Profiles test directory].
+
+Here's an example of integrating profiles into an existing application:
+
+[source,cpp]
+----
+// Original device creation code
+void CreateDeviceOriginal(VkPhysicalDevice physicalDevice) {
+    // Query for features, extensions, etc.
+    VkPhysicalDeviceFeatures features;
+    vkGetPhysicalDeviceFeatures(physicalDevice, &features);
+
+    // Set up device creation info manually
+    VkDeviceCreateInfo createInfo = {};
+    createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    createInfo.pEnabledFeatures = &features;
+    // ... set up extensions, queues, etc. ...
+
+    // Create the device
+    VkDevice device;
+    vkCreateDevice(physicalDevice, &createInfo, nullptr, &device);
+}
+
+// Updated device creation code using profiles
+void CreateDeviceWithProfiles(VkPhysicalDevice physicalDevice) {
+    // Try to use the Baseline 2022 profile
+    vkp::Baseline2022Profile profile;
+
+    VkBool32 supported = VK_FALSE;
+    profile.CheckSupport(physicalDevice, &supported);
+
+    if (supported) {
+        // Profile is supported, use it to configure device creation
+        VkDeviceCreateInfo createInfo = {};
+        createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+
+        profile.ConfigureDeviceCreation(physicalDevice, createInfo);
+
+        // Create the device with profile-configured settings
+        VkDevice device;
+        vkCreateDevice(physicalDevice, &createInfo, nullptr, &device);
+    } else {
+        // Fall back to original method if profile is not supported
+        CreateDeviceOriginal(physicalDevice);
+    }
+}
+----
+
+== Performance Considerations
+
+Using Vulkan Profiles has minimal runtime performance impact, but there are some considerations to keep in mind:
+
+1. *Initialization Overhead*: Loading and parsing profile JSON files adds some initialization time
+2. *Memory Usage*: The profile data structures consume a small amount of memory
+3. *Feature Enabling*: Enabling features you don't need might have a slight performance impact on some implementations
+
+To optimize performance when using profiles:
+
+* Use the header-based approach for better compile-time optimization
+* Create custom profiles that only include the features you actually need
+* Consider using different profiles for different hardware tiers
+
+== Troubleshooting and Common Issues
+
+When working with Vulkan Profiles, developers might encounter several common issues. The link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/library/README.md#troubleshooting[Vulkan-Profiles library documentation] provides guidance on troubleshooting, and the link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/main/docs/khronos_validation_layer.md[Vulkan Validation Layers documentation] can help identify issues with profile usage:
+
+=== Profile Isn't Supported
+
+If `CheckSupport()` returns `VK_FALSE`, it means the device doesn't support all the requirements of the profile. To troubleshoot:
+
+1. Use the profile's `GetProfileCapabilitiesReport()` function to get detailed information about which specific requirements are not met
+2. Consider using a less demanding profile
+3. Implement a fallback path for devices that don't support your target profile
+
+Example:
+
+[source,cpp]
+----
+VkBool32 supported = VK_FALSE;
+profile.CheckSupport(physicalDevice, &supported);
+
+if (!supported) {
+    // Get detailed report on what's not supported
+    VkpProfileCapabilitiesReport report;
+    profile.GetProfileCapabilitiesReport(physicalDevice, report);
+
+    // Log the unsupported capabilities
+    for (const auto& unsupported : report.unsupportedCapabilities) {
+        LogWarning("Unsupported: " + unsupported);
+    }
+
+    // Fall back to a different profile or custom configuration
+}
+----
+
+=== Version Compatibility Issues
+
+When using profiles across different Vulkan SDK versions, you might encounter compatibility issues. To avoid these:
+
+* Always use the profile definitions from the same SDK version as your Vulkan headers
+* Be aware that profile definitions might evolve between SDK releases
+* Consider bundling the profile JSON files with your application to ensure consistency
+
+=== Integration with Validation Layers
+
+Vulkan Profiles work well with validation layers, but there are some considerations:
+
+* Enable the `VK_LAYER_KHRONOS_validation` layer during development
+* Be aware that some validation warnings might be triggered for profile-enabled features that you're not explicitly using
+* Use debug callbacks to filter validation messages if necessary
+
+== Benefits of Using Vulkan Profiles
+
+Using Vulkan Profiles offers several advantages:
+
+1. *Simplified Development*
+    - Reduces the complexity of checking for individual features and extensions
+2. *Better Compatibility*
+    - Ensures your application works consistently across different devices
+3. *Future-Proofing*
+    - Profiles evolve in a controlled manner, making it easier to adapt to new hardware
+4. *Clear Communication*
+    - Provides a common language for developers and hardware vendors to discuss capabilities
+5. *Reduced Testing Burden*
+    - Fewer device-specific code paths means less testing required
+6. *Standardized Capabilities*
+    - Provides a well-defined baseline that hardware vendors can target
+7. *Easier Porting*
+    - Simplifies the process of porting applications between different platforms
+
+== Conclusion
+
+Vulkan Profiles provide a powerful mechanism for targeting a consistent set of Vulkan capabilities across different devices. By using profiles, particularly the Android Baseline Profile for mobile development, developers can simplify their code, ensure better compatibility, and reduce the need for device-specific workarounds.
+
+The profile system continues to evolve, with new profiles being defined to address emerging hardware capabilities and developer needs. By understanding how to effectively use profiles, create custom profiles, and integrate them into your applications, you can significantly streamline your Vulkan development process.
+
+For more information, refer to these resources:
+
+* link:https://docs.vulkan.org/spec/latest/appendices/profiles.html[Vulkan Profiles in the Vulkan Specification]
+* link:https://github.com/KhronosGroup/Vulkan-Profiles[Vulkan-Profiles repository]
+    - Contains profile definitions, library code, and tools
+* link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/api/profiles[Vulkan-Samples profiles examples]
+    - Sample code demonstrating profile usage
+* link:https://vulkan.lunarg.com/doc/sdk/latest/windows/profiles_api_library.html[Vulkan SDK Profiles API Library documentation]
+* link:https://developer.android.com/ndk/guides/graphics/vulkan-profiles[Android NDK documentation on Vulkan Profiles] - For Android-specific guidance
