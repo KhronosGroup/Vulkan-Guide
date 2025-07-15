@@ -10,7 +10,6 @@
 ** xref:{chapters}vulkan_spec.adoc[]
 ** xref:{chapters}platforms.adoc[]
 ** xref:{chapters}checking_for_support.adoc[]
-** xref:{chapters}versions.adoc[]
 ** xref:{chapters}vulkan_versions_porting_guide.adoc[]
 ** xref:{chapters}vulkan_release_summary.adoc[]
 ** xref:{chapters}what_is_spirv.adoc[]
