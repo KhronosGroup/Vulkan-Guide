@@ -24,6 +24,18 @@ jobs:
         with:
           ruby-version: '3.0'
 
+      # Set up Python for chapter reference checker
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # Run chapter reference checker
+      - name: Check chapter references
+        run: |
+          chmod +x .github/scripts/check_chapter_references.py
+          python .github/scripts/check_chapter_references.py
+
       # Run awesome_bot checker
       # Apparently this has trouble parsing one wiki link with () in it, so added to whitelist
       # need request-delay or will get 429 errors for sites such as GitHub
