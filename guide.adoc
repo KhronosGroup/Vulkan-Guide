@@ -42,7 +42,7 @@ include::{chapters}platforms.adoc[]
 
 include::{chapters}checking_for_support.adoc[]
 
-include::{chapters}vulkan_versions_porting_guide.adoc[]
+include::{chapters}versions.adoc[]
 
 include::{chapters}vulkan_release_summary.adoc[]
 
