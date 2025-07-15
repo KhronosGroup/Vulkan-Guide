@@ -1,0 +1,224 @@
+// Copyright 2019-2024 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
+
+[[feature_availability_dashboard]]
+= Feature Availability Dashboard
+
+This dashboard provides an overview of which major Vulkan extensions are supported by different vendors across desktop and mobile platforms. It helps developers understand feature availability across the ecosystem and provides links to relevant resources.
+
+== Vendor Support
+
+The following table shows the support status of major Vulkan extensions across desktop and mobile GPU vendors:
+
+[cols="1,1,1,1,1,1,1,1,1", options="header"]
+|===
+|Extension |AMD |NVIDIA |Intel |Qualcomm |ARM |PowerVR |Description |Resources
+
+|VK_EXT_mesh_shader
+|✓
+|✓
+|✓
+|
+|
+|
+|Provides support for the mesh shading pipeline
+|link:https://vulkan.gpuinfo.org/listextensions.php?core=vulkan&extension=VK_EXT_mesh_shader[GPU Info] \| link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_mesh_shader.html[Spec]
+
+|VK_EXT_descriptor_indexing
+|✓
+|✓
+|✓
+|✓
+|✓
+|✓
+|Provides more flexibility in descriptor indexing
+|link:https://vulkan.gpuinfo.org/listextensions.php?core=vulkan&extension=VK_EXT_descriptor_indexing[GPU Info] \| link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_descriptor_indexing.html[Spec] \| link:extensions/VK_EXT_descriptor_indexing.adoc[Guide]
+
+|VK_EXT_inline_uniform_block
+|✓
+|✓
+|✓
+|✓
+|✓
+|✓
+|Provides support for inline uniform blocks in descriptor sets
+|link:https://vulkan.gpuinfo.org/listextensions.php?core=vulkan&extension=VK_EXT_inline_uniform_block[GPU Info] \| link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_inline_uniform_block.html[Spec] \| link:extensions/VK_EXT_inline_uniform_block.adoc[Guide]
+
+|VK_EXT_memory_priority
+|✓
+|✓
+|✓
+|✓
+|✓
+|✓
+|Allows applications to set priorities for memory allocations
+|link:https://vulkan.gpuinfo.org/listextensions.php?core=vulkan&extension=VK_EXT_memory_priority[GPU Info] \| link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_memory_priority.html[Spec] \| link:extensions/VK_EXT_memory_priority.adoc[Guide]
+
+|VK_EXT_extended_dynamic_state
+|✓
+|✓
+|✓
+|✓
+|✓
+|✓
+|Provides dynamic state for additional pipeline state
+|link:https://vulkan.gpuinfo.org/listextensions.php?core=vulkan&extension=VK_EXT_extended_dynamic_state[GPU Info] \| link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_extended_dynamic_state.html[Spec] \| link:dynamic_state.adoc#states-that-are-dynamic[Guide]
+
+|VK_EXT_extended_dynamic_state2
+|✓
+|✓
+|✓
+|✓
+|✓
+|✓
+|Provides additional dynamic state for pipeline state
+|link:https://vulkan.gpuinfo.org/listextensions.php?core=vulkan&extension=VK_EXT_extended_dynamic_state2[GPU Info] \| link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_extended_dynamic_state2.html[Spec] \| link:dynamic_state.adoc#states-that-are-dynamic[Guide]
+
+|VK_EXT_custom_border_color
+|✓
+|✓
+|✓
+|✓
+|✓
+|✓
+|Allows setting custom border colors for samplers
+|link:https://vulkan.gpuinfo.org/listextensions.php?core=vulkan&extension=VK_EXT_custom_border_color[GPU Info] \| link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_custom_border_color.html[Spec] \| link:extensions/translation_layer_extensions.adoc#VK_EXT_custom_border_color[Guide]
+
+|VK_EXT_depth_clip_enable
+|✓
+|✓
+|✓
+|✓
+|✓
+|✓
+|Provides D3D11-like depth clip enable functionality
+|link:https://vulkan.gpuinfo.org/listextensions.php?core=vulkan&extension=VK_EXT_depth_clip_enable[GPU Info] \| link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_depth_clip_enable.html[Spec] \| link:extensions/translation_layer_extensions.adoc#VK_EXT_depth_clip_enable[Guide]
+
+|VK_EXT_depth_clip_control
+|✓
+|✓
+|✓
+|✓
+|✓
+|✓
+|Allows using OpenGL depth range in NDC
+|link:https://vulkan.gpuinfo.org/listextensions.php?core=vulkan&extension=VK_EXT_depth_clip_control[GPU Info] \| link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_depth_clip_control.html[Spec] \| link:extensions/translation_layer_extensions.adoc#VK_EXT_depth_clip_control[Guide]
+
+|VK_EXT_image_view_min_lod
+|
+|
+|
+|✓
+|✓
+|✓
+|Provides an API-side version of the MinLod SPIR-V qualifier
+|link:https://vulkan.gpuinfo.org/listextensions.php?core=vulkan&extension=VK_EXT_image_view_min_lod[GPU Info] \| link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_image_view_min_lod.html[Spec] \| link:extensions/translation_layer_extensions.adoc#VK_EXT_image_view_min_lod[Guide]
+
+|VK_EXT_shader_viewport_index_layer
+|✓
+|✓
+|✓
+|✓
+|✓
+|✓
+|Allows setting viewport index and render target layer from vertex or tessellation shaders
+|link:https://vulkan.gpuinfo.org/listextensions.php?core=vulkan&extension=VK_EXT_shader_viewport_index_layer[GPU Info] \| link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_shader_viewport_index_layer.html[Spec] \| link:extensions/shader_features.adoc#VK_EXT_shader_viewport_index_layer[Guide]
+
+|VK_EXT_shader_demote_to_helper_invocation
+|✓
+|✓
+|✓
+|✓
+|✓
+|✓
+|Adds HLSL-compatible fragment shader discard functionality
+|link:https://vulkan.gpuinfo.org/listextensions.php?core=vulkan&extension=VK_EXT_shader_demote_to_helper_invocation[GPU Info] \| link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_shader_demote_to_helper_invocation.html[Spec] \| link:extensions/shader_features.adoc#VK_EXT_shader_demote_to_helper_invocation[Guide]
+
+|VK_EXT_transform_feedback
+|✓
+|✓
+|✓
+|
+|
+|
+|Provides transform feedback functionality for capturing vertex data
+|link:https://vulkan.gpuinfo.org/listextensions.php?core=vulkan&extension=VK_EXT_transform_feedback[GPU Info] \| link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_transform_feedback.html[Spec] \| link:extensions/translation_layer_extensions.adoc#VK_EXT_transform_feedback[Guide]
+
+|VK_EXT_sampler_filter_minmax
+|✓
+|✓
+|✓
+|✓
+|✓
+|✓
+|Allows samplers to return component-wise min or max values
+|link:https://vulkan.gpuinfo.org/listextensions.php?core=vulkan&extension=VK_EXT_sampler_filter_minmax[GPU Info] \| link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_sampler_filter_minmax.html[Spec] \| link:extensions/cleanup.adoc#VK_EXT_sampler_filter_minmax[Guide]
+
+|VK_EXT_host_query_reset
+|✓
+|✓
+|✓
+|✓
+|✓
+|✓
+|Allows resetting queries from the host instead of command buffers
+|link:https://vulkan.gpuinfo.org/listextensions.php?core=vulkan&extension=VK_EXT_host_query_reset[GPU Info] \| link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_host_query_reset.html[Spec] \| link:extensions/cleanup.adoc#VK_EXT_host_query_reset[Guide]
+
+|VK_EXT_provoking_vertex
+|✓
+|✓
+|✓
+|
+|
+|
+|Allows control over which vertex is the provoking vertex in a primitive
+|link:https://vulkan.gpuinfo.org/listextensions.php?core=vulkan&extension=VK_EXT_provoking_vertex[GPU Info] \| link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_provoking_vertex.html[Spec] \| link:extensions/translation_layer_extensions.adoc#VK_EXT_provoking_vertex[Guide]
+
+|VK_EXT_border_color_swizzle
+|✓
+|✓
+|✓
+|
+|
+|
+|Fixes undefined behavior when using custom border colors with image view swizzles
+|link:https://vulkan.gpuinfo.org/listextensions.php?core=vulkan&extension=VK_EXT_border_color_swizzle[GPU Info] \| link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_border_color_swizzle.html[Spec] \| link:extensions/translation_layer_extensions.adoc#VK_EXT_border_color_swizzle[Guide]
+
+|VK_EXT_shader_stencil_export
+|✓
+|✓
+|✓
+|
+|
+|
+|Allows a shader to generate the stencil reference value
+|link:https://vulkan.gpuinfo.org/listextensions.php?core=vulkan&extension=VK_EXT_shader_stencil_export[GPU Info] \| link:https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_shader_stencil_export.html[Spec] \| link:extensions/shader_features.adoc#VK_EXT_shader_stencil_export[Guide]
+|===
+
+== How to Use This Dashboard
+
+1. **Identify Required Features**: Determine which Vulkan extensions your application needs.
+2. **Check Vendor Support**: Use the table above to see which vendors support those extensions.
+3. **Explore Resources**: Follow the links to learn more about each extension:
+   * **GPU Info**: Shows real-world support data from vulkan.gpuinfo.org
+   * **Spec**: Links to the official Khronos specification
+   * **Guide**: Links to detailed guides (when available)
+4. **Plan for Fallbacks**: If an extension isn't universally supported, consider implementing fallbacks.
+
+== Notes on Extension Support
+
+* Support for extensions can vary between different GPU models from the same vendor.
+* Mobile GPUs generally support fewer extensions than desktop GPUs.
+* Some extensions are promoted to core in newer Vulkan versions, making them universally available.
+* Always check for extension availability at runtime using `vkEnumerateDeviceExtensionProperties`.
+
+== Additional Resources
+
+* link:https://vulkan.gpuinfo.org/[GPU Info Database]: Comprehensive database of Vulkan implementation details
+* link:https://registry.khronos.org/vulkan/[Vulkan Registry]: Official specifications for all Vulkan extensions
+* link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples]: Sample code demonstrating various Vulkan features
+* link:checking_for_support.adoc[Checking for Support]: Guide on how to check for feature support at runtime
+* link:enabling_extensions.adoc[Enabling Extensions]: Guide on how to enable extensions in your application
