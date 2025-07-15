@@ -48,6 +48,8 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 == xref:{chapters}versions.adoc[Versions]
 
+== xref:{chapters}vulkan_versions_porting_guide.adoc[Vulkan Versions & Porting Guide]
+
 == xref:{chapters}vulkan_release_summary.adoc[Vulkan Release Summary]
 
 == xref:{chapters}what_is_spirv.adoc[What is SPIR-V?]

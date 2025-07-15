@@ -1,0 +1,532 @@
+// Copyright 2019-2025 The Khronos Group, Inc.
+// Copyright 2025 Holochip, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[vulkan-versions-porting-guide]]
+= Vulkan Versions & Porting Guide
+
+This chapter provides a detailed breakdown of features added in each Vulkan version, guidance on porting applications between versions, and instructions on how to request features from different Vulkan versions.
+
+== Vulkan 1.1 Features Breakdown
+
+Vulkan 1.1 was released on March 7, 2018, and introduced several significant features:
+
+[NOTE]
+====
+link:https://docs.vulkan.org/spec/latest/appendices/versions.html#versions-1.1[Vulkan Spec: Vulkan 1.1]
+====
+
+=== Subgroups
+
+Subgroups provide a way for invocations within a workgroup to communicate with each other without using shared memory or barriers. This enables more efficient parallel algorithms and can significantly improve performance for certain workloads.
+
+link:https://docs.vulkan.org/spec/latest/chapters/subgroups.html[Vulkan Spec: Subgroups] |
+link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions/subgroup_operations[Vulkan Sample: Subgroup Operations]
+
+Key capabilities:
+
+* Basic vote operations (all, any, ballot)
+* Shuffle operations (swap data between invocations)
+* Arithmetic operations (add, min, max across subgroup)
+* Broadcast values from one invocation to all others
+
+=== Protected Memory
+
+Protected memory provides a mechanism to protect content from being read or modified by unauthorized processes or applications. This is particularly important for DRM content and secure applications.
+
+link:https://docs.vulkan.org/spec/latest/chapters/memory.html#memory-protected-memory[Vulkan Spec: Protected Memory]
+
+Key capabilities:
+
+* Create protected memory allocations
+* Submit protected command buffers
+* Render to protected swapchain images
+
+=== Device Groups
+
+Device groups allow an application to treat multiple physical devices as a single logical device, enabling features like:
+
+link:https://docs.vulkan.org/spec/latest/chapters/devsandqueues.html#devsandqueues-device-groups[Vulkan Spec: Device Groups] |
+link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions/device_group[Vulkan Sample: Device Group]
+
+* Cross-device memory operations
+* Peer-to-peer memory access
+* Multi-GPU rendering
+
+=== External Memory and Synchronization
+
+These features allow Vulkan to share resources with other APIs and systems:
+
+link:https://docs.vulkan.org/spec/latest/chapters/memory.html#memory-external[Vulkan Spec: External Memory] |
+link:https://docs.vulkan.org/spec/latest/chapters/synchronization.html#synchronization-external[Vulkan Spec: External Synchronization]
+
+* Import/export memory objects
+* Import/export semaphores and fences
+* Coordinate with other graphics APIs or the operating system
+
+=== Other Notable Features
+
+* 16-bit storage: Support for 16-bit integer and floating-point types in storage buffers and push constants
+* Variable pointers: Allow pointers to storage buffers to be dynamically indexed
+* Multiview rendering: Render to multiple layers of a framebuffer in a single pass
+* SPIR-V 1.3 support: New shader capabilities
+* YCbCr conversion: Hardware-accelerated color space conversion
+* Maintenance updates: Various quality-of-life improvements
+
+== Vulkan 1.2 Features Breakdown
+
+Vulkan 1.2 was released on January 15, 2020, and built upon the foundation of Vulkan 1.1:
+
+[NOTE]
+====
+link:https://docs.vulkan.org/spec/latest/appendices/versions.html#versions-1.2[Vulkan Spec: Vulkan 1.2]
+====
+
+=== Descriptor Indexing
+
+Descriptor indexing provides more flexibility in how descriptors are accessed from shaders:
+
+link:https://docs.vulkan.org/spec/latest/chapters/descriptorsets.html#descriptorsets-updates-after-bind[Vulkan Spec: Descriptor Indexing] |
+link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions/descriptor_indexing[Vulkan Sample: Descriptor Indexing]
+
+* Update-after-bind descriptors
+* Runtime-sized descriptor arrays
+* Partially bound descriptors
+* Non-uniform indexing
+
+=== Timeline Semaphores
+
+Timeline semaphores extend the binary semaphore model with a more flexible synchronization primitive:
+
+link:https://docs.vulkan.org/spec/latest/chapters/synchronization.html#synchronization-semaphores-timeline[Vulkan Spec: Timeline Semaphores] |
+link:https://www.khronos.org/blog/vulkan-timeline-semaphores[Khronos Blog: Timeline Semaphores]
+
+* Assign timeline values to signal and wait operations
+* Signal and wait on multiple points in a timeline
+* Query current timeline value
+* Signal from host without queue submission
+
+=== Buffer Device Address
+
+Buffer device address allows shaders to directly access buffer memory using 64-bit addresses:
+
+link:https://docs.vulkan.org/spec/latest/chapters/descriptorsets.html#descriptorsets-bufferdeviceaddress[Vulkan Spec: Buffer Device Address] |
+link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions/buffer_device_address[Vulkan Sample: Buffer Device Address]
+
+* Get a 64-bit GPU address for a buffer
+* Pass buffer addresses through push constants or descriptors
+* Access buffer data using pointers in shaders
+* Enables data structures like linked lists and trees in shaders
+
+=== Shader Atomic Operations
+
+Enhanced atomic operations in shaders:
+
+link:https://docs.vulkan.org/spec/latest/chapters/spirvenv.html#spirvenv-capabilities-table-64-bit-atomics[Vulkan Spec: 64-bit Atomics] |
+link:https://docs.vulkan.org/spec/latest/chapters/spirvenv.html#spirvenv-capabilities-table-float-atomics[Vulkan Spec: Float Atomics]
+
+* 64-bit integer atomics
+* Floating-point atomics
+* Shared memory atomics
+
+=== Other Notable Features
+
+* 8-bit storage: Support for 8-bit integer types in storage buffers and push constants
+* Shader float controls: Fine-grained control over floating-point behavior
+* Depth/stencil resolve: Control how depth and stencil attachments are
+resolved in multi-sampled rendering
+* Scalar block layout: More flexible memory layout for shader blocks
+* Imageless framebuffers: Create framebuffers without specifying image views
+* Uniform buffer standard layout: Standardized memory layout for uniform buffers
+* Draw indirect count: Specify the number of draw commands in an indirect draw
+
+== Vulkan 1.3 Features Breakdown
+
+Vulkan 1.3 was released on January 25, 2022:
+
+[NOTE]
+====
+link:https://docs.vulkan.org/spec/latest/appendices/versions.html#versions-1.3[Vulkan Spec: Vulkan 1.3]
+====
+
+=== Dynamic Rendering
+
+Dynamic rendering simplifies the rendering process by removing the need for render pass objects:
+
+link:https://docs.vulkan.org/spec/latest/chapters/renderpass.html#dynamic-render[Vulkan Spec: Dynamic Rendering] |
+link:https://www.khronos.org/blog/streamlining-render-passes[Khronos Blog: Streamlining Render Passes] |
+link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions/dynamic_rendering[Vulkan Sample: Dynamic Rendering]
+
+* Begin and end rendering directly
+* Specify attachments at render time
+* More flexible rendering workflows
+* Easier porting from other APIs
+
+=== Synchronization2
+
+Synchronization2 provides a more streamlined API for synchronization:
+
+link:https://docs.vulkan.org/spec/latest/chapters/synchronization.html#synchronization-pipeline-barriers-2[Vulkan Spec: Synchronization2] |
+link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions/synchronization_2[Vulkan Sample: Synchronization2]
+
+* Simplified barrier usage
+* More explicit memory dependency specification
+* Better performance through more precise synchronization
+* Easier to use correctly
+
+=== Extended Dynamic State
+
+Extended dynamic state allows more pipeline states to be specified at command buffer recording time:
+
+link:https://docs.vulkan.org/spec/latest/chapters/pipelines.html#vertexinput-dynamic-state[Vulkan Spec: Extended Dynamic State] |
+link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions/extended_dynamic_state[Vulkan Sample: Extended Dynamic State]
+
+* Vertex input bindings and attributes
+* Primitive topology
+* Viewport with count
+* Scissor with count
+* Depth test enable and write enable
+* Depth compares op and bounds
+* Stencil test enables and ops
+* Stencil writes mask and reference
+* Blend constants
+
+=== Other Notable Features
+
+* Inline uniform blocks: Small uniform data embedded directly in descriptor sets
+* Pipeline creation cache control: More control over pipeline compilation
+* Private data: Attach arbitrary data to Vulkan objects
+* Shader demote to helper invocation: Control helper invocations in fragment shaders
+* Subgroup size control: Specify required subgroup sizes
+* Zero-initialize workgroup memory: Automatically initialize workgroup shared variables
+* Format feature flags 2: More detailed format capability reporting
+* Copy commands 2: More flexible copy operations
+
+== Vulkan 1.4 Features Breakdown
+
+Vulkan 1.4 was released on December 3, 2024:
+
+[NOTE]
+====
+link:https://docs.vulkan.org/spec/latest/appendices/versions.html#versions-1.4[Vulkan Spec: Vulkan 1.4]
+====
+
+=== Dynamic Rendering Local Read
+
+Extends dynamic rendering to allow reading from attachments during rendering:
+
+link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_dynamic_rendering_local_read.html#_description[Vulkan Spec: Dynamic Rendering Local Read]
+
+* Read from color attachments during rendering
+* Implement techniques like deferred shading more efficiently
+* Reduce memory bandwidth by avoiding intermediate buffers
+* Simplify rendering algorithms that need to read previous results
+
+=== Line Rasterization
+
+Provides more control over line rendering:
+
+link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_line_rasterization.html#_description[Vulkan Spec: Line Rasterization]
+
+* Specify line rasterization mode (bresenham, rectangular, etc.)
+* Control line width and stipple patterns
+* Improve line rendering quality and consistency across implementations
+* Better match the behavior of other graphics APIs
+
+=== Memory Management Improvements
+
+Several features that improve memory management:
+
+link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_map_memory2.html#_description[Vulkan Spec: Map Memory 2] |
+link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_load_store_op_none.html#_description[Vulkan Spec: Load/Store Op None] |
+link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_maintenance5.html#_description[Vulkan Spec: Maintenance 5]
+
+* Map Memory 2: More flexible memory mapping
+* Load/Store Op None: Skip unnecessary load/store operations
+* Maintenance 5 & 6: Various quality-of-life improvements
+* Global Priority: Specify queue priorities for system-level scheduling
+
+=== Shader Enhancements
+
+New shader capabilities:
+
+link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_subgroup_rotate.html#_description[Vulkan Spec: Shader Subgroup Rotate] |
+link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_expect_assume.html#_description[Vulkan Spec: Shader Expect/Assume] |
+link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_float_controls2.html#_description[Vulkan Spec: Shader Float Controls 2]
+
+* Shader Subgroup Rotate: Rotate values within a subgroup
+* Shader Expect/Assume: Provide hints to the compiler for optimization
+* Shader Float Controls 2: More control over floating-point behavior
+* Vertex Attribute Divisor: Instance-rate vertex attributes
+
+=== Other Notable Features
+
+* Push Descriptor: Update descriptors directly in command buffers (link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_push_descriptor.html#_description[Spec])
+* Index Type UINT8: Support for 8-bit indices (link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_index_type_uint8.html#_description[Spec])
+* Host Image Copy: Copy image data directly from host memory (link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_host_image_copy.html#_description[Spec])
+* Pipeline Protected Access: More flexible protected memory access (link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_pipeline_protected_access.html#_description[Spec])
+* Pipeline Robustness: Improved handling of out-of-bounds accesses (link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_pipeline_robustness.html#_description[Spec])
+
+== Porting from Vulkan 1.0 to Any Version
+
+This section provides a consolidated guide for porting applications from Vulkan 1.0 to any newer version (1.1, 1.2, 1.3, or 1.4).
+
+[NOTE]
+====
+link:https://docs.vulkan.org/spec/latest/chapters/extensions.html#extendingvulkan-compatibility[Vulkan Spec: Compatibility] |
+link:https://docs.vulkan.org/spec/latest/chapters/extensions.html#extendingvulkan-compatibility-promotion[Vulkan Spec: Extension Promotion]
+====
+
+=== General Porting Checklist
+
+1. *Update SDK and headers*
+   * Ensure you're using the Vulkan SDK that matches your target version or later
+   * Update header files to the latest version
+
+2. *Instance creation*
+   * Update `VkApplicationInfo::apiVersion` to your target version (e.g., `VK_API_VERSION_1_4`)
+   * Use `vkEnumerateInstanceVersion` to check for support of your target version
+
+3. *Device selection*
+   * Check for support of your target version on physical devices
+   * Select devices that support required features for your target version
+
+4. *Feature adoption*
+   * Replace extension usage with core functionality where applicable
+   * Update structure names (e.g., `VkPhysicalDeviceFeatures2KHR` → `VkPhysicalDeviceFeatures2`)
+   * Update function names (e.g., `vkGetPhysicalDeviceFeatures2KHR` → `vkGetPhysicalDeviceFeatures2`)
+   * Enable version-specific features through the appropriate feature structs:
+     - Vulkan 1.1: `VkPhysicalDeviceVulkan11Features`
+     - Vulkan 1.2: `VkPhysicalDeviceVulkan12Features`
+     - Vulkan 1.3: `VkPhysicalDeviceVulkan13Features`
+     - Vulkan 1.4: `VkPhysicalDeviceVulkan14Features`
+
+5. *SPIR-V updates*
+   * Update shaders to use the appropriate SPIR-V version for your target Vulkan version:
+     - Vulkan 1.1: SPIR-V 1.3
+     - Vulkan 1.2: SPIR-V 1.5
+     - Vulkan 1.3: SPIR-V 1.6
+     - Vulkan 1.4: SPIR-V 1.6
+   * Recompile shaders with an updated compiler
+
+6. *Testing*
+   * Test on both your original version and target version if backward compatibility is needed
+   * Verify all features work as expected
+
+=== Version-Specific Considerations
+
+==== Vulkan 1.1 Specific
+
+* Use `vkEnumerateInstanceVersion` to check for 1.1 support (this function was introduced in 1.1)
+* Consider adopting subgroups for improved parallel processing
+* Take advantage of protected memory if needed for secure content
+* Utilize device groups for multi-GPU scenarios
+* Implement external memory and synchronization for interoperability
+
+==== Vulkan 1.2 Specific
+
+* Consider adopting descriptor indexing for more flexible descriptor access
+* Use timeline semaphores for more advanced synchronization
+* Take advantage of the buffer device address for pointer-based buffer access
+* Implement shader atomic operations for advanced compute workloads
+* Use a uniform buffer standard layout for more predictable memory layouts
+
+==== Vulkan 1.3 Specific
+
+* Consider replacing render passes with dynamic rendering for simplified rendering
+* Migrate to Synchronization2 API for more streamlined synchronization
+* Take advantage of the extended dynamic state to reduce pipeline count
+* Use inline uniform blocks for small uniform data
+* Implement zero-initialize workgroup memory for safer compute shaders
+
+==== Vulkan 1.4 Specific
+
+* Take advantage of dynamic rendering local read for more efficient rendering
+* Update line rendering code to use improved line rasterization features
+* Use map memory 2 for more flexible memory mapping
+* Implement shader subgroup rotate and other shader enhancements
+* Use push descriptor for more efficient descriptor updates
+
+=== Backward Compatibility Considerations
+
+When targeting multiple Vulkan versions, follow these guidelines:
+
+* *Feature detection*: Always check for specific feature support rather than assuming availability based on a version
+* *Extension fallback*: For each core feature you use, check if it's available as an extension on older versions
+* *Structure and function names*: Use the non-KHR/EXT names from the latest headers, but be aware of compatibility issues
+* *Extension enabling*: On older versions, explicitly enable extensions that were later promoted to core
+* *Testing*: Test thoroughly on all targeted versions to ensure compatibility
+
+*Example of handling both extension and core functionality:*
+
+[source,c]
+----
+// Check if dynamic rendering is available (either as extension or core)
+bool hasDynamicRendering = false;
+if (deviceVersion >= VK_API_VERSION_1_3) {
+    // In Vulkan 1.3+, dynamic rendering is core functionality
+    VkPhysicalDeviceVulkan13Features features13 = {};
+    features13.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
+
+    VkPhysicalDeviceFeatures2 features2 = {};
+    features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+    features2.pNext = &features13;
+
+    vkGetPhysicalDeviceFeatures2(physicalDevice, &features2);
+
+    hasDynamicRendering = features13.dynamicRendering;
+} else {
+    // Check for the extension on older versions
+    // [Extension checking code here]
+}
+
+// Use the feature if available
+if (hasDynamicRendering) {
+    // [Dynamic rendering implementation]
+} else {
+    // [Fallback implementation using render passes]
+}
+----
+
+== Requesting Features from Different Versions
+
+[NOTE]
+====
+link:https://docs.vulkan.org/spec/latest/chapters/features.html[Vulkan Spec: Features] |
+link:https://docs.vulkan.org/spec/latest/chapters/features.html#features-requirements[Vulkan Spec: Feature Requirements]
+====
+
+=== Core Version Features
+
+To request features from a specific Vulkan core version:
+
+* *Specify the Vulkan version in instance creation*:
+
+[source,c]
+----
+VkApplicationInfo appInfo = {};
+appInfo.apiVersion = VK_API_VERSION_1_4; // Request Vulkan 1.4
+----
+
+* *Query for feature support*:
+
+[source,c]
+----
+// For Vulkan 1.1 features
+VkPhysicalDeviceVulkan11Features features11 = {};
+features11.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
+
+// For Vulkan 1.2 features
+VkPhysicalDeviceVulkan12Features features12 = {};
+features12.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+
+// For Vulkan 1.3 features
+VkPhysicalDeviceVulkan13Features features13 = {};
+features13.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
+
+// For Vulkan 1.4 features
+VkPhysicalDeviceVulkan14Features features14 = {};
+features14.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_4_FEATURES;
+
+// Chain them together
+features14.pNext = &features13;
+features13.pNext = &features12;
+features12.pNext = &features11;
+
+VkPhysicalDeviceFeatures2 features2 = {};
+features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+features2.pNext = &features14;
+
+vkGetPhysicalDeviceFeatures2(physicalDevice, &features2);
+----
+
+* *Enable the features during device creation*:
+
+[source,c]
+----
+// Use the same structures, now with desired features enabled
+VkDeviceCreateInfo createInfo = {};
+createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+createInfo.pNext = &features14; // Points to the start of our chain
+// ... other device creation parameters ...
+
+vkCreateDevice(physicalDevice, &createInfo, nullptr, &device);
+----
+
+=== Extension Features
+
+For features that are available as extensions in earlier Vulkan versions:
+
+link:https://docs.vulkan.org/spec/latest/chapters/extensions.html[Vulkan Spec: Extensions] |
+link:https://docs.vulkan.org/spec/latest/chapters/extensions.html#extensions-discovery[Vulkan Spec: Extension Discovery]
+
+1. *Check for extension support*:
+
+[source,c]
+----
+uint32_t extensionCount;
+vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
+std::vector<VkExtensionProperties> extensions(extensionCount);
+vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, extensions.data());
+
+bool hasExtension = false;
+for (const auto& extension : extensions) {
+    if (strcmp(extension.extensionName, "VK_KHR_dynamic_rendering") == 0) {
+        hasExtension = true;
+        break;
+    }
+}
+----
+
+* *Enable the extension*:
+
+[source,c]
+----
+const char* enabledExtensions[] = { "VK_KHR_dynamic_rendering" };
+
+VkDeviceCreateInfo createInfo = {};
+createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+createInfo.enabledExtensionCount = 1;
+createInfo.ppEnabledExtensionNames = enabledExtensions;
+// ... other device creation parameters ...
+----
+
+* *Query and enable extension-specific features if needed*:
+
+[source,c]
+----
+// Example for VK_EXT_descriptor_indexing
+VkPhysicalDeviceDescriptorIndexingFeaturesEXT indexingFeatures = {};
+indexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
+
+VkPhysicalDeviceFeatures2 features2 = {};
+features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+features2.pNext = &indexingFeatures;
+
+vkGetPhysicalDeviceFeatures2(physicalDevice, &features2);
+
+// Then enable during device creation
+VkDeviceCreateInfo createInfo = {};
+createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+createInfo.pNext = &indexingFeatures;
+// ... other device creation parameters ...
+----
+
+=== Best Practices
+
+link:https://docs.vulkan.org/spec/latest/appendices/spirvenv.html#spirvenv-compatibility-versioning[Vulkan Spec: Versioning and Compatibility] |
+link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/performance[Vulkan Samples: Performance Best Practices]
+
+1. *Graceful fallbacks*: Always check for feature support and have fallback paths for unsupported features.
+
+2. *Minimum required version*: Clearly document the minimum Vulkan version your application requires.
+
+3. *Feature detection over version detection*: When possible, check for specific features rather than assuming they exist based on the Vulkan version.
+
+4. *Extension prioritization*: Prefer core functionality over extensions when targeting newer Vulkan versions.
+
+5. *Testing*: Test on a variety of implementations to ensure compatibility.
