@@ -116,13 +116,16 @@ Profiles use a year-based versioning scheme (e.g., 2022, 2023) to indicate when 
 
 * Provides clear temporal context for each profile
 * Allows for the creation of new profiles that reflect evolving hardware capabilities
-* Maintains backward compatibility, as older profiles remain valid even as new ones are introduced
+* Maintains backward compatibility, as older profiles remain valid even as
+new ones are introduced.  This is a feature of the design of the profiles,
+yet sometimes, there are rare instances where the older profiles are updated
+due to newly released hardware.
 
 When a new yearly profile is released, it typically includes all the capabilities of the previous year's profile plus additional features and possibly higher limits, reflecting the advancement of hardware capabilities.
 
 == Using Vulkan Profiles
 
-There are two main ways to use Vulkan Profiles:
+There are two main ways to use Vulkan Profiles to initialize a Vulkan application:
 
 === 1. Using the Vulkan Profiles header
 
