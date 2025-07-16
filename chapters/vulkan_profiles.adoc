@@ -10,7 +10,7 @@ ifndef::images[:images: images/]
 
 Vulkan Profiles is a mechanism that allows developers to target a specific set of features, extensions, and limits that are guaranteed to be supported by a range of Vulkan implementations. This is particularly useful for cross-platform development where you want to ensure your application works consistently across different devices.
 
-For detailed information, refer to the link:https://vulkan.lunarg.com/doc/sdk/1.4.321.0/windows/profiles_api_library.html[Vulkan Profiles API Library] documentation on LunarG's website.
+For detailed information, refer to the link:https://vulkan.lunarg.com/doc/sdk/latest/windows/profiles_api_library.html[Vulkan Profiles API Library] documentation on LunarG's website.
 
 == What are Vulkan Profiles?
 
@@ -54,8 +54,8 @@ The Khronos Group maintains several profiles, which are defined in the link:http
 
 * *LunarG Desktop Baseline 2022* - A baseline profile for desktop platforms
 (link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/profiles/VP_LUNARG_desktop_baseline_2022[JSON Definitions])
-* *Android Baseline 2022* - A baseline profile specifically for Android devices (link:https://vulkan.lunarg.com/doc/sdk/1.4.321.0/windows/profiles_api_library.html[Documentation], link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/profiles/VP_ANDROID_baseline_2022.json[JSON Definition])
-* *Roadmap 2022* - A forward-looking profile that hardware vendors are encouraged to support in future implementations (link:https://vulkan.lunarg.com/doc/sdk/1.4.321.0/windows/profiles_api_library.html[Documentation], link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/profiles/VP_KHR_roadmap_2022.json[JSON Definition])
+* *Android Baseline 2022* - A baseline profile specifically for Android devices (link:https://vulkan.lunarg.com/doc/sdk/latest/windows/profiles_api_library.html[Documentation], link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/profiles/VP_ANDROID_baseline_2022.json[JSON Definition])
+* *Roadmap 2022* - A forward-looking profile that hardware vendors are encouraged to support in future implementations (link:https://vulkan.lunarg.com/doc/sdk/latest/windows/profiles_api_library.html[Documentation], link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/profiles/VP_KHR_roadmap_2022.json[JSON Definition])
 
 These profiles are versioned by year to allow for evolution over time while maintaining backward compatibility. You can find sample code demonstrating the use of these profiles in the link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/tooling/profiles[Vulkan-Samples repository].
 
@@ -297,7 +297,7 @@ VkpProfile profile = loader.GetProfile("VP_CUSTOM_GAME_PROFILE");
 
 == Android Baseline Profile
 
-The Android Baseline Profile is particularly useful for Android developers as it provides a guaranteed set of features that are available on a wide range of Android devices. This profile is documented in the link:https://vulkan.lunarg.com/doc/sdk/1.4.321.0/windows/profiles_api_library.html[Vulkan Profiles API Library documentation] and the link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/profiles/VP_ANDROID_baseline_2022.json[JSON definition]. This profile includes:
+The Android Baseline Profile is particularly useful for Android developers as it provides a guaranteed set of features that are available on a wide range of Android devices. This profile is documented in the link:https://vulkan.lunarg.com/doc/sdk/latest/windows/profiles_api_library.html[Vulkan Profiles API Library documentation] and the link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/profiles/VP_ANDROID_baseline_2022.json[JSON definition]. This profile includes:
 
 * Core Vulkan 1.1 functionality
 * Essential extensions for Android development
@@ -497,7 +497,7 @@ The profile system continues to evolve, with new profiles being defined to addre
 
 For more information, refer to these resources:
 
-* link:https://vulkan.lunarg.com/doc/sdk/1.4.321.0/windows/profiles_api_library.html[Vulkan Profiles API Library documentation]
+* link:https://vulkan.lunarg.com/doc/sdk/latest/windows/profiles_api_library.html[Vulkan Profiles API Library documentation]
 * link:https://github.com/KhronosGroup/Vulkan-Profiles[Vulkan-Profiles repository]
     - Contains profile definitions, library code, and tools
 * link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/tooling/profiles[Vulkan-Samples profiles examples]
