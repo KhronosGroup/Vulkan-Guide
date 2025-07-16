@@ -20,6 +20,7 @@ A Vulkan Profile is a well-defined set of capabilities, (features, extensions, f
 * Ensure compatibility across a range of devices
 * Reduce the need for complex capability checking and fallback code
 * Provide a clear target for both developers and hardware vendors
+* Automatically enable required features and extensions without manual configuration
 
 The Khronos Group maintains a set of official profiles, and vendors can also
 define their own profiles for their specific hardware. Additionally, Vulkan
@@ -55,7 +56,9 @@ The Khronos Group maintains several profiles, which are defined in the link:http
 * *LunarG Desktop Baseline 2022* - A baseline profile for desktop platforms
 (link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/profiles/VP_LUNARG_desktop_baseline_2022[JSON Definitions])
 * *Android Baseline 2022* - A baseline profile specifically for Android devices (link:https://vulkan.lunarg.com/doc/sdk/latest/windows/profiles_api_library.html[Documentation], link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/profiles/VP_ANDROID_baseline_2022.json[JSON Definition])
-* *Roadmap 2022* - A forward-looking profile that hardware vendors are encouraged to support in future implementations (link:https://vulkan.lunarg.com/doc/sdk/latest/windows/profiles_api_library.html[Documentation], link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/profiles/VP_KHR_roadmap_2022.json[JSON Definition])
+* *Roadmap 2024* - A forward-looking profile that hardware vendors are
+encouraged to support in future implementations (link:https://vulkan.lunarg.com/doc/sdk/latest/windows/profiles_api_library.html[Documentation],
+link:https://docs.vulkan.org/spec/latest/appendices/roadmap.html#roadmap-2024[JSON Definition], link:https://docs.vulkan.org/spec/latest/appendices/roadmap.html[roadmap])
 
 These profiles are versioned by year to allow for evolution over time while maintaining backward compatibility. You can find sample code demonstrating the use of these profiles in the link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/tooling/profiles[Vulkan-Samples repository].
 
@@ -116,16 +119,29 @@ Profiles use a year-based versioning scheme (e.g., 2022, 2023) to indicate when 
 
 * Provides clear temporal context for each profile
 * Allows for the creation of new profiles that reflect evolving hardware capabilities
-* Maintains backward compatibility, as older profiles remain valid even as
-new ones are introduced.  This is a feature of the design of the profiles,
-yet sometimes, there are rare instances where the older profiles are updated
-due to newly released hardware.
+* Maintains backward compatibility, as older profiles are only updated to fix shortcomings or issues.
 
 When a new yearly profile is released, it typically includes all the capabilities of the previous year's profile plus additional features and possibly higher limits, reflecting the advancement of hardware capabilities.
 
 == Using Vulkan Profiles
 
 There are two main ways to use Vulkan Profiles to initialize a Vulkan application:
+
+=== Automatic Feature Enabling
+
+One of the key benefits of using the Vulkan Profiles library is that it automatically handles the enabling of all required features, extensions, and properties defined in a profile. This eliminates the need to manually:
+
+* Track and enable each required extension
+* Set up feature structures for each feature you need
+* Configure property structures for specific requirements
+
+When you call `profile.ConfigureDeviceCreation()`, the library automatically:
+
+1. Populates the device creation info with all necessary extensions
+2. Sets up the feature chain with all required features enabled
+3. Configures any required properties
+
+This significantly simplifies device initialization and reduces the chance of errors from forgetting to enable specific features or extensions.
 
 === 1. Using the Vulkan Profiles header
 
@@ -157,8 +173,7 @@ if (supported) {
 === 2. Using the Vulkan Profiles, JSON files directly
 
 For more advanced use cases, you can work with the JSON profile definitions
-directly. The JSON schema is documented in the link:https://github
-.com/KhronosGroup/Vulkan-Profiles/blob/main/schema/README.md[Vulkan-Profiles
+directly. The JSON schema is documented in the link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/schema/README.md[Vulkan-Profiles
 schema documentation]. You can find example code that loads and uses JSON
 profiles in the link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/layer/TUTORIAL.md[Vulkan-Profiles]:
 
@@ -352,7 +367,7 @@ void SetupVulkanWithAndroidProfile() {
 
 == Integration with Existing Applications
 
-Integrating Vulkan Profiles into an existing Vulkan application involves several steps, which are described in the link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/library/README.md#integrating-with-existing-applications[Vulkan-Profiles library documentation]:
+Integrating Vulkan Profiles into an existing Vulkan application involves several steps, which are described in the link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/library/TUTORIAL.md[Vulkan-Profiles library documentation]:
 
 1. *Identify Target Profiles*: Determine which profiles best match your application's requirements
 2. *Add Profile Support*: Incorporate the Vulkan Profiles header or JSON handling
@@ -423,7 +438,7 @@ To optimize performance when using profiles:
 
 == Troubleshooting and Common Issues
 
-When working with Vulkan Profiles, developers might encounter several common issues. The link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/library/README.md#troubleshooting[Vulkan-Profiles library documentation] provides guidance on troubleshooting, and the link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/main/docs/khronos_validation_layer.md[Vulkan Validation Layers documentation] can help identify issues with profile usage:
+When working with Vulkan Profiles, developers might encounter several common issues. The link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/library/TUTORIAL.md[Vulkan-Profiles library documentation] provides guidance on troubleshooting, and the link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/main/docs/khronos_validation_layer.md[Vulkan Validation Layers documentation] can help identify issues with profile usage:
 
 === Profile Isn't Supported
 
@@ -476,6 +491,7 @@ Using Vulkan Profiles offers several advantages:
 
 1. *Simplified Development*
     - Reduces the complexity of checking for individual features and extensions
+    - *Automatically enables all required features and extensions* without manual configuration
 2. *Better Compatibility*
     - Ensures your application works consistently across different devices
 3. *Future-Proofing*
@@ -488,6 +504,8 @@ Using Vulkan Profiles offers several advantages:
     - Provides a well-defined baseline that hardware vendors can target
 7. *Easier Porting*
     - Simplifies the process of porting applications between different platforms
+8. *Reduced Boilerplate Code*
+    - Eliminates the need to write extensive feature and extension enabling code
 
 == Conclusion
 
