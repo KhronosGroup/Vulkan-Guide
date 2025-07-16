@@ -173,8 +173,7 @@ if (supported) {
 === 2. Using the Vulkan Profiles, JSON files directly
 
 For more advanced use cases, you can work with the JSON profile definitions
-directly. The JSON schema is documented in the link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/schema/README.md[Vulkan-Profiles
-schema documentation]. You can find example code that loads and uses JSON
+directly. You can find example code that loads and uses JSON
 profiles in the link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/layer/TUTORIAL.md[Vulkan-Profiles]:
 
 [source,cpp]
