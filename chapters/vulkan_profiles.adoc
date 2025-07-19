@@ -49,9 +49,12 @@ For example:
 
 This approach allows developers to target specific capability sets without being tied to a particular Vulkan version, providing more flexibility in application development.
 
-== Official Profiles
+== Maintained Profiles
 
-The Khronos Group maintains several profiles, which are defined in the link:https://github.com/KhronosGroup/Vulkan-Profiles/tree/main/profiles[Vulkan-Profiles repository]. The only official profiles are the Khronos Roadmap profiles and the Android Baseline profile. The others are maintained by Google and LunarG:
+The Khronos Group maintains several profiles, which are defined in the
+link:https://github.com/KhronosGroup/Vulkan-Profiles/tree/main/profiles
+[Vulkan-Profiles repository]. The only Khronos group maintained profiles are
+the Khronos Roadmap profiles. The others are maintained by Google and LunarG:
 
 * *LunarG Desktop Baseline 2022* - A baseline profile for desktop platforms
 (link:https://github.com/KhronosGroup/Vulkan-Profiles/blob/main/profiles/VP_LUNARG_desktop_baseline_2022[JSON Definitions])
@@ -115,7 +118,8 @@ By targeting this profile, developers can prepare their applications for future 
 
 === Profile Versioning Strategy
 
-Profiles use a year-based versioning scheme (e.g., 2022, 2023) to indicate when they were defined. This approach:
+Profiles may use a year-based versioning scheme (e.g., 2022, 2023) to indicate
+when they were defined. This approach:
 
 * Provides clear temporal context for each profile
 * Allows for the creation of new profiles that reflect evolving hardware capabilities
@@ -251,6 +255,19 @@ The key parts of a profile definition include:
   * *Features*: Required features that must be supported
   * *Properties*: Required properties and limits
   * *Formats*: Required format support with specific capabilities
+
+=== Types of Vulkan Profiles
+
+Vulkan Profiles can be applied for a multitude of use cases, including:
+
+* *Roadmap profiles*: To express guidance on the future direction of Vulkan devices.
+* *Platform profiles*: To express the Vulkan support available on different platforms.
+* *Device profiles*: To express the Vulkan support of a single Vulkan driver on a Vulkan device.
+* *Architecture profiles*: To express the Vulkan support of a class of GPUs.
+* *Engine profiles*: To express some rendering code paths requirements of an engine.
+* *Drivers bugs profiles*: To express capabilities that can't be used by an application.
+
+These different types of profiles allow developers to target specific hardware configurations, platforms, or use cases, ensuring compatibility and optimal performance across a wide range of scenarios.
 
 === Creating Custom Profiles
 
@@ -519,3 +536,6 @@ For more information, refer to these resources:
     - Contains profile definitions, library code, and tools
 * link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/tooling/profiles[Vulkan-Samples profiles examples]
     - Sample code demonstrating profile usage
+* link:https://www.lunarg.com/wp-content/uploads/2024/02/The-Vulkan-Profiles-Tools-LunarG-Christophe-Riccio-02-01-2024.pdf[Vulkan Profiles pdf]
+    - LunarG's Cristophe Ricco exhaustive documentation for
+    Vulkan Profiles.
