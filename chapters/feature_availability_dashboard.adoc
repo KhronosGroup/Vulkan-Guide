@@ -328,6 +328,7 @@ This flag represented the stage of the pipeline where vertex and index data is c
 ==== Replacement
 
 Split into more specific flags:
+
 * `VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR`: Represents the stage where index data is consumed
 * `VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR`: Represents the stage where vertex attribute data is consumed
 
@@ -398,6 +399,7 @@ This flag represented all transfer operations, including copy, resolve, blit, an
 ==== Replacement
 
 Split into more specific flags:
+
 * `VK_PIPELINE_STAGE_2_COPY_BIT_KHR`: Represents copy operations
 * `VK_PIPELINE_STAGE_2_RESOLVE_BIT_KHR`: Represents resolve operations
 * `VK_PIPELINE_STAGE_2_BLIT_BIT_KHR`: Represents blit operations
@@ -479,6 +481,7 @@ This flag represented all read operations performed by shaders, including readin
 ==== Replacement
 
 Split into more specific flags:
+
 * `VK_ACCESS_2_UNIFORM_READ_BIT_KHR`: Represents reads from uniform buffers
 * `VK_ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR`: Represents reads from sampled images
 * `VK_ACCESS_2_SHADER_STORAGE_READ_BIT_KHR`: Represents reads from storage buffers and images
