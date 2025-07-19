@@ -167,6 +167,8 @@ The following table lists deprecated items in Vulkan along with their replacemen
 == Additional Resources
 
 * link:https://docs.vulkan.org/spec/latest/[Vulkan Specification]: Official documentation for all Vulkan features
+* link:https://docs.vulkan.org/spec/latest/appendices/deprecation.html[Vulkan
+ Specification Deprecation]: Current official list of deprecated Vulkan features
 * link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples]: Sample code demonstrating various Vulkan features
 * link:checking_for_support.adoc[Checking for Support]: Guide on how to check for feature support at runtime
 * link:versions.adoc[Vulkan Versions]: Information about different Vulkan versions and their features
