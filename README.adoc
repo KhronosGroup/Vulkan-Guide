@@ -64,7 +64,10 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 = Using Vulkan
 
+== xref:{chapters}vulkan_profiles.adoc[Vulkan Profiles]
+
 == xref:{chapters}loader.adoc[Loader]
+
 
 == xref:{chapters}layers.adoc[Layers]
 
