@@ -86,8 +86,8 @@ link:https://docs.vulkan.org/spec/latest/appendices/versions.html#versions-1.1[V
 
 Subgroups provide a way for invocations within a workgroup to communicate with each other without using shared memory or barriers. This enables more efficient parallel algorithms and can significantly improve performance for certain workloads.
 
-link:https://docs.vulkan.org/spec/latest/chapters/subgroups.html[Vulkan Spec: Subgroups] |
-link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions/subgroup_operations[Vulkan Sample: Subgroup Operations]
+link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html[Vulkan Spec: Subgroups] |
+link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions[Vulkan Samples: Extensions]
 
 Key capabilities:
 
@@ -112,8 +112,8 @@ Key capabilities:
 
 Device groups allow an application to treat multiple physical devices as a single logical device, enabling features like:
 
-link:https://docs.vulkan.org/spec/latest/chapters/devsandqueues.html#devsandqueues-device-groups[Vulkan Spec: Device Groups] |
-link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions/device_group[Vulkan Sample: Device Group]
+link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html[Vulkan Spec: Device Groups] |
+link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions[Vulkan Samples: Extensions]
 
 * Cross-device memory operations
 * Peer-to-peer memory access
@@ -188,8 +188,7 @@ link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions
 
 Enhanced atomic operations in shaders:
 
-link:https://docs.vulkan.org/spec/latest/chapters/spirvenv.html#spirvenv-capabilities-table-64-bit-atomics[Vulkan Spec: 64-bit Atomics] |
-link:https://docs.vulkan.org/spec/latest/chapters/spirvenv.html#spirvenv-capabilities-table-float-atomics[Vulkan Spec: Float Atomics]
+link:https://docs.vulkan.org/spec/latest/appendices/spirvenv.html#spirvenv-capabilities[Vulkan Spec: SPIR-V Capabilities]
 
 * 64-bit integer atomics
 * Floating-point atomics
@@ -244,8 +243,8 @@ link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions
 
 Extended dynamic state allows more pipeline states to be specified at command buffer recording time:
 
-link:https://docs.vulkan.org/spec/latest/chapters/pipelines.html#vertexinput-dynamic-state[Vulkan Spec: Extended Dynamic State] |
-link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions/extended_dynamic_state[Vulkan Sample: Extended Dynamic State]
+link:https://docs.vulkan.org/features/latest/features/proposals/VK_EXT_extended_dynamic_state3.html[Vulkan Spec: Extended Dynamic State] |
+link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/extensions[Vulkan Samples: Extensions]
 
 * Vertex input bindings and attributes
 * Primitive topology
@@ -327,11 +326,11 @@ link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_shader_flo
 
 === Other Notable Features
 
-* Push Descriptor: Update descriptors directly in command buffers (link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_push_descriptor.html#_description[Spec])
-* Index Type UINT8: Support for 8-bit indices (link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_index_type_uint8.html#_description[Spec])
-* Host Image Copy: Copy image data directly from host memory (link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_host_image_copy.html#_description[Spec])
-* Pipeline Protected Access: More flexible protected memory access (link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_pipeline_protected_access.html#_description[Spec])
-* Pipeline Robustness: Improved handling of out-of-bounds accesses (link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_pipeline_robustness.html#_description[Spec])
+* Push Descriptor: Update descriptors directly in command buffers link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_push_descriptor.html#_description[Spec]
+* Index Type UINT8: Support for 8-bit indices link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_index_type_uint8.html#_description[Spec]
+* Host Image Copy: Copy image data directly from host memory link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_host_image_copy.html#_description[Spec]
+* Pipeline Protected Access: More flexible protected memory access link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_pipeline_protected_access.html#_description[Spec]
+* Pipeline Robustness: Improved handling of out-of-bounds accesses link:https://registry.khronos.org/vulkan/specs/latest/man/html/VK_EXT_pipeline_robustness.html#_description[Spec]
 
 == Porting from Vulkan 1.0 to Any Version
 
