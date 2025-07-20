@@ -71,7 +71,7 @@ The link:https://docs.vulkan.org/spec/latest/chapters/features.html#features-req
 
 == Limits
 
-Currently, all versions of Vulkan share the same minimum/maximum limit requirements, but any changes would be listed in the link:https://docs.vulkan.org/spec/latest/chapters/limits.html#limits-minmax[Limit Requirements] section of the Vulkan Spec.
+Vulkan versions 1.0 through 1.3 share the same minimum/maximum limit requirements. Vulkan 1.4 introduced changes to some of these limits, notably increasing the guaranteed minimum value for `maxPushConstantsSize` from 128 bytes to 256 bytes. Any changes to limits are listed in the link:https://docs.vulkan.org/spec/latest/chapters/limits.html#limits-minmax[Limit Requirements] section of the Vulkan Spec.
 
 == Vulkan 1.1 Features Breakdown
 
@@ -369,10 +369,10 @@ link:https://docs.vulkan.org/spec/latest/chapters/extensions.html#extendingvulka
 
 5. *SPIR-V updates*
    * Update shaders to use the appropriate SPIR-V version for your target Vulkan version:
-     - Vulkan 1.1: SPIR-V 1.3
-     - Vulkan 1.2: SPIR-V 1.5
-     - Vulkan 1.3: SPIR-V 1.6
-     - Vulkan 1.4: SPIR-V 1.6
+     - Vulkan 1.1: SPIR-V 1.3 and all prior SPIR-V versions
+     - Vulkan 1.2: SPIR-V 1.5 and all prior SPIR-V versions
+     - Vulkan 1.3: SPIR-V 1.6 and all prior SPIR-V versions
+     - Vulkan 1.4: SPIR-V 1.6 and all prior SPIR-V versions
    * Recompile shaders with an updated compiler
 
 6. *Testing*
@@ -392,7 +392,7 @@ link:https://docs.vulkan.org/spec/latest/chapters/extensions.html#extendingvulka
 ==== Vulkan 1.2 Specific
 
 * Consider adopting descriptor indexing for more flexible descriptor access
-* Use timeline semaphores for more advanced synchronization
+* Use timeline semaphores for simplified synchronization
 * Take advantage of the buffer device address for pointer-based buffer access
 * Implement shader atomic operations for advanced compute workloads
 * Use a uniform buffer standard layout for more predictable memory layouts
@@ -407,11 +407,11 @@ link:https://docs.vulkan.org/spec/latest/chapters/extensions.html#extendingvulka
 
 ==== Vulkan 1.4 Specific
 
-* Take advantage of dynamic rendering local read for more efficient rendering
+* Take advantage of dynamic rendering local read for accessing pixel data directly during rendering (provides an interface to pixel local reads)
 * Update line rendering code to use improved line rasterization features
 * Use map memory 2 for more flexible memory mapping
 * Implement shader subgroup rotate and other shader enhancements
-* Use push descriptor for more efficient descriptor updates
+* Consider push descriptors for descriptor updates where appropriate (note: some vendors may not recommend their use due to performance considerations)
 
 === Backward Compatibility Considerations
 
