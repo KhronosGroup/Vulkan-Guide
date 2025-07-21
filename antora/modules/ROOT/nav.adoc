@@ -58,6 +58,7 @@
 ** xref:{chapters}image_copies.adoc[]
 ** xref:{chapters}common_pitfalls.adoc[]
 ** xref:{chapters}hlsl.adoc[]
+** xref:{chapters}shader_authoring_guide_slang_hlsl.adoc[]
 ** xref:{chapters}high_level_shader_language_comparison.adoc[]
 * When and Why to use Extensions
 ** xref:{chapters}extensions/cleanup.adoc[]

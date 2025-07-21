@@ -145,6 +145,8 @@ include::{chapters}common_pitfalls.adoc[]
 
 include::{chapters}hlsl.adoc[]
 
+include::{chapters}shader_authoring_guide_slang_hlsl.adoc[]
+
 include::{chapters}high_level_shader_language_comparison.adoc[]
 
 = When and Why to use Extensions
