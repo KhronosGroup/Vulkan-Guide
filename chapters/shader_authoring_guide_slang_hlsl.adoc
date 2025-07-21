@@ -16,11 +16,14 @@ While Vulkan consumes shaders in xref:{chapters}what_is_spirv.adoc[SPIR-V] forma
 
 === What is Slang?
 
-link:https://github.com/shader-slang/slang[Slang] is a modern shading language and compiler designed to extend HLSL with advanced features. It's backward compatible with HLSL but adds features like generics, interfaces, and reflection capabilities. Slang can target multiple backends, including SPIR-V for Vulkan.
+link:https://github.com/shader-slang/slang[Slang] is a modern shading
+language and compiler designed to extend HLSL with advanced features. It's
+largely backward-compatible with HLSL 2018 but adds features like generics,
+interfaces, and reflection capabilities. Slang can target multiple backends, including SPIR-V for Vulkan.
 
 Key features of Slang include:
 
-* Full compatibility with HLSL syntax
+* Largely compatible with HLSL syntax
 * Advanced language features like generics, interfaces, and modules
 * Cross-compilation to multiple targets, including SPIR-V for Vulkan
 * Powerful metaprogramming capabilities
@@ -59,7 +62,7 @@ float result = min<float>(1.0, 2.0);
 int intResult = min<int>(5, 3);
 ----
 
-HLSL has limited template support, but Slang's implementation is more robust and flexible.
+HLSL has limited template support, but Slang's generics are more robust and flexible than HLSL's templates.
 
 ==== Interfaces and Polymorphism
 
@@ -148,7 +151,8 @@ This provides better organization and more flexible binding than HLSL's register
 
 === Syntax Differences
 
-While Slang maintains HLSL syntax compatibility, it introduces some new syntax elements:
+While Slang largely maintains HLSL syntax compatibility, it introduces some
+new syntax elements:
 
 * *Module declarations*: `module ModuleName;`
 * *Import statements*: `import ModuleName;`
@@ -184,9 +188,9 @@ Slang introduces some runtime behavior differences:
 * *Parameter blocks*: Hierarchical organization of shader parameters
 * *Reflection API*: Runtime access to shader structure information
 
-== Migration Guide: Upgrading from HLSL to Slang
+== Migration Guide: Transitioning from HLSL to Slang
 
-Migrating from HLSL to Slang can be done incrementally, as Slang maintains backward compatibility with HLSL. This guide provides a step-by-step approach to upgrading your shaders.
+Migrating from HLSL to Slang can be done incrementally, as Slang maintains backward compatibility with HLSL. This guide provides a step-by-step approach to transitioning your shaders.
 
 === Step 1: Setting Up the Slang Compiler
 
