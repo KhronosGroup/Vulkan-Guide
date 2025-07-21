@@ -327,9 +327,9 @@ OpDecorate %storageTexelBuffer Binding 0
 %storageTexelBuffer = OpVariable %ptr UniformConstant
 ----
 
-==== Using non-rgba Format for Texel Buffer 
+==== Using non-rgba Format for Texel Buffer
 
-A common mistake when dealing with Texel Buffers is forgetting you are accessing a single texel at a time. 
+A common mistake when dealing with Texel Buffers is forgetting you are accessing a single texel at a time.
 This texel format can have 1 to 4 components (`R8` vs `RGBA8`).
 Some shading languages, such as GLSL, require you to write all 4 components where the extra components are ignored.
 
@@ -478,13 +478,13 @@ When using storage images and texel buffers, it's crucial to understand the form
 
 === Differences in Format Compatibility Rules
 
-The format compatibility rules differ between storage images and texel buffers in subtle but important ways:
+The format compatibility rules for storage images and texel buffers are the same:
 
 1. **Storage Images**: The format specified in the shader (SPIR-V Image Format) must **exactly match** the format used when creating the VkImageView (Vulkan Format).
 
-2. **Texel Buffers**: The format compatibility is more relaxed. The shader can access the data as long as the format is compatible with the buffer view format according to the format compatibility classes.
+2. **Texel Buffers**: The format specified in the shader (SPIR-V Image Format) must **exactly match** the format used when creating the VkBufferView (Vulkan Format).
 
-This difference means that storage images have stricter format requirements than texel buffers, which can lead to confusion when working with both resource types.
+Both resource types require exact format matching between the shader and the view. The views must always match the shader exactly.
 
 === SPIR-V Image Format and Vulkan Format Compatibility
 
@@ -505,35 +505,35 @@ layout(set = 0, binding = 0, rgba8) uniform image2D storageImage;
 
 ==== Texel Buffers Format Requirements
 
-For texel buffers, the format compatibility is determined by the format compatibility classes. Formats within the same compatibility class can be used interchangeably, with the shader performing the necessary conversions.
+For texel buffers, just like storage images, the format specified in the shader must exactly match the format of the buffer view according to the SPIR-V Image Format and Vulkan Format compatibility table. There is no automatic format conversion or component swizzling.
 
 [source,glsl]
 ----
 // For uniform texel buffers, the format is not specified in the shader
 layout(set = 0, binding = 0) uniform textureBuffer uniformTexelBuffer;
 
-// The VkBufferView can be created with any compatible format
-// For example, both VK_FORMAT_R8G8B8A8_UNORM and VK_FORMAT_B8G8R8A8_UNORM would work
+// The VkBufferView must be created with a format that exactly matches what the shader expects
+// For example, if the shader expects RGBA data, VK_FORMAT_R8G8B8A8_UNORM must be used
 ----
 
-For storage texel buffers, a format is specified in the shader, but the compatibility rules are still more relaxed than for storage images:
+For storage texel buffers, a format is specified in the shader, and it must exactly match the format used for the VkBufferView:
 
 [source,glsl]
 ----
 // SPIR-V format Rgba8 (maps to VK_FORMAT_R8G8B8A8_UNORM)
 layout(set = 0, binding = 0, rgba8) uniform imageBuffer storageTexelBuffer;
 
-// The VkBufferView should ideally be created with VK_FORMAT_R8G8B8A8_UNORM
-// But formats in the same compatibility class may work on some implementations
+// The VkBufferView must be created with VK_FORMAT_R8G8B8A8_UNORM
+// Using a different format, even in the same compatibility class, results in undefined behavior
 ----
 
 === Component Swizzling
 
-Component swizzling is another area where storage images and texel buffers differ:
+For both storage images and texel buffers, component swizzling works the same way:
 
 1. **Storage Images**: No automatic component swizzling occurs. The components are accessed exactly as they are stored in memory. If you need to swizzle components, (e.g., convert between RGBA and BGRA), you must do it manually in your shader code.
 
-2. **Texel Buffers**: Some implementations may perform automatic component swizzling based on the format compatibility class. However, this behavior is not guaranteed across all implementations, so it's best practice to match formats exactly when possible.
+2. **Texel Buffers**: Just like storage images, no automatic component swizzling occurs. The components are accessed exactly as they are stored in memory. If you need to swizzle components, you must do it manually in your shader code.
 
 3. **Image Views**: For sampled images (not storage images), you can use the `VkComponentMapping` structure in `VkImageViewCreateInfo` to specify component swizzling. This is not applicable to storage images or texel buffers.
 
@@ -543,6 +543,7 @@ Several types of format mismatches can occur, all of which result in undefined b
 
 1. **Component Size Mismatch**: When the component size in the SPIR-V format differs from the Vulkan format.
    - Example: SPIR-V format `Rgba32f` (32-bit float components) with `VK_FORMAT_R8G8B8A8_UNORM` (8-bit components)
+   - Example: SPIR-V format `R32ui` (32-bit unsigned int) with `VK_FORMAT_R8_UINT` (8-bit unsigned int) - this is invalid, resulting in undefined behavior with no implicit bitcasting
 
 2. **Component Count Mismatch**: When the number of components in the SPIR-V format differs from the Vulkan format.
    - **More Components Written**: SPIR-V format `Rgba8` (4 components) with `VK_FORMAT_R8_UNORM` (1 component)
@@ -595,19 +596,19 @@ layout(set = 0, binding = 0) uniform image2D storageImage;
 
 ==== For Texel Buffers
 
-1. **Match the Formats When Possible**: While texel buffers have more relaxed format compatibility rules, it's still best practice to match formats exactly when possible.
+1. **Match the Formats Exactly**: Ensure that the VkBufferView format exactly matches the SPIR-V Image Format as defined in the compatibility table, just as with storage images.
+   - For example, if your shader uses `rgba8` (SPIR-V format `Rgba8`), create your VkBufferView with `VK_FORMAT_R8G8B8A8_UNORM`.
+   - Using a different format, even in the same compatibility class, results in undefined behavior.
 
-2. **Use Format Compatibility Classes**: If you need to work with different formats, ensure they are in the same format compatibility class.
-
-3. **Handle Component Swizzling in Shader**: If you're working with formats that have different component orders (e.g., RGBA vs. BGRA), handle the swizzling explicitly in your shader code to ensure consistent behavior across all implementations.
+2. **Handle Component Swizzling in Shader**: If you need to work with formats that have different component orders (e.g., RGBA vs. BGRA), handle the swizzling explicitly in your shader code, as no automatic swizzling occurs.
 
 === Important Considerations
 
-- When a format mismatch occurs with storage images, the entire image memory becomes undefined, not just the texels being written.
-- Even formats that are in the same compatibility class (e.g., `VK_FORMAT_R8G8B8A8_UNORM` and `VK_FORMAT_B8G8R8A8_UNORM`) must match exactly for storage images.
-- Texel buffers have more relaxed format compatibility rules, but it's still best practice to match formats exactly when possible.
+- When a format mismatch occurs with either storage images or texel buffers, the entire memory becomes undefined, not just the texels being written.
+- Even formats that are in the same compatibility class (e.g., `VK_FORMAT_R8G8B8A8_UNORM` and `VK_FORMAT_B8G8R8A8_UNORM`) must match exactly for both storage images and texel buffers.
+- Both storage images and texel buffers have the same strict format compatibility rules - the formats specified in the shader must exactly match the formats used in the views.
 - The validation warnings for format mismatches are intended to help developers identify potential issues, as these mismatches can lead to subtle bugs that might not be immediately clear.
-- Component swizzling must be handled manually for storage images, while some automatic swizzling may occur for texel buffers on some implementations.
+- Component swizzling must be handled manually for both storage images and texel buffers, as no automatic swizzling occurs for either resource type.
 
 == Best Practices
 
