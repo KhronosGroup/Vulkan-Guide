@@ -176,7 +176,7 @@ Create a `.vscode/launch.json` file for debugging:
 }
 ----
 
-=== Profiling Integration
+=== Debugging and Profiling Integration
 
 VS Code can be integrated with various Vulkan profiling tools:
 
@@ -417,7 +417,7 @@ target_link_libraries(your_native_lib Vulkan::Vulkan)
 +
 [source,xml]
 ----
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android.xsd">
     <!-- Declare that your app uses Vulkan -->
     <uses-feature android:name="android.hardware.vulkan.version" android:version="0x400003" android:required="true" />
 
