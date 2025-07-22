@@ -1943,7 +1943,7 @@ if (result != VK_SUCCESS) {
 
 - link:https://github.com/KhronosGroup/Vulkan-Samples[Khronos Vulkan Samples]
 - link:https://github.com/SaschaWillems/Vulkan[Sascha Willems' Vulkan Examples]
-- link:https://vulkan-tutorial.com/[Vulkan Tutorial]
+- link:https://docs.vulkan.org/tutorial/latest/00_Introduction.html[Vulkan Tutorial]
 
 === Documentation
 
