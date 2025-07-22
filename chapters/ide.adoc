@@ -1,0 +1,1054 @@
+// Copyright 2025 Holochip, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[development-environments]]
+= Development Environments & IDEs
+
+Setting up a proper development environment can significantly improve productivity when working with Vulkan. This chapter covers how to configure popular IDEs for Vulkan development, with a focus on CMake integration.
+
+[[visual-studio]]
+== Visual Studio
+
+Microsoft Visual Studio provides robust support for Vulkan development on Windows:
+
+=== Basic Setup and Configuration
+
+1. Install the link:https://vulkan.lunarg.com/[Vulkan SDK] which provides the necessary headers, libraries, and tools.
+2. In your Visual Studio project:
+   * Add the Vulkan SDK include directory to your project's include paths (`$(VULKAN_SDK)/Include`)
+   * Add the Vulkan SDK library directory to your project's library paths (`$(VULKAN_SDK)/Lib` or `$(VULKAN_SDK)/Lib32`)
+   * Link against `vulkan-1.lib`
+
+=== IntelliSense Configuration
+
+To improve IntelliSense support for Vulkan:
+
+1. Ensure your project includes the Vulkan SDK include directory
+2. For better autocompletion, add the following to your precompiled header or a common header file:
++
+[source,cpp]
+----
+#define VK_USE_PLATFORM_WIN32_KHR
+#include <vulkan/vulkan.h>
+----
+
+=== CMake Configuration
+
+Visual Studio has excellent CMake integration:
+
+1. Open a CMake project in Visual Studio:
+   * File → Open → CMake...
+   * Select your CMakeLists.txt file
+
+2. Configure Vulkan in your CMakeLists.txt:
++
+[source,cmake]
+----
+# Find Vulkan package
+find_package(Vulkan REQUIRED)
+
+# Add include directories
+include_directories(${Vulkan_INCLUDE_DIRS})
+
+# Create your executable
+add_executable(your_app main.cpp)
+
+# Link against Vulkan
+target_link_libraries(your_app ${Vulkan_LIBRARIES})
+----
+
+3. Configure CMake settings in Visual Studio:
+   * Right-click on CMakeLists.txt → CMake Settings
+   * Add any additional CMake variables or configuration options
+
+=== Debugging and Profiling
+
+Visual Studio can be configured to work with Vulkan debugging and profiling tools:
+
+1. Enable the Vulkan validation layers by setting the `VK_LAYER_PATH` environment variable in your project's debugging properties
+2. Configure RenderDoc integration:
+   * Install link:https://renderdoc.org/[RenderDoc]
+   * In Visual Studio, go to Debug → Graphics → Start Graphics Debugging
+   * RenderDoc can capture and analyze Vulkan API calls
+3. For profiling Vulkan applications:
+   * For NVIDIA GPUs, use xref:{chapters}development_tools.adoc#profiling[NVIDIA Nsight Graphics] which integrates directly with Visual Studio
+   * For AMD GPUs, use xref:{chapters}development_tools.adoc#profiling[AMD Radeon GPU Profiler (RGP)] through the Radeon Developer Panel
+   * For Intel GPUs, use xref:{chapters}development_tools.adoc#profiling[Intel Graphics Performance Analyzers (GPA)]
+   * For cross-vendor profiling, consider xref:{chapters}development_tools.adoc#profiling[VKtracer] or xref:{chapters}development_tools.adoc#profiling[GFXReconstruct]
+
+For more detailed information on profiling tools, see the xref:{chapters}development_tools.adoc#profiling[Profiling section] in the Development Tools chapter.
+
+[[visual-studio-code]]
+== Visual Studio Code
+
+VS Code is a lightweight but powerful editor that can be configured for Vulkan development:
+
+=== Basic Setup and Configuration
+
+1. Install the link:https://vulkan.lunarg.com/[Vulkan SDK]
+2. Install the following VS Code extensions:
+   * C/C++ extension by Microsoft
+   * CMake Tools (if using CMake)
+   * Shader languages support (GLSL, HLSL)
+
+=== CMake Configuration
+
+VS Code has excellent CMake integration through the CMake Tools extension:
+
+1. Install the CMake Tools extension
+2. Configure your CMakeLists.txt:
++
+[source,cmake]
+----
+cmake_minimum_required(VERSION 3.10)
+project(VulkanProject)
+
+# Find Vulkan package
+find_package(Vulkan REQUIRED)
+
+# Create your executable
+add_executable(your_app main.cpp)
+
+# Link against Vulkan
+target_link_libraries(your_app PUBLIC Vulkan::Vulkan)
+----
+
+3. Configure CMake in VS Code:
+   * Create a `.vscode/settings.json` file:
++
+[source,json]
+----
+{
+    "cmake.configureOnOpen": true,
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "cmake.generator": "Ninja"
+}
+----
+
+=== Build Tasks Configuration
+
+Create a `.vscode/tasks.json` file to configure build tasks:
+
+[source,json]
+----
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "cmake --build build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
+----
+
+=== Launch Configuration
+
+Create a `.vscode/launch.json` file for debugging:
+
+[source,json]
+----
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Vulkan Application",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/your_app",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [
+                {"name": "VK_LAYER_PATH", "value": "path/to/vulkan/sdk/layers"}
+            ],
+            "externalConsole": false
+        }
+    ]
+}
+----
+
+=== Debugging and Profiling Integration
+
+VS Code can be integrated with various Vulkan profiling tools:
+
+1. RenderDoc integration:
+   * Install the RenderDoc extension for VS Code
+   * Configure launch tasks to start RenderDoc with your application
+   * Analyze captured frames directly from VS Code
+
+2. External profiling tools:
+   * Use xref:{chapters}development_tools.adoc#profiling[RenderDoc] for frame capture and analysis
+   * For cross-platform profiling, use xref:{chapters}development_tools.adoc#profiling[VKtracer] or xref:{chapters}development_tools.adoc#profiling[GFXReconstruct]
+   * For vendor-specific profiling, launch the appropriate tool from the command line or use their VS Code extensions if available
+
+For more detailed information on profiling tools, see the xref:{chapters}development_tools.adoc#profiling[Profiling section] in the Development Tools chapter.
+
+[[clion]]
+== CLion
+
+JetBrains CLion provides excellent support for Vulkan development with powerful code analysis and debugging capabilities:
+
+=== Basic Setup and Configuration
+
+1. Install the link:https://vulkan.lunarg.com/[Vulkan SDK]
+2. In CLion:
+   * Open your project's CMakeLists.txt
+   * Configure the Vulkan include and library paths in your CMake configuration
+
+=== CMake Configuration
+
+CLion has built-in CMake support:
+
+1. Create a new CMake project or open an existing one
+2. Configure your CMakeLists.txt:
++
+[source,cmake]
+----
+cmake_minimum_required(VERSION 3.10)
+project(VulkanProject)
+
+# Find Vulkan package
+find_package(Vulkan REQUIRED)
+
+# Create your executable
+add_executable(your_app main.cpp)
+
+# Link against Vulkan
+target_link_libraries(your_app PUBLIC Vulkan::Vulkan)
+----
+
+3. CLion will automatically detect changes to CMakeLists.txt and reload the project
+
+4. For more advanced configuration, you can modify CMake settings:
+   * File → Settings → Build, Execution, Deployment → CMake
+   * Add profiles for different build types (Debug, Release, etc.)
+
+=== Run/Debug Configuration
+
+1. Create a Run/Debug Configuration for your Vulkan application:
+   * Go to Run → Edit Configurations
+   * Add a new configuration for your application
+   * In the Environment Variables section, add `VK_LAYER_PATH` pointing to your Vulkan SDK layers directory
+
+2. For enhanced debugging:
+   * Enable the Vulkan validation layers in your application
+   * Configure RenderDoc integration by launching your application through RenderDoc
+
+=== Profiling Integration
+
+CLion can be integrated with various Vulkan profiling tools:
+
+1. External profiling tools:
+   * Use xref:{chapters}development_tools.adoc#profiling[RenderDoc] for frame capture and analysis
+   * For cross-platform profiling, use xref:{chapters}development_tools.adoc#profiling[VKtracer] or xref:{chapters}development_tools.adoc#profiling[GFXReconstruct]
+
+2. Vendor-specific profiling:
+   * For NVIDIA GPUs, configure xref:{chapters}development_tools.adoc#profiling[NVIDIA Nsight Graphics] as an external tool
+   * For AMD GPUs, use xref:{chapters}development_tools.adoc#profiling[AMD Radeon GPU Profiler (RGP)] through the Radeon Developer Panel
+   * For Intel GPUs, configure xref:{chapters}development_tools.adoc#profiling[Intel Graphics Performance Analyzers (GPA)] as an external tool
+
+3. Configure external tools in CLion:
+   * Go to File → Settings → Tools → External Tools
+   * Add your profiling tools with appropriate command-line arguments
+   * Access them via Tools → External Tools in the menu
+
+For more detailed information on profiling tools, see the xref:{chapters}development_tools.adoc#profiling[Profiling section] in the Development Tools chapter.
+
+[[xcode]]
+== Xcode
+
+Apple's Xcode IDE can be used for Vulkan development on macOS, typically through MoltenVK, which is a Vulkan implementation that runs on Apple's Metal API.
+
+=== Basic Setup and Configuration
+
+1. Install the link:https://vulkan.lunarg.com/sdk/home#mac[Vulkan SDK for macOS], which includes MoltenVK
+2. In your Xcode project:
+   * Add the Vulkan SDK include directory to your project's include paths
+   * Add the MoltenVK framework to your project
+   * Link against the necessary libraries
+
+=== CMake Configuration
+
+Xcode can be used with CMake projects:
+
+1. Generate an Xcode project from your CMake project:
++
+[source,bash]
+----
+cmake -G Xcode -B build .
+----
+
+2. Configure your CMakeLists.txt for macOS and MoltenVK:
++
+[source,cmake]
+----
+cmake_minimum_required(VERSION 3.10)
+project(VulkanProject)
+
+# Find Vulkan package
+find_package(Vulkan REQUIRED)
+
+# Create your executable
+add_executable(your_app main.cpp)
+
+# Link against Vulkan
+target_link_libraries(your_app PUBLIC Vulkan::Vulkan)
+
+# For macOS, you might need to add MoltenVK-specific configuration
+if(APPLE)
+    # Add MoltenVK framework path
+    set(MOLTENVK_PATH "$ENV{VULKAN_SDK}/MoltenVK/MoltenVK.xcframework")
+    target_link_libraries(your_app PUBLIC "-framework Metal" "-framework
+    MetalKit" "-framework Cocoa")
+
+    # If using MoltenVK as a framework
+    target_link_libraries(your_app PUBLIC "${MOLTENVK_PATH}")
+endif()
+----
+
+3. Open the generated Xcode project:
++
+[source,bash]
+----
+open build/YourProject.xcodeproj
+----
+
+=== Debugging Configuration
+
+1. Configure debugging in Xcode:
+   * Edit your scheme (Product → Scheme → Edit Scheme)
+   * In the Run section, go to Arguments
+   * Add environment variables for Vulkan validation layers:
+     * `VK_LAYER_PATH` pointing to your Vulkan SDK layers directory
+     * `VK_ICD_FILENAMES` pointing to your MoltenVK ICD JSON file
+
+2. For enhanced debugging:
+   * Enable the Vulkan validation layers in your application
+   * Use Xcode's built-in debugging tools
+   * Consider using RenderDoc (though support on macOS may be limited)
+
+=== Profiling Integration
+
+Profiling Vulkan applications on macOS through MoltenVK has some limitations, but several options are available:
+
+1. Xcode Instruments:
+   * Use Xcode's built-in Instruments tool (Xcode → Product → Profile)
+   * The Metal System Trace instrument can help analyze GPU performance
+   * The Time Profiler can identify CPU bottlenecks in your Vulkan application
+
+2. MoltenVK-specific profiling:
+   * Enable MoltenVK's performance tracking features
+   * Add the following to your environment variables:
+     * `MVK_CONFIG_TRACE_VULKAN_CALLS=1` to log Vulkan API calls
+     * `MVK_CONFIG_PERFORMANCE_TRACKING=1` to enable performance tracking
+
+3. External profiling tools:
+   * For cross-platform profiling, consider xref:{chapters}development_tools.adoc#profiling[VKtracer] which works on macOS
+   * xref:{chapters}development_tools.adoc#profiling[GFXReconstruct] can be used to capture and replay Vulkan API calls
+
+For more detailed information on profiling tools, see the xref:{chapters}development_tools.adoc#profiling[Profiling section] in the Development Tools chapter.
+
+=== MoltenVK Considerations
+
+When using Vulkan on macOS through MoltenVK, keep in mind:
+
+1. Not all Vulkan features are supported by MoltenVK, as it translates Vulkan to Metal
+2. Check the link:https://github.com/KhronosGroup/MoltenVK[MoltenVK documentation] for supported features and limitations
+3. Use the `VK_MVK_moltenvk` extension for MoltenVK-specific functionality
+4. Consider using the Vulkan Portability subset for better cross-platform compatibility
+
+[[android-studio]]
+== Android Studio
+
+Android Studio is the official IDE for Android development and provides excellent support for Vulkan development on Android devices:
+
+=== Basic Setup and Configuration
+
+1. Install link:https://developer.android.com/studio[Android Studio]
+2. Install the Android NDK (Native Development Kit) through the SDK Manager:
+   * Open Android Studio → Tools → SDK Manager
+   * Select the "SDK Tools" tab
+   * Check "NDK (Side by side)" and "CMake"
+   * Click "Apply" to download and install
+
+3. Configure your project for Vulkan:
+   * Create a new Android project with Native C++ support or add C++ to an existing project
+   * In your `app/build.gradle` file, ensure the minimum SDK version supports Vulkan:
++
+[source,groovy]
+----
+android {
+    defaultConfig {
+        minSdkVersion 24 // Vulkan requires Android 7.0 (API level 24) or higher
+        // ...
+    }
+    // ...
+}
+----
+
+=== NDK Configuration for Vulkan
+
+1. Add Vulkan headers to your project:
+   * The Vulkan headers are included in the Android NDK
+   * In your `CMakeLists.txt`, add:
++
+[source,cmake]
+----
+# Find the Vulkan package
+find_package(Vulkan REQUIRED)
+
+# Include Vulkan headers
+include_directories(${VULKAN_INCLUDE_DIRS})
+
+# Link against Vulkan
+target_link_libraries(your_native_lib Vulkan::Vulkan)
+----
+
+2. Configure your Android manifest to require Vulkan:
++
+[source,xml]
+----
+<manifest xmlns:android="http://schemas.android.com/apk/res/android.xsd">
+    <!-- Declare that your app uses Vulkan -->
+    <uses-feature android:name="android.hardware.vulkan.version" android:version="0x400003" android:required="true" />
+
+    <!-- Specify the Vulkan features your app requires -->
+    <uses-feature android:name="android.hardware.vulkan.level" android:version="1" android:required="true" />
+
+    <!-- ... -->
+</manifest>
+----
+
+=== CMake Integration
+
+Android Studio uses CMake for native code projects:
+
+1. Configure your `CMakeLists.txt` for Android and Vulkan:
++
+[source,cmake]
+----
+cmake_minimum_required(VERSION 3.10)
+project(VulkanAndroidProject)
+
+# Find Vulkan package
+find_package(Vulkan REQUIRED)
+
+# Add your source files
+add_library(native-lib SHARED
+    native-lib.cpp
+    vulkan_wrapper.cpp
+    # Add other source files
+)
+
+# Include directories
+target_include_directories(native-lib PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${VULKAN_INCLUDE_DIRS}
+)
+
+# Link against libraries
+target_link_libraries(native-lib
+    android
+    log
+    Vulkan::Vulkan
+)
+----
+
+2. Configure the CMake settings in your `app/build.gradle`:
++
+[source,groovy]
+----
+android {
+    // ...
+    defaultConfig {
+        // ...
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++17"
+                arguments "-DANDROID_STL=c++_shared"
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+            version "3.10.2"
+        }
+    }
+}
+----
+
+=== Debugging and Profiling
+
+Android Studio provides several tools for debugging and profiling Vulkan applications:
+
+1. Native debugging:
+   * Set breakpoints in your C++ code
+   * Use the debugger to step through your Vulkan code
+   * Inspect variables and memory
+
+2. GPU debugging and profiling:
+   * Use xref:{chapters}development_tools.adoc#profiling[Android GPU Inspector (AGI)] for GPU profiling and debugging
+   * AGI can be launched directly from Android Studio via Tools → Android → Android GPU Inspector
+   * Capture Vulkan API calls, analyze GPU workloads, and identify performance bottlenecks
+
+3. System tracing:
+   * Use Android Studio's built-in System Trace tool (Profiler → System Trace)
+   * Analyze CPU, GPU, and system-level performance
+
+4. For Qualcomm Adreno GPUs:
+   * Use xref:{chapters}development_tools.adoc#profiling[Qualcomm Snapdragon Profiler] for detailed GPU analysis
+   * Provides Vulkan-specific insights for Adreno GPUs
+
+For more information on profiling tools for Vulkan on Android, see the xref:{chapters}development_tools.adoc#profiling[Profiling section] in the Development Tools chapter.
+
+[[general-ide-configuration]]
+== General IDE Configuration for Vulkan Development
+
+While the previous sections covered specific IDEs in detail, many developers may use other development environments or prefer a more universal approach. This section provides general guidelines for configuring any IDE for Vulkan development, with a focus on using CMake as a cross-platform build system.
+
+=== Universal Setup Principles
+
+Regardless of which IDE you use, the following steps are essential for Vulkan development:
+
+1. Install the link:https://vulkan.lunarg.com/[Vulkan SDK] for your platform
+   * Ensure the SDK's bin directory is in your system PATH
+   * Note the location of the SDK for include and library paths
+
+2. Configure your IDE's include paths to find Vulkan headers:
+   * Add `$(VULKAN_SDK)/Include` or equivalent to your include paths
+   * For platform-specific development, include the appropriate platform headers
+
+3. Configure library paths to find Vulkan libraries:
+   * Add `$(VULKAN_SDK)/Lib` or equivalent to your library paths
+   * Link against the appropriate Vulkan library (`vulkan-1.lib` on Windows, `libvulkan.so` on Linux, etc.)
+
+4. Install necessary development tools:
+   * Shader compilers (glslangValidator, DXC, slangc)
+   * Validation layer tools
+   * Debugging and profiling tools (RenderDoc, GPU-specific tools)
+
+=== CMake as a Universal Build System
+
+CMake provides a consistent way to configure Vulkan projects across different IDEs and platforms:
+
+1. Create a basic CMakeLists.txt for your Vulkan project:
++
+[source,cmake]
+----
+cmake_minimum_required(VERSION 3.10)
+project(VulkanProject)
+
+# Find Vulkan package
+find_package(Vulkan REQUIRED)
+
+# Create your executable
+add_executable(your_app main.cpp)
+
+# Modern CMake approach with target_* commands
+target_include_directories(your_app PRIVATE ${Vulkan_INCLUDE_DIRS})
+target_link_libraries(your_app PRIVATE Vulkan::Vulkan)
+
+# Platform-specific configurations
+if(WIN32)
+    target_compile_definitions(your_app PRIVATE VK_USE_PLATFORM_WIN32_KHR)
+elseif(APPLE)
+    target_compile_definitions(your_app PRIVATE VK_USE_PLATFORM_MACOS_MVK)
+    # Link against Metal framework for MoltenVK
+    target_link_libraries(your_app PRIVATE "-framework Metal" "-framework MetalKit" "-framework Cocoa")
+elseif(UNIX AND NOT APPLE)
+    # Linux-specific configuration
+    target_compile_definitions(your_app PRIVATE VK_USE_PLATFORM_XCB_KHR)
+    # You might need to link against XCB or Wayland libraries
+endif()
+----
+
+2. Configure your IDE to use CMake:
+   * Most modern IDEs have built-in CMake support or plugins
+   * For IDEs without direct CMake support, you can generate project files:
+     * For Visual Studio: `cmake -G "Visual Studio 16 2019" -A x64 -B build .`
+     * For Xcode: `cmake -G Xcode -B build .`
+     * For Makefiles: `cmake -G "Unix Makefiles" -B build .`
+
+3. Shader compilation in CMake:
++
+[source,cmake]
+----
+# Function to compile GLSL shaders to SPIR-V
+function(compile_shader TARGET_NAME SHADER_SOURCE SHADER_OUTPUT)
+    add_custom_command(
+        OUTPUT ${SHADER_OUTPUT}
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/shaders"
+        COMMAND $ENV{VULKAN_SDK}/bin/glslangValidator -V "${SHADER_SOURCE}" -o "${SHADER_OUTPUT}"
+        DEPENDS ${SHADER_SOURCE}
+        COMMENT "Compiling ${SHADER_SOURCE} to ${SHADER_OUTPUT}"
+    )
+    add_custom_target(${TARGET_NAME} DEPENDS ${SHADER_OUTPUT})
+endfunction()
+
+# Example usage
+compile_shader(
+    compile_vertex_shader
+    ${CMAKE_CURRENT_SOURCE_DIR}/shaders/shader.vert
+    ${CMAKE_CURRENT_BINARY_DIR}/shaders/vert.spv
+)
+add_dependencies(your_app compile_vertex_shader)
+----
+
+=== Universal Debugging Approaches
+
+Regardless of the IDE, these debugging techniques apply to all Vulkan applications:
+
+1. Enable validation layers:
+   * Set environment variables in your IDE's debug configuration:
+     * `VK_LAYER_PATH` pointing to your Vulkan SDK layers directory
+     * `VK_INSTANCE_LAYERS=VK_LAYER_KHRONOS_validation` to enable validation
+
+2. Configure your application to use debug callbacks:
++
+[source,cpp]
+----
+// Set up debug messenger
+VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
+createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
+                             VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
+                             VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+                         VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+                         VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+createInfo.pfnUserCallback = debugCallback;  // Your callback function
+----
+
+3. Use external debugging tools:
+   * RenderDoc works with most IDEs and platforms
+   * Configure your IDE to launch your application through RenderDoc
+   * For GPU-specific debugging, use vendor tools as described in the xref:{chapters}development_tools.adoc#debugging[Debugging section]
+
+=== Cross-Platform Profiling Integration
+
+For profiling Vulkan applications in any IDE:
+
+1. Configure your IDE to launch external profiling tools:
+   * Create custom run configurations or external tool integrations
+   * Set up keyboard shortcuts for common profiling tasks
+
+2. Use universal profiling tools:
+   * xref:{chapters}development_tools.adoc#profiling[RenderDoc] for frame capture and basic profiling
+   * xref:{chapters}development_tools.adoc#profiling[VKtracer] for cross-vendor API tracing
+   * xref:{chapters}development_tools.adoc#profiling[GFXReconstruct] for capture and replay
+
+3. For detailed GPU profiling:
+   * Use vendor-specific tools as described in the xref:{chapters}development_tools.adoc#profiling[Profiling section]
+   * Configure your IDE to set the necessary environment variables for these tools
+
+=== IDE Configuration Checklist
+
+When setting up any IDE for Vulkan development, ensure you've addressed these key points:
+
+1. ✓ Vulkan SDK is properly installed and configured
+2. ✓ Include and library paths are correctly set
+3. ✓ Build system (preferably CMake) is configured
+4. ✓ Shader compilation is integrated into the build process
+5. ✓ Debugging with validation layers is enabled
+6. ✓ Profiling tools are accessible
+7. ✓ Platform-specific considerations are addressed
+
+By following these universal principles, you can configure virtually any IDE for effective Vulkan development, leveraging the power of CMake for cross-platform compatibility and consistent build processes.
+
+[[shader-debugging]]
+== Shader Debugging Integration
+
+Debugging shaders in Vulkan applications presents unique challenges compared to debugging CPU code. This section covers tools, techniques, and IDE integrations for effective shader debugging.
+
+=== Shader Debugging Tools
+
+Several tools are available for debugging Vulkan shaders:
+
+==== RenderDoc
+
+link:https://renderdoc.org/[RenderDoc] is one of the most powerful tools for shader debugging:
+
+1. Shader Inspection:
+   * View and edit shader code at runtime
+   * Inspect shader inputs and outputs
+   * Analyze shader resources (textures, buffers, etc.)
+
+2. Shader Debugging:
+   * Step through shader execution line by line
+   * Inspect variable values at each step
+   * View shader register contents
+   * Visualize texture accesses and sampling operations
+
+3. IDE Integration:
+   * Visual Studio: Use the RenderDoc plugin or launch via Debug → Graphics → Start Graphics Debugging
+   * VS Code: Use the RenderDoc extension
+   * CLion/Android Studio: Configure as an external tool
+
+.VS Code launch.json example for RenderDoc integration
+[source,json]
+----
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch with RenderDoc",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "path/to/renderdoc.exe",
+            "args": ["--capture-file", "${workspaceFolder}/capture.rdc", "${workspaceFolder}/build/your_app.exe"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": []
+        }
+    ]
+}
+----
+
+==== GPU-Assisted Validation
+
+The Vulkan validation layers include GPU-Assisted Validation, which instruments shader code to detect errors:
+
+* Enable in your application:
+
+[source,cpp]
+----
+// Enable GPU-Assisted Validation
+VkValidationFeaturesEXT validationFeatures{};
+validationFeatures.sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
+validationFeatures.enabledValidationFeatureCount = 1;
+VkValidationFeatureEnableEXT enabledFeatures[] = {VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT};
+validationFeatures.pEnabledValidationFeatures = enabledFeatures;
+
+// Add to instance creation info
+VkInstanceCreateInfo createInfo{};
+createInfo.pNext = &validationFeatures;
+----
+
+* IDE Integration:
+   * Add the above code to your debug builds
+   * Configure environment variables in your IDE's debug configuration:
+
+.VS Code environment variables configuration example
+[source,json]
+----
+{
+    "environment": [
+        {"name": "VK_LAYER_PATH", "value": "path/to/vulkan/sdk/layers"},
+        {"name": "VK_INSTANCE_LAYERS", "value": "VK_LAYER_KHRONOS_validation"}
+    ]
+}
+----
+
+==== Shader printf
+
+The Shader printf feature allows you to print values from within your shaders:
+
+* GLSL Implementation:
+
+[source,glsl]
+----
+#version 450
+#extension GL_EXT_debug_printf : enable
+
+void main() {
+    vec4 color = vec4(1.0, 0.0, 0.0, 1.0);
+    debugPrintfEXT("Fragment color: %f, %f, %f, %f", color.r, color.g, color.b, color.a);
+    // Rest of shader code...
+}
+----
+
+* HLSL Implementation:
+
+[source,hlsl]
+----
+[[vk::ext_capability(5056)]] // SPV_KHR_non_semantic_info
+[[vk::ext_extension("SPV_KHR_non_semantic_info")]]
+float4 main() : SV_TARGET
+{
+    float4 color = float4(1.0, 0.0, 0.0, 1.0);
+    printf("Fragment color: %f, %f, %f, %f\n", color.r, color.g, color.b, color.a);
+    return color;
+}
+----
+
+* Enable in your application:
+
+[source,cpp]
+----
+// Enable Shader printf
+VkValidationFeaturesEXT validationFeatures{};
+validationFeatures.sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
+validationFeatures.enabledValidationFeatureCount = 1;
+VkValidationFeatureEnableEXT enabledFeatures[] = {VK_VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT};
+validationFeatures.pEnabledValidationFeatures = enabledFeatures;
+
+// Add to instance creation info
+VkInstanceCreateInfo createInfo{};
+createInfo.pNext = &validationFeatures;
+----
+
+* Using environment variables (fast path):
+   * Environment variables provide a quicker way to enable shader printf without code changes
+   * These variables help avoid common configuration issues where shader printf appears not to work
+   * Key environment variables:
+     ** `VK_VALIDATION_FEATURES=DEBUG_PRINTF`: Enables shader printf while disabling other validation
+     ** `VK_VALIDATION_FEATURES=+DEBUG_PRINTF,-CORE_VALIDATION`: Enables shader printf and disables core validation
+     ** `VK_LAYER_ENABLES`: Controls which validation layers are enabled
+     ** `VK_DBG_LAYER_LEVEL`: Controls the log level for validation messages
+     ** `VK_LAYER_PRINTF_ONLY_PRESET`: Preset that enables only shader printf functionality while disabling other validation features
+     ** `VK_LAYER_PRINTF_TO_STDOUT`: Redirects shader printf output to stdout instead of the debug callback
+   * Example configuration:
++
+[source,bash]
+----
+# Enable shader printf and disable core validation
+export VK_VALIDATION_FEATURES=+DEBUG_PRINTF,-CORE_VALIDATION
+# Set debug log level to verbose
+export VK_DBG_LAYER_LEVEL=info
+
+# Alternative: Use the printf-only preset (simpler approach)
+export VK_LAYER_PRINTF_ONLY_PRESET=1
+
+# Optional: Redirect printf output to stdout instead of debug callback
+export VK_LAYER_PRINTF_TO_STDOUT=1
+----
+
+* IDE Integration:
+   * Configure your IDE to capture debug output
+   * For Visual Studio: Debug → Windows → Output
+   * For VS Code: Add "console": "integratedTerminal" to your launch.json
+   * Set environment variables in your IDE's debug configuration
+
+==== Vendor-Specific Tools
+
+Vendor-specific tools offer advanced shader debugging capabilities:
+
+1. NVIDIA Nsight Graphics:
+   * Shader Profiler: Analyze shader performance
+   * Shader Debugger: Step through shader execution
+   * Resource Viewer: Inspect textures and buffers
+   * Visual Studio integration available
+
+2. AMD Radeon GPU Analyzer (RGA):
+   * Static shader analysis
+   * Disassembly view
+   * Register usage statistics
+   * Performance suggestions
+
+3. Intel Graphics Debugger:
+   * Shader debugging
+   * API tracing
+   * Resource inspection
+   * Performance analysis
+
+=== IDE-Specific Shader Debugging Configurations
+
+==== Visual Studio
+
+1. Configure RenderDoc integration:
+   * Install the RenderDoc plugin for Visual Studio
+   * Use Debug → Graphics → Start Graphics Debugging
+   * Capture frames and analyze shaders
+
+2. Configure shader printf environment variables:
+   * Right-click on your project → Properties → Debugging
+   * In the "Environment" field, add the following:
+     ** `VK_VALIDATION_FEATURES=+DEBUG_PRINTF,-CORE_VALIDATION`
+     ** `VK_DBG_LAYER_LEVEL=info`
+     ** Or use the simpler approach: `VK_LAYER_PRINTF_ONLY_PRESET=1`
+     ** Optionally add: `VK_LAYER_PRINTF_TO_STDOUT=1` to redirect output to stdout
+   * These environment variables provide a fast path for enabling shader printf without code changes
+   * Output will appear in the Debug → Windows → Output window (or in the console if using stdout redirection)
+
+3. Configure NVIDIA Nsight integration:
+   * Install NVIDIA Nsight Graphics
+   * Use Extensions → NVIDIA → Start Graphics Debugging
+   * Use the shader debugger to step through shader code
+
+4. Configure AMD integration:
+   * Install AMD Radeon Developer Panel
+   * Configure as an external tool
+   * Capture and analyze shader performance
+
+==== Visual Studio Code
+
+1. Configure RenderDoc integration:
+   * Install the RenderDoc extension
+   * Add a launch configuration to start your application with RenderDoc
+   * Analyze captured frames
+
+2. Configure shader debugging environment:
+   * Add validation layer environment variables to launch.json
+   * Configure terminal output capture for shader printf
+   * Use the fast path environment variables for quick shader printf setup
+   * You can use `VK_LAYER_PRINTF_ONLY_PRESET` for a simpler approach
+   * Use `VK_LAYER_PRINTF_TO_STDOUT` to redirect output to stdout
+
+.VS Code launch.json for shader debugging with standard approach
+[source,json]
+----
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Vulkan Shaders",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/your_app",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [
+                {"name": "VK_LAYER_PATH", "value": "path/to/vulkan/sdk/layers"},
+                {"name": "VK_INSTANCE_LAYERS", "value": "VK_LAYER_KHRONOS_validation"},
+                {"name": "VK_VALIDATION_FEATURES", "value": "+DEBUG_PRINTF,-CORE_VALIDATION"},
+                {"name": "VK_DBG_LAYER_LEVEL", "value": "info"}
+            ],
+            "console": "integratedTerminal"
+        }
+    ]
+}
+----
+
+.VS Code launch.json for shader debugging with printf-only preset
+[source,json]
+----
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Vulkan Shaders (Printf Only)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/your_app",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [
+                {"name": "VK_LAYER_PATH", "value": "path/to/vulkan/sdk/layers"},
+                {"name": "VK_LAYER_PRINTF_ONLY_PRESET", "value": "1"},
+                {"name": "VK_LAYER_PRINTF_TO_STDOUT", "value": "1"}
+            ],
+            "console": "integratedTerminal"
+        }
+    ]
+}
+----
+
+==== CLion
+
+1. Configure RenderDoc as an external tool:
+   * Go to File → Settings → Tools → External Tools
+   * Add RenderDoc with appropriate command-line arguments
+   * Create a run configuration that uses this external tool
+
+2. Configure shader debugging environment:
+   * Go to Run → Edit Configurations → Select your configuration
+   * Click on "Environment Variables" and add:
+     ** `VK_VALIDATION_FEATURES=+DEBUG_PRINTF,-CORE_VALIDATION`
+     ** `VK_DBG_LAYER_LEVEL=info`
+     ** Or use the simpler approach: `VK_LAYER_PRINTF_ONLY_PRESET=1`
+     ** Optionally add: `VK_LAYER_PRINTF_TO_STDOUT=1` to redirect output to stdout
+   * These environment variables provide a fast path for enabling shader printf without code changes
+   * Enable console output capture for shader printf by selecting "Allow parallel run"
+
+==== Xcode
+
+1. Configure shader debugging on macOS:
+   * MoltenVK has limited shader debugging support
+   * Edit your scheme (Product → Scheme → Edit Scheme)
+   * In the Run section, go to Arguments → Environment Variables and add:
+     ** `VK_VALIDATION_FEATURES=+DEBUG_PRINTF,-CORE_VALIDATION`
+     ** `VK_DBG_LAYER_LEVEL=info`
+     ** Or use the simpler approach: `VK_LAYER_PRINTF_ONLY_PRESET=1`
+     ** Optionally add: `VK_LAYER_PRINTF_TO_STDOUT=1` to redirect output to stdout
+   * These environment variables provide a fast path for enabling shader printf without code changes
+   * Configure shader printf output capture by enabling "Show Debug Output" in the Options tab
+
+2. Alternative approaches:
+   * Use RenderDoc on a different platform for shader debugging
+   * Use Metal shader debugging tools for MoltenVK applications
+
+==== Android Studio
+
+1. Configure Android GPU Inspector (AGI):
+   * Launch AGI from Tools → Android → Android GPU Inspector
+   * Capture frames and analyze shaders
+   * Inspect shader resources and performance
+
+2. Configure shader debugging for Android:
+   * Add validation layer configuration to your application
+   * For shader printf, add the following to your AndroidManifest.xml:
++
+[source,xml]
+----
+<application>
+    <!-- Standard approach -->
+    <meta-data android:name="debug.vulkan.validation_features"
+               android:value="+DEBUG_PRINTF,-CORE_VALIDATION" />
+    <meta-data android:name="debug.vulkan.debug_layer_level"
+               android:value="info" />
+
+    <!-- Alternative: Use the printf-only preset (simpler approach) -->
+    <meta-data android:name="debug.vulkan.layer_printf_only_preset"
+               android:value="1" />
+
+    <!-- Optional: Redirect printf output to stdout -->
+    <meta-data android:name="debug.vulkan.layer_printf_to_stdout"
+               android:value="1" />
+</application>
+----
+   * These meta-data entries provide a fast path for enabling shader printf without code changes
+   * Use logcat to capture shader printf output with the filter tag "Vulkan"
+
+=== Shader Debugging Best Practices
+
+1. **Start with validation layers**: Enable validation layers to catch basic shader errors before using more advanced debugging tools.
+
+2. **Use shader printf strategically**: Add printf statements at key points in your shader code to track execution flow and variable values.
+
+3. **Simplify shaders during debugging**: Temporarily simplify complex shaders to isolate issues.
+
+4. **Debug with simple scenes**: Use simple test scenes that isolate the shader being debugged.
+
+5. **Check shader compilation**: Verify that shaders compile correctly before runtime debugging:
+   * Use `glslangValidator` for GLSL shaders
+   * Use `dxc` with the `-Zi` flag for HLSL shaders to include debug information
+
+6. **Visualize intermediate results**: Output intermediate calculations to color to visually debug complex algorithms.
+
+7. **Compare against reference implementations**: Implement the same algorithm on CPU and compare results.
+
+8. **Use debug views**: Create special debug views that visualize specific shader attributes (normals, UVs, etc.).
+
+=== GLSL vs HLSL Debugging Considerations
+
+1. GLSL Debugging:
+   * Use `GL_EXT_debug_printf` extension for printf functionality
+   * RenderDoc has excellent support for GLSL shader debugging
+   * Use `glslangValidator` with `-g` flag to include debug information
+
+2. HLSL Debugging:
+   * Use the DirectX Shader Compiler (DXC) with debugging flags
+   * Add the `-Zi` flag to include debug information
+   * Use the `-Od` flag to disable optimizations for better debugging
+   * HLSL printf requires special extensions as shown in the example above
+
+[source,bash]
+----
+# Compile HLSL with debug information
+dxc.exe -spirv -T ps_6_0 -E main -Zi -Od shader.hlsl -Fo shader.spv
+----
+
+For more information on debugging tools, see the xref:{chapters}development_tools.adoc#debugging[Debugging section] in the Development Tools chapter.
