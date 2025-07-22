@@ -78,6 +78,8 @@ include::{chapters}queues.adoc[]
 
 include::{chapters}wsi.adoc[]
 
+include::{chapters}windowing_audio_input.adoc[]
+
 include::{chapters}pnext_and_stype.adoc[]
 
 include::{chapters}synchronization.adoc[]
