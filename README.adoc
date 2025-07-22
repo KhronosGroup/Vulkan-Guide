@@ -64,7 +64,6 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 = Using Vulkan
 
-== xref:{chapters}shader_authoring_guide_slang_hlsl.adoc[Shader Authoring Guide (Slang/HLSL)]
 
 == xref:{chapters}loader.adoc[Loader]
 
@@ -157,6 +156,8 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 == xref:{chapters}common_pitfalls.adoc[Common Pitfalls]
 
 == xref:{chapters}hlsl.adoc[Using HLSL shaders]
+
+== xref:{chapters}slang.adoc[Using Slang shaders]
 
 == xref:{chapters}high_level_shader_language_comparison.adoc[High Level Shader Language Comparison]
 

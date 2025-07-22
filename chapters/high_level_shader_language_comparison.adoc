@@ -8,41 +8,57 @@ ifndef::images[:images: images/]
 = Vulkan High Level Shader Language Comparison
 :toc:
 
-While Vulkan itself consumes shaders in a binary format called xref:{chapters}what_is_spirv.adoc[SPIR-V], shaders are usually written in a high level language. This section provides a mapping between shader functionality for the most common ones used with Vulkan: GLSL and HLSL. This is mostly aimed at people wanting to migrate from one high level shader language to another. It's meant as a starting point and not as a complete porting guide to one language from another
+While Vulkan itself consumes shaders in a binary format called xref:{chapters}what_is_spirv.adoc[SPIR-V], shaders are usually written in a high level language. This section provides a mapping between shader functionality for the most common ones used with Vulkan: GLSL, HLSL, and Slang. This is mostly aimed at people wanting to migrate from one high level shader language to another. It's meant as a starting point and not as a complete porting guide to one language from another.
 
 [TIP]
 ====
 For more details on using HLSL with Vulkan, visit xref:{chapters}hlsl.adoc[this chapter].
+
+For more details on using Slang with Vulkan, visit xref:{chapters}slang.adoc[this chapter].
 ====
 
 [NOTE]
 ====
-The following listings are by no means complete, and mappings for newer extensions may be missing. Also note that concepts do not always map 1:1 between GLSL and HLSL. E.g. there are no semantic in GLSL while some newer GLSL functionality may not (yet) be available in HLSL.
+The following listings are by no means complete, and mappings for newer extensions may be missing. Also note that concepts do not always map 1:1 between languages. E.g. there are no semantics in GLSL, while some newer GLSL functionality may not (yet) be available in HLSL or Slang.
+
+Slang is largely compatible with HLSL 2018 but adds several advanced features like generics, interfaces, and modules. In most cases where HLSL syntax is shown, Slang supports the same syntax, but may offer additional options.
 ====
 
 == Extensions
 
-In GLSL extensions need to be explicitly enabled using the `#extension` directive. This is **not** necessary in HLSL. The compiler will implicitly select suitable SPIR-V extensions based on the shader. If required one can use `-fspv-extension` arguments to explicitly select extensions.
+In GLSL extensions need to be explicitly enabled using the `#extension` directive. This is **not** necessary in HLSL or Slang. Both compilers will implicitly select suitable SPIR-V extensions based on the shader.
+
+For HLSL, if required one can use `-fspv-extension` arguments to explicitly select extensions.
+
+For Slang, extensions can be explicitly enabled using command-line options like `-D` or through the Slang API. Slang also supports SPIR-V intrinsics similar to HLSL.
 
 == Data types
 
 [NOTE]
 ====
-Types work similar in GLSL and HLSL. But where GLSL e.g. has explicit vector or matrix types, HLSL uses basic types. On the other hand HLSL offers advanced type features like C++ templates. This paragraph contains a basic summary with some examples to show type differences between the two languages.
+Types work similarly across GLSL, HLSL, and Slang. GLSL has explicit vector or matrix types, while HLSL and Slang use basic types with numeric suffixes. HLSL offers some advanced type features like C++ templates, and Slang extends this further with full generic support. This section contains a basic summary with examples to show type differences between the languages.
 ====
 
 [options="header"]
 |====
-| *GLSL* | *HLSL* | *Example*
-| vec__n__ | float__n__ | vec4 -> float4
-| ivec__n__ | int__n__ | ivec3 --> int3
-| mat__nxm__ or shorthand mat__n__ | float__nxm__ | mat4 -> float4x4
+| *GLSL* | *HLSL* | *Example* | *Slang-specific*
+| vec__n__ | float__n__ | vec4 -> float4 |
+| ivec__n__ | int__n__ | ivec3 -> int3 |
+| mat__nxm__ or shorthand mat__n__ | float__nxm__ | mat4 -> float4x4 |
+| n/a | n/a | | interface types
+| n/a | limited templates | | full generic<T> support
 |====
+
+[NOTE]
+====
+Slang uses the same basic data types as HLSL (float__n__, int__n__, float__nxm__, etc.) but adds several advanced features like interfaces and full generic support.
+====
 
 * link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-data-types[HLSL data types (Microsoft)]
 * link:https://www.khronos.org/opengl/wiki/Data_Type_(GLSL)[GLSL data types (OpenGL wiki)]
+* link:https://docs.shader-slang.org/en/latest/external/core-module-reference/types/index.html[Slang data types]
 
-The syntax for casting types also differs:
+The syntax for casting types differs:
 
 GLSL:
 [source,glsl]
@@ -56,14 +72,88 @@ HLSL:
 float4x3 mat = (float4x3)(ubo.view);
 ----
 
+Slang:
+[source,slang]
+----
+float4x3 mat = (float4x3)(ubo.view);
+// Or using generics
+let mat = cast<float4x3>(ubo.view);
+----
+
 [NOTE]
 ====
-An important difference: Matrices in GLSL are column-major, while matrices in HLSL are row-major. This affects things like matrix construction.
+An important difference: Matrices in GLSL are column-major, while matrices in HLSL and Slang are row-major by default. This affects things like matrix construction.
 ====
+
+=== Slang-specific Types
+
+Slang extends HLSL's type system with several advanced features:
+
+==== Interfaces
+
+Slang supports interfaces similar to C# or Java:
+
+[source,slang]
+----
+interface IMaterial {
+    float3 evaluateBRDF(float3 viewDir, float3 lightDir, float3 normal);
+}
+
+struct LambertianMaterial : IMaterial {
+    float3 albedo;
+
+    float3 evaluateBRDF(float3 viewDir, float3 lightDir, float3 normal) {
+        return albedo * max(0, dot(normal, lightDir)) / 3.14159;
+    }
+}
+----
+
+==== Generics
+
+Slang provides full generic support:
+
+[source,slang]
+----
+// Generic function
+generic<T>
+T min(T a, T b) {
+    return a < b ? a : b;
+}
+
+// Generic struct
+generic<T, let N : int>
+struct Array {
+    T data[N];
+
+    T getElement(int index) { return data[index]; }
+}
+
+// Usage
+float result = min<float>(1.0, 2.0);
+Array<float, 4> myArray;
+----
 
 == Implicit vk Namespace
 
 For Vulkan concepts that are not available in DirectX, an link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst#the-implicit-vk-namespace[implicit namespace] has been added that marks Vulkan specific features.
+
+Slang supports the same `vk` namespace as HLSL for Vulkan-specific functionality. This allows Slang code to use the same Vulkan-specific attributes and functions as HLSL:
+
+[source,slang]
+----
+// Binding a resource in Slang using vk namespace
+[[vk::binding(0, 0)]]
+Texture2D albedoMap;
+
+// Push constants in Slang
+struct PushConstants {
+    float4x4 transform;
+};
+[[vk::push_constant]]
+PushConstants pushConstants;
+----
+
+In addition to supporting the HLSL `vk` namespace, Slang also provides its own parameter block system that can be used alongside the `vk` namespace for more organized resource binding (see the Parameter Blocks section below).
 
 == SPIR-V macro
 
@@ -77,9 +167,34 @@ When using xref:{chapters}hlsl.adoc#DirectXShaderCompiler[DXC] to compile HLSL t
 ConstantBuffer<Node> node : register(b0, space1);
 ----
 
+Slang provides similar conditional compilation capabilities, but with more options for cross-API development:
+
+[source,slang]
+----
+// Using __spirv__ macro (same as HLSL)
+#ifdef __spirv__
+[[vk::binding(0, 1)]]
+#endif
+ConstantBuffer<Node> node : register(b0, space1);
+
+// Using Slang's target-specific compilation
+#if SLANG_VULKAN
+[[vk::binding(0, 1)]]
+#elif SLANG_D3D12
+// D3D12-specific code
+#endif
+ConstantBuffer<Node> node;
+
+// Using Slang's target-agnostic parameter blocks
+[[vk::binding(0, 1)]]
+ParameterBlock<Resources> resources;
+----
+
+Slang's multi-target compilation system allows you to write shaders that can be compiled for multiple graphics APIs from a single source file, with conditional compilation to handle API-specific differences.
+
 == SPIR-V intrinsics
 
-DXC supports link:https://github.com/microsoft/DirectXShaderCompiler/wiki/GL_EXT_spirv_intrinsics-for-SPIR-V-code-gen[SPIR-V intrinsics] with the `GL_EXT_spirv_intrinsics` extension. This adds support for embedding arbitrary SPIR-V in the middle of of GLSL for features not available in DirectX. For this new keywords are added to the `vk` namespace that map SPIR-V opcodes, incl. `vk::ext_extension`, `vk::ext_capability`, `vk::ext_builtin_input`, `vk::ext_execution_mode` and `vk::ext_instruction`.
+DXC supports link:https://github.com/microsoft/DirectXShaderCompiler/wiki/GL_EXT_spirv_intrinsics-for-SPIR-V-code-gen[SPIR-V intrinsics] with the `GL_EXT_spirv_intrinsics` extension. This adds support for embedding arbitrary SPIR-V in the middle of GLSL for features not available in DirectX. For this new keywords are added to the `vk` namespace that map SPIR-V opcodes, incl. `vk::ext_extension`, `vk::ext_capability`, `vk::ext_builtin_input`, `vk::ext_execution_mode` and `vk::ext_instruction`.
 
 Example for using the stencil export SPIR-V extension in HLSL:
 
@@ -100,12 +215,100 @@ Example for setting up the built-in to access vertex positions in ray tracing:
 const static float3 gl_HitTriangleVertexPositions[3];
 ----
 
+Slang supports the same SPIR-V intrinsics capabilities as HLSL, allowing you to access Vulkan-specific features that don't have direct mappings in the language. The syntax is identical to HLSL:
+
+[source,slang]
+----
+[[vk::ext_capability(/* StencilExportEXT */ 5013)]]
+[[vk::ext_extension("SPV_EXT_shader_stencil_export")]]
+vk::ext_execution_mode(/* StencilRefReplacingEXT */ 5027);
+----
+
+In addition, Slang provides a more structured approach to extension capabilities through its module system, allowing you to encapsulate extension-specific code in dedicated modules:
+
+[source,slang]
+----
+// In a dedicated module for stencil export functionality
+module Extensions.StencilExport;
+
+[[vk::ext_capability(/* StencilExportEXT */ 5013)]]
+[[vk::ext_extension("SPV_EXT_shader_stencil_export")]]
+vk::ext_execution_mode(/* StencilRefReplacingEXT */ 5027);
+
+export void writeStencil(uint value) {
+    // Implementation using stencil export
+}
+
+// In main shader code
+import Extensions.StencilExport;
+
+void main() {
+    // Use the extension functionality
+    writeStencil(42);
+}
+----
+
 == Built-ins vs. Semantics
 
 [NOTE]
 ====
-While GLSL makes heavy use of input and output variables built into the languages called "built-ins", there is no such concept in HLSL. HLSL instead uses link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics[semantics], strings that are attached to inputs or inputs that contain information about the intended use of that variable. They are prefixed with `SV_`. For HLSL input values are explicit arguments for the main entry point and the shader needs to explicitly return an output.
+While GLSL makes heavy use of input and output variables built into the languages called "built-ins", there is no such concept in HLSL or Slang. HLSL and Slang instead use link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics[semantics], strings that are attached to inputs or outputs that contain information about the intended use of that variable. They are prefixed with `SV_`. For HLSL and Slang, input values are explicit arguments for the main entry point and the shader needs to explicitly return an output.
+
+Slang follows HLSL's semantic-based approach but provides additional features through its interface system that can abstract away some of the semantic details.
 ====
+
+=== Slang Interface Abstractions
+
+Slang allows you to define interfaces that can abstract away some of the semantic details:
+
+[source,slang]
+----
+// Define a vertex shader interface
+interface IVertexShader
+{
+    // Input structure with semantics
+    struct Input
+    {
+        float3 position : POSITION;
+        float3 normal : NORMAL;
+        float2 texCoord : TEXCOORD0;
+    };
+
+    // Output structure with semantics
+    struct Output
+    {
+        float4 position : SV_POSITION;
+        float3 worldPos : POSITION0;
+        float3 normal : NORMAL0;
+        float2 texCoord : TEXCOORD0;
+    };
+
+    // Vertex shader function
+    Output computeVertex(Input input);
+}
+
+// Implement the interface
+struct StandardVertexShader : IVertexShader
+{
+    // Implementation of the vertex shader function
+    IVertexShader.Output computeVertex(IVertexShader.Input input)
+    {
+        IVertexShader.Output output;
+        // Implementation...
+        return output;
+    }
+}
+
+// Use the interface in a shader entry point
+[shader("vertex")]
+IVertexShader.Output vertexMain(IVertexShader.Input input)
+{
+    StandardVertexShader vertexShader;
+    return vertexShader.computeVertex(input);
+}
+----
+
+This approach allows for more modular and reusable shader code while still leveraging the semantic system.
 
 === Examples
 
@@ -122,7 +325,7 @@ void main() {
 }
 ----
 
-HLSL
+HLSL:
 [source,hlsl]
 ----
 struct VSOutput
@@ -139,6 +342,49 @@ VSOutput main(VSInput input)
 }
 ----
 
+Slang:
+[source,slang]
+----
+struct VSOutput
+{
+    // Same as HLSL, using SV_POSITION semantic
+    float4 Pos : SV_POSITION;
+};
+
+// Standard approach (identical to HLSL)
+VSOutput main(VSInput input)
+{
+    VSOutput output = (VSOutput)0;
+    output.Pos = mul(ubo.projectionMatrix, mul(ubo.viewMatrix, mul(ubo.modelMatrix, input.Pos)));
+    return output;
+}
+
+// Alternative using interfaces
+interface IVertexTransform
+{
+    float4x4 getTransform();
+}
+
+struct StandardTransform : IVertexTransform
+{
+    float4x4 projectionMatrix;
+    float4x4 viewMatrix;
+    float4x4 modelMatrix;
+
+    float4x4 getTransform()
+    {
+        return mul(projectionMatrix, mul(viewMatrix, modelMatrix));
+    }
+}
+
+VSOutput transformedMain(VSInput input, IVertexTransform transform)
+{
+    VSOutput output = (VSOutput)0;
+    output.Pos = mul(transform.getTransform(), float4(input.Pos, 1.0));
+    return output;
+}
+----
+
 Reading the vertex index:
 
 GLSL:
@@ -151,7 +397,7 @@ void main()
 }
 ----
 
-HLSL
+HLSL:
 [source,hlsl]
 ----
 struct VSInput
@@ -168,12 +414,86 @@ VSOutput main(VSInput input)
 }
 ----
 
+Slang:
+[source,slang]
+----
+struct VSInput
+{
+    // Same as HLSL, using SV_VertexID semantic
+    uint VertexIndex : SV_VertexID
+};
+
+VSOutput main(VSInput input)
+{
+    VSOutput output = (VSOutput)0;
+    output.UV = float2((input.VertexIndex << 1) & 2, input.VertexIndex & 2);
+    return output;
+}
+
+// Alternative using a utility function
+float2 calculateUVFromVertexID(uint vertexID)
+{
+    return float2((vertexID << 1) & 2, vertexID & 2);
+}
+
+VSOutput alternativeMain(VSInput input)
+{
+    VSOutput output = (VSOutput)0;
+    output.UV = calculateUVFromVertexID(input.VertexIndex);
+    return output;
+}
+----
+
 == Shader interface
 
 [NOTE]
 ====
-Shader interfaces greatly differ between GLSL and HLSL.
+Shader interfaces greatly differ between GLSL, HLSL, and Slang. GLSL uses a more procedural approach with global variables, while HLSL uses a more object-oriented approach with explicit structures and semantics. Slang extends HLSL's approach with additional features like parameter blocks, interfaces, and modules.
 ====
+
+=== Slang Parameter Blocks
+
+Slang introduces a powerful concept called parameter blocks that provides a more structured way to organize shader resources:
+
+[source,slang]
+----
+// Define a parameter block type
+struct MaterialResources
+{
+    Texture2D albedoMap;
+    SamplerState samplerState;
+
+    struct Constants {
+        float4 baseColor;
+        float roughness;
+        float metallic;
+    } constants;
+};
+
+// Declare a parameter block with explicit binding
+[[vk::binding(0, 0)]]
+ParameterBlock<MaterialResources> material;
+
+// Usage in shader code
+float4 sampleAlbedo(float2 uv)
+{
+    // Access resources through the parameter block
+    return material.albedoMap.Sample(material.samplerState, uv);
+}
+
+float getRoughness()
+{
+    // Access constants through the parameter block
+    return material.constants.roughness;
+}
+----
+
+Parameter blocks offer several advantages:
+* Logical grouping of related resources
+* Cleaner shader code with hierarchical access
+* Better compatibility across different graphics APIs
+* Support for nested resources and constants
+* Improved reflection capabilities
 
 === Descriptor bindings
 
@@ -607,6 +927,35 @@ float4 main(VSOutput input) : SV_TARGET {
 | sparseTexelsResidentARB | CheckAccessFullyMapped
 |====
 
+[NOTE]
+====
+Slang supports the same texture operations as HLSL, with identical function names and behavior.
+====
+
+Slang also supports more advanced texture operations through its parameter block system:
+
+[source,slang]
+----
+// Define a parameter block with textures
+struct TextureResources
+{
+    Texture2D albedoMap;
+    Texture2D normalMap;
+    Texture2D roughnessMap;
+    SamplerState samplerState;
+}
+
+// Declare a parameter block
+[[vk::binding(0, 0)]]
+ParameterBlock<TextureResources> textures;
+
+// Sample textures through the parameter block
+float4 sampleAlbedo(float2 uv)
+{
+    return textures.albedoMap.Sample(textures.samplerState, uv);
+}
+----
+
 === Image formats
 
 ==== GLSL
@@ -723,7 +1072,7 @@ ConstantBuffer<SBT> sbt;
 // @todo: some of the stuff in here is used across different stages (e.g. gl_PrimitiveID)
 [options="header"]
 |====
-| *GLSL*  | *HLSL* | Note
+| *GLSL*  | *HLSL* | *Note*
 | accelerationStructureEXT | RaytracingAccelerationStructure |
 | executeCallableEXT | CallShader |
 | ignoreIntersectionEXT | IgnoreHit |
@@ -755,19 +1104,19 @@ ConstantBuffer<SBT> sbt;
 | gl_WorldToObjectEXT | WorldToObject4x3 |
 | gl_WorldToObject3x4EXT | WorldToObject3x4 |
 | gl_ObjectToWorld3x4EXT | ObjectToWorld3x4 |
-| gl_RayFlagsNoneEXT | RAY_FLAG_NONE  |
+| gl_RayFlagsNoneEXT | RAY_FLAG_NONE |
 | gl_RayFlagsOpaqueEXT | RAY_FLAG_FORCE_OPAQUE |
 | gl_RayFlagsNoOpaqueEXT | RAY_FLAG_FORCE_NON_OPAQUE |
 | gl_RayFlagsTerminateOnFirstHitEXT | RAY_FLAG_ACCEPT_FIRST_HIT_AND_END_SEARCH |
 | gl_RayFlagsSkipClosestHitShaderEXT | RAY_FLAG_SKIP_CLOSEST_HIT_SHADER |
 | gl_RayFlagsCullBackFacingTrianglesEXT | RAY_FLAG_CULL_BACK_FACING_TRIANGLES |
-| gl_RayFlagsCullFrontFacingTrianglesEXT | RAY_FLAG_CULL_FRONT_FACING_TRIANGLES  |
+| gl_RayFlagsCullFrontFacingTrianglesEXT | RAY_FLAG_CULL_FRONT_FACING_TRIANGLES |
 | gl_RayFlagsCullOpaqueEXT | RAY_FLAG_CULL_OPAQUE |
 | gl_RayFlagsCullNoOpaqueEXT | RAY_FLAG_CULL_NON_OPAQUE | requires `GL_EXT_ray_flags_primitive_culling`
 | gl_RayFlagsSkipTrianglesEXT | RAY_FLAG_SKIP_TRIANGLES | requires `GL_EXT_ray_flags_primitive_culling`
 | gl_RayFlagsSkipAABBEXT  | RAY_FLAG_SKIP_PROCEDURAL_PRIMITIVES |
-| gl_HitKindFrontFacingTriangleEXT | HIT_KIND_TRIANGLE_FRONT_FACE  |
-| gl_HitKindBackFacingTriangleEXT | HIT_KIND_TRIANGLE_BACK_FACE  |
+| gl_HitKindFrontFacingTriangleEXT | HIT_KIND_TRIANGLE_FRONT_FACE |
+| gl_HitKindBackFacingTriangleEXT | HIT_KIND_TRIANGLE_BACK_FACE |
 | gl_HitTriangleVertexPositionsEXT a| Requires <<SPIR-V intrinsics>>:
 [,hlsl]
 ----
@@ -775,9 +1124,60 @@ ConstantBuffer<SBT> sbt;
 [[vk::ext_capability(RayTracingPositionFetchKHR)]]
 [[vk::ext_builtin_input(HitTriangleVertexPositionsKHR)]]
 ----
-  | Requires `GL_EXT_ray_tracing_position_fetch`
+| Requires `GL_EXT_ray_tracing_position_fetch`
 | shadercallcoherent | n.a. |
 |====
+
+[NOTE]
+====
+Slang supports the same raytracing built-ins as HLSL, with identical function names and behavior. Additionally, Slang's interface and module system can be used to create more modular and reusable raytracing code.
+====
+
+[source,slang]
+----
+// Define a ray tracing interface
+interface IRayTracer
+{
+    struct RayPayload
+    {
+        float3 color;
+        float distance;
+        int materialID;
+    };
+
+    void traceScene(inout RayPayload payload, float3 origin, float3 direction);
+}
+
+// Implement the interface
+struct StandardRayTracer : IRayTracer
+{
+    RaytracingAccelerationStructure accelerationStructure;
+
+    void traceScene(inout IRayTracer.RayPayload payload, float3 origin, float3 direction)
+    {
+        // Configure ray
+        uint rayFlags = RAY_FLAG_NONE;
+        uint instanceMask = 0xFF;
+        uint rayContributionToHitGroupIndex = 0;
+        uint multiplierForGeometryContributionToHitGroupIndex = 1;
+        uint missShaderIndex = 0;
+
+        // Trace ray
+        TraceRay(
+            accelerationStructure,
+            rayFlags,
+            instanceMask,
+            rayContributionToHitGroupIndex,
+            multiplierForGeometryContributionToHitGroupIndex,
+            missShaderIndex,
+            origin,
+            0.001f,    // Min t
+            direction,
+            10000.0f,  // Max t
+            payload);
+    }
+}
+----
 
 === Compute
 
@@ -840,6 +1240,51 @@ groupshared float4 sharedData[1024];
 | gl_NumWorkGroups | n.a.
 | gl_WorkGroupSize | n.a.
 |====
+
+[NOTE]
+====
+Slang supports the same compute shader semantics as HLSL, with identical names and behavior. Additionally, Slang's interface and module system can be used to create more modular and reusable compute shader code.
+====
+
+[source,slang]
+----
+// Define a compute kernel interface
+interface IComputeKernel
+{
+    void execute(uint3 globalID, uint3 groupID, uint3 localID);
+}
+
+// Implement a specific compute kernel
+struct ImageProcessingKernel : IComputeKernel
+{
+    RWTexture2D<float4> outputImage;
+    Texture2D<float4> inputImage;
+    SamplerState samplerState;
+
+    void execute(uint3 globalID, uint3 groupID, uint3 localID)
+    {
+        // Process image at the current pixel
+        uint2 pixelCoord = globalID.xy;
+        float2 uv = float2(pixelCoord) / float2(1920, 1080); // Example resolution
+
+        // Sample input and write to output
+        float4 color = inputImage.Sample(samplerState, uv);
+        outputImage[pixelCoord] = color;
+    }
+}
+
+// Main compute shader entry point
+[numthreads(16, 16, 1)]
+void main(
+    uint3 dispatchThreadID : SV_DispatchThreadID,
+    uint3 groupID : SV_GroupID,
+    uint3 groupThreadID : SV_GroupThreadID)
+{
+    // Create and use the kernel
+    ImageProcessingKernel kernel;
+    kernel.execute(dispatchThreadID, groupID, groupThreadID);
+}
+----
 
 ==== Barriers
 
@@ -962,12 +1407,12 @@ These shader stages share several functions and built-ins
 [options="header"]
 |====
 | *GLSL*  | *HLSL* | *Note*
-| gl_PointSize | [[vk::builtin("PointSize")]] | Vulkan only, no direct HLSL equivalent
-| gl_BaseVertexARB | [[vk::builtin("BaseVertex")]] | Vulkan only, no direct HLSL equivalent
-| gl_BaseInstanceARB | [[vk::builtin("BaseInstance")]] | Vulkan only, no direct HLSL equivalent
-| gl_DrawID | [[vk::builtin("DrawIndex")]] | Vulkan only, no direct HLSL equivalent
-| gl_DeviceIndex | [[vk::builtin("DeviceIndex")]] | Vulkan only, no direct HLSL equivalent
-| gl_ViewportMask | [[vk::builtin("ViewportMaskNV")]] | Vulkan only, no direct HLSL equivalent
+| gl_PointSize | `vk::builtin("PointSize")` | Vulkan only, no direct HLSL equivalent
+| gl_BaseVertexARB | `vk::builtin("BaseVertex")` | Vulkan only, no direct HLSL equivalent
+| gl_BaseInstanceARB | `vk::builtin("BaseInstance")` | Vulkan only, no direct HLSL equivalent
+| gl_DrawID | `vk::builtin("DrawIndex")` | Vulkan only, no direct HLSL equivalent
+| gl_DeviceIndex | `vk::builtin("DeviceIndex")` | Vulkan only, no direct HLSL equivalent
+| gl_ViewportMask | `vk::builtin("ViewportMaskNV")` | Vulkan only, no direct HLSL equivalent
 | gl_FragCoord | SV_Position |
 | gl_FragDepth | SV_Depth |
 | gl_FrontFacing | SV_IsFrontFace |
@@ -993,6 +1438,90 @@ These shader stages share several functions and built-ins
 | gl_BaryCoordNoPerspEXT | SV_Barycentrics with noperspective |
 |====
 
+== Slang Modules and Imports
+
+One of Slang's most distinctive features is its module system, which allows for better code organization and reuse. This feature is not available in either GLSL or standard HLSL.
+
+=== Module Declaration
+
+In Slang, you can organize code into modules:
+
+[source,slang]
+----
+// File: Lighting.slang
+module Lighting;
+
+// Public functions must be marked with 'export'
+export float3 calculateDirectLighting(float3 normal, float3 lightDir, float3 color)
+{
+    float NdotL = max(0, dot(normal, lightDir));
+    return color * NdotL;
+}
+
+// Private function (not exported)
+float calculateAttenuation(float distance)
+{
+    return 1.0 / (distance * distance);
+}
+----
+
+=== Importing Modules
+
+You can import modules to use their exported functionality:
+
+[source,slang]
+----
+// File: Fragment.slang
+module Fragment;
+
+// Import another module
+import Lighting;
+
+[shader("fragment")]
+float4 fragmentMain(float3 normal : NORMAL, float3 worldPos : POSITION) : SV_TARGET
+{
+    float3 lightDir = normalize(float3(1, 1, 1));
+    float3 lightColor = float3(1, 1, 1);
+
+    // Use function from imported module
+    float3 directLighting = Lighting::calculateDirectLighting(normal, lightDir, lightColor);
+
+    return float4(directLighting, 1.0);
+}
+----
+
+=== Hierarchical Modules
+
+Slang supports hierarchical module organization:
+
+[source,slang]
+----
+// File: Rendering/Materials/PBR.slang
+module Rendering.Materials.PBR;
+
+export interface IMaterial { ... }
+export struct PBRMaterial : IMaterial { ... }
+
+// File: Main.slang
+module Main;
+
+// Import specific module
+import Rendering.Materials.PBR;
+
+// Use imported types
+PBR::PBRMaterial material;
+----
+
+=== Module Benefits
+
+The module system offers several advantages:
+
+* Better code organization
+* Encapsulation of implementation details
+* Reduced name conflicts
+* Explicit dependencies between components
+* Improved compilation times through separate compilation
+
 == Functions
 
 [NOTE]
@@ -1014,5 +1543,61 @@ Most GLSL functions are also available in HLSL and vice-versa. This chapter list
 | mix | lerp
 |====
 
+[NOTE]
+====
+Slang supports all the same intrinsic functions as HLSL, with identical names. Additionally, Slang allows you to define your own generic functions that can work with multiple types and supports operator overloading and custom function definitions within interfaces.
+====
+
 * link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-intrinsic-functions[HLSL intrinsic function (Microsoft)]
 * link:https://registry.khronos.org/OpenGL-Refpages/gl4/index.php[OpenGL reference pages]
+* link:https://github.com/shader-slang/spec[Slang Language Reference]
+
+Here's an example of Slang's generic functions:
+
+[source,slang]
+----
+// Generic interpolation function
+generic<T>
+T interpolate(T a, T b, float t)
+{
+    return lerp(a, b, t);
+}
+
+// Usage with different types
+float result1 = interpolate(1.0f, 2.0f, 0.5f);          // Returns 1.5
+float3 result2 = interpolate(float3(1,0,0), float3(0,1,0), 0.5f); // Returns (0.5, 0.5, 0)
+----
+
+Slang also supports operator overloading and custom function definitions within interfaces, allowing for more expressive and reusable code:
+
+[source,slang]
+----
+// Define an interface with operations
+interface IVector<T>
+{
+    T dot(T other);
+    T normalize();
+    T scale(float factor);
+}
+
+// Implement for float3
+struct Float3Vector : IVector<float3>
+{
+    float3 value;
+
+    float3 dot(float3 other)
+    {
+        return dot(value, other);
+    }
+
+    float3 normalize()
+    {
+        return normalize(value);
+    }
+
+    float3 scale(float factor)
+    {
+        return value * factor;
+    }
+}
+----

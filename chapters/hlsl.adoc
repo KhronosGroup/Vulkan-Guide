@@ -7,6 +7,7 @@ ifndef::images[:images: images/]
 
 [[hlsl-in-vulkan]]
 = HLSL in Vulkan
+:toc:
 
 Vulkan does not directly consume shaders in a human-readable text format, but instead uses xref:{chapters}what_is_spirv.adoc[SPIR-V] as an intermediate representation. This opens the option to use shader languages other than e.g. GLSL, as long as they can target the Vulkan SPIR-V environment.
 
@@ -21,10 +22,306 @@ image::{images}what_is_spirv_dxc.png[what_is_spriv_dxc.png]
 
 If you are new to HLSL, a good starting point are the HLSL resources over at link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl[Microsoft Learn]. Another great source is the link:https://microsoft.github.io/DirectX-Specs/[DirectX-Specs document]. It contains valuable information on recent shader features and HLSL's shader models.
 
+== Why Use HLSL for Vulkan?
+
+There are several advantages to using HLSL for Vulkan development:
+
+* *Cross-API compatibility*: Write shaders that can be used with both Vulkan and DirectX with minimal changes
+* *Familiar syntax*: Developers with DirectX experience can leverage their existing knowledge
+* *Industry adoption*: HLSL is widely used in game engines and graphics applications
+* *Tooling support*: Rich ecosystem of tools, debuggers, and IDE integrations
+
 [[applications-pov]]
 == From the application's point-of-view
 
 From the application's point-of-view, using HLSL is exactly the same as using GLSL. As the application always consumes shaders in the SPIR-V format, the only difference is in the tooling to generate the SPIR-V shaders from the desired shading language.
+
+== Best Practices for Writing Shaders in HLSL for Vulkan
+
+=== Code Organization
+
+* *Separate shader stages*: Keep different shader stages (vertex, fragment, compute, etc.) in separate files
+* *Use structures for inputs and outputs*: Define clear structures for shader inputs and outputs
+* *Consistent naming conventions*: Adopt a consistent naming scheme for variables, functions, and types
+* *Modular design*: Break complex shaders into reusable functions and components
+
+Example of a well-organized HLSL shader:
+
+[source,hlsl]
+----
+// Common structures and constants
+struct VSInput {
+    [[vk::location(0)]] float3 Position : POSITION0;
+    [[vk::location(1)]] float3 Normal : NORMAL0;
+    [[vk::location(2)]] float2 TexCoord : TEXCOORD0;
+};
+struct VSOutput {
+    float4 Position : SV_POSITION;
+    [[vk::location(0)]] float3 WorldPos : POSITION0;
+    [[vk::location(1)]] float3 Normal : NORMAL0;
+    [[vk::location(2)]] float2 TexCoord : TEXCOORD0;
+};
+// Uniform buffer with transformation matrices
+struct SceneUBO {
+    float4x4 model;
+    float4x4 view;
+    float4x4 projection;
+};
+[[vk::binding(0, 0)]]
+ConstantBuffer<SceneUBO> ubo;
+// Vertex shader main function
+VSOutput main(VSInput input) {
+    VSOutput output = (VSOutput)0;
+    // Transform position to clip space
+    float4 worldPos = mul(ubo.model, float4(input.Position, 1.0));
+    output.Position = mul(ubo.projection, mul(ubo.view, worldPos));
+    // Pass through other attributes
+    output.WorldPos = worldPos.xyz;
+    output.Normal = mul((float3x3)ubo.model, input.Normal);
+    output.TexCoord = input.TexCoord;
+    return output;
+}
+----
+
+=== Performance Considerations
+
+* *Minimize divergent control flow*: Avoid complex branching within shader wavefronts
+* *Optimize memory access patterns*: Group related data together to improve cache coherency
+* *Reduce register pressure*: Limit the number of variables in high-register-usage sections
+* *Use appropriate precision*: Use lower precision types (`half`, `min16float`) when full precision isn't needed
+* *Leverage subgroup operations*: Use subgroup/wave intrinsics for efficient parallel operations
+* *Prefer compile-time constants*: Use specialization constants for values known at pipeline creation time
+
+Example of using specialization constants:
+
+[source,hlsl]
+----
+// Define specialization constants
+[[vk::constant_id(0)]] const bool USE_NORMAL_MAPPING = true;
+[[vk::constant_id(1)]] const int LIGHT_COUNT = 4;
+[[vk::constant_id(2)]] const float SPECULAR_POWER = 32.0;
+// Use in conditional code
+float3 CalculateNormal(float3 normal, float3 tangent, float2 texCoord) {
+    if (USE_NORMAL_MAPPING) {
+        // Complex normal mapping calculation
+        return CalculateNormalFromMap(normal, tangent, texCoord);
+    } else {
+        // Simple pass-through
+        return normalize(normal);
+    }
+}
+----
+
+=== Debugging and Validation
+
+* *Add debug markers*: Use comments or debug variables to mark important sections
+* *Validate inputs*: Check for NaN or invalid values in critical calculations
+* *Use validation layers*: Enable Vulkan validation layers during development
+* *Leverage shader debugging tools*: Use tools like RenderDoc or NVIDIA Nsight for shader debugging
+* *Implement fallbacks*: Provide simpler code paths for debugging complex algorithms
+
+=== Vulkan-Specific Best Practices
+
+* *Explicit bindings*: Always specify explicit descriptor set and binding indices
+* *Consistent descriptor layouts*: Maintain consistent descriptor layouts across shader stages
+* *Minimize descriptor set changes*: Group resources to minimize descriptor set changes during rendering
+* *Consider push constants*: Use push constants for frequently changing small data
+* *Be mindful of SPIR-V limitations*: Some HLSL features may not translate directly to SPIR-V
+
+== Migration from GLSL to HLSL
+
+=== Conceptual Differences
+
+GLSL and HLSL have different programming paradigms:
+
+* *GLSL*: More procedural, similar to C
+* *HLSL*: More object-oriented, similar to C++
+
+Key conceptual differences include:
+
+* *Entry points*: GLSL uses `void main()`, HLSL uses typed functions with explicit inputs/outputs
+* *Built-ins vs. semantics*: GLSL uses built-in variables, HLSL uses semantics
+* *Resource binding*: Different syntax for binding resources
+* *Matrix layout*: GLSL uses column-major by default, HLSL uses row-major by default
+
+=== Syntax Translation Guide
+
+==== Data Types
+
+[options="header"]
+|====
+| GLSL | HLSL | Example
+| vec_n_ | float_n_ | vec4 → float4
+| ivec_n_ | int_n_ | ivec3 → int3
+| uvec_n_ | uint_n_ | uvec2 → uint2
+| mat_nxm_ | float_nxm_ | mat4 → float4x4
+|====
+
+==== Shader Inputs/Outputs
+
+GLSL:
+[source,glsl]
+----
+// Vertex shader inputs
+layout(location = 0) in vec3 inPosition;
+layout(location = 1) in vec3 inNormal;
+// Vertex shader outputs
+layout(location = 0) out vec3 outNormal;
+layout(location = 1) out vec2 outUV;
+void main() {
+    gl_Position = ubo.projectionMatrix * ubo.viewMatrix * ubo.modelMatrix * vec4(inPosition, 1.0);
+    outNormal = inNormal;
+    outUV = inUV;
+}
+----
+
+HLSL:
+[source,hlsl]
+----
+// Input/output structures
+struct VSInput {
+    [[vk::location(0)]] float3 Position : POSITION0;
+    [[vk::location(1)]] float3 Normal : NORMAL0;
+};
+struct VSOutput {
+    float4 Position : SV_POSITION;
+    [[vk::location(0)]] float3 Normal : NORMAL0;
+    [[vk::location(1)]] float2 UV : TEXCOORD0;
+};
+// Main function with explicit input/output
+VSOutput main(VSInput input) {
+    VSOutput output = (VSOutput)0;
+    output.Position = mul(ubo.projectionMatrix, mul(ubo.viewMatrix, mul(ubo.modelMatrix, float4(input.Position, 1.0))));
+    output.Normal = input.Normal;
+    output.UV = input.UV;
+    return output;
+}
+----
+
+==== Resource Binding
+
+GLSL:
+[source,glsl]
+----
+// Uniform buffer
+layout(set = 0, binding = 0) uniform UBO {
+    mat4 model;
+    mat4 view;
+    mat4 projection;
+} ubo;
+// Texture and sampler
+layout(set = 0, binding = 1) uniform sampler2D texAlbedo;
+// Storage buffer
+layout(set = 0, binding = 2) buffer SSBO {
+    vec4 data[];
+} ssbo;
+----
+
+HLSL:
+[source,hlsl]
+----
+// Uniform buffer
+struct UBO {
+    float4x4 model;
+    float4x4 view;
+    float4x4 projection;
+};
+[[vk::binding(0, 0)]]
+ConstantBuffer<UBO> ubo;
+// Texture and sampler
+[[vk::binding(1, 0)]]
+Texture2D texAlbedo;
+[[vk::binding(1, 0)]]
+SamplerState sampAlbedo;
+// Storage buffer
+struct SSBO {
+    float4 data[];
+};
+[[vk::binding(2, 0)]]
+RWStructuredBuffer<float4> ssbo;
+----
+
+==== Built-ins and Special Variables
+
+[options="header"]
+|====
+| GLSL | HLSL | Description
+| gl_Position | SV_Position | Vertex position output
+| gl_FragCoord | SV_Position | Fragment position
+| gl_VertexIndex | SV_VertexID | Vertex index
+| gl_InstanceIndex | SV_InstanceID | Instance index
+| gl_FragDepth | SV_Depth | Fragment depth output
+| gl_FrontFacing | SV_IsFrontFace | Front-facing flag
+| gl_PrimitiveID | SV_PrimitiveID | Primitive ID
+|====
+
+==== Common Functions
+
+[options="header"]
+|====
+| GLSL | HLSL | Description
+| mix(x, y, a) | lerp(x, y, a) | Linear interpolation
+| fract(x) | frac(x) | Fractional part
+| dFdx(p) | ddx(p) | Derivative in x direction
+| dFdy(p) | ddy(p) | Derivative in y direction
+| texture(sampler, coord) | sampler.Sample(texture, coord) | Texture sampling
+|====
+
+=== Common Migration Challenges
+
+* *Matrix multiplication*: GLSL uses `*` operator, HLSL uses `mul()` function
+* *Texture sampling*: Different syntax for texture access
+* *Swizzling*: Both support swizzling but with subtle differences
+* *Preprocessor directives*: Different preprocessor capabilities
+* *Extension handling*: GLSL requires explicit extension enabling, HLSL doesn't
+
+=== Migration Tools
+
+* *DXC*: The DirectX Shader Compiler can help validate HLSL code
+* *SPIRV-Cross*: Can convert between GLSL and HLSL via SPIR-V
+* *Automated translation tools*: Various tools can assist with bulk translation
+* *IDE plugins*: Some editors have plugins to help with shader language conversion
+
+== Vulkan-Specific Semantics, Bindings, and Entry Points
+
+=== Descriptor Binding in HLSL
+
+HLSL offers two approaches for binding resources in Vulkan:
+
+* *HLSL register syntax*:
+[source,hlsl]
+----
+Texture2D albedoMap : register(t0, space1);
+SamplerState samplerState : register(s0, space1);
+----
+
+* *Vulkan-specific attributes*:
+[source,hlsl]
+----
+[[vk::binding(0, 1)]]
+Texture2D albedoMap;
+[[vk::binding(0, 1)]]
+SamplerState samplerState;
+----
+
+You can also combine both approaches for cross-API compatibility:
+[source,hlsl]
+----
+[[vk::binding(0, 1)]]
+Texture2D albedoMap : register(t0, space1);
+----
+
+=== Resource Types and Register Spaces
+
+[options="header"]
+|====
+| Resource Type | HLSL Type | Register Type | Vulkan Equivalent
+| Uniform Buffer | ConstantBuffer<T> | b | VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
+| Storage Buffer | RWStructuredBuffer<T> | u | VK_DESCRIPTOR_TYPE_STORAGE_BUFFER
+| Texture | Texture2D, Texture3D, etc. | t | VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE
+| Storage Image | RWTexture2D, etc. | u | VK_DESCRIPTOR_TYPE_STORAGE_IMAGE
+| Sampler | SamplerState | s | VK_DESCRIPTOR_TYPE_SAMPLER
+|====
 
 [[hlsl-spirv-mapping-manual]]
 == HLSL to SPIR-V feature mapping manual
@@ -342,3 +639,294 @@ DirectX and HLSL use a fixed shader model notion to describe the supported featu
 | VK_KHR_shader_quad_control, VkPhysicalDeviceFeatures::shaderStorageImageMultisample
 
 |===
+
+== Advanced Topics
+
+=== Cross-Compilation and Portability
+
+For maximum portability between Vulkan and DirectX:
+
+* Use conditional compilation with `#ifdef __spirv__`
+* Maintain separate binding declarations for each API
+* Use abstraction layers for API-specific features
+* Consider shader generation tools for complex cases
+
+Example of a cross-API shader:
+
+[source,hlsl]
+----
+// Resource bindings for both APIs
+#ifdef __spirv__
+[[vk::binding(0, 0)]]
+#endif
+ConstantBuffer<Uniforms> uniforms : register(b0);
+#ifdef __spirv__
+[[vk::binding(1, 0)]]
+#endif
+Texture2D albedoTexture : register(t0);
+// API-specific code paths
+float4 SampleTexture(Texture2D tex, SamplerState samp, float2 uv) {
+#ifdef __spirv__
+    // Vulkan-specific sampling code if needed
+    return tex.Sample(samp, uv);
+#else
+    // DirectX-specific sampling code if needed
+    return tex.Sample(samp, uv);
+#endif
+}
+----
+
+=== Shader Interoperability
+
+For interoperability between GLSL and HLSL in the same application:
+
+* Maintain consistent descriptor set layouts
+* Use explicit locations for all shader inputs/outputs
+* Be mindful of matrix layout differences
+* Consider using a shader generation system
+
+=== Performance Optimization
+
+Advanced optimization techniques:
+
+* *Shader permutations*: Generate specialized shader variants for different feature combinations
+* *Workgroup size tuning*: Optimize compute shader workgroup sizes for specific hardware
+* *Memory layout optimization*: Align data structures to hardware requirements
+* *Instruction scheduling*: Organize instructions to maximize parallelism
+* *Register pressure management*: Minimize register usage in critical sections
+
+=== Debugging Techniques
+
+Advanced debugging approaches:
+
+* *Debug prints*: Some implementations support debug printf in shaders
+* *Debug buffers*: Write debug values to storage buffers for inspection
+* *Shader instrumentation*: Add code to validate intermediate results
+* *GPU debugging tools*: Use RenderDoc, NVIDIA Nsight, or AMD Radeon GPU Profiler
+
+== Distribution Considerations
+
+When deploying applications that use HLSL shaders with Vulkan, several distribution-related factors need to be considered to ensure optimal performance, compatibility, and user experience across different platforms and devices.
+
+=== Precompilation vs. Runtime Compilation
+
+Both approaches have advantages and trade-offs:
+
+==== Precompilation
+
+* *Advantages*:
+** Faster application startup time
+** No runtime dependency on shader compilers
+** Validation errors caught during build rather than at runtime
+** Opportunity for offline optimization
+* *Disadvantages*:
+** Increased package size when supporting multiple hardware targets
+** Less flexibility for runtime adaptation
+** Need to manage multiple precompiled variants
+
+Example pipeline for precompilation:
+
+[source,bash]
+----
+# Build script example
+for shader in shaders/*.hlsl; do
+  # Extract base name
+  base=$(basename $shader .hlsl)
+  # Determine shader type from filename suffix
+  if [[ $base == *_vs ]]; then
+    profile="vs_6_0"
+    output="${base}.vert.spv"
+  elif [[ $base == *_ps ]]; then
+    profile="ps_6_0"
+    output="${base}.frag.spv"
+  elif [[ $base == *_cs ]]; then
+    profile="cs_6_0"
+    output="${base}.comp.spv"
+  fi
+  # Compile with optimization
+  dxc -spirv -T $profile -E main $shader -O3 -Fo build/shaders/$output
+  # Optionally validate
+  spirv-val build/shaders/$output
+done
+----
+
+==== Runtime Compilation
+
+* *Advantages*:
+** Ability to adapt to specific hardware capabilities at runtime
+** Smaller distribution size (ship source instead of binaries)
+** Easier to update and patch shaders
+** Can generate specialized variants based on runtime conditions
+* *Disadvantages*:
+** Increased startup time or loading times
+** Runtime dependency on shader compiler
+** Potential for runtime shader compilation errors
+** Additional memory usage during compilation
+
+Example runtime compilation integration:
+
+[source,cpp]
+----
+// Shader manager class that handles runtime compilation
+class ShaderManager {
+public:
+    // Initialize DXC compiler once
+    ShaderManager() {
+        DxcCreateInstance(CLSID_DxcLibrary, IID_PPV_ARGS(&m_library));
+        DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&m_compiler));
+        DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&m_utils));
+    }
+    // Compile shader at runtime
+    VkShaderModule CompileShader(const std::string& source,
+                                 const std::string& entryPoint,
+                                 const std::string& profile) {
+        // Compilation logic here
+        // ...
+        // Return shader module
+        return shaderModule;
+    }
+private:
+    CComPtr<IDxcLibrary> m_library;
+    CComPtr<IDxcCompiler> m_compiler;
+    CComPtr<IDxcUtils> m_utils;
+};
+----
+
+=== Hybrid Approaches
+
+Many applications use a hybrid approach:
+
+* Precompile common shaders for supported platforms
+* Include fallback runtime compilation for edge cases
+* Use shader caching to avoid recompilation
+
+=== Binary Distribution Formats
+
+When distributing precompiled SPIR-V shaders:
+
+* *Raw SPIR-V binaries*: Direct output from DXC compiler
+* *Compressed SPIR-V*: Apply compression to reduce distribution size
+* *Custom container formats*: Package multiple shader variants with metadata
+* *Embedded in application*: Include SPIR-V as binary arrays in application code
+
+Example of embedding SPIR-V in C++ code:
+
+[source,cpp]
+----
+// Generated header with embedded shader data
+#include "compiled_shaders.h"
+// Create shader module from embedded data
+VkShaderModuleCreateInfo createInfo = {};
+createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+createInfo.codeSize = sizeof(g_VertexShader);
+createInfo.pCode = reinterpret_cast<const uint32_t*>(g_VertexShader);
+VkShaderModule shaderModule;
+vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule);
+----
+
+=== Shader Caching Strategies
+
+Implementing an effective shader cache can significantly improve performance:
+
+* *Disk-based caching*: Store compiled shaders on disk between application runs
+* *Memory caching*: Keep frequently used shaders in memory
+* *Pipeline caching*: Use Vulkan's `VkPipelineCache` to store compiled pipelines
+* *Warm-up phase*: Precompile critical shaders during loading screens
+
+Example of implementing a simple shader cache:
+
+[source,cpp]
+----
+class ShaderCache {
+public:
+    // Try to load cached shader
+    VkShaderModule GetCachedShader(const std::string& key) {
+        auto it = m_cache.find(key);
+        if (it != m_cache.end()) {
+            return it->second;
+        }
+        return VK_NULL_HANDLE;
+    }
+    // Add shader to cache
+    void CacheShader(const std::string& key, VkShaderModule module) {
+        m_cache[key] = module;
+        // Optionally persist to disk
+        SaveToDisk(key, module);
+    }
+private:
+    std::unordered_map<std::string, VkShaderModule> m_cache;
+    // Implementation details for disk persistence
+    void SaveToDisk(const std::string& key, VkShaderModule module);
+    VkShaderModule LoadFromDisk(const std::string& key);
+};
+----
+
+=== Version Management
+
+Managing shader versions is crucial for maintenance and updates:
+
+* *Versioning scheme*: Include version information in shader metadata
+* *Compatibility checks*: Verify shader compatibility with application version
+* *Incremental updates*: Support updating only changed shaders
+* *Fallback mechanisms*: Provide fallback shaders for backward compatibility
+
+Example versioning approach:
+
+[source,cpp]
+----
+struct ShaderMetadata {
+    uint32_t version;
+    uint32_t minAppVersion;
+    uint32_t featureFlags;
+    char name[64];
+};
+// Shader package header
+struct ShaderPackageHeader {
+    uint32_t magic;           // Magic number for validation
+    uint32_t version;         // Package version
+    uint32_t shaderCount;     // Number of shaders in package
+    uint32_t compatFlags;     // Compatibility flags
+};
+----
+
+=== Platform-Specific Considerations
+
+Different platforms may require special handling:
+
+* *Desktop vs. mobile*: Optimize shader complexity based on target hardware
+* *Vendor-specific optimizations*: Consider optimizations for specific GPU vendors
+* *Memory constraints*: Be mindful of memory limitations on mobile devices
+* *Power efficiency*: Optimize shaders for power efficiency on battery-powered devices
+
+=== Size Optimization Techniques
+
+Reducing shader size can be important for distribution:
+
+* *Dead code elimination*: Remove unused code paths
+* *Constant folding*: Evaluate constant expressions at compile time
+* *Function inlining*: Inline small functions to reduce call overhead
+* *Variable packing*: Pack multiple variables into larger types
+* *Compression*: Apply compression to shader binaries
+
+=== Distribution Security Considerations
+
+Protecting your shader intellectual property:
+
+* *Obfuscation*: Obfuscate shader source code before distribution
+* *Encryption*: Encrypt shader binaries
+* *Runtime decryption*: Decrypt shaders only when needed
+* *Watermarking*: Include hidden watermarks in shaders
+
+== Conclusion
+
+HLSL provides a powerful alternative to GLSL for Vulkan shader development. By following the best practices and guidelines in this chapter, you can create efficient, maintainable, and portable shaders that leverage the strengths of HLSL while taking full advantage of Vulkan's abilities.
+
+The migration from GLSL to HLSL may require some effort, but the benefits in terms of code reuse, language features, and cross-API compatibility can be significant for many projects.
+
+== References and Further Reading
+
+* link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst[HLSL to SPIR-V Feature Mapping Manual]
+* link:https://github.com/KhronosGroup/SPIRV-Guide[SPIR-V Guide]
+* link:https://www.khronos.org/blog/hlsl-first-class-vulkan-shading-language[HLSL as a First Class Vulkan Shading Language]
+* link:https://docs.vulkan.org/spec/latest/chapters/interfaces.html[Vulkan Interfaces with SPIR-V]
+* link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl[Microsoft HLSL Documentation]
