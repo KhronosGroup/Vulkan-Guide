@@ -1407,12 +1407,12 @@ These shader stages share several functions and built-ins
 [options="header"]
 |====
 | *GLSL*  | *HLSL* | *Note*
-| gl_PointSize | `vk::builtin("PointSize")` | Vulkan only, no direct HLSL equivalent
-| gl_BaseVertexARB | `vk::builtin("BaseVertex")` | Vulkan only, no direct HLSL equivalent
-| gl_BaseInstanceARB | `vk::builtin("BaseInstance")` | Vulkan only, no direct HLSL equivalent
-| gl_DrawID | `vk::builtin("DrawIndex")` | Vulkan only, no direct HLSL equivalent
-| gl_DeviceIndex | `vk::builtin("DeviceIndex")` | Vulkan only, no direct HLSL equivalent
-| gl_ViewportMask | `vk::builtin("ViewportMaskNV")` | Vulkan only, no direct HLSL equivalent
+| gl_PointSize | [[vk::builtin("PointSize")]] | Vulkan only, no direct HLSL equivalent
+| gl_BaseVertexARB | [[vk::builtin("BaseVertex")]] | Vulkan only, no direct HLSL equivalent
+| gl_BaseInstanceARB | [[vk::builtin("BaseInstance")]] | Vulkan only, no direct HLSL equivalent
+| gl_DrawID | [[vk::builtin("DrawIndex")]] | Vulkan only, no direct HLSL equivalent
+| gl_DeviceIndex | [[vk::builtin("DeviceIndex")]] | Vulkan only, no direct HLSL equivalent
+| gl_ViewportMask | [[vk::builtin("ViewportMaskNV")]] | Vulkan only, no direct HLSL equivalent
 | gl_FragCoord | SV_Position |
 | gl_FragDepth | SV_Depth |
 | gl_FrontFacing | SV_IsFrontFace |
