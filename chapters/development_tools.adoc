@@ -24,7 +24,7 @@ Layers are optional components that augment the Vulkan system. They can intercep
     The validation layer included multiple features:
   ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/synchronization_usage.html[Synchronization Validation]: Identify resource access conflicts due to missing or incorrect synchronization operations between actions (Draw, Copy, Dispatch, Blit) reading or writing the same regions of memory.
   ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/gpu_validation.html[GPU-Assisted Validation]: Instrument shader code to perform run-time checks for error conditions produced during shader execution.
-  ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/debug_printf.html[Shader printf]: Debug shader code by "`printing`" any values of interest to the debug callback or stdout.
+  ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/debug_printf.html[Shader printf]: Debug shader code by "`printing`" any values of interest to the debug callback or stdout. Environment variables provide a fast path for enabling this feature without code changes.
   ** link:https://vulkan.lunarg.com/doc/sdk/latest/windows/best_practices.html[Best Practices Warnings]: Highlights potential performance issues, questionable usage patterns, common mistakes.
 
 === Vulkan SDK layers
@@ -113,14 +113,6 @@ With anything related to a GPU it is best to not assume and profile when possibl
     ** Includes shader profiling and memory analysis
     ** Integrates with xref:{chapters}ide.adoc#visual-studio[Visual Studio] and can be used standalone
 
-==== Intel
-
-  * link:https://www.intel.com/content/www/us/en/developer/tools/graphics-performance-analyzers/overview.html[Intel(R) Graphics Performance Analyzers (GPA)] - Suite of tools for Intel GPUs.
-    ** Supports capturing and analyzing multi-frame streams of Vulkan apps
-    ** Provides CPU and GPU metrics visualization
-    ** Includes frame analysis and real-time performance monitoring
-    ** Works with xref:{chapters}ide.adoc#visual-studio[Visual Studio] and other development environments
-
 ==== ARM
 
   * link:https://developer.arm.com/Tools%20and%20Software/Streamline%20Performance%20Analyzer[Arm Streamline Performance Analyzer] - Performance analysis tool for Arm-based devices.
@@ -156,12 +148,6 @@ With anything related to a GPU it is best to not assume and profile when possibl
     ** Integrates with xref:{chapters}ide.adoc#android-studio[Android Studio]
 
 === Cross-Platform Profiling Tools
-
-  * link:https://renderdoc.org/[RenderDoc] - Open-source graphics debugger that supports Vulkan.
-    ** Captures and analyzes individual frames
-    ** Provides detailed API usage information
-    ** Supports shader debugging and resource inspection
-    ** Integrates with multiple IDEs including xref:{chapters}ide.adoc#visual-studio[Visual Studio], xref:{chapters}ide.adoc#visual-studio-code[VS Code], and others
 
   * link:https://github.com/GPUOpen-Tools/OCAT[OCAT] (Open Capture and Analytics Tool) - FPS overlay and performance measurement tool.
     ** Provides real-time FPS monitoring and performance metrics

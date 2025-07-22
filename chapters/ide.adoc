@@ -798,10 +798,37 @@ VkInstanceCreateInfo createInfo{};
 createInfo.pNext = &validationFeatures;
 ----
 
+* Using environment variables (fast path):
+   * Environment variables provide a quicker way to enable shader printf without code changes
+   * These variables help avoid common configuration issues where shader printf appears not to work
+   * Key environment variables:
+     ** `VK_VALIDATION_FEATURES=DEBUG_PRINTF`: Enables shader printf while disabling other validation
+     ** `VK_VALIDATION_FEATURES=+DEBUG_PRINTF,-CORE_VALIDATION`: Enables shader printf and disables core validation
+     ** `VK_LAYER_ENABLES`: Controls which validation layers are enabled
+     ** `VK_DBG_LAYER_LEVEL`: Controls the log level for validation messages
+     ** `VK_LAYER_PRINTF_ONLY_PRESET`: Preset that enables only shader printf functionality while disabling other validation features
+     ** `VK_LAYER_PRINTF_TO_STDOUT`: Redirects shader printf output to stdout instead of the debug callback
+   * Example configuration:
++
+[source,bash]
+----
+# Enable shader printf and disable core validation
+export VK_VALIDATION_FEATURES=+DEBUG_PRINTF,-CORE_VALIDATION
+# Set debug log level to verbose
+export VK_DBG_LAYER_LEVEL=info
+
+# Alternative: Use the printf-only preset (simpler approach)
+export VK_LAYER_PRINTF_ONLY_PRESET=1
+
+# Optional: Redirect printf output to stdout instead of debug callback
+export VK_LAYER_PRINTF_TO_STDOUT=1
+----
+
 * IDE Integration:
    * Configure your IDE to capture debug output
    * For Visual Studio: Debug → Windows → Output
    * For VS Code: Add "console": "integratedTerminal" to your launch.json
+   * Set environment variables in your IDE's debug configuration
 
 ==== Vendor-Specific Tools
 
@@ -834,12 +861,22 @@ Vendor-specific tools offer advanced shader debugging capabilities:
    * Use Debug → Graphics → Start Graphics Debugging
    * Capture frames and analyze shaders
 
-2. Configure NVIDIA Nsight integration:
+2. Configure shader printf environment variables:
+   * Right-click on your project → Properties → Debugging
+   * In the "Environment" field, add the following:
+     ** `VK_VALIDATION_FEATURES=+DEBUG_PRINTF,-CORE_VALIDATION`
+     ** `VK_DBG_LAYER_LEVEL=info`
+     ** Or use the simpler approach: `VK_LAYER_PRINTF_ONLY_PRESET=1`
+     ** Optionally add: `VK_LAYER_PRINTF_TO_STDOUT=1` to redirect output to stdout
+   * These environment variables provide a fast path for enabling shader printf without code changes
+   * Output will appear in the Debug → Windows → Output window (or in the console if using stdout redirection)
+
+3. Configure NVIDIA Nsight integration:
    * Install NVIDIA Nsight Graphics
    * Use Extensions → NVIDIA → Start Graphics Debugging
    * Use the shader debugger to step through shader code
 
-3. Configure AMD integration:
+4. Configure AMD integration:
    * Install AMD Radeon Developer Panel
    * Configure as an external tool
    * Capture and analyze shader performance
@@ -854,8 +891,11 @@ Vendor-specific tools offer advanced shader debugging capabilities:
 2. Configure shader debugging environment:
    * Add validation layer environment variables to launch.json
    * Configure terminal output capture for shader printf
+   * Use the fast path environment variables for quick shader printf setup
+   * You can use `VK_LAYER_PRINTF_ONLY_PRESET` for a simpler approach
+   * Use `VK_LAYER_PRINTF_TO_STDOUT` to redirect output to stdout
 
-.VS Code launch.json for shader debugging
+.VS Code launch.json for shader debugging with standard approach
 [source,json]
 ----
 {
@@ -872,7 +912,33 @@ Vendor-specific tools offer advanced shader debugging capabilities:
             "environment": [
                 {"name": "VK_LAYER_PATH", "value": "path/to/vulkan/sdk/layers"},
                 {"name": "VK_INSTANCE_LAYERS", "value": "VK_LAYER_KHRONOS_validation"},
-                {"name": "VK_VALIDATION_FEATURES", "value": "GPU_ASSISTED,DEBUG_PRINTF"}
+                {"name": "VK_VALIDATION_FEATURES", "value": "+DEBUG_PRINTF,-CORE_VALIDATION"},
+                {"name": "VK_DBG_LAYER_LEVEL", "value": "info"}
+            ],
+            "console": "integratedTerminal"
+        }
+    ]
+}
+----
+
+.VS Code launch.json for shader debugging with printf-only preset
+[source,json]
+----
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Vulkan Shaders (Printf Only)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/your_app",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [
+                {"name": "VK_LAYER_PATH", "value": "path/to/vulkan/sdk/layers"},
+                {"name": "VK_LAYER_PRINTF_ONLY_PRESET", "value": "1"},
+                {"name": "VK_LAYER_PRINTF_TO_STDOUT", "value": "1"}
             ],
             "console": "integratedTerminal"
         }
@@ -888,15 +954,27 @@ Vendor-specific tools offer advanced shader debugging capabilities:
    * Create a run configuration that uses this external tool
 
 2. Configure shader debugging environment:
-   * Add validation layer environment variables to your run configuration
-   * Enable console output capture for shader printf
+   * Go to Run → Edit Configurations → Select your configuration
+   * Click on "Environment Variables" and add:
+     ** `VK_VALIDATION_FEATURES=+DEBUG_PRINTF,-CORE_VALIDATION`
+     ** `VK_DBG_LAYER_LEVEL=info`
+     ** Or use the simpler approach: `VK_LAYER_PRINTF_ONLY_PRESET=1`
+     ** Optionally add: `VK_LAYER_PRINTF_TO_STDOUT=1` to redirect output to stdout
+   * These environment variables provide a fast path for enabling shader printf without code changes
+   * Enable console output capture for shader printf by selecting "Allow parallel run"
 
 ==== Xcode
 
 1. Configure shader debugging on macOS:
    * MoltenVK has limited shader debugging support
-   * Use environment variables to enable validation layers
-   * Configure shader printf output capture
+   * Edit your scheme (Product → Scheme → Edit Scheme)
+   * In the Run section, go to Arguments → Environment Variables and add:
+     ** `VK_VALIDATION_FEATURES=+DEBUG_PRINTF,-CORE_VALIDATION`
+     ** `VK_DBG_LAYER_LEVEL=info`
+     ** Or use the simpler approach: `VK_LAYER_PRINTF_ONLY_PRESET=1`
+     ** Optionally add: `VK_LAYER_PRINTF_TO_STDOUT=1` to redirect output to stdout
+   * These environment variables provide a fast path for enabling shader printf without code changes
+   * Configure shader printf output capture by enabling "Show Debug Output" in the Options tab
 
 2. Alternative approaches:
    * Use RenderDoc on a different platform for shader debugging
@@ -911,8 +989,28 @@ Vendor-specific tools offer advanced shader debugging capabilities:
 
 2. Configure shader debugging for Android:
    * Add validation layer configuration to your application
-   * Use logcat to capture shader printf output
-   * Configure environment variables in your launch configuration
+   * For shader printf, add the following to your AndroidManifest.xml:
++
+[source,xml]
+----
+<application>
+    <!-- Standard approach -->
+    <meta-data android:name="debug.vulkan.validation_features"
+               android:value="+DEBUG_PRINTF,-CORE_VALIDATION" />
+    <meta-data android:name="debug.vulkan.debug_layer_level"
+               android:value="info" />
+
+    <!-- Alternative: Use the printf-only preset (simpler approach) -->
+    <meta-data android:name="debug.vulkan.layer_printf_only_preset"
+               android:value="1" />
+
+    <!-- Optional: Redirect printf output to stdout -->
+    <meta-data android:name="debug.vulkan.layer_printf_to_stdout"
+               android:value="1" />
+</application>
+----
+   * These meta-data entries provide a fast path for enabling shader printf without code changes
+   * Use logcat to capture shader printf output with the filter tag "Vulkan"
 
 === Shader Debugging Best Practices
 
