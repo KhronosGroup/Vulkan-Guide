@@ -719,7 +719,7 @@ link:https://renderdoc.org/[RenderDoc] is one of the most powerful tools for sha
 
 The Vulkan validation layers include GPU-Assisted Validation, which instruments shader code to detect errors:
 
-1. Enable in your application:
+* Enable in your application:
 
 [source,cpp]
 ----
@@ -735,7 +735,7 @@ VkInstanceCreateInfo createInfo{};
 createInfo.pNext = &validationFeatures;
 ----
 
-2. IDE Integration:
+* IDE Integration:
    * Add the above code to your debug builds
    * Configure environment variables in your IDE's debug configuration:
 
@@ -754,7 +754,7 @@ createInfo.pNext = &validationFeatures;
 
 The Shader printf feature allows you to print values from within your shaders:
 
-1. GLSL Implementation:
+* GLSL Implementation:
 
 [source,glsl]
 ----
@@ -768,7 +768,7 @@ void main() {
 }
 ----
 
-2. HLSL Implementation:
+* HLSL Implementation:
 
 [source,hlsl]
 ----
@@ -782,7 +782,7 @@ float4 main() : SV_TARGET
 }
 ----
 
-3. Enable in your application:
+* Enable in your application:
 
 [source,cpp]
 ----
@@ -798,7 +798,7 @@ VkInstanceCreateInfo createInfo{};
 createInfo.pNext = &validationFeatures;
 ----
 
-4. IDE Integration:
+* IDE Integration:
    * Configure your IDE to capture debug output
    * For Visual Studio: Debug → Windows → Output
    * For VS Code: Add "console": "integratedTerminal" to your launch.json
