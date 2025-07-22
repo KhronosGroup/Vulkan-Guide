@@ -17,6 +17,7 @@
 ** xref:{chapters}portability_initiative.adoc[]
 ** xref:{chapters}vulkan_cts.adoc[]
 ** xref:{chapters}development_tools.adoc[]
+** xref:{chapters}ide.adoc[]
 ** xref:{chapters}validation_overview.adoc[]
 ** xref:{chapters}decoder_ring.adoc[]
 * Using Vulkan

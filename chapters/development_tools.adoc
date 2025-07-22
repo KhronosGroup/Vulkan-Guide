@@ -60,7 +60,7 @@ There are also other publicly available layers that can be used to help in devel
   * link:https://developer.qualcomm.com/software/adreno-gpu-sdk/tools[`VK_LAYER_adreno`], the Vulkan Adreno Layer.
     Checks Vulkan applications for best practices on Qualcomm Adreno devices.
 
-== Debugging 
+== Debugging
 
 Debugging something running on a GPU can be incredibly hard, luckily there are tools out there to help.
 
@@ -78,16 +78,121 @@ The following tools help debug crashes.
   * link:https://gpuopen.com/radeon-gpu-detective[AMD GPU detective]
   * link:https://developer.nvidia.com/nsight-aftermath[NVIDIA Nsight Aftermath SDK]
 
+=== Shader Debugging
+
+Debugging shaders requires specialized tools and techniques. For comprehensive guidance on shader debugging in Vulkan applications, including:
+
+  * Shader debugging tools and their IDE integration
+  * GPU-Assisted Validation for shader debugging
+  * Shader printf techniques for both GLSL and HLSL
+  * IDE-specific shader debugging configurations
+  * Best practices for shader debugging workflows
+
+See the xref:{chapters}ide.adoc#shader-debugging[Shader Debugging Integration] section in the Development Environments & IDEs chapter.
+
+[[profiling]]
 == Profiling
 
-With anything related to a GPU it is best to not assume and profile when possible. Here is a list of known profilers to aid in your development.
+With anything related to a GPU it is best to not assume and profile when possible. Profiling tools can help identify performance bottlenecks, analyze GPU workloads, and optimize your Vulkan applications. For IDE-specific profiling integration, see the xref:{chapters}ide.adoc[Development Environments & IDEs] chapter.
 
-  * link:https://gpuopen.com/rgp/[AMD Radeon GPU Profiler] - Low-level performance analysis tool for AMD Radeon GPUs.
-  * link:https://developer.android.com/agi[Android GPU Inspector (AGI)] - Google's profiler for the Android platform with support for Vulkan  
-  * link:https://developer.arm.com/Tools%20and%20Software/Streamline%20Performance%20Analyzer[Arm Streamline Performance Analyzer] - Visualize the performance of mobile games and applications for a broad range of devices, using Arm Mobile Studio.
-  * link:https://www.intel.com/content/www/us/en/developer/tools/graphics-performance-analyzers/overview.html[Intel(R) GPA] - Intel's Graphics Performance Analyzers that supports capturing and analyzing multi-frame streams of Vulkan apps.
-  * link:https://developer.nvidia.com/nsight-graphics[NVIDIA Nsight]
-  * link:https://github.com/GPUOpen-Tools/OCAT[OCAT] - The Open Capture and Analytics Tool (OCAT) provides an FPS overlay and performance measurement for D3D11, D3D12, and Vulkan.
-  * link:https://developer.imaginationtech.com[PVRTune]
-  * link:https://developer.qualcomm.com/software/snapdragon-profiler[Qualcomm Snapdragon Profiler] - Profiling tool targeting Adreno GPU.
-  * link:https://www.vktracer.com[VKtracer] - Cross-vendor and cross-platform profiler.
+=== Vendor-Specific Profiling Tools
+
+==== AMD
+
+  * link:https://gpuopen.com/rgp/[AMD Radeon GPU Profiler (RGP)] - Low-level performance analysis tool for AMD Radeon GPUs.
+    ** Provides detailed timing information for Vulkan API calls and GPU workloads
+    ** Visualizes the rendering pipeline and identifies bottlenecks
+    ** Supports hardware-based ray tracing analysis
+    ** Integrates with xref:{chapters}ide.adoc#visual-studio[Visual Studio] through the Radeon Developer Panel
+
+==== NVIDIA
+
+  * link:https://developer.nvidia.com/nsight-graphics[NVIDIA Nsight Graphics] - Comprehensive graphics debugger and profiler for NVIDIA GPUs.
+    ** Provides frame debugging, GPU trace capture, and performance analysis
+    ** Supports Vulkan API debugging and optimization
+    ** Includes shader profiling and memory analysis
+    ** Integrates with xref:{chapters}ide.adoc#visual-studio[Visual Studio] and can be used standalone
+
+==== Intel
+
+  * link:https://www.intel.com/content/www/us/en/developer/tools/graphics-performance-analyzers/overview.html[Intel(R) Graphics Performance Analyzers (GPA)] - Suite of tools for Intel GPUs.
+    ** Supports capturing and analyzing multi-frame streams of Vulkan apps
+    ** Provides CPU and GPU metrics visualization
+    ** Includes frame analysis and real-time performance monitoring
+    ** Works with xref:{chapters}ide.adoc#visual-studio[Visual Studio] and other development environments
+
+==== ARM
+
+  * link:https://developer.arm.com/Tools%20and%20Software/Streamline%20Performance%20Analyzer[Arm Streamline Performance Analyzer] - Performance analysis tool for Arm-based devices.
+    ** Visualizes the performance of mobile games and applications
+    ** Provides CPU, GPU, and system-level performance metrics
+    ** Supports Vulkan workload analysis
+    ** Part of Arm Mobile Studio, which integrates with various IDEs
+
+==== Imagination Technologies
+
+  * link:https://developer.imaginationtech.com[PVRTune] - Performance analysis tool for PowerVR GPUs.
+    ** Provides real-time hardware performance metrics
+    ** Supports Vulkan API tracing and analysis
+    ** Helps identify bottlenecks in PowerVR-based devices
+    ** Works with xref:{chapters}ide.adoc#android-studio[Android Studio] for mobile development
+
+==== Qualcomm
+
+  * link:https://developer.qualcomm.com/software/snapdragon-profiler[Qualcomm Snapdragon Profiler] - Profiling tool targeting Adreno GPUs.
+    ** Provides detailed GPU metrics for Qualcomm Snapdragon devices
+    ** Supports Vulkan API trace capture and analysis
+    ** Includes shader profiling and optimization suggestions
+    ** Integrates with xref:{chapters}ide.adoc#android-studio[Android Studio] for Android development
+
+=== Platform-Specific Profiling Tools
+
+==== Android
+
+  * link:https://developer.android.com/agi[Android GPU Inspector (AGI)] - Google's profiler for the Android platform.
+    ** Provides Vulkan API tracing and GPU performance analysis
+    ** Supports system trace correlation with GPU workloads
+    ** Helps identify rendering bottlenecks on Android devices
+    ** Integrates with xref:{chapters}ide.adoc#android-studio[Android Studio]
+
+=== Cross-Platform Profiling Tools
+
+  * link:https://renderdoc.org/[RenderDoc] - Open-source graphics debugger that supports Vulkan.
+    ** Captures and analyzes individual frames
+    ** Provides detailed API usage information
+    ** Supports shader debugging and resource inspection
+    ** Integrates with multiple IDEs including xref:{chapters}ide.adoc#visual-studio[Visual Studio], xref:{chapters}ide.adoc#visual-studio-code[VS Code], and others
+
+  * link:https://github.com/GPUOpen-Tools/OCAT[OCAT] (Open Capture and Analytics Tool) - FPS overlay and performance measurement tool.
+    ** Provides real-time FPS monitoring and performance metrics
+    ** Supports D3D11, D3D12, and Vulkan
+    ** Generates detailed performance reports
+    ** Works alongside any development environment
+
+  * link:https://www.vktracer.com[VKtracer] - Cross-vendor and cross-platform Vulkan profiler.
+    ** Captures and analyzes Vulkan API calls
+    ** Works with all Vulkan-compatible GPUs
+    ** Provides timing information and bottleneck identification
+    ** Compatible with various development environments
+
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/capture_tools.html[GFXReconstruct] - Frame capture and replay tool for Vulkan.
+    ** Captures Vulkan API calls for later analysis
+    ** Supports cross-platform capture and replay
+    ** Helps identify performance issues and bugs
+    ** Included in the Vulkan SDK and works with all major IDEs
+
+=== Profiling Best Practices
+
+When profiling Vulkan applications, consider the following best practices:
+
+1. **Start with validation layers**: Before profiling, ensure your application passes validation to avoid measuring performance of incorrect code.
+
+2. **Profile on target hardware**: Performance characteristics can vary significantly between different GPUs and platforms.
+
+3. **Use vendor-specific tools** for the most detailed insights on specific hardware.
+
+4. **Combine CPU and GPU profiling** to identify bottlenecks across the entire rendering pipeline.
+
+5. **Profile regularly** throughout development to catch performance regressions early.
+
+For IDE-specific profiling workflows, refer to the relevant sections in the xref:{chapters}ide.adoc[Development Environments & IDEs] chapter.
