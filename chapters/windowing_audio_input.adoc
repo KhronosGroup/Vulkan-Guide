@@ -1,0 +1,1957 @@
+// Copyright 2019-2025 Holochip, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[windowing_audio_input]]
+= Windowing, Audio, and Input
+
+This chapter provides boilerplate examples for integrating libraries like GLFW, SDL2, and native platform APIs for window creation and input handling with Vulkan applications.
+
+== Overview
+
+While Vulkan itself is a graphics and compute API, most applications need to interact with the operating system to create windows, handle user input, and potentially process audio. This chapter covers the most common libraries and approaches for these tasks when developing Vulkan applications.
+
+== Window Creation
+
+=== GLFW
+
+link:https://www.glfw.org/[GLFW] is a lightweight, multi-platform library for creating windows, contexts, and surfaces, receiving input and events. It's particularly popular for Vulkan development due to its simple API and built-in Vulkan support.
+
+==== Setting Up GLFW with Vulkan
+
+[source,cpp]
+----
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+#include <iostream>
+
+int main() {
+    // Initialize GLFW
+    if (!glfwInit()) {
+        std::cerr << "Failed to initialize GLFW" << std::endl;
+        return -1;
+    }
+
+    // GLFW was originally designed to create an OpenGL context,
+    // so we need to tell it not to create one
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+
+    // Create a window
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Vulkan Window", nullptr, nullptr);
+    if (!window) {
+        std::cerr << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
+
+    // Create Vulkan instance (not shown)
+    VkInstance instance = VK_NULL_HANDLE;
+    // ... create instance ...
+
+    // Create Vulkan surface
+    VkSurfaceKHR surface;
+    VkResult result = glfwCreateWindowSurface(instance, window, nullptr, &surface);
+    if (result != VK_SUCCESS) {
+        std::cerr << "Failed to create window surface" << std::endl;
+        return -1;
+    }
+
+    // Main loop
+    while (!glfwWindowShouldClose(window)) {
+        glfwPollEvents();
+
+        // Render with Vulkan (not shown)
+    }
+
+    // Cleanup
+    vkDestroySurfaceKHR(instance, surface, nullptr);
+    glfwDestroyWindow(window);
+    glfwTerminate();
+
+    return 0;
+}
+----
+
+==== GLFW Input Handling
+
+GLFW provides both polling and callback-based approaches for input handling:
+
+[source,cpp]
+----
+// Callback for keyboard input
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+    }
+}
+
+// Callback for mouse movement
+void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos) {
+    // Handle mouse movement
+    std::cout << "Mouse position: " << xpos << ", " << ypos << std::endl;
+}
+
+// Callback for mouse buttons
+void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+        // Handle left mouse button press
+        std::cout << "Left mouse button pressed" << std::endl;
+    }
+}
+
+// In main function, register callbacks:
+glfwSetKeyCallback(window, keyCallback);
+glfwSetCursorPosCallback(window, cursorPositionCallback);
+glfwSetMouseButtonCallback(window, mouseButtonCallback);
+
+// Alternatively, poll for input in the main loop:
+if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+    // Move forward
+}
+----
+
+=== SDL2
+
+link:https://www.libsdl.org/[SDL2] (Simple DirectMedia Layer) is a cross-platform development library designed to provide low-level access to audio, keyboard, mouse, joystick, and graphics hardware. It's more comprehensive than GLFW, offering audio support and more input options.
+
+==== Setting Up SDL2 with Vulkan
+
+[source,cpp]
+----
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_vulkan.h>
+#include <vulkan/vulkan.h>
+#include <iostream>
+#include <vector>
+
+int main() {
+    // Initialize SDL
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
+        std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
+        return -1;
+    }
+
+    // Create window with Vulkan support
+    SDL_Window* window = SDL_CreateWindow(
+        "Vulkan SDL2 Window",
+        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+        800, 600,
+        SDL_WINDOW_VULKAN | SDL_WINDOW_SHOWN
+    );
+
+    if (!window) {
+        std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
+        SDL_Quit();
+        return -1;
+    }
+
+    // Get required Vulkan extensions for SDL
+    unsigned int extensionCount;
+    if (!SDL_Vulkan_GetInstanceExtensions(window, &extensionCount, nullptr)) {
+        std::cerr << "Failed to get Vulkan extension count" << std::endl;
+        return -1;
+    }
+
+    std::vector<const char*> extensions(extensionCount);
+    if (!SDL_Vulkan_GetInstanceExtensions(window, &extensionCount, extensions.data())) {
+        std::cerr << "Failed to get Vulkan extensions" << std::endl;
+        return -1;
+    }
+
+    // Create Vulkan instance (not shown)
+    VkInstance instance = VK_NULL_HANDLE;
+    // ... create instance with extensions ...
+
+    // Create Vulkan surface
+    VkSurfaceKHR surface;
+    if (!SDL_Vulkan_CreateSurface(window, instance, &surface)) {
+        std::cerr << "Failed to create Vulkan surface" << std::endl;
+        return -1;
+    }
+
+    // Main loop
+    bool running = true;
+    SDL_Event event;
+    while (running) {
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                running = false;
+            }
+        }
+
+        // Render with Vulkan (not shown)
+    }
+
+    // Cleanup
+    vkDestroySurfaceKHR(instance, surface, nullptr);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+
+    return 0;
+}
+----
+
+==== SDL2 Input Handling
+
+SDL2 uses an event-based system for input handling:
+
+[source,cpp]
+----
+// In the main loop
+SDL_Event event;
+while (SDL_PollEvent(&event)) {
+    switch (event.type) {
+        case SDL_QUIT:
+            running = false;
+            break;
+        case SDL_KEYDOWN:
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
+                running = false;
+            }
+            if (event.key.keysym.sym == SDLK_w) {
+                // Move forward
+            }
+            break;
+        case SDL_MOUSEMOTION:
+            std::cout << "Mouse position: " << event.motion.x << ", " << event.motion.y << std::endl;
+            break;
+        case SDL_MOUSEBUTTONDOWN:
+            if (event.button.button == SDL_BUTTON_LEFT) {
+                std::cout << "Left mouse button pressed" << std::endl;
+            }
+            break;
+    }
+}
+
+// Alternatively, get keyboard state
+const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
+if (keyboardState[SDL_SCANCODE_W]) {
+    // Move forward
+}
+----
+
+==== SDL2 Audio Integration
+
+SDL2 provides a simple audio API:
+
+[source,cpp]
+----
+// Audio callback function
+void audioCallback(void* userdata, Uint8* stream, int len) {
+    // Fill the stream buffer with audio data
+    // For example, generate a sine wave
+    static double phase = 0.0;
+    double frequency = 440.0; // A4 note
+    double amplitude = 0.25;  // Volume
+
+    for (int i = 0; i < len; i++) {
+        stream[i] = (Uint8)(sin(phase) * amplitude * 127.0 + 128.0);
+        phase += 2.0 * M_PI * frequency / 44100.0;
+        if (phase > 2.0 * M_PI) {
+            phase -= 2.0 * M_PI;
+        }
+    }
+}
+
+// Set up audio
+SDL_AudioSpec want, have;
+SDL_memset(&want, 0, sizeof(want));
+want.freq = 44100;
+want.format = AUDIO_U8;
+want.channels = 1;
+want.samples = 4096;
+want.callback = audioCallback;
+
+SDL_AudioDeviceID audioDevice = SDL_OpenAudioDevice(NULL, 0, &want, &have, 0);
+if (audioDevice == 0) {
+    std::cerr << "Failed to open audio device: " << SDL_GetError() << std::endl;
+    return -1;
+}
+
+// Start playing audio
+SDL_PauseAudioDevice(audioDevice, 0);
+
+// Later, when done:
+SDL_CloseAudioDevice(audioDevice);
+----
+
+=== Native Platform APIs
+
+For applications requiring more direct control or platform-specific features, you can use native APIs for window creation and input handling.
+
+==== Windows (Win32)
+
+[source,cpp]
+----
+#define VK_USE_PLATFORM_WIN32_KHR
+#include <vulkan/vulkan.h>
+#include <windows.h>
+#include <iostream>
+
+// Window procedure
+LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    switch (uMsg) {
+        case WM_CLOSE:
+            PostQuitMessage(0);
+            return 0;
+        case WM_KEYDOWN:
+            if (wParam == VK_ESCAPE) {
+                PostQuitMessage(0);
+            }
+            return 0;
+        case WM_LBUTTONDOWN:
+            std::cout << "Left mouse button pressed" << std::endl;
+            return 0;
+        case WM_MOUSEMOVE:
+            std::cout << "Mouse position: " << LOWORD(lParam) << ", " << HIWORD(lParam) << std::endl;
+            return 0;
+        default:
+            return DefWindowProc(hwnd, uMsg, wParam, lParam);
+    }
+}
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nCmdShow) {
+    // Register window class
+    WNDCLASSEX wc = {};
+    wc.cbSize = sizeof(WNDCLASSEX);
+    wc.style = CS_HREDRAW | CS_VREDRAW;
+    wc.lpfnWndProc = WindowProc;
+    wc.hInstance = hInstance;
+    wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+    wc.lpszClassName = "VulkanWindowClass";
+    RegisterClassEx(&wc);
+
+    // Create window
+    HWND hwnd = CreateWindowEx(
+        0,
+        "VulkanWindowClass",
+        "Vulkan Win32 Window",
+        WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT, CW_USEDEFAULT,
+        800, 600,
+        NULL,
+        NULL,
+        hInstance,
+        NULL
+    );
+
+    if (!hwnd) {
+        std::cerr << "Failed to create window" << std::endl;
+        return -1;
+    }
+
+    ShowWindow(hwnd, nCmdShow);
+
+    // Create Vulkan instance (not shown)
+    VkInstance instance = VK_NULL_HANDLE;
+    // ... create instance ...
+
+    // Create Vulkan surface
+    VkWin32SurfaceCreateInfoKHR createInfo = {};
+    createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+    createInfo.hwnd = hwnd;
+    createInfo.hinstance = hInstance;
+
+    VkSurfaceKHR surface;
+    VkResult result = vkCreateWin32SurfaceKHR(instance, &createInfo, nullptr, &surface);
+    if (result != VK_SUCCESS) {
+        std::cerr << "Failed to create window surface" << std::endl;
+        return -1;
+    }
+
+    // Main loop
+    MSG msg = {};
+    bool running = true;
+    while (running) {
+        while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+            if (msg.message == WM_QUIT) {
+                running = false;
+            }
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+
+        // Render with Vulkan (not shown)
+    }
+
+    // Cleanup
+    vkDestroySurfaceKHR(instance, surface, nullptr);
+    DestroyWindow(hwnd);
+
+    return 0;
+}
+----
+
+==== Linux (XCB)
+
+[source,cpp]
+----
+#define VK_USE_PLATFORM_XCB_KHR
+#include <vulkan/vulkan.h>
+#include <xcb/xcb.h>
+#include <iostream>
+
+int main() {
+    // Connect to X server
+    xcb_connection_t* connection = xcb_connect(NULL, NULL);
+    if (xcb_connection_has_error(connection)) {
+        std::cerr << "Failed to connect to X server" << std::endl;
+        return -1;
+    }
+
+    // Get screen
+    const xcb_setup_t* setup = xcb_get_setup(connection);
+    xcb_screen_iterator_t iter = xcb_setup_roots_iterator(setup);
+    xcb_screen_t* screen = iter.data;
+
+    // Create window
+    xcb_window_t window = xcb_generate_id(connection);
+    uint32_t value_mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
+    uint32_t value_list[2] = {
+        screen->black_pixel,
+        XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_STRUCTURE_NOTIFY
+    };
+
+    xcb_create_window(
+        connection,
+        XCB_COPY_FROM_PARENT,
+        window,
+        screen->root,
+        0, 0,
+        800, 600,
+        0,
+        XCB_WINDOW_CLASS_INPUT_OUTPUT,
+        screen->root_visual,
+        value_mask,
+        value_list
+    );
+
+    // Set window title
+    xcb_change_property(
+        connection,
+        XCB_PROP_MODE_REPLACE,
+        window,
+        XCB_ATOM_WM_NAME,
+        XCB_ATOM_STRING,
+        8,
+        13,
+        "Vulkan Window"
+    );
+
+    // Map window
+    xcb_map_window(connection, window);
+    xcb_flush(connection);
+
+    // Create Vulkan instance (not shown)
+    VkInstance instance = VK_NULL_HANDLE;
+    // ... create instance ...
+
+    // Create Vulkan surface
+    VkXcbSurfaceCreateInfoKHR createInfo = {};
+    createInfo.sType = VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR;
+    createInfo.connection = connection;
+    createInfo.window = window;
+
+    VkSurfaceKHR surface;
+    VkResult result = vkCreateXcbSurfaceKHR(instance, &createInfo, nullptr, &surface);
+    if (result != VK_SUCCESS) {
+        std::cerr << "Failed to create window surface" << std::endl;
+        return -1;
+    }
+
+    // Main loop
+    bool running = true;
+    while (running) {
+        xcb_generic_event_t* event;
+        while ((event = xcb_poll_for_event(connection))) {
+            switch (event->response_type & 0x7f) {
+                case XCB_CLIENT_MESSAGE:
+                    running = false;
+                    break;
+                case XCB_KEY_PRESS: {
+                    xcb_key_press_event_t* keyEvent = (xcb_key_press_event_t*)event;
+                    // Handle key press
+                    break;
+                }
+                case XCB_BUTTON_PRESS: {
+                    xcb_button_press_event_t* buttonEvent = (xcb_button_press_event_t*)event;
+                    // Handle button press
+                    break;
+                }
+                case XCB_MOTION_NOTIFY: {
+                    xcb_motion_notify_event_t* motionEvent = (xcb_motion_notify_event_t*)event;
+                    // Handle mouse motion
+                    break;
+                }
+            }
+            free(event);
+        }
+
+        // Render with Vulkan (not shown)
+    }
+
+    // Cleanup
+    vkDestroySurfaceKHR(instance, surface, nullptr);
+    xcb_destroy_window(connection, window);
+    xcb_disconnect(connection);
+
+    return 0;
+}
+----
+
+==== Linux (Wayland)
+
+link:https://wayland.freedesktop.org/[Wayland] is a modern display server protocol for Linux that aims to replace the X Window System. It provides a simpler, more efficient, and more secure architecture for graphical applications.
+
+[source,cpp]
+----
+#define VK_USE_PLATFORM_WAYLAND_KHR
+#include <vulkan/vulkan.h>
+#include <wayland-client.h>
+#include <iostream>
+#include <cstring>
+
+// Wayland protocol listeners
+struct WaylandData {
+    wl_display* display;
+    wl_registry* registry;
+    wl_compositor* compositor;
+    wl_shell* shell;
+    wl_surface* surface;
+    wl_shell_surface* shellSurface;
+    bool running;
+};
+
+// Registry listener callbacks
+static void registry_global(void* data, wl_registry* registry, uint32_t id, const char* interface, uint32_t version) {
+    WaylandData* waylandData = static_cast<WaylandData*>(data);
+
+    if (strcmp(interface, "wl_compositor") == 0) {
+        waylandData->compositor = static_cast<wl_compositor*>(
+            wl_registry_bind(registry, id, &wl_compositor_interface, 1)
+        );
+    } else if (strcmp(interface, "wl_shell") == 0) {
+        waylandData->shell = static_cast<wl_shell*>(
+            wl_registry_bind(registry, id, &wl_shell_interface, 1)
+        );
+    }
+}
+
+static void registry_global_remove(void* data, wl_registry* registry, uint32_t name) {
+    // Handle removed global
+}
+
+static const wl_registry_listener registry_listener = {
+    registry_global,
+    registry_global_remove
+};
+
+// Shell surface listener callbacks
+static void shell_surface_ping(void* data, wl_shell_surface* shell_surface, uint32_t serial) {
+    wl_shell_surface_pong(shell_surface, serial);
+}
+
+static void shell_surface_configure(void* data, wl_shell_surface* shell_surface, uint32_t edges, int32_t width, int32_t height) {
+    // Handle resize
+}
+
+static void shell_surface_popup_done(void* data, wl_shell_surface* shell_surface) {
+    // Handle popup done
+}
+
+static const wl_shell_surface_listener shell_surface_listener = {
+    shell_surface_ping,
+    shell_surface_configure,
+    shell_surface_popup_done
+};
+
+int main() {
+    WaylandData waylandData = {};
+
+    // Connect to Wayland display
+    waylandData.display = wl_display_connect(nullptr);
+    if (!waylandData.display) {
+        std::cerr << "Failed to connect to Wayland display" << std::endl;
+        return -1;
+    }
+
+    // Get registry
+    waylandData.registry = wl_display_get_registry(waylandData.display);
+    wl_registry_add_listener(waylandData.registry, &registry_listener, &waylandData);
+
+    // Wait for registry events
+    wl_display_roundtrip(waylandData.display);
+
+    // Check if we got the required globals
+    if (!waylandData.compositor || !waylandData.shell) {
+        std::cerr << "Failed to get Wayland compositor or shell" << std::endl;
+        return -1;
+    }
+
+    // Create surface
+    waylandData.surface = wl_compositor_create_surface(waylandData.compositor);
+    if (!waylandData.surface) {
+        std::cerr << "Failed to create Wayland surface" << std::endl;
+        return -1;
+    }
+
+    // Create shell surface
+    waylandData.shellSurface = wl_shell_get_shell_surface(waylandData.shell, waylandData.surface);
+    if (!waylandData.shellSurface) {
+        std::cerr << "Failed to create Wayland shell surface" << std::endl;
+        return -1;
+    }
+
+    // Set up shell surface
+    wl_shell_surface_add_listener(waylandData.shellSurface, &shell_surface_listener, &waylandData);
+    wl_shell_surface_set_toplevel(waylandData.shellSurface);
+    wl_shell_surface_set_title(waylandData.shellSurface, "Vulkan Wayland Window");
+
+    // Create Vulkan instance (not shown)
+    VkInstance instance = VK_NULL_HANDLE;
+    // ... create instance with VK_KHR_wayland_surface extension ...
+
+    // Create Vulkan surface
+    VkWaylandSurfaceCreateInfoKHR createInfo = {};
+    createInfo.sType = VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR;
+    createInfo.display = waylandData.display;
+    createInfo.surface = waylandData.surface;
+
+    VkSurfaceKHR surface;
+    VkResult result = vkCreateWaylandSurfaceKHR(instance, &createInfo, nullptr, &surface);
+    if (result != VK_SUCCESS) {
+        std::cerr << "Failed to create Wayland surface for Vulkan" << std::endl;
+        return -1;
+    }
+
+    // Main loop
+    waylandData.running = true;
+    while (waylandData.running) {
+        // Process Wayland events
+        wl_display_dispatch_pending(waylandData.display);
+
+        // Render with Vulkan (not shown)
+
+        // Flush Wayland commands
+        wl_display_flush(waylandData.display);
+    }
+
+    // Cleanup
+    vkDestroySurfaceKHR(instance, surface, nullptr);
+
+    if (waylandData.shellSurface) {
+        wl_shell_surface_destroy(waylandData.shellSurface);
+    }
+
+    if (waylandData.surface) {
+        wl_surface_destroy(waylandData.surface);
+    }
+
+    if (waylandData.shell) {
+        wl_shell_destroy(waylandData.shell);
+    }
+
+    if (waylandData.compositor) {
+        wl_compositor_destroy(waylandData.compositor);
+    }
+
+    if (waylandData.registry) {
+        wl_registry_destroy(waylandData.registry);
+    }
+
+    if (waylandData.display) {
+        wl_display_disconnect(waylandData.display);
+    }
+
+    return 0;
+}
+----
+
+==== macOS (Cocoa)
+
+link:https://developer.apple.com/documentation/appkit[Cocoa] is Apple's native object-oriented API for macOS application development. For Vulkan applications on macOS, you typically use MoltenVK, which translates Vulkan calls to Metal.
+
+[source,cpp]
+----
+#define VK_USE_PLATFORM_MACOS_MVK
+#include <vulkan/vulkan.h>
+#include <Cocoa/Cocoa.h>
+#include <iostream>
+
+// Cocoa application delegate
+@interface VulkanAppDelegate : NSObject <NSApplicationDelegate>
+@end
+
+@implementation VulkanAppDelegate
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
+    return YES;
+}
+@end
+
+// Cocoa window delegate
+@interface VulkanWindowDelegate : NSObject <NSWindowDelegate>
+@end
+
+@implementation VulkanWindowDelegate
+- (void)windowWillClose:(NSNotification *)notification {
+    [NSApp terminate:nil];
+}
+@end
+
+// Cocoa view for rendering
+@interface VulkanView : NSView
+@end
+
+@implementation VulkanView
+- (BOOL)acceptsFirstResponder {
+    return YES;
+}
+
+- (void)keyDown:(NSEvent *)event {
+    if ([[event characters] isEqualToString:@"\033"]) { // Escape key
+        [NSApp terminate:nil];
+    }
+}
+
+- (void)mouseDown:(NSEvent *)event {
+    NSPoint point = [self convertPoint:[event locationInWindow] fromView:nil];
+    std::cout << "Mouse clicked at: " << point.x << ", " << point.y << std::endl;
+}
+
+- (void)mouseMoved:(NSEvent *)event {
+    NSPoint point = [self convertPoint:[event locationInWindow] fromView:nil];
+    std::cout << "Mouse moved to: " << point.x << ", " << point.y << std::endl;
+}
+@end
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        // Create application
+        [NSApplication sharedApplication];
+        [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
+
+        // Create application delegate
+        VulkanAppDelegate *appDelegate = [[VulkanAppDelegate alloc] init];
+        [NSApp setDelegate:appDelegate];
+
+        // Create window
+        NSRect frame = NSMakeRect(0, 0, 800, 600);
+        NSWindow *window = [[NSWindow alloc] initWithContentRect:frame
+                                                       styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable
+                                                         backing:NSBackingStoreBuffered
+                                                           defer:NO];
+        [window setTitle:@"Vulkan macOS Window"];
+        [window center];
+
+        // Create window delegate
+        VulkanWindowDelegate *windowDelegate = [[VulkanWindowDelegate alloc] init];
+        [window setDelegate:windowDelegate];
+
+        // Create view
+        VulkanView *view = [[VulkanView alloc] initWithFrame:frame];
+        [window setContentView:view];
+        [window makeFirstResponder:view];
+
+        // Show window
+        [window makeKeyAndOrderFront:nil];
+        [NSApp activateIgnoringOtherApps:YES];
+
+        // Create Vulkan instance (not shown)
+        VkInstance instance = VK_NULL_HANDLE;
+        // ... create instance with VK_MVK_macos_surface extension ...
+
+        // Create Vulkan surface
+        VkMacOSSurfaceCreateInfoMVK createInfo = {};
+        createInfo.sType = VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK;
+        createInfo.pView = (__bridge void*)view;
+
+        VkSurfaceKHR surface;
+        VkResult result = vkCreateMacOSSurfaceMVK(instance, &createInfo, nullptr, &surface);
+        if (result != VK_SUCCESS) {
+            std::cerr << "Failed to create macOS surface for Vulkan" << std::endl;
+            return -1;
+        }
+
+        // Start the application event loop
+        [NSApp run];
+
+        // Cleanup (this code won't be reached normally as the app is terminated by Cocoa)
+        vkDestroySurfaceKHR(instance, surface, nullptr);
+    }
+
+    return 0;
+}
+----
+
+==== iOS (UIKit)
+
+link:https://developer.apple.com/documentation/uikit[UIKit] is Apple's framework for building user interfaces for iOS applications. Similar to macOS, Vulkan applications on iOS typically use MoltenVK.
+
+[source,cpp]
+----
+#define VK_USE_PLATFORM_IOS_MVK
+#include <vulkan/vulkan.h>
+#include <UIKit/UIKit.h>
+#include <iostream>
+
+// UIView subclass for Vulkan rendering
+@interface VulkanView : UIView
+@end
+
+@implementation VulkanView
++ (Class)layerClass {
+    return [CAMetalLayer class];
+}
+@end
+
+// UIViewController for the Vulkan view
+@interface VulkanViewController : UIViewController
+@property (nonatomic, strong) VulkanView *vulkanView;
+@property (nonatomic, assign) VkInstance instance;
+@property (nonatomic, assign) VkSurfaceKHR surface;
+@end
+
+@implementation VulkanViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    // Create Vulkan view
+    self.vulkanView = [[VulkanView alloc] initWithFrame:self.view.bounds];
+    self.vulkanView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [self.view addSubview:self.vulkanView];
+
+    // Create Vulkan instance (not shown)
+    // ... create instance with VK_MVK_ios_surface extension ...
+
+    // Create Vulkan surface
+    VkIOSSurfaceCreateInfoMVK createInfo = {};
+    createInfo.sType = VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK;
+    createInfo.pView = (__bridge void*)self.vulkanView;
+
+    VkResult result = vkCreateIOSSurfaceMVK(self.instance, &createInfo, nullptr, &self.surface);
+    if (result != VK_SUCCESS) {
+        NSLog(@"Failed to create iOS surface for Vulkan");
+    }
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    UITouch *touch = [touches anyObject];
+    CGPoint point = [touch locationInView:self.vulkanView];
+    NSLog(@"Touch began at: %f, %f", point.x, point.y);
+}
+
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    UITouch *touch = [touches anyObject];
+    CGPoint point = [touch locationInView:self.vulkanView];
+    NSLog(@"Touch moved to: %f, %f", point.x, point.y);
+}
+
+- (void)dealloc {
+    if (self.surface != VK_NULL_HANDLE) {
+        vkDestroySurfaceKHR(self.instance, self.surface, nullptr);
+    }
+}
+@end
+
+// AppDelegate
+@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@property (strong, nonatomic) UIWindow *window;
+@end
+
+@implementation AppDelegate
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.rootViewController = [[VulkanViewController alloc] init];
+    [self.window makeKeyAndVisible];
+    return YES;
+}
+
+@end
+
+int main(int argc, char * argv[]) {
+    @autoreleasepool {
+        return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
+    }
+}
+----
+
+==== Android
+
+link:https://developer.android.com/[Android] is Google's mobile operating system. Vulkan is natively supported on Android 7.0 (API level 24) and higher.
+
+[source,cpp]
+----
+#define VK_USE_PLATFORM_ANDROID_KHR
+#include <vulkan/vulkan.h>
+#include <android/native_window.h>
+#include <android_native_app_glue.h>
+#include <android/log.h>
+
+#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "VulkanApp", __VA_ARGS__))
+#define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "VulkanApp", __VA_ARGS__))
+#define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "VulkanApp", __VA_ARGS__))
+
+// Global application state
+struct AppState {
+    ANativeWindow* window;
+    VkInstance instance;
+    VkSurfaceKHR surface;
+    bool running;
+};
+
+// Process Android input events
+static int32_t handleInput(struct android_app* app, AInputEvent* event) {
+    AppState* appState = (AppState*)app->userData;
+
+    if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) {
+        float x = AMotionEvent_getX(event, 0);
+        float y = AMotionEvent_getY(event, 0);
+
+        switch (AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK) {
+            case AMOTION_EVENT_ACTION_DOWN:
+                LOGI("Touch down at: %f, %f", x, y);
+                return 1;
+            case AMOTION_EVENT_ACTION_MOVE:
+                LOGI("Touch moved to: %f, %f", x, y);
+                return 1;
+            case AMOTION_EVENT_ACTION_UP:
+                LOGI("Touch up at: %f, %f", x, y);
+                return 1;
+        }
+    } else if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_KEY) {
+        int32_t keyCode = AKeyEvent_getKeyCode(event);
+        if (keyCode == AKEYCODE_BACK) {
+            appState->running = false;
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+// Process Android application commands
+static void handleCmd(struct android_app* app, int32_t cmd) {
+    AppState* appState = (AppState*)app->userData;
+
+    switch (cmd) {
+        case APP_CMD_INIT_WINDOW:
+            if (app->window != NULL) {
+                appState->window = app->window;
+
+                // Create Vulkan instance (not shown)
+                // ... create instance with VK_KHR_android_surface extension ...
+
+                // Create Vulkan surface
+                VkAndroidSurfaceCreateInfoKHR createInfo = {};
+                createInfo.sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR;
+                createInfo.window = appState->window;
+
+                VkResult result = vkCreateAndroidSurfaceKHR(appState->instance, &createInfo, nullptr, &appState->surface);
+                if (result != VK_SUCCESS) {
+                    LOGE("Failed to create Android surface for Vulkan");
+                }
+            }
+            break;
+        case APP_CMD_TERM_WINDOW:
+            // Clean up the surface when the window is closed
+            if (appState->surface != VK_NULL_HANDLE) {
+                vkDestroySurfaceKHR(appState->instance, appState->surface, nullptr);
+                appState->surface = VK_NULL_HANDLE;
+            }
+            appState->window = nullptr;
+            break;
+        case APP_CMD_GAINED_FOCUS:
+            // App gained focus, start rendering
+            break;
+        case APP_CMD_LOST_FOCUS:
+            // App lost focus, stop rendering
+            break;
+    }
+}
+
+// Main entry point for Android applications
+void android_main(struct android_app* app) {
+    AppState appState = {};
+    appState.running = true;
+
+    app->userData = &appState;
+    app->onAppCmd = handleCmd;
+    app->onInputEvent = handleInput;
+
+    // Main loop
+    while (app->destroyRequested == 0 && appState.running) {
+        // Process events
+        int events;
+        struct android_poll_source* source;
+
+        while (ALooper_pollAll(0, nullptr, &events, (void**)&source) >= 0) {
+            if (source != nullptr) {
+                source->process(app, source);
+            }
+        }
+
+        // Render with Vulkan (not shown)
+    }
+
+    // Cleanup
+    if (appState.surface != VK_NULL_HANDLE) {
+        vkDestroySurfaceKHR(appState.instance, appState.surface, nullptr);
+    }
+}
+----
+
+== Audio Integration
+
+While Vulkan itself doesn't provide audio capabilities, several libraries can be used alongside Vulkan for audio processing.
+
+=== OpenAL
+
+link:https://www.openal.org/[OpenAL] is a cross-platform 3D audio API designed for efficient rendering of multichannel three-dimensional positional audio.
+
+[source,cpp]
+----
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <iostream>
+#include <vector>
+
+bool initOpenAL() {
+    // Open the default device
+    ALCdevice* device = alcOpenDevice(nullptr);
+    if (!device) {
+        std::cerr << "Failed to open OpenAL device" << std::endl;
+        return false;
+    }
+
+    // Create context
+    ALCcontext* context = alcCreateContext(device, nullptr);
+    if (!context) {
+        std::cerr << "Failed to create OpenAL context" << std::endl;
+        alcCloseDevice(device);
+        return false;
+    }
+
+    // Make context current
+    if (!alcMakeContextCurrent(context)) {
+        std::cerr << "Failed to make OpenAL context current" << std::endl;
+        alcDestroyContext(context);
+        alcCloseDevice(device);
+        return false;
+    }
+
+    return true;
+}
+
+void cleanupOpenAL() {
+    ALCcontext* context = alcGetCurrentContext();
+    ALCdevice* device = alcGetContextsDevice(context);
+
+    alcMakeContextCurrent(nullptr);
+    alcDestroyContext(context);
+    alcCloseDevice(device);
+}
+
+// Example of playing a sound
+void playSound(const std::vector<ALubyte>& audioData, ALsizei frequency) {
+    // Generate buffer
+    ALuint buffer;
+    alGenBuffers(1, &buffer);
+
+    // Fill buffer with audio data
+    alBufferData(buffer, AL_FORMAT_MONO8, audioData.data(), audioData.size(), frequency);
+
+    // Generate source
+    ALuint source;
+    alGenSources(1, &source);
+
+    // Attach buffer to source
+    alSourcei(source, AL_BUFFER, buffer);
+
+    // Play source
+    alSourcePlay(source);
+
+    // Wait for sound to finish (in a real application, you'd handle this differently)
+    ALint state;
+    do {
+        alGetSourcei(source, AL_SOURCE_STATE, &state);
+    } while (state == AL_PLAYING);
+
+    // Cleanup
+    alDeleteSources(1, &source);
+    alDeleteBuffers(1, &buffer);
+}
+----
+
+=== FMOD
+
+link:https://www.fmod.com/[FMOD] is a proprietary sound effects engine used in many games and applications.
+
+[source,cpp]
+----
+#include <fmod.hpp>
+#include <fmod_errors.h>
+#include <iostream>
+
+void ERRCHECK(FMOD_RESULT result) {
+    if (result != FMOD_OK) {
+        std::cerr << "FMOD error: " << FMOD_ErrorString(result) << std::endl;
+        exit(-1);
+    }
+}
+
+int main() {
+    FMOD::System* system = nullptr;
+    FMOD::Sound* sound = nullptr;
+    FMOD::Channel* channel = nullptr;
+
+    // Create FMOD system
+    ERRCHECK(FMOD::System_Create(&system));
+
+    // Initialize FMOD
+    ERRCHECK(system->init(32, FMOD_INIT_NORMAL, nullptr));
+
+    // Load sound
+    ERRCHECK(system->createSound("sound.wav", FMOD_DEFAULT, nullptr, &sound));
+
+    // Play sound
+    ERRCHECK(system->playSound(sound, nullptr, false, &channel));
+
+    // Main loop
+    bool running = true;
+    while (running) {
+        // Update FMOD
+        ERRCHECK(system->update());
+
+        // Check if sound is still playing
+        bool isPlaying = false;
+        if (channel) {
+            channel->isPlaying(&isPlaying);
+            if (!isPlaying) {
+                running = false;
+            }
+        }
+
+        // Your Vulkan rendering code here
+    }
+
+    // Cleanup
+    ERRCHECK(sound->release());
+    ERRCHECK(system->close());
+    ERRCHECK(system->release());
+
+    return 0;
+}
+----
+
+=== Mobile Audio Integration
+
+Mobile platforms have their own audio APIs optimized for mobile devices. These APIs provide features specifically designed for mobile environments, such as handling audio focus changes, managing battery usage, and dealing with interruptions.
+
+==== Android Audio
+
+Android provides AAudio and OpenSL ES (Deprecated) for high-performance audio
+ in
+gapplications like games.  With the goal of recommending one library to work
+across 99% of devices, we recommend
+the
+Oboe library for
+Android audio development.
+
+===== Oboe
+
+link:https://github.com/google/oboe[Oboe] is a C++ library developed by Google that provides a high-performance, low-latency audio API for Android. It's the recommended library for audio in Android applications, especially for games and other applications requiring real-time audio.
+
+Oboe provides a unified API that automatically selects the best available audio backend:
+
+* On Android 8.0 (API 26) and higher, it uses AAudio
+* On older Android versions, it falls back to OpenSL ES
+
+This approach gives you the benefits of AAudio on newer devices while maintaining compatibility with older devices.
+
+[source,cpp]
+----
+#include <oboe/Oboe.h>
+#include <android/log.h>
+#include <cmath>
+
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, "OboeAudioEngine", __VA_ARGS__)
+
+class OboeAudioEngine : public oboe::AudioStreamCallback {
+public:
+    OboeAudioEngine() : stream_(nullptr), phase_(0.0f) {}
+    ~OboeAudioEngine() { closeStream(); }
+
+    bool setupAudioStream() {
+        // Create an audio stream builder
+        oboe::AudioStreamBuilder builder;
+
+        // Configure the builder
+        builder.setDirection(oboe::Direction::Output)
+               ->setPerformanceMode(oboe::PerformanceMode::LowLatency)
+               ->setSharingMode(oboe::SharingMode::Exclusive)
+               ->setFormat(oboe::AudioFormat::Float)
+               ->setChannelCount(oboe::ChannelCount::Stereo)
+               ->setCallback(this);
+
+        // Build the stream
+        oboe::Result result = builder.openStream(stream_);
+        if (result != oboe::Result::OK) {
+            LOGE("Failed to create audio stream. Error: %s", oboe::convertToText(result));
+            return false;
+        }
+
+        // Get the sample rate from the stream (in case the requested sample rate was not available)
+        sampleRate_ = stream_->getSampleRate();
+
+        return true;
+    }
+
+    bool startStream() {
+        if (!stream_) {
+            return false;
+        }
+
+        oboe::Result result = stream_->requestStart();
+        if (result != oboe::Result::OK) {
+            LOGE("Failed to start audio stream. Error: %s", oboe::convertToText(result));
+            return false;
+        }
+
+        return true;
+    }
+
+    void stopStream() {
+        if (stream_) {
+            stream_->requestStop();
+        }
+    }
+
+    void closeStream() {
+        if (stream_) {
+            stream_->close();
+            stream_.reset();
+        }
+    }
+
+    // AudioStreamCallback implementation
+    oboe::DataCallbackResult onAudioReady(
+            oboe::AudioStream *stream,
+            void *audioData,
+            int32_t numFrames) override {
+
+        float *buffer = static_cast<float*>(audioData);
+
+        // Generate audio data (simple sine wave example)
+        for (int i = 0; i < numFrames * 2; i += 2) {
+            float sample = 0.5f * sinf(phase_);
+
+            // Write to stereo channels
+            buffer[i] = sample;       // Left channel
+            buffer[i + 1] = sample;   // Right channel
+
+            // Update phase
+            phase_ += 2.0f * M_PI * 440.0f / sampleRate_; // 440 Hz tone
+            if (phase_ >= 2.0f * M_PI) {
+                phase_ -= 2.0f * M_PI;
+            }
+        }
+
+        return oboe::DataCallbackResult::Continue;
+    }
+
+    // Error callback
+    void onErrorBeforeClose(oboe::AudioStream *stream, oboe::Result error) override {
+        LOGE("Oboe error before close: %s", oboe::convertToText(error));
+    }
+
+    void onErrorAfterClose(oboe::AudioStream *stream, oboe::Result error) override {
+        LOGE("Oboe error after close: %s", oboe::convertToText(error));
+
+        // Reopen the stream if it was disconnected (e.g., when headphones are unplugged)
+        if (error == oboe::Result::ErrorDisconnected) {
+            closeStream();
+            setupAudioStream();
+            startStream();
+        }
+    }
+
+private:
+    std::shared_ptr<oboe::AudioStream> stream_;
+    float phase_;
+    int32_t sampleRate_;
+};
+
+// Usage in your Android application:
+// OboeAudioEngine audioEngine;
+// audioEngine.setupAudioStream();
+// audioEngine.startStream();
+//
+// // When done:
+// audioEngine.stopStream();
+// audioEngine.closeStream();
+----
+
+===== Android Audio Focus
+
+Handling audio focus is crucial for a good user experience on Android:
+
+[source,cpp]
+----
+// In your native code, you'll need to call Java methods via JNI
+extern "C" {
+    JNIEXPORT void JNICALL
+    Java_com_example_vulkanaudio_AudioManager_nativeOnAudioFocusGained(JNIEnv *env, jobject thiz) {
+        // Resume audio playback
+        // For example:
+        // audioEngine->start();
+    }
+
+    JNIEXPORT void JNICALL
+    Java_com_example_vulkanaudio_AudioManager_nativeOnAudioFocusLost(JNIEnv *env, jobject thiz) {
+        // Pause audio playback
+        // For example:
+        // audioEngine->stop();
+    }
+}
+----
+
+Java side:
+
+[source,java]
+----
+public class AudioManager {
+    private AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+        public void onAudioFocusChange(int focusChange) {
+            if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                // Lost focus for an unbounded amount of time
+                nativeOnAudioFocusLost();
+            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+                // Lost focus for a short time
+                nativeOnAudioFocusLost();
+            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                // Gained focus
+                nativeOnAudioFocusGained();
+            }
+        }
+    };
+
+    public void requestAudioFocus() {
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        int result = audioManager.requestAudioFocus(afChangeListener,
+                AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN);
+
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            // Start playback
+            nativeOnAudioFocusGained();
+        }
+    }
+
+    // Native methods
+    private native void nativeOnAudioFocusGained();
+    private native void nativeOnAudioFocusLost();
+}
+----
+
+==== iOS Audio
+
+iOS provides several audio APIs, with AVAudioEngine being the recommended high-level API and Core Audio for low-level control.
+
+===== AVAudioEngine
+
+link:https://developer.apple.com/documentation/avfaudio/avaudioengine[AVAudioEngine] is the recommended high-level audio API for iOS applications.
+
+[source,cpp]
+----
+// This is Objective-C++ code that would be used in your iOS application
+#import <AVFoundation/AVFoundation.h>
+#include <vector>
+
+class iOSAudioEngine {
+public:
+    iOSAudioEngine() : audioEngine(nil), playerNode(nil), isPlaying(false) {}
+
+    bool initialize() {
+        @autoreleasepool {
+            // Create the audio engine
+            audioEngine = [[AVAudioEngine alloc] init];
+            if (!audioEngine) {
+                NSLog(@"Failed to create AVAudioEngine");
+                return false;
+            }
+
+            // Create a player node
+            playerNode = [[AVAudioPlayerNode alloc] init];
+            if (!playerNode) {
+                NSLog(@"Failed to create AVAudioPlayerNode");
+                return false;
+            }
+
+            // Attach the player node to the engine
+            [audioEngine attachNode:playerNode];
+
+            // Connect the player node to the output
+            [audioEngine connect:playerNode to:audioEngine.mainMixerNode format:[audioEngine.mainMixerNode outputFormatForBus:0]];
+
+            // Prepare the engine
+            NSError* error = nil;
+            if (![audioEngine startAndReturnError:&error]) {
+                NSLog(@"Failed to start AVAudioEngine: %@", error);
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    bool playSound(const std::vector<float>& audioData, int sampleRate, int channels) {
+        @autoreleasepool {
+            if (!audioEngine || !playerNode) {
+                return false;
+            }
+
+            // Create an audio buffer
+            AVAudioFormat* format = [[AVAudioFormat alloc] initStandardFormatWithSampleRate:sampleRate channels:channels];
+            AVAudioPCMBuffer* buffer = [[AVAudioPCMBuffer alloc] initWithPCMFormat:format frameCapacity:audioData.size() / channels];
+
+            // Fill the buffer with audio data
+            float* bufferData = buffer.floatChannelData[0];
+            for (int i = 0; i < audioData.size(); i++) {
+                bufferData[i] = audioData[i];
+            }
+            buffer.frameLength = audioData.size() / channels;
+
+            // Schedule the buffer for playback
+            [playerNode scheduleBuffer:buffer completionHandler:^{
+                // This is called when the buffer finishes playing
+                NSLog(@"Buffer finished playing");
+            }];
+
+            // Start playback if not already playing
+            if (!isPlaying) {
+                [playerNode play];
+                isPlaying = true;
+            }
+
+            return true;
+        }
+    }
+
+    void stop() {
+        @autoreleasepool {
+            if (playerNode && isPlaying) {
+                [playerNode stop];
+                isPlaying = false;
+            }
+        }
+    }
+
+    void shutdown() {
+        @autoreleasepool {
+            if (audioEngine) {
+                [audioEngine stop];
+                audioEngine = nil;
+            }
+
+            playerNode = nil;
+            isPlaying = false;
+        }
+    }
+
+private:
+    AVAudioEngine* audioEngine;
+    AVAudioPlayerNode* playerNode;
+    bool isPlaying;
+};
+
+// Usage:
+// iOSAudioEngine audioEngine;
+// audioEngine.initialize();
+//
+// // Create audio data
+// std::vector<float> audioData = createAudioData();
+// audioEngine.playSound(audioData, 44100, 2);
+//
+// // When done:
+// audioEngine.stop();
+// audioEngine.shutdown();
+----
+
+===== Core Audio
+
+link:https://developer.apple.com/documentation/coreaudio[Core Audio] provides low-level audio capabilities for iOS applications.
+
+[source,cpp]
+----
+// This is Objective-C++ code that would be used in your iOS application
+#import <AudioToolbox/AudioToolbox.h>
+#include <vector>
+#include <cmath>
+
+class CoreAudioEngine {
+public:
+    CoreAudioEngine() : audioUnit(nullptr), isInitialized(false) {}
+
+    bool initialize() {
+        // Set up the audio component description
+        AudioComponentDescription desc;
+        desc.componentType = kAudioUnitType_Output;
+        desc.componentSubType = kAudioUnitSubType_RemoteIO;
+        desc.componentManufacturer = kAudioUnitManufacturer_Apple;
+        desc.componentFlags = 0;
+        desc.componentFlagsMask = 0;
+
+        // Find the audio component
+        AudioComponent component = AudioComponentFindNext(NULL, &desc);
+        if (!component) {
+            NSLog(@"Failed to find audio component");
+            return false;
+        }
+
+        // Create the audio unit
+        OSStatus status = AudioComponentInstanceNew(component, &audioUnit);
+        if (status != noErr) {
+            NSLog(@"Failed to create audio unit: %d", (int)status);
+            return false;
+        }
+
+        // Enable output
+        UInt32 enableOutput = 1;
+        status = AudioUnitSetProperty(audioUnit,
+                                     kAudioOutputUnitProperty_EnableIO,
+                                     kAudioUnitScope_Output,
+                                     0,
+                                     &enableOutput,
+                                     sizeof(enableOutput));
+        if (status != noErr) {
+            NSLog(@"Failed to enable audio output: %d", (int)status);
+            return false;
+        }
+
+        // Set up the audio format
+        AudioStreamBasicDescription audioFormat;
+        audioFormat.mSampleRate = 44100;
+        audioFormat.mFormatID = kAudioFormatLinearPCM;
+        audioFormat.mFormatFlags = kAudioFormatFlagIsFloat | kAudioFormatFlagIsPacked | kAudioFormatFlagIsNonInterleaved;
+        audioFormat.mBytesPerPacket = 4;
+        audioFormat.mFramesPerPacket = 1;
+        audioFormat.mBytesPerFrame = 4;
+        audioFormat.mChannelsPerFrame = 2;
+        audioFormat.mBitsPerChannel = 32;
+
+        status = AudioUnitSetProperty(audioUnit,
+                                     kAudioUnitProperty_StreamFormat,
+                                     kAudioUnitScope_Input,
+                                     0,
+                                     &audioFormat,
+                                     sizeof(audioFormat));
+        if (status != noErr) {
+            NSLog(@"Failed to set audio format: %d", (int)status);
+            return false;
+        }
+
+        // Set up the render callback
+        AURenderCallbackStruct callbackStruct;
+        callbackStruct.inputProc = renderCallback;
+        callbackStruct.inputProcRefCon = this;
+
+        status = AudioUnitSetProperty(audioUnit,
+                                     kAudioUnitProperty_SetRenderCallback,
+                                     kAudioUnitScope_Input,
+                                     0,
+                                     &callbackStruct,
+                                     sizeof(callbackStruct));
+        if (status != noErr) {
+            NSLog(@"Failed to set render callback: %d", (int)status);
+            return false;
+        }
+
+        // Initialize the audio unit
+        status = AudioUnitInitialize(audioUnit);
+        if (status != noErr) {
+            NSLog(@"Failed to initialize audio unit: %d", (int)status);
+            return false;
+        }
+
+        isInitialized = true;
+        return true;
+    }
+
+    bool start() {
+        if (!isInitialized) {
+            return false;
+        }
+
+        OSStatus status = AudioOutputUnitStart(audioUnit);
+        if (status != noErr) {
+            NSLog(@"Failed to start audio unit: %d", (int)status);
+            return false;
+        }
+
+        return true;
+    }
+
+    void stop() {
+        if (isInitialized) {
+            AudioOutputUnitStop(audioUnit);
+        }
+    }
+
+    void shutdown() {
+        if (isInitialized) {
+            stop();
+            AudioUnitUninitialize(audioUnit);
+            AudioComponentInstanceDispose(audioUnit);
+            audioUnit = nullptr;
+            isInitialized = false;
+        }
+    }
+
+private:
+    AudioUnit audioUnit;
+    bool isInitialized;
+    float phase = 0.0f;
+
+    // Audio render callback
+    static OSStatus renderCallback(void* inRefCon,
+                                  AudioUnitRenderActionFlags* ioActionFlags,
+                                  const AudioTimeStamp* inTimeStamp,
+                                  UInt32 inBusNumber,
+                                  UInt32 inNumberFrames,
+                                  AudioBufferList* ioData) {
+        CoreAudioEngine* engine = static_cast<CoreAudioEngine*>(inRefCon);
+        return engine->render(ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData);
+    }
+
+    OSStatus render(AudioUnitRenderActionFlags* ioActionFlags,
+                   const AudioTimeStamp* inTimeStamp,
+                   UInt32 inBusNumber,
+                   UInt32 inNumberFrames,
+                   AudioBufferList* ioData) {
+        // Generate audio data
+        // For example, generate a sine wave
+        for (UInt32 i = 0; i < ioData->mNumberBuffers; i++) {
+            float* buffer = static_cast<float*>(ioData->mBuffers[i].mData);
+
+            for (UInt32 frame = 0; frame < inNumberFrames; frame++) {
+                float sample = 0.5f * sinf(phase);
+                buffer[frame] = sample;
+
+                // Increment phase for next sample
+                phase += 0.01f;
+                if (phase > 2.0f * M_PI) {
+                    phase -= 2.0f * M_PI;
+                }
+            }
+        }
+
+        return noErr;
+    }
+};
+
+// Usage:
+// CoreAudioEngine audioEngine;
+// audioEngine.initialize();
+// audioEngine.start();
+//
+// // When done:
+// audioEngine.stop();
+// audioEngine.shutdown();
+----
+
+===== iOS Audio Session
+
+Managing the audio session is important for proper audio behavior on iOS:
+
+[source,cpp]
+----
+// This is Objective-C++ code that would be used in your iOS application
+#import <AVFoundation/AVFoundation.h>
+
+class AudioSessionManager {
+public:
+    bool configureAudioSession() {
+        @autoreleasepool {
+            NSError* error = nil;
+
+            // Get the shared audio session
+            AVAudioSession* session = [AVAudioSession sharedInstance];
+
+            // Set the category
+            if (![session setCategory:AVAudioSessionCategoryAmbient
+                          withOptions:0
+                                error:&error]) {
+                NSLog(@"Failed to set audio session category: %@", error);
+                return false;
+            }
+
+            // Set the mode
+            if (![session setMode:AVAudioSessionModeDefault error:&error]) {
+                NSLog(@"Failed to set audio session mode: %@", error);
+                return false;
+            }
+
+            // Activate the audio session
+            if (![session setActive:YES error:&error]) {
+                NSLog(@"Failed to activate audio session: %@", error);
+                return false;
+            }
+
+            // Register for interruptions
+            [[NSNotificationCenter defaultCenter] addObserver:[NSObject new]
+                                                     selector:@selector(handleInterruption:)
+                                                         name:AVAudioSessionInterruptionNotification
+                                                       object:nil];
+
+            return true;
+        }
+    }
+
+    void handleInterruption(NSNotification* notification) {
+        @autoreleasepool {
+            NSDictionary* info = notification.userInfo;
+            NSInteger type = [[info valueForKey:AVAudioSessionInterruptionTypeKey] integerValue];
+
+            if (type == AVAudioSessionInterruptionTypeBegan) {
+                // Audio session interrupted - pause audio
+                NSLog(@"Audio session interrupted");
+                // audioEngine->stop();
+            } else if (type == AVAudioSessionInterruptionTypeEnded) {
+                NSInteger options = [[info valueForKey:AVAudioSessionInterruptionOptionKey] integerValue];
+                if (options == AVAudioSessionInterruptionOptionShouldResume) {
+                    // Interruption ended - resume audio
+                    NSLog(@"Audio session interruption ended");
+                    // audioEngine->start();
+                }
+            }
+        }
+    }
+};
+
+// Usage:
+// AudioSessionManager sessionManager;
+// sessionManager.configureAudioSession();
+----
+
+==== Mobile Audio Considerations
+
+When developing audio for mobile platforms, consider the following:
+
+===== Battery Usage
+
+Audio processing can be CPU-intensive and drain the battery. Consider these strategies:
+
+1. **Reduce Sample Rate**: Use lower sample rates when high fidelity isn't required.
+2. **Process in Larger Chunks**: Process audio in larger buffer sizes to reduce CPU wake-ups.
+3. **Pause Audio**: Pause audio processing when the app is in the background or when audio isn't needed.
+
+===== Memory Management
+
+Mobile devices have limited memory:
+
+1. **Stream Audio**: Stream large audio files rather than loading them entirely into memory.
+2. **Unload Unused Assets**: Unload audio assets when they're not needed.
+3. **Compress Audio**: Use appropriate compression formats for mobile (AAC for iOS, Opus for Android).
+
+===== Interruptions and Audio Focus
+
+Handle audio interruptions gracefully:
+
+1. **Save State**: When interrupted, save the audio state so it can be resumed later.
+2. **Respect System Volume**: Use the system volume controls rather than implementing your own.
+3. **Handle Phone Calls**: Pause audio during phone calls and other system interruptions.
+
+===== Latency
+
+Different devices have different audio latency characteristics:
+
+1. **Test on Real Devices**: Simulator audio behavior may differ from real devices.
+2. **Use Low-Latency Modes**: Both Android and iOS provide low-latency audio modes for real-time applications.
+3. **Buffer Appropriately**: Balance between latency and audio stability with appropriate buffer sizes.
+
+== Integrating with Vulkan
+
+When using these windowing and input libraries with Vulkan, there are a few key considerations:
+
+=== Surface Creation
+
+Each windowing library provides a way to create a `VkSurfaceKHR` object, which is the bridge between Vulkan and the window system:
+
+- GLFW: `glfwCreateWindowSurface`
+- SDL2: `SDL_Vulkan_CreateSurface`
+- Win32: `vkCreateWin32SurfaceKHR`
+- XCB: `vkCreateXcbSurfaceKHR`
+- Wayland: `vkCreateWaylandSurfaceKHR`
+- macOS: `vkCreateMacOSSurfaceMVK`
+- iOS: `vkCreateIOSSurfaceMVK`
+- Android: `vkCreateAndroidSurfaceKHR`
+- Metal: `vkCreateMetalSurfaceEXT`
+
+=== Swapchain Management
+
+The swapchain needs to be recreated when the window is resized. Here's a basic approach:
+
+[source,cpp]
+----
+void handleWindowResize(VkDevice device, VkSwapchainKHR& swapchain, VkSurfaceKHR surface) {
+    // Wait for device to be idle
+    vkDeviceWaitIdle(device);
+
+    // Destroy old swapchain
+    VkSwapchainKHR oldSwapchain = swapchain;
+
+    // Get new surface capabilities
+    VkSurfaceCapabilitiesKHR capabilities;
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &capabilities);
+
+    // Create new swapchain
+    VkSwapchainCreateInfoKHR createInfo = {};
+    createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    createInfo.surface = surface;
+    createInfo.minImageCount = capabilities.minImageCount + 1;
+    createInfo.imageFormat = surfaceFormat.format;
+    createInfo.imageColorSpace = surfaceFormat.colorSpace;
+    createInfo.imageExtent = capabilities.currentExtent;
+    createInfo.imageArrayLayers = 1;
+    createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    createInfo.preTransform = capabilities.currentTransform;
+    createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+    createInfo.presentMode = presentMode;
+    createInfo.clipped = VK_TRUE;
+    createInfo.oldSwapchain = oldSwapchain;
+
+    VkResult result = vkCreateSwapchainKHR(device, &createInfo, nullptr, &swapchain);
+    if (result != VK_SUCCESS) {
+        throw std::runtime_error("Failed to create swapchain");
+    }
+
+    // Destroy old swapchain if it was replaced
+    if (oldSwapchain != VK_NULL_HANDLE) {
+        vkDestroySwapchainKHR(device, oldSwapchain, nullptr);
+    }
+
+    // Recreate swapchain images, image views, framebuffers, etc.
+    // ...
+}
+----
+
+=== Input to Vulkan Rendering
+
+Input handling typically affects the application state, which then influences the Vulkan rendering:
+
+[source,cpp]
+----
+struct AppState {
+    float cameraPosition[3] = {0.0f, 0.0f, 0.0f};
+    float cameraRotation[3] = {0.0f, 0.0f, 0.0f};
+    // Other state variables
+};
+
+// Update state based on input
+void handleInput(AppState& state, float deltaTime) {
+    // Example with GLFW
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+        state.cameraPosition[2] -= 1.0f * deltaTime;
+    }
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+        state.cameraPosition[2] += 1.0f * deltaTime;
+    }
+    // Handle other keys and input
+}
+
+// In main loop
+AppState state;
+float lastFrameTime = 0.0f;
+
+while (!glfwWindowShouldClose(window)) {
+    float currentTime = glfwGetTime();
+    float deltaTime = currentTime - lastFrameTime;
+    lastFrameTime = currentTime;
+
+    glfwPollEvents();
+    handleInput(state, deltaTime);
+
+    // Update uniform buffers with new state
+    updateUniformBuffers(state);
+
+    // Render frame with Vulkan
+    drawFrame();
+}
+----
+
+== Best Practices
+
+=== Performance Considerations
+
+1. **Minimize Window Resizing**: Recreating the swapchain is expensive, so handle window resizing efficiently.
+2. **Batch Input Processing**: Process all input events at once rather than handling them individually.
+3. **Use Double Buffering**: For audio, use double buffering to ensure smooth playback while preparing the next audio segment.
+
+=== Cross-Platform Development
+
+1. **Abstract Platform-Specific Code**: Create a platform abstraction layer to handle differences between platforms.
+2. **Use Cross-Platform Libraries**: Libraries like GLFW and SDL2 already handle most platform-specific details.
+3. **Test on All Target Platforms**: Different platforms may have subtle differences in behavior.
+
+=== Error Handling
+
+Always check return values and handle errors gracefully:
+
+[source,cpp]
+----
+VkResult result = vkCreateSwapchainKHR(device, &createInfo, nullptr, &swapchain);
+if (result != VK_SUCCESS) {
+    switch (result) {
+        case VK_ERROR_OUT_OF_HOST_MEMORY:
+            std::cerr << "Failed to create swapchain: Out of host memory" << std::endl;
+            break;
+        case VK_ERROR_OUT_OF_DEVICE_MEMORY:
+            std::cerr << "Failed to create swapchain: Out of device memory" << std::endl;
+            break;
+        case VK_ERROR_DEVICE_LOST:
+            std::cerr << "Failed to create swapchain: Device lost" << std::endl;
+            break;
+        case VK_ERROR_SURFACE_LOST_KHR:
+            std::cerr << "Failed to create swapchain: Surface lost" << std::endl;
+            break;
+        case VK_ERROR_NATIVE_WINDOW_IN_USE_KHR:
+            std::cerr << "Failed to create swapchain: Native window in use" << std::endl;
+            break;
+        default:
+            std::cerr << "Failed to create swapchain: Unknown error" << std::endl;
+            break;
+    }
+    // Handle error appropriately
+}
+----
+
+== Resources
+
+=== Libraries
+
+- link:https://www.glfw.org/[GLFW]
+- link:https://www.libsdl.org/[SDL2]
+- link:https://www.openal.org/[OpenAL]
+- link:https://www.fmod.com/[FMOD]
+
+=== Examples and Tutorials
+
+- link:https://github.com/KhronosGroup/Vulkan-Samples[Khronos Vulkan Samples]
+- link:https://github.com/SaschaWillems/Vulkan[Sascha Willems' Vulkan Examples]
+- link:https://docs.vulkan.org/tutorial/latest/00_Introduction.html[Vulkan Tutorial]
+
+=== Documentation
+
+- link:https://www.glfw.org/docs/latest/[GLFW Documentation]
+- link:https://wiki.libsdl.org/SDL2/FrontPage[SDL2 Wiki]
+- link:https://www.openal.org/documentation/[OpenAL Documentation]
+- link:https://www.fmod.com/resources/documentation-api[FMOD Documentation]
+- link:https://github.com/google/oboe[Oboe GitHub Repository]
+- link:https://github.com/google/oboe/wiki[Oboe Documentation]
+- link:https://developer.apple.com/documentation/avfaudio/avaudioengine[iOS AVAudioEngine Documentation]
+- link:https://developer.apple.com/documentation/coreaudio[iOS Core Audio Documentation]
