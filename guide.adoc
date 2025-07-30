@@ -42,8 +42,6 @@ include::{chapters}platforms.adoc[]
 
 include::{chapters}checking_for_support.adoc[]
 
-include::{chapters}feature_availability_dashboard.adoc[]
-
 include::{chapters}versions.adoc[]
 
 include::{chapters}vulkan_release_summary.adoc[]
@@ -61,6 +59,8 @@ include::{chapters}validation_overview.adoc[]
 include::{chapters}decoder_ring.adoc[]
 
 = Using Vulkan
+
+include::{chapters}deprecated.adoc[]
 
 include::{chapters}descriptor_arrays.adoc[]
 

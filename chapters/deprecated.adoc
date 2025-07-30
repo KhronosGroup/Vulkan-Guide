@@ -4,8 +4,8 @@
 ifndef::chapters[:chapters: ../]
 ifndef::images[:images: ../images/]
 
-[[feature_availability_dashboard]]
-= Feature Availability Dashboard
+[[deprecated]]
+= Deprecated
 
 This guide provides fallback instructions for deprecated items in Vulkan. It helps developers understand what deprecated features were, what they did, and how to use their modern replacements while maintaining backward compatibility where needed.
 
@@ -13,139 +13,73 @@ This guide provides fallback instructions for deprecated items in Vulkan. It hel
 
 The following table lists deprecated items in Vulkan along with their replacements and links to detailed fallback instructions:
 
-[cols="2,3,3,1,1,1,1,1,1,2,2", options="header"]
+[cols="2,3,3,2,2", options="header"]
 |===
-|Deprecated Item |What it was/did |Replacement |AMD Desktop |NVIDIA Desktop |Intel Desktop |Qualcomm Mobile |ARM Mobile |PowerVR Mobile |When Deprecated |GPU Info Link
+|Deprecated Item |What it was/did |Replacement |When Deprecated |GPU Info Link
 
 |Device Layers
 |Device layers were a way to intercept, evaluate, and modify Vulkan functions at the device level.
 |Instance layers should be used instead. All layer functionality is now available through instance layers.
-|✓
-|✓
-|✓
-|✓
-|✓
-|✓
 |Early in Vulkan's life
 |link:https://vulkan.gpuinfo.org/listdeviceslayers.php[View on GPU Info]
 
 |Physical Device Queries
 |Functions like `vkGetPhysicalDeviceFeatures` used to query device capabilities.
 |Use `vkGetPhysicalDeviceFeatures2` and related functions that provide greater extensibility. See <<physical_device_queries_replacement>> for details.
-|✓
-|✓
-|✓
-|✓
-|✓
-|✓
 |Vulkan 1.1
 |link:https://vulkan.gpuinfo.org/listextensions.php?extension=VK_KHR_get_physical_device_properties2[View on GPU Info]
 
 |Version Macros
 |Macros like `VK_MAKE_VERSION` and `VK_VERSION_MAJOR` that don't account for API variant.
 |Use macros that include API variant like `VK_MAKE_API_VERSION` and `VK_API_VERSION_MAJOR`. See <<version_macros_replacement>> for details.
-|✓
-|✓
-|✓
-|✓
-|✓
-|✓
 |Vulkan 1.1
 |link:https://docs.vulkan.org/spec/latest/appendices/versions.html#versions-1.1[View in Spec]
 
 |Render Pass Functions
 |Original render pass creation and management functions.
 |Use version 2 functions like `vkCreateRenderPass2` that provide greater extensibility. See <<render_pass_functions_replacement>> for details.
-|✓
-|✓
-|✓
-|✓
-|✓
-|✓
 |Vulkan 1.2
 |link:https://vulkan.gpuinfo.org/listextensions.php?extension=VK_KHR_create_renderpass2[View on GPU Info]
 
 |Render Pass Objects
 |`VkRenderPass` and `VkFramebuffer` objects for defining rendering operations.
 |Use dynamic rendering via `vkCmdBeginRendering` and `vkCmdEndRendering`. See <<render_pass_objects_replacement>> for details.
-|✓
-|✓
-|✓
-|✓
-|✓
-|✓
 |Vulkan 1.4
 |link:https://vulkan.gpuinfo.org/listextensions.php?extension=VK_KHR_dynamic_rendering[View on GPU Info]
 
 |VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT
 |Used in synchronization to represent the earliest possible pipeline stage.
 |Different replacements depending on usage context. See <<top_of_pipe_replacement>> for details.
-|✓
-|✓
-|✓
-|✓
-|✓
-|✓
 |With VK_KHR_synchronization2
 |link:https://vulkan.gpuinfo.org/listextensions.php?extension=VK_KHR_synchronization2[View on GPU Info]
 
 |VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
 |Used in synchronization to represent the latest possible pipeline stage.
 |Different replacements depending on usage context. See <<bottom_of_pipe_replacement>> for details.
-|✓
-|✓
-|✓
-|✓
-|✓
-|✓
 |With VK_KHR_synchronization2
 |link:https://vulkan.gpuinfo.org/listextensions.php?extension=VK_KHR_synchronization2[View on GPU Info]
 
 |VK_PIPELINE_STAGE_VERTEX_INPUT_BIT
 |Used to represent the vertex input stage in the pipeline.
 |Split into more specific flags: `VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR` and `VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR`.
-|✓
-|✓
-|✓
-|✓
-|✓
-|✓
 |With VK_KHR_synchronization2
 |link:https://vulkan.gpuinfo.org/listextensions.php?extension=VK_KHR_synchronization2[View on GPU Info]
 
 |VK_PIPELINE_STAGE_ALL_TRANSFER_BIT
 |Used to represent all transfer operations in the pipeline.
 |Split into more specific flags: `VK_PIPELINE_STAGE_2_COPY_BIT_KHR`, `VK_PIPELINE_STAGE_2_RESOLVE_BIT_KHR`, `VK_PIPELINE_STAGE_2_BLIT_BIT_KHR`, and `VK_PIPELINE_STAGE_2_CLEAR_BIT_KHR`.
-|✓
-|✓
-|✓
-|✓
-|✓
-|✓
 |With VK_KHR_synchronization2
 |link:https://vulkan.gpuinfo.org/listextensions.php?extension=VK_KHR_synchronization2[View on GPU Info]
 
 |VK_ACCESS_SHADER_READ_BIT
 |Used to represent all shader read operations.
 |Split into more specific flags: `VK_ACCESS_2_UNIFORM_READ_BIT_KHR`, `VK_ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR`, and `VK_ACCESS_2_SHADER_STORAGE_READ_BIT_KHR`.
-|✓
-|✓
-|✓
-|✓
-|✓
-|✓
 |With VK_KHR_synchronization2
 |link:https://vulkan.gpuinfo.org/listextensions.php?extension=VK_KHR_synchronization2[View on GPU Info]
 
 |VK_ACCESS_SHADER_WRITE_BIT
 |Used to represent shader write operations.
 |Renamed to `VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR` to better describe the scope of what resources in the shader are described by the access flag.
-|✓
-|✓
-|✓
-|✓
-|✓
-|✓
 |With VK_KHR_synchronization2
 |link:https://vulkan.gpuinfo.org/listextensions.php?extension=VK_KHR_synchronization2[View on GPU Info]
 |===
@@ -159,7 +93,7 @@ The following table lists deprecated items in Vulkan along with their replacemen
 
 == Notes on Deprecation
 
-* Deprecated items may still work in current Vulkan implementations but could be removed in future versions.
+* Deprecated items will still work in current Vulkan implementations.
 * Using replacements for deprecated items often provides better performance or more precise control.
 * When targeting newer Vulkan versions, it's best to use the recommended replacements.
 * For backward compatibility with older Vulkan implementations, fallback code may be necessary.
