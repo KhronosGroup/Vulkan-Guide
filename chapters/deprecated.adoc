@@ -21,7 +21,7 @@ The following table lists deprecated items in Vulkan along with their replacemen
 |Device layers were a way to intercept, evaluate, and modify Vulkan functions at the device level.
 |Instance layers should be used instead. All layer functionality is now available through instance layers.
 |Early in Vulkan's life
-|link:https://vulkan.gpuinfo.org/listdeviceslayers.php[View on GPU Info]
+|
 
 |Physical Device Queries
 |Functions like `vkGetPhysicalDeviceFeatures` used to query device capabilities.
