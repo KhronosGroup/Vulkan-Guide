@@ -70,7 +70,6 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 == xref:{chapters}loader.adoc[Loader]
 
-
 == xref:{chapters}layers.adoc[Layers]
 
 == xref:{chapters}querying_extensions_features.adoc[Querying Properties, Extensions, Features, Limits, and Formats]
