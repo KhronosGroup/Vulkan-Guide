@@ -60,6 +60,8 @@ include::{chapters}decoder_ring.adoc[]
 
 = Using Vulkan
 
+include::{chapters}ide.adoc[]
+
 include::{chapters}descriptor_arrays.adoc[]
 
 include::{chapters}loader.adoc[]
