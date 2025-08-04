@@ -62,6 +62,8 @@ include::{chapters}decoder_ring.adoc[]
 
 include::{chapters}ide.adoc[]
 
+include::{chapters}tile_based_rendering_best_practices.adoc[]
+
 include::{chapters}descriptor_arrays.adoc[]
 
 include::{chapters}loader.adoc[]
