@@ -110,6 +110,8 @@ include::{chapters}enabling_features.adoc[]
 
 include::{chapters}dynamic_state.adoc[]
 
+include::{chapters}windowing_audio_input.adoc[]
+
 include::{chapters}pnext_and_stype.adoc[]
 include::{chapters}sparse_resources.adoc[]
 
