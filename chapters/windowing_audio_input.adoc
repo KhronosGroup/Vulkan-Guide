@@ -277,6 +277,106 @@ SDL_PauseAudioDevice(audioDevice, 0);
 SDL_CloseAudioDevice(audioDevice);
 ----
 
+=== SFML
+
+link:https://www.sfml-dev.org/[SFML] (Simple and Fast Multimedia Library) is a multi-platform C++ library designed to provide a simple interface to various multi-media components, such as input, audio and graphics. Compared to GLFW, SFML offers a more extensive set of features and supports more platforms like mobile.
+
+==== Setting up SFML with Vulkan
+
+[source,cpp]
+----
+#include <SFML/Window.hpp>
+#include <vulkan/vulkan.h>
+#include <iostream>
+#include <vector>
+
+int main() {
+    // Create SFML window
+    sf::WindowBase window{sf::VideoMode({800, 600}), "Vulkan SFML Window", sf::Style::Default};   
+
+    // Get required Vulkan extensions for SFML
+    std::vector<const char*> extensions = sf::Vulkan::getGraphicsRequiredInstanceExtensions();
+
+    // Create Vulkan instance (not shown)
+    VkInstance instance = VK_NULL_HANDLE;
+    // ... create instance with extensions ...
+
+    // Create Vulkan surface
+    VkSurfaceKHR surface;
+    if (!window.createVulkanSurface(instance, surface)) {
+        std::cerr << "Failed to create Vulkan surface" << std::endl;
+        return -1;
+    }
+
+    // Main loop
+    while (window.isOpen()) {
+        while (const std::optional event = window.pollEvent()) {
+            if (event->is<sf::Event::Closed>()) {
+                window.close();
+            }            
+        }
+
+        // Render with Vulkan (not shown)          
+    }
+
+    vkDestroySurfaceKHR(instance, surface, nullptr);
+    // No explicit SFML cleanup required
+
+    return 0;
+}
+----
+
+==== SFML Input Handling
+
+[source,cpp]
+----
+// In the main loop
+while (window.isOpen()) {
+    while (const std::optional event = window.pollEvent()) {
+        if (event->is<sf::Event::Closed>()) {
+            window.close();
+        }
+        if (event->is<sf::Event::KeyPressed>()) {
+            if (event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::W) {
+                // Move forwards
+            }
+        }
+        if (event->is<sf::Event::MouseButtonPressed>()) {
+            if (event->getIf<sf::Event::MouseButtonPressed>()->button == sf::Mouse::Button::Left) {
+                // Pick object
+            }
+        }
+    }
+}
+
+// Alternatively, poll key state
+if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
+    // Move forward
+}
+----
+
+==== SFML Audio Integration
+
+SFML provides a simple audio and music API:
+
+[source,cpp]
+----
+// Load a sound buffer from a wav file
+const sf::SoundBuffer buffer("soundfile.wav");
+// Create a sound instance of the sound buffer
+sf::Sound sound(buffer);
+// Play it
+sound.play();
+----
+
+[source,cpp]
+----
+// Load a music track
+sf::Music music("soundtrack.ogg");
+// Play it
+music.play();
+----
+
 === Native Platform APIs
 
 For applications requiring more direct control or platform-specific features, you can use native APIs for window creation and input handling.
