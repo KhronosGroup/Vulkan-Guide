@@ -68,6 +68,8 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 == xref:{chapters}ide.adoc[Development Environments & IDEs]
 
+== xref:{chapters}tile_based_rendering_best_practices.adoc[Tile Based Rendering (TBR) Best Practices]
+
 == xref:{chapters}vulkan_profiles.adoc[Vulkan Profiles]
 
 == xref:{chapters}loader.adoc[Loader]
