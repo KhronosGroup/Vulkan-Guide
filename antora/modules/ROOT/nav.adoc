@@ -21,6 +21,7 @@
 ** xref:{chapters}validation_overview.adoc[]
 ** xref:{chapters}decoder_ring.adoc[]
 * Using Vulkan
+** xref:{chapters}deprecated.adoc[]
 ** xref:{chapters}loader.adoc[]
 ** xref:{chapters}layers.adoc[]
 ** xref:{chapters}querying_extensions_features.adoc[]

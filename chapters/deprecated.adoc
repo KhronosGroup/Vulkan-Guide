@@ -1,0 +1,1096 @@
+// Copyright 2025 Holochip, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../]
+ifndef::images[:images: ../images/]
+
+[[deprecated]]
+= Deprecated
+
+This guide provides fallback instructions for deprecated items in Vulkan. It helps developers understand what deprecated features were, what they did, and how to use their modern replacements while maintaining backward compatibility where needed.
+
+== Deprecated Items
+
+The following table lists deprecated items in Vulkan along with their replacements and links to detailed fallback instructions:
+
+[cols="2,3,3,2,2", options="header"]
+|===
+|Deprecated Item |What it was/did |Replacement |When Deprecated |GPU Info Link
+
+|Device Layers
+|Device layers were a way to intercept, evaluate, and modify Vulkan functions at the device level.
+|Instance layers should be used instead. All layer functionality is now available through instance layers.
+|Early in Vulkan's life
+|
+
+|Physical Device Queries
+|Functions like `vkGetPhysicalDeviceFeatures` used to query device capabilities.
+|Use `vkGetPhysicalDeviceFeatures2` and related functions that provide greater extensibility. See <<physical_device_queries_replacement>> for details.
+|Vulkan 1.1
+|link:https://vulkan.gpuinfo.org/listreports.php?instanceextension=VK_KHR_get_physical_device_properties2&platform=all[View on GPU Info]
+
+|Version Macros
+|Macros like `VK_MAKE_VERSION` and `VK_VERSION_MAJOR` that don't account for API variant.
+|Use macros that include API variant like `VK_MAKE_API_VERSION` and `VK_API_VERSION_MAJOR`. See <<version_macros_replacement>> for details.
+|Vulkan 1.1
+|link:https://docs.vulkan.org/spec/latest/appendices/versions.html#versions-1.1[View in Spec]
+
+|Render Pass Functions
+|Original render pass creation and management functions.
+|Use version 2 functions like `vkCreateRenderPass2` that provide greater extensibility. See <<render_pass_functions_replacement>> for details.
+|Vulkan 1.2
+|link:https://vulkan.gpuinfo.org/displayextensiondetail.php?extension=VK_KHR_create_renderpass2[View on GPU Info]
+
+|Render Pass Objects
+|`VkRenderPass` and `VkFramebuffer` objects for defining rendering operations.
+|Use dynamic rendering via `vkCmdBeginRendering` and `vkCmdEndRendering`. See <<render_pass_objects_replacement>> for details.
+|Vulkan 1.4
+|link:https://vulkan.gpuinfo.org/displayextensiondetail.php?extension=VK_KHR_dynamic_rendering[View on GPU Info]
+
+|VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT
+|Used in synchronization to represent the earliest possible pipeline stage.
+|Different replacements depending on usage context. See <<top_of_pipe_replacement>> for details.
+|With VK_KHR_synchronization2
+|link:https://vulkan.gpuinfo.org/displayextensiondetail.php?extension=VK_KHR_synchronization2[View on GPU Info]
+
+|VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
+|Used in synchronization to represent the latest possible pipeline stage.
+|Different replacements depending on usage context. See <<bottom_of_pipe_replacement>> for details.
+|With VK_KHR_synchronization2
+|link:https://vulkan.gpuinfo.org/displayextensiondetail.php?extension=VK_KHR_synchronization2[View on GPU Info]
+
+|VK_PIPELINE_STAGE_VERTEX_INPUT_BIT
+|Used to represent the vertex input stage in the pipeline.
+|Split into more specific flags: `VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR` and `VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR`.
+|With VK_KHR_synchronization2
+|link:https://vulkan.gpuinfo.org/displayextensiondetail.php?extension=VK_KHR_synchronization2[View on GPU Info]
+
+|VK_PIPELINE_STAGE_ALL_TRANSFER_BIT
+|Used to represent all transfer operations in the pipeline.
+|Split into more specific flags: `VK_PIPELINE_STAGE_2_COPY_BIT_KHR`, `VK_PIPELINE_STAGE_2_RESOLVE_BIT_KHR`, `VK_PIPELINE_STAGE_2_BLIT_BIT_KHR`, and `VK_PIPELINE_STAGE_2_CLEAR_BIT_KHR`.
+|With VK_KHR_synchronization2
+|link:https://vulkan.gpuinfo.org/displayextensiondetail.php?extension=VK_KHR_synchronization2[View on GPU Info]
+
+|VK_ACCESS_SHADER_READ_BIT
+|Used to represent all shader read operations.
+|Split into more specific flags: `VK_ACCESS_2_UNIFORM_READ_BIT_KHR`, `VK_ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR`, and `VK_ACCESS_2_SHADER_STORAGE_READ_BIT_KHR`.
+|With VK_KHR_synchronization2
+|link:https://vulkan.gpuinfo.org/displayextensiondetail.php?extension=VK_KHR_synchronization2[View on GPU Info]
+
+|VK_ACCESS_SHADER_WRITE_BIT
+|Used to represent shader write operations.
+|Renamed to `VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR` to better describe the scope of what resources in the shader are described by the access flag.
+|With VK_KHR_synchronization2
+|link:https://vulkan.gpuinfo.org/displayextensiondetail.php?extension=VK_KHR_synchronization2[View on GPU Info]
+|===
+
+== How to Use This Guide
+
+1. **Identify Deprecated Items**: Determine if your application uses any deprecated Vulkan features.
+2. **Understand the Replacement**: Read about what each deprecated item was and its recommended replacement.
+3. **Implement Fallbacks**: Use the detailed sections below to implement proper fallbacks for backward compatibility.
+4. **Test Thoroughly**: Ensure your application works correctly with both the deprecated item and its replacement.
+
+== Notes on Deprecation
+
+* Deprecated items will still work in current Vulkan implementations.
+* Using replacements for deprecated items often provides better performance or more precise control.
+* When targeting newer Vulkan versions, it's best to use the recommended replacements.
+* For backward compatibility with older Vulkan implementations, fallback code may be necessary.
+
+== Additional Resources
+
+* link:https://docs.vulkan.org/spec/latest/[Vulkan Specification]: Official documentation for all Vulkan features
+* link:https://docs.vulkan.org/spec/latest/appendices/deprecation.html[Vulkan
+ Specification Deprecation]: Current official list of deprecated Vulkan features
+* link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples]: Sample code demonstrating various Vulkan features
+* link:checking_for_support.adoc[Checking for Support]: Guide on how to check for feature support at runtime
+* link:versions.adoc[Vulkan Versions]: Information about different Vulkan versions and their features
+
+== Detailed Fallback Instructions
+
+[[device_layers_replacement]]
+=== Device Layers
+
+Device layers were a way to intercept, evaluate, and modify Vulkan functions at the device level. They were deprecated early in Vulkan's life in favor of instance layers.
+
+==== What They Were
+
+Device layers were similar to instance layers but were associated with a specific VkDevice. They allowed for device-specific validation and debugging.
+
+==== Replacement
+
+All layer functionality is now available through instance layers. Instance layers can intercept both instance-level and device-level Vulkan functions.
+
+==== Code Example
+
+[source,cpp]
+----
+// DEPRECATED: Using device layers
+const char* deviceLayerNames[] = { "VK_LAYER_LUNARG_standard_validation" };
+VkDeviceCreateInfo createInfo = {};
+createInfo.enabledLayerCount = 1;
+createInfo.ppEnabledLayerNames = deviceLayerNames;
+vkCreateDevice(physicalDevice, &createInfo, nullptr, &device);
+
+// RECOMMENDED: Using instance layers only
+const char* instanceLayerNames[] = { "VK_LAYER_KHRONOS_validation" };
+VkInstanceCreateInfo instanceCreateInfo = {};
+instanceCreateInfo.enabledLayerCount = 1;
+instanceCreateInfo.ppEnabledLayerNames = instanceLayerNames;
+vkCreateInstance(&instanceCreateInfo, nullptr, &instance);
+
+// When creating the device, don't specify any layers
+VkDeviceCreateInfo createInfo = {};
+createInfo.enabledLayerCount = 0;
+createInfo.ppEnabledLayerNames = nullptr;
+vkCreateDevice(physicalDevice, &createInfo, nullptr, &device);
+----
+
+==== Fallback Strategy
+
+Since device layers were deprecated very early, there's no need for a fallback strategy. All Vulkan implementations should support instance layers instead of device layers.
+
+[[top_of_pipe_replacement]]
+=== VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT
+
+`VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT` was used in synchronization to represent the earliest possible pipeline stage. It was deprecated with the introduction of VK_KHR_synchronization2.
+
+==== What It Was
+
+This flag represented a "pseudo-stage" at the beginning of the pipeline, before any actual work begins. It was often used in synchronization primitives to indicate that a dependency should be satisfied before any actual work begins.
+
+==== Replacement
+
+The replacement depends on the context in which `VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT` is used:
+
+1. When used in the first synchronization scope (srcStageMask):
+   * Replace with `VK_PIPELINE_STAGE_2_NONE_KHR` and `VK_ACCESS_2_NONE_KHR`
+
+2. When used in the second synchronization scope (dstStageMask):
+   * Replace with `VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR` and `VK_ACCESS_2_NONE_KHR`
+
+==== Code Example
+
+[source,cpp]
+----
+// DEPRECATED: Using VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT in srcStageMask
+VkMemoryBarrier memoryBarrier = {
+    .srcAccessMask = 0,
+    .dstAccessMask = VK_ACCESS_SHADER_READ_BIT
+};
+vkCmdPipelineBarrier(
+    commandBuffer,
+    VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,  // srcStageMask
+    VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,  // dstStageMask
+    0,
+    1, &memoryBarrier,
+    0, nullptr,
+    0, nullptr
+);
+
+// RECOMMENDED: Using VK_PIPELINE_STAGE_2_NONE_KHR in srcStageMask
+VkMemoryBarrier2KHR memoryBarrier2 = {
+    .sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR,
+    .pNext = nullptr,
+    .srcStageMask = VK_PIPELINE_STAGE_2_NONE_KHR,
+    .srcAccessMask = VK_ACCESS_2_NONE_KHR,
+    .dstStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR,
+    .dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR
+};
+
+VkDependencyInfoKHR dependencyInfo = {
+    .sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO_KHR,
+    .pNext = nullptr,
+    .dependencyFlags = 0,
+    .memoryBarrierCount = 1,
+    .pMemoryBarriers = &memoryBarrier2,
+    .bufferMemoryBarrierCount = 0,
+    .pBufferMemoryBarriers = nullptr,
+    .imageMemoryBarrierCount = 0,
+    .pImageMemoryBarriers = nullptr
+};
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+----
+
+==== Fallback Strategy
+
+To support both deprecated and new APIs, you can check for the availability of the VK_KHR_synchronization2 extension:
+
+[source,cpp]
+----
+bool hasSync2 = false;
+// Check if VK_KHR_synchronization2 is available
+uint32_t extensionCount = 0;
+vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
+std::vector<VkExtensionProperties> extensions(extensionCount);
+vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, extensions.data());
+
+for (const auto& extension : extensions) {
+    if (strcmp(extension.extensionName, VK_KHR_SYNCHRONIZATION_2_EXTENSION_NAME) == 0) {
+        hasSync2 = true;
+        break;
+    }
+}
+
+// Function to create a barrier based on available extensions
+void CreateBarrier(VkCommandBuffer commandBuffer, bool isSourceTopOfPipe) {
+    if (hasSync2) {
+        // Use synchronization2 API
+        VkMemoryBarrier2KHR memoryBarrier2 = {
+            .sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR,
+            .pNext = nullptr,
+            .srcStageMask = isSourceTopOfPipe ? VK_PIPELINE_STAGE_2_NONE_KHR : VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR,
+            .srcAccessMask = VK_ACCESS_2_NONE_KHR,
+            .dstStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR,
+            .dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR
+        };
+
+        VkDependencyInfoKHR dependencyInfo = {
+            .sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO_KHR,
+            .pNext = nullptr,
+            .dependencyFlags = 0,
+            .memoryBarrierCount = 1,
+            .pMemoryBarriers = &memoryBarrier2,
+            .bufferMemoryBarrierCount = 0,
+            .pBufferMemoryBarriers = nullptr,
+            .imageMemoryBarrierCount = 0,
+            .pImageMemoryBarriers = nullptr
+        };
+
+        vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+    } else {
+        // Use original API
+        VkMemoryBarrier memoryBarrier = {
+            .sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER,
+            .pNext = nullptr,
+            .srcAccessMask = 0,
+            .dstAccessMask = VK_ACCESS_SHADER_READ_BIT
+        };
+
+        vkCmdPipelineBarrier(
+            commandBuffer,
+            VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,  // srcStageMask
+            VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,  // dstStageMask
+            0,
+            1, &memoryBarrier,
+            0, nullptr,
+            0, nullptr
+        );
+    }
+}
+----
+
+[[bottom_of_pipe_replacement]]
+=== VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
+
+`VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT` was used in synchronization to represent the latest possible pipeline stage. It was deprecated with the introduction of VK_KHR_synchronization2.
+
+==== What It Was
+
+This flag represented a "pseudo-stage" at the end of the pipeline, after all actual work is completed. It was often used in synchronization primitives to indicate that a dependency should be satisfied after all work is completed.
+
+==== Replacement
+
+The replacement depends on the context in which `VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT` is used:
+
+1. When used in the first synchronization scope (srcStageMask):
+   * Replace with `VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT_KHR` and `VK_ACCESS_2_NONE_KHR`
+
+2. When used in the second synchronization scope (dstStageMask):
+   * Replace with `VK_PIPELINE_STAGE_2_NONE_KHR` and `VK_ACCESS_2_NONE_KHR`
+
+==== Code Example
+
+[source,cpp]
+----
+// DEPRECATED: Using VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT in srcStageMask
+VkMemoryBarrier memoryBarrier = {
+    .srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT,
+    .dstAccessMask = 0
+};
+vkCmdPipelineBarrier(
+    commandBuffer,
+    VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,  // srcStageMask
+    VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,  // dstStageMask
+    0,
+    1, &memoryBarrier,
+    0, nullptr,
+    0, nullptr
+);
+
+// RECOMMENDED: Using VK_PIPELINE_STAGE_2_NONE_KHR in dstStageMask
+VkMemoryBarrier2KHR memoryBarrier2 = {
+    .sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR,
+    .pNext = nullptr,
+    .srcStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR,
+    .srcAccessMask = VK_ACCESS_2_SHADER_WRITE_BIT_KHR,
+    .dstStageMask = VK_PIPELINE_STAGE_2_NONE_KHR,
+    .dstAccessMask = VK_ACCESS_2_NONE_KHR
+};
+
+VkDependencyInfoKHR dependencyInfo = {
+    .sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO_KHR,
+    .pNext = nullptr,
+    .dependencyFlags = 0,
+    .memoryBarrierCount = 1,
+    .pMemoryBarriers = &memoryBarrier2,
+    .bufferMemoryBarrierCount = 0,
+    .pBufferMemoryBarriers = nullptr,
+    .imageMemoryBarrierCount = 0,
+    .pImageMemoryBarriers = nullptr
+};
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+----
+
+==== Fallback Strategy
+
+The fallback strategy is similar to the one for `VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT`. Check for the availability of the VK_KHR_synchronization2 extension and use the appropriate API.
+
+[[vertex_input_replacement]]
+=== VK_PIPELINE_STAGE_VERTEX_INPUT_BIT
+
+`VK_PIPELINE_STAGE_VERTEX_INPUT_BIT` was used to represent the vertex input stage in the pipeline. With VK_KHR_synchronization2, it was split into more specific flags.
+
+==== What It Was
+
+This flag represented the stage of the pipeline where vertex and index data is consumed. It was used in synchronization primitives to indicate operations related to vertex input.
+
+==== Replacement
+
+Split into more specific flags:
+
+* `VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR`: Represents the stage where index data is consumed
+* `VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR`: Represents the stage where vertex attribute data is consumed
+
+==== Code Example
+
+[source,cpp]
+----
+// DEPRECATED: Using VK_PIPELINE_STAGE_VERTEX_INPUT_BIT
+VkBufferMemoryBarrier bufferBarrier = {
+    .srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT,
+    .dstAccessMask = VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
+    .buffer = vertexBuffer,
+    // ... other fields
+};
+vkCmdPipelineBarrier(
+    commandBuffer,
+    VK_PIPELINE_STAGE_TRANSFER_BIT,
+    VK_PIPELINE_STAGE_VERTEX_INPUT_BIT,
+    0,
+    0, nullptr,
+    1, &bufferBarrier,
+    0, nullptr
+);
+
+// RECOMMENDED: Using specific vertex input stage flags
+VkBufferMemoryBarrier2KHR bufferBarrier2 = {
+    .sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2_KHR,
+    .pNext = nullptr,
+    .srcStageMask = VK_PIPELINE_STAGE_2_TRANSFER_BIT_KHR,
+    .srcAccessMask = VK_ACCESS_2_TRANSFER_WRITE_BIT_KHR,
+    .dstStageMask = VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR,
+    .dstAccessMask = VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT_KHR,
+    .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+    .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+    .buffer = vertexBuffer,
+    .offset = 0,
+    .size = VK_WHOLE_SIZE
+};
+
+VkDependencyInfoKHR dependencyInfo = {
+    .sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO_KHR,
+    .pNext = nullptr,
+    .dependencyFlags = 0,
+    .memoryBarrierCount = 0,
+    .pMemoryBarriers = nullptr,
+    .bufferMemoryBarrierCount = 1,
+    .pBufferMemoryBarriers = &bufferBarrier2,
+    .imageMemoryBarrierCount = 0,
+    .pImageMemoryBarriers = nullptr
+};
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+----
+
+==== Fallback Strategy
+
+Check for the availability of the VK_KHR_synchronization2 extension and use the appropriate API. When using the new API, choose the most specific flag that applies to your use case.
+
+[[all_transfer_replacement]]
+=== VK_PIPELINE_STAGE_ALL_TRANSFER_BIT
+
+`VK_PIPELINE_STAGE_ALL_TRANSFER_BIT` was used to represent all transfer operations in the pipeline. With VK_KHR_synchronization2, it was split into more specific flags.
+
+==== What It Was
+
+This flag represented all transfer operations, including copy, resolve, blit, and clear operations. It was used in synchronization primitives to indicate operations related to data transfer.
+
+==== Replacement
+
+Split into more specific flags:
+
+* `VK_PIPELINE_STAGE_2_COPY_BIT_KHR`: Represents copy operations
+* `VK_PIPELINE_STAGE_2_RESOLVE_BIT_KHR`: Represents resolve operations
+* `VK_PIPELINE_STAGE_2_BLIT_BIT_KHR`: Represents blit operations
+* `VK_PIPELINE_STAGE_2_CLEAR_BIT_KHR`: Represents clear operations
+
+==== Code Example
+
+[source,cpp]
+----
+// DEPRECATED: Using VK_PIPELINE_STAGE_ALL_TRANSFER_BIT
+VkImageMemoryBarrier imageBarrier = {
+    .srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT,
+    .dstAccessMask = VK_ACCESS_SHADER_READ_BIT,
+    .oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+    .newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+    .image = image,
+    // ... other fields
+};
+vkCmdPipelineBarrier(
+    commandBuffer,
+    VK_PIPELINE_STAGE_ALL_TRANSFER_BIT,
+    VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+    0,
+    0, nullptr,
+    0, nullptr,
+    1, &imageBarrier
+);
+
+// RECOMMENDED: Using specific transfer stage flags
+VkImageMemoryBarrier2KHR imageBarrier2 = {
+    .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2_KHR,
+    .pNext = nullptr,
+    .srcStageMask = VK_PIPELINE_STAGE_2_COPY_BIT_KHR,  // Assuming a copy operation
+    .srcAccessMask = VK_ACCESS_2_TRANSFER_WRITE_BIT_KHR,
+    .dstStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR,
+    .dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR,
+    .oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+    .newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+    .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+    .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+    .image = image,
+    .subresourceRange = {
+        .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+        .baseMipLevel = 0,
+        .levelCount = 1,
+        .baseArrayLayer = 0,
+        .layerCount = 1
+    }
+};
+
+VkDependencyInfoKHR dependencyInfo = {
+    .sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO_KHR,
+    .pNext = nullptr,
+    .dependencyFlags = 0,
+    .memoryBarrierCount = 0,
+    .pMemoryBarriers = nullptr,
+    .bufferMemoryBarrierCount = 0,
+    .pBufferMemoryBarriers = nullptr,
+    .imageMemoryBarrierCount = 1,
+    .pImageMemoryBarriers = &imageBarrier2
+};
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+----
+
+==== Fallback Strategy
+
+Check for the availability of the VK_KHR_synchronization2 extension and use the appropriate API. When using the new API, choose the most specific flag that applies to your use case.
+
+[[shader_read_replacement]]
+=== VK_ACCESS_SHADER_READ_BIT
+
+`VK_ACCESS_SHADER_READ_BIT` was used to represent all shader read operations. With VK_KHR_synchronization2, it was split into more specific flags.
+
+==== What It Was
+
+This flag represented all read operations performed by shaders, including reading from uniform buffers, storage buffers, and sampled images. It was used in synchronization primitives to indicate shader read operations.
+
+==== Replacement
+
+Split into more specific flags:
+
+* `VK_ACCESS_2_UNIFORM_READ_BIT_KHR`: Represents reads from uniform buffers
+* `VK_ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR`: Represents reads from sampled images
+* `VK_ACCESS_2_SHADER_STORAGE_READ_BIT_KHR`: Represents reads from storage buffers and images
+
+==== Code Example
+
+[source,cpp]
+----
+// DEPRECATED: Using VK_ACCESS_SHADER_READ_BIT
+VkImageMemoryBarrier imageBarrier = {
+    .srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT,
+    .dstAccessMask = VK_ACCESS_SHADER_READ_BIT,
+    .oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+    .newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+    .image = image,
+    // ... other fields
+};
+vkCmdPipelineBarrier(
+    commandBuffer,
+    VK_PIPELINE_STAGE_TRANSFER_BIT,
+    VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+    0,
+    0, nullptr,
+    0, nullptr,
+    1, &imageBarrier
+);
+
+// RECOMMENDED: Using specific shader read access flags
+VkImageMemoryBarrier2KHR imageBarrier2 = {
+    .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2_KHR,
+    .pNext = nullptr,
+    .srcStageMask = VK_PIPELINE_STAGE_2_TRANSFER_BIT_KHR,
+    .srcAccessMask = VK_ACCESS_2_TRANSFER_WRITE_BIT_KHR,
+    .dstStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR,
+    .dstAccessMask = VK_ACCESS_2_SHADER_SAMPLED_READ_BIT_KHR,  // Assuming a sampled image
+    .oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+    .newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+    .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+    .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+    .image = image,
+    .subresourceRange = {
+        .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+        .baseMipLevel = 0,
+        .levelCount = 1,
+        .baseArrayLayer = 0,
+        .layerCount = 1
+    }
+};
+
+VkDependencyInfoKHR dependencyInfo = {
+    .sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO_KHR,
+    .pNext = nullptr,
+    .dependencyFlags = 0,
+    .memoryBarrierCount = 0,
+    .pMemoryBarriers = nullptr,
+    .bufferMemoryBarrierCount = 0,
+    .pBufferMemoryBarriers = nullptr,
+    .imageMemoryBarrierCount = 1,
+    .pImageMemoryBarriers = &imageBarrier2
+};
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+----
+
+==== Fallback Strategy
+
+Check for the availability of the VK_KHR_synchronization2 extension and use the appropriate API. When using the new API, choose the most specific flag that applies to your use case.
+
+[[shader_write_replacement]]
+=== VK_ACCESS_SHADER_WRITE_BIT
+
+`VK_ACCESS_SHADER_WRITE_BIT` was used to represent shader write operations. With VK_KHR_synchronization2, it was renamed to better describe its scope.
+
+==== What It Was
+
+This flag represented write operations performed by shaders to storage buffers and images. It was used in synchronization primitives to indicate shader write operations.
+
+==== Replacement
+
+Renamed to `VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR` to better describe the scope of what resources in the shader are described by the access flag.
+
+==== Code Example
+
+[source,cpp]
+----
+// DEPRECATED: Using VK_ACCESS_SHADER_WRITE_BIT
+VkBufferMemoryBarrier bufferBarrier = {
+    .srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT,
+    .dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT,
+    .buffer = storageBuffer,
+    // ... other fields
+};
+vkCmdPipelineBarrier(
+    commandBuffer,
+    VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+    VK_PIPELINE_STAGE_TRANSFER_BIT,
+    0,
+    0, nullptr,
+    1, &bufferBarrier,
+    0, nullptr
+);
+
+// RECOMMENDED: Using VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR
+VkBufferMemoryBarrier2KHR bufferBarrier2 = {
+    .sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2_KHR,
+    .pNext = nullptr,
+    .srcStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+    .srcAccessMask = VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR,
+    .dstStageMask = VK_PIPELINE_STAGE_2_TRANSFER_BIT_KHR,
+    .dstAccessMask = VK_ACCESS_2_TRANSFER_READ_BIT_KHR,
+    .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+    .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+    .buffer = storageBuffer,
+    .offset = 0,
+    .size = VK_WHOLE_SIZE
+};
+
+VkDependencyInfoKHR dependencyInfo = {
+    .sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO_KHR,
+    .pNext = nullptr,
+    .dependencyFlags = 0,
+    .memoryBarrierCount = 0,
+    .pMemoryBarriers = nullptr,
+    .bufferMemoryBarrierCount = 1,
+    .pBufferMemoryBarriers = &bufferBarrier2,
+    .imageMemoryBarrierCount = 0,
+    .pImageMemoryBarriers = nullptr
+};
+
+vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
+----
+
+==== Fallback Strategy
+
+Check for the availability of the VK_KHR_synchronization2 extension and use the appropriate API.
+
+[[physical_device_queries_replacement]]
+=== Physical Device Queries
+
+Physical device query functions like `vkGetPhysicalDeviceFeatures` were used to query device capabilities in Vulkan 1.0. These were deprecated with the introduction of version 2 query functions in Vulkan 1.1.
+
+==== What They Were
+
+The original physical device query functions provided basic information about device capabilities but lacked extensibility. The main functions included:
+
+* `vkGetPhysicalDeviceFeatures`: Queried supported features
+* `vkGetPhysicalDeviceProperties`: Queried device properties
+* `vkGetPhysicalDeviceMemoryProperties`: Queried memory properties
+* `vkGetPhysicalDeviceQueueFamilyProperties`: Queried queue family properties
+
+==== Replacement
+
+The version 2 query functions provide the same functionality but with greater extensibility through the pNext chain:
+
+* `vkGetPhysicalDeviceFeatures2`: Replaces `vkGetPhysicalDeviceFeatures`
+* `vkGetPhysicalDeviceProperties2`: Replaces `vkGetPhysicalDeviceProperties`
+* `vkGetPhysicalDeviceMemoryProperties2`: Replaces `vkGetPhysicalDeviceMemoryProperties`
+* `vkGetPhysicalDeviceQueueFamilyProperties2`: Replaces `vkGetPhysicalDeviceQueueFamilyProperties`
+
+When enabling device features, `VkPhysicalDeviceFeatures2` should be provided in the pNext chain of `VkDeviceCreateInfo` instead of using `VkDeviceCreateInfo::pEnabledFeatures`.
+
+==== Code Example
+
+[source,cpp]
+----
+// DEPRECATED: Using original physical device query functions
+VkPhysicalDeviceFeatures deviceFeatures;
+vkGetPhysicalDeviceFeatures(physicalDevice, &deviceFeatures);
+
+// Enable features when creating device
+VkDeviceCreateInfo createInfo = {};
+createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+createInfo.pEnabledFeatures = &deviceFeatures;
+vkCreateDevice(physicalDevice, &createInfo, nullptr, &device);
+
+// RECOMMENDED: Using version 2 query functions
+VkPhysicalDeviceFeatures2 deviceFeatures2 = {};
+deviceFeatures2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+
+// Can extend with additional feature structs
+VkPhysicalDeviceVulkan11Features vulkan11Features = {};
+vulkan11Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
+deviceFeatures2.pNext = &vulkan11Features;
+
+vkGetPhysicalDeviceFeatures2(physicalDevice, &deviceFeatures2);
+
+// Enable features when creating device using pNext chain
+VkDeviceCreateInfo createInfo = {};
+createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+createInfo.pNext = &deviceFeatures2; // Pass features through pNext
+createInfo.pEnabledFeatures = nullptr; // Don't use this field anymore
+vkCreateDevice(physicalDevice, &createInfo, nullptr, &device);
+----
+
+==== Fallback Strategy
+
+To support both Vulkan 1.0 and newer versions, check for the availability of the version 2 functions:
+
+[source,cpp]
+----
+// Check if Vulkan 1.1 or VK_KHR_get_physical_device_properties2 is supported
+bool hasPhysicalDeviceProperties2 = false;
+
+// For instance-level version check
+uint32_t apiVersion = VK_API_VERSION_1_0;
+if (vkEnumerateInstanceVersion) {
+    vkEnumerateInstanceVersion(&apiVersion);
+    if (apiVersion >= VK_API_VERSION_1_1) {
+        hasPhysicalDeviceProperties2 = true;
+    }
+}
+
+// Or check for extension if not using Vulkan 1.1
+if (!hasPhysicalDeviceProperties2) {
+    uint32_t extensionCount = 0;
+    vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+    std::vector<VkExtensionProperties> extensions(extensionCount);
+    vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
+
+    for (const auto& extension : extensions) {
+        if (strcmp(extension.extensionName, VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME) == 0) {
+            hasPhysicalDeviceProperties2 = true;
+            break;
+        }
+    }
+}
+
+// Function to query features based on available functionality
+void QueryDeviceFeatures(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures* features,
+                         VkPhysicalDeviceVulkan11Features* vulkan11Features = nullptr) {
+    if (hasPhysicalDeviceProperties2 && vulkan11Features) {
+        // Use version 2 query with extensions
+        VkPhysicalDeviceFeatures2 features2 = {};
+        features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+        features2.pNext = vulkan11Features;
+
+        vkGetPhysicalDeviceFeatures2(physicalDevice, &features2);
+        *features = features2.features;
+    } else {
+        // Fall back to original query
+        vkGetPhysicalDeviceFeatures(physicalDevice, features);
+    }
+}
+----
+
+[[version_macros_replacement]]
+=== Version Macros
+
+Version macros that do not take the API variant into account, such as `VK_MAKE_VERSION` or `VK_VERSION_MAJOR`, were deprecated in favor of macros that include the API variant.
+
+==== What They Were
+
+The original version macros were used to create and manipulate Vulkan version numbers without accounting for the API variant:
+
+* `VK_MAKE_VERSION`: Created a version number from major, minor, and patch components
+* `VK_VERSION_MAJOR`: Extracted the major version from a version number
+* `VK_VERSION_MINOR`: Extracted the minor version from a version number
+* `VK_VERSION_PATCH`: Extracted the patch version from a version number
+* `VK_API_VERSION`: Created a specific API version
+
+==== Replacement
+
+The replacement macros include the API variant:
+
+* `VK_MAKE_API_VERSION`: Creates a version number including the variant
+* `VK_API_VERSION_MAJOR`: Extracts the major version
+* `VK_API_VERSION_MINOR`: Extracts the minor version
+* `VK_API_VERSION_PATCH`: Extracts the patch version
+* `VK_API_VERSION_VARIANT`: Extracts the variant
+
+Instead of `VK_API_VERSION`, specific version defines (e.g., `VK_API_VERSION_1_0`) or the `VK_MAKE_API_VERSION` macro should be used.
+
+==== Code Example
+
+[source,cpp]
+----
+// DEPRECATED: Using original version macros
+uint32_t version = VK_MAKE_VERSION(1, 2, 0);
+uint32_t major = VK_VERSION_MAJOR(version);
+uint32_t minor = VK_VERSION_MINOR(version);
+uint32_t patch = VK_VERSION_PATCH(version);
+
+// Using VK_API_VERSION directly
+uint32_t apiVersion = VK_API_VERSION(1, 0, 0);
+
+// RECOMMENDED: Using API variant-aware macros
+uint32_t version = VK_MAKE_API_VERSION(0, 1, 2, 0);
+uint32_t variant = VK_API_VERSION_VARIANT(version);
+uint32_t major = VK_API_VERSION_MAJOR(version);
+uint32_t minor = VK_API_VERSION_MINOR(version);
+uint32_t patch = VK_API_VERSION_PATCH(version);
+
+// Using specific version defines
+uint32_t apiVersion = VK_API_VERSION_1_0;
+----
+
+==== Fallback Strategy
+
+The original macros still work in current Vulkan implementations, but it's recommended to use the newer macros for future compatibility. There's no need for a complex fallback strategy as the macros are defined in the Vulkan headers and are available in all Vulkan implementations.
+
+[[render_pass_functions_replacement]]
+=== Render Pass Functions
+
+The original render pass functions were deprecated with the introduction of version 2 functions in Vulkan 1.2, which provide greater extensibility.
+
+==== What They Were
+
+The original render pass functions were used to create and manage render passes:
+
+* `vkCreateRenderPass`: Created a render pass object
+* `vkCmdBeginRenderPass`: Began a render pass
+* `vkCmdNextSubpass`: Advanced to the next subpass
+* `vkCmdEndRenderPass`: Ended a render pass
+
+==== Replacement
+
+The version 2 functions provide the same functionality but with greater extensibility through additional parameters and pNext chains:
+
+* `vkCreateRenderPass2`: Replaces `vkCreateRenderPass`
+* `vkCmdBeginRenderPass2`: Replaces `vkCmdBeginRenderPass`
+* `vkCmdNextSubpass2`: Replaces `vkCmdNextSubpass`
+* `vkCmdEndRenderPass2`: Replaces `vkCmdEndRenderPass`
+
+Note that render pass objects themselves are further deprecated by dynamic rendering in Vulkan 1.4.
+
+==== Code Example
+
+[source,cpp]
+----
+// DEPRECATED: Using original render pass functions
+VkRenderPassBeginInfo renderPassBegin = {};
+renderPassBegin.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+renderPassBegin.renderPass = renderPass;
+renderPassBegin.framebuffer = framebuffer;
+renderPassBegin.renderArea = {{0, 0}, {width, height}};
+renderPassBegin.clearValueCount = 2;
+renderPassBegin.pClearValues = clearValues;
+
+vkCmdBeginRenderPass(commandBuffer, &renderPassBegin, VK_SUBPASS_CONTENTS_INLINE);
+// Render operations...
+vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
+// More render operations...
+vkCmdEndRenderPass(commandBuffer);
+
+// RECOMMENDED: Using version 2 render pass functions
+VkRenderPassBeginInfo renderPassBegin = {};
+renderPassBegin.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+renderPassBegin.renderPass = renderPass;
+renderPassBegin.framebuffer = framebuffer;
+renderPassBegin.renderArea = {{0, 0}, {width, height}};
+renderPassBegin.clearValueCount = 2;
+renderPassBegin.pClearValues = clearValues;
+
+VkSubpassBeginInfo subpassBeginInfo = {};
+subpassBeginInfo.sType = VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO;
+subpassBeginInfo.contents = VK_SUBPASS_CONTENTS_INLINE;
+
+VkSubpassEndInfo subpassEndInfo = {};
+subpassEndInfo.sType = VK_STRUCTURE_TYPE_SUBPASS_END_INFO;
+
+vkCmdBeginRenderPass2(commandBuffer, &renderPassBegin, &subpassBeginInfo);
+// Render operations...
+vkCmdNextSubpass2(commandBuffer, &subpassBeginInfo, &subpassEndInfo);
+// More render operations...
+vkCmdEndRenderPass2(commandBuffer, &subpassEndInfo);
+----
+
+==== Fallback Strategy
+
+To support both original and version 2 render pass functions, check for the availability of Vulkan 1.2 or the `VK_KHR_create_renderpass2` extension:
+
+[source,cpp]
+----
+// Check if Vulkan 1.2 or VK_KHR_create_renderpass2 is supported
+bool hasRenderPass2 = false;
+
+// For device-level version check
+VkPhysicalDeviceProperties properties;
+vkGetPhysicalDeviceProperties(physicalDevice, &properties);
+if (properties.apiVersion >= VK_API_VERSION_1_2) {
+    hasRenderPass2 = true;
+}
+
+// Or check for extension if not using Vulkan 1.2
+if (!hasRenderPass2) {
+    uint32_t extensionCount = 0;
+    vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
+    std::vector<VkExtensionProperties> extensions(extensionCount);
+    vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, extensions.data());
+
+    for (const auto& extension : extensions) {
+        if (strcmp(extension.extensionName, VK_KHR_CREATE_RENDERPASS_2_EXTENSION_NAME) == 0) {
+            hasRenderPass2 = true;
+            break;
+        }
+    }
+}
+
+// Function to begin render pass based on available functionality
+void BeginRenderPass(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* renderPassBegin) {
+    if (hasRenderPass2) {
+        VkSubpassBeginInfo subpassBeginInfo = {};
+        subpassBeginInfo.sType = VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO;
+        subpassBeginInfo.contents = VK_SUBPASS_CONTENTS_INLINE;
+
+        vkCmdBeginRenderPass2(commandBuffer, renderPassBegin, &subpassBeginInfo);
+    } else {
+        vkCmdBeginRenderPass(commandBuffer, renderPassBegin, VK_SUBPASS_CONTENTS_INLINE);
+    }
+}
+----
+
+[[render_pass_objects_replacement]]
+=== Render Pass Objects
+
+Render pass objects (`VkRenderPass` and `VkFramebuffer`) were deprecated with the introduction of dynamic rendering in Vulkan 1.4.
+
+==== What They Were
+
+Render pass objects defined the structure of rendering operations:
+
+* `VkRenderPass`: Defined the structure of a render pass, including attachments and subpasses
+* `VkFramebuffer`: Defined the specific image views to use as attachments for a render pass
+
+These objects required applications to define the entire rendering structure upfront, which could be inflexible for some rendering techniques.
+
+==== Replacement
+
+Dynamic rendering allows applications to begin and end render passes without creating `VkRenderPass` and `VkFramebuffer` objects:
+
+* `vkCmdBeginRendering`: Begins a dynamic rendering pass
+* `vkCmdEndRendering`: Ends a dynamic rendering pass
+
+In Vulkan 1.4, `VK_KHR_dynamic_rendering_local_read` was also promoted to core, which allows the expression of most subpass functionality.
+
+==== Code Example
+
+[source,cpp]
+----
+// DEPRECATED: Using render pass objects
+// Create render pass
+VkAttachmentDescription colorAttachment = {};
+// ... set up attachment
+VkAttachmentReference colorAttachmentRef = {};
+colorAttachmentRef.attachment = 0;
+colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+VkSubpassDescription subpass = {};
+subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+subpass.colorAttachmentCount = 1;
+subpass.pColorAttachments = &colorAttachmentRef;
+VkRenderPassCreateInfo renderPassInfo = {};
+renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+renderPassInfo.attachmentCount = 1;
+renderPassInfo.pAttachments = &colorAttachment;
+renderPassInfo.subpassCount = 1;
+renderPassInfo.pSubpasses = &subpass;
+VkRenderPass renderPass;
+vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass);
+
+// Create framebuffer
+VkFramebufferCreateInfo framebufferInfo = {};
+framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+framebufferInfo.renderPass = renderPass;
+framebufferInfo.attachmentCount = 1;
+framebufferInfo.pAttachments = &colorImageView;
+framebufferInfo.width = width;
+framebufferInfo.height = height;
+framebufferInfo.layers = 1;
+VkFramebuffer framebuffer;
+vkCreateFramebuffer(device, &framebufferInfo, nullptr, &framebuffer);
+
+// Begin render pass
+VkRenderPassBeginInfo renderPassBegin = {};
+renderPassBegin.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+renderPassBegin.renderPass = renderPass;
+renderPassBegin.framebuffer = framebuffer;
+renderPassBegin.renderArea = {{0, 0}, {width, height}};
+renderPassBegin.clearValueCount = 1;
+renderPassBegin.pClearValues = &clearValue;
+vkCmdBeginRenderPass(commandBuffer, &renderPassBegin, VK_SUBPASS_CONTENTS_INLINE);
+// Render operations...
+vkCmdEndRenderPass(commandBuffer);
+
+// RECOMMENDED: Using dynamic rendering
+VkRenderingAttachmentInfo colorAttachmentInfo = {};
+colorAttachmentInfo.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+colorAttachmentInfo.imageView = colorImageView;
+colorAttachmentInfo.imageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+colorAttachmentInfo.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+colorAttachmentInfo.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+colorAttachmentInfo.clearValue = clearValue;
+
+VkRenderingInfo renderingInfo = {};
+renderingInfo.sType = VK_STRUCTURE_TYPE_RENDERING_INFO;
+renderingInfo.renderArea = {{0, 0}, {width, height}};
+renderingInfo.layerCount = 1;
+renderingInfo.colorAttachmentCount = 1;
+renderingInfo.pColorAttachments = &colorAttachmentInfo;
+
+vkCmdBeginRendering(commandBuffer, &renderingInfo);
+// Render operations...
+vkCmdEndRendering(commandBuffer);
+----
+
+==== Fallback Strategy
+
+To support both render pass objects and dynamic rendering, check for the availability of Vulkan 1.4 or the `VK_KHR_dynamic_rendering` extension:
+
+[source,cpp]
+----
+// Check if Vulkan 1.4 or VK_KHR_dynamic_rendering is supported
+bool hasDynamicRendering = false;
+
+// For device-level version check
+VkPhysicalDeviceProperties properties;
+vkGetPhysicalDeviceProperties(physicalDevice, &properties);
+if (properties.apiVersion >= VK_API_VERSION_1_4) {
+    hasDynamicRendering = true;
+}
+
+// Or check for extension if not using Vulkan 1.4
+if (!hasDynamicRendering) {
+    uint32_t extensionCount = 0;
+    vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
+    std::vector<VkExtensionProperties> extensions(extensionCount);
+    vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, extensions.data());
+
+    for (const auto& extension : extensions) {
+        if (strcmp(extension.extensionName, VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME) == 0) {
+            hasDynamicRendering = true;
+            break;
+        }
+    }
+}
+
+// If using dynamic rendering, need to enable the feature
+if (hasDynamicRendering) {
+    VkPhysicalDeviceDynamicRenderingFeatures dynamicRenderingFeatures = {};
+    dynamicRenderingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES;
+    dynamicRenderingFeatures.dynamicRendering = VK_TRUE;
+
+    VkDeviceCreateInfo createInfo = {};
+    createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    createInfo.pNext = &dynamicRenderingFeatures;
+    // ... other device creation parameters
+    vkCreateDevice(physicalDevice, &createInfo, nullptr, &device);
+}
+
+// Rendering function that uses appropriate method based on availability
+void RenderFrame(VkCommandBuffer commandBuffer, VkImageView colorImageView, VkClearValue clearValue) {
+    if (hasDynamicRendering) {
+        // Use dynamic rendering
+        VkRenderingAttachmentInfo colorAttachmentInfo = {};
+        colorAttachmentInfo.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+        colorAttachmentInfo.imageView = colorImageView;
+        colorAttachmentInfo.imageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+        colorAttachmentInfo.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+        colorAttachmentInfo.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+        colorAttachmentInfo.clearValue = clearValue;
+
+        VkRenderingInfo renderingInfo = {};
+        renderingInfo.sType = VK_STRUCTURE_TYPE_RENDERING_INFO;
+        renderingInfo.renderArea = {{0, 0}, {width, height}};
+        renderingInfo.layerCount = 1;
+        renderingInfo.colorAttachmentCount = 1;
+        renderingInfo.pColorAttachments = &colorAttachmentInfo;
+
+        vkCmdBeginRendering(commandBuffer, &renderingInfo);
+        // Render operations...
+        vkCmdEndRendering(commandBuffer);
+    } else {
+        // Use traditional render pass
+        // ... (code to use renderPass and framebuffer)
+        vkCmdBeginRenderPass(commandBuffer, &renderPassBegin, VK_SUBPASS_CONTENTS_INLINE);
+        // Render operations...
+        vkCmdEndRenderPass(commandBuffer);
+    }
+}
+----
