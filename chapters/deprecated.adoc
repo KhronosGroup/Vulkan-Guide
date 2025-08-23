@@ -27,7 +27,7 @@ The following table lists deprecated items in Vulkan along with their replacemen
 |Functions like `vkGetPhysicalDeviceFeatures` used to query device capabilities.
 |Use `vkGetPhysicalDeviceFeatures2` and related functions that provide greater extensibility. See <<physical_device_queries_replacement>> for details.
 |Vulkan 1.1
-|link:https://vulkan.gpuinfo.org/displayextensiondetail.php?extension=VK_KHR_get_physical_device_properties2[View on GPU Info]
+|link:https://vulkan.gpuinfo.org/listreports.php?instanceextension=VK_KHR_get_physical_device_properties2&platform=all[View on GPU Info]
 
 |Version Macros
 |Macros like `VK_MAKE_VERSION` and `VK_VERSION_MAJOR` that don't account for API variant.
