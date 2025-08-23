@@ -17,6 +17,7 @@
 ** xref:{chapters}portability_initiative.adoc[]
 ** xref:{chapters}vulkan_cts.adoc[]
 ** xref:{chapters}development_tools.adoc[]
+** xref:{chapters}ide.adoc[]
 ** xref:{chapters}validation_overview.adoc[]
 ** xref:{chapters}decoder_ring.adoc[]
 * Using Vulkan
@@ -30,6 +31,7 @@
 *** xref:{chapters}formats.adoc[]
 ** xref:{chapters}queues.adoc[]
 ** xref:{chapters}wsi.adoc[]
+** xref:{chapters}windowing_audio_input.adoc[]
 ** xref:{chapters}pnext_and_stype.adoc[]
 ** xref:{chapters}synchronization.adoc[]
 *** xref:{chapters}extensions/VK_KHR_synchronization2.adoc[]
