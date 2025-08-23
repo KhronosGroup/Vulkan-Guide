@@ -1,4 +1,4 @@
-// Copyright 2019-2024 The Khronos Group, Inc.
+// Copyright 2025 Holochip, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters: ../]
