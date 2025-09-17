@@ -241,6 +241,8 @@ include::{chapters}descriptor_arrays.adoc[]
 
 include::{chapters}descriptor_dynamic_offset.adoc[]
 
+include::{chapters}descriptor_buffer.adoc[]
+
 include::{chapters}location_component_interface.adoc[]
 
 include::{chapters}push_constants.adoc[]
