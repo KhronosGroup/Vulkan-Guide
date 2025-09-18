@@ -130,6 +130,8 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 === xref:{chapters}descriptor_dynamic_offset.adoc[Descriptor Dynamic Offset]
 
+=== xref:{chapters}descriptor_buffer.adoc[Descriptor Buffers (VK_EXT_descriptor_buffer)]
+
 === xref:{chapters}location_component_interface.adoc[Location and Component Interface]
 
 === xref:{chapters}push_constants.adoc[Push Constants]
