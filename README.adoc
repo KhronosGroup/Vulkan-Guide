@@ -29,7 +29,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 
 [NOTE]
 ====
-The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
+The Vulkan Guide content is also viewable from https://docs.vulkan.org/guide/latest/index.html
 ====
 
 :leveloffset: 1
