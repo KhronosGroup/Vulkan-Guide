@@ -78,11 +78,11 @@ VkPipelineLayout pipeline_layot([ds_layout_0, ds_layout_1, ds_layout_2]);
 
 == Query Descriptor Set Layout Sizes
 
-Now using the new `vkGetDescriptorSetLayoutSizeEXT` and `vkGetDescriptorSetLayoutBindingOffsetEXT` commands, we can get info from the driver what size it needs to properly use these `VkDescriptorSetLayout`.
+Now using the `vkGetDescriptorSetLayoutSizeEXT` and `vkGetDescriptorSetLayoutBindingOffsetEXT` commands, we can get info from the driver what size it needs to properly use these `VkDescriptorSetLayout`.
 
 [NOTE]
 ====
-Don't make the assumption that `binding 0` will be the lowest offset!
+Don't make the assumption that `binding 0` will be the lowest offset! The driver might sort bindings in a more optimal way such that the offsets might not be incremental as the binding numbers.
 ====
 
 [source,c++]
@@ -109,7 +109,7 @@ These buffers can be large and they hold a "look up table" to your resources and
 
 [NOTE]
 ====
-The minimum required limit for `VkPhysicalDeviceDescriptorBufferPropertiesEXT::descriptorBufferAddressSpaceSize` is 128MB but link:https://vulkan.gpuinfo.org/displayextensionproperty.php?extensionname=VK_EXT_descriptor_buffer&extensionproperty=descriptorBufferAddressSpaceSize&platform=all[many devices can support 4GB]
+The minimum required limit for `VkPhysicalDeviceDescriptorBufferPropertiesEXT::descriptorBufferAddressSpaceSize` is 128MB, but many devices can support 4GB
 ====
 
 For this demo, we will create two of them.
