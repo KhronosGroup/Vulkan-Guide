@@ -1,0 +1,208 @@
+// Copyright 2025 Holochip Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= AI-assisted Vulkan Development: MCP, Local LLMs, and Agentic IDE Tools
+
+This chapter explains how to leverage modern AI tooling with Vulkan development. It covers:
+
+- Using the Vulkan MCP with a LLM (Large Language Model) so the Vulkan context of the LLM can be updated to the latest version.
+- Running a local LLM with llama.cpp by downloading a model from Hugging Face
+- Practical agentic tool use cases in popular IDEs (CLion, Android Studio, Visual Studio, Xcode) for Vulkan projects
+
+== 1) Using the Vulkan MCP with an LLM
+
+The "Model Context Protocol" (MCP) enables tools to expose capabilities the LLM can call. The Vulkan MCP provides Vulkan-specific context and actions that help an LLM reason about your Vulkan project.
+
+Project: https://github.com/gpx1000/mcp-Vulkan[mcp-Vulkan]
+
+=== Goal: Use the latest Vulkan version in the LLM's Vulkan context
+
+Many issues stem from the LLM assuming the wrong Vulkan version (for example, defaulting to Vulkan 1.0).  This is caused by the LLM being trained on the version of Vulkan that was latest at the time of the LLM model getting training.  To combat this, we need to update the context the LLM uses to understand Vulkan. The Vulkan MCP is designed so the LLM can query and set the Vulkan context version to latest. By providing all the Vulkan Documentation resources including the Spec, Man pages, Tutorial, Guide and Samples we ensure guidance and code suggested by the LLM target the up-to-date Vulkan specification.
+
+High-level steps:
+
+. Install an MCP-capable LLM client (for example, clients that support MCP bridges).
++
++  Major LLM services you can use with MCP-capable clients/bridges include:
++  - Anthropic Claude (Claude Desktop supports MCP natively)
++  - OpenAI models (via MCP bridges/clients)
++  - Google Gemini (via MCP bridges/clients)
++  - Mistral (via MCP bridges/clients)
++  - Cohere (via MCP bridges/clients)
++  - Groq API–served models (via MCP bridges/clients)
++  - Local engines: llama.cpp and Ollama (via MCP-capable clients/bridges)
+. Install and configure the Vulkan MCP from mcp-Vulkan.
+
+=== Example setup (generic MCP client)
+
+1. Install the MCP client of your choice that supports external MCP servers.
+2. Clone the Vulkan MCP (this is the MCP server we will connect the clients to):
++
+----
+git clone https://github.com/gpx1000/mcp-Vulkan.git
+cd mcp-Vulkan
+----
+3. Most MCP clients require a small JSON/YAML config to register the MCP server URL and advertised tools. (See below for an example JSON config)
+4. In your MCP client configuration, add a "Vulkan" tool/provider, pointing to the running mcp-Vulkan server (or node running in the command line).
+5. Test by asking your LLM: "Use the Vulkan MCP to set your Vulkan context, then list the extensions that are core in that version." The LLM should call the MCP, update its working context, and answer consistently with the latest Vulkan version.
++  - The functions directly provided by the Vulkan MCP server are:
+    search-vulkan-docs:
+    Search Vulkan documentation for specific topics
+
+    get-vulkan-topic:
+    Get information about a specific Vulkan topic
+
+
+Tips:
+
+- When discussing features, ask the LLM to explicitly cite the Vulkan version it believes is active to avoid drift.
+
+==== Minimal MCP client config example
+
+The following JSON shows a minimal configuration entry that works with the Vulkan MCP. It registers the MCP server under the key "vulkan".
+
+----
+{
+  "mcpServers": {
+    "vulkan": {
+      "command": "node",
+      "args": [
+        "build/index.js"
+      ]
+    }
+  }
+}
+----
+
+Note: Some clients accept additional fields (environment variables, transport, URL). Keep the above structure as a starting point and consult your client's docs to add any required fields.
+
+== 2) Running a local LLM with llama.cpp
+
+You can run a local LLM on your machine using https://github.com/ggerganov/llama.cpp[llama.cpp]. This allows private, offline experimentation and integration with MCP-enabled clients that support local model backends.
+
+=== Build or install llama.cpp
+
+- Prebuilt binaries are available for common platforms in the repository Releases page, or you can build from source:
++
+----
+# Linux/macOS (requires CMake and a recent compiler)
+git clone https://github.com/ggerganov/llama.cpp.git
+cd llama.cpp
+cmake -S . -B build -DGGML_NATIVE=ON
+cmake --build build -j
+# Binaries will be in ./build/bin
+----
+
+Optional GPU acceleration:
+
+- Vulkan: build with -DGGML_VULKAN=ON if supported on your platform/driver
+- CUDA: build with -DGGML_CUDA=ON
+- Metal (macOS): build with -DGGML_METAL=ON
+
+Refer to the llama.cpp README for the latest flags supported by your platform.
+
+=== Download a GGUF model from Hugging Face
+
+llama.cpp consumes models in the GGUF format. Choose an instruct-tuned model appropriate for on-device use (7–8B parameters is a common starting point).
+
+Examples on Hugging Face:
+
+- https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF[Mistral-7B-Instruct GGUF]
+- https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF[Llama 3 8B Instruct GGUF]
+
+Download a quantized file (e.g., Q4_K_M) for faster inference on CPUs/GPUs with modest memory.
+
+=== Run the model with llama.cpp
+
+----
+# Example invocation (adjust paths and model file name)
+./build/bin/llama-cli \
+  -m /path/to/model/YourModelName.Q4_K_M.gguf \
+  -p "You are a Vulkan development assistant."
+----
+
+Once you confirm local inference works, integrate with your MCP-capable client if it supports a local llama.cpp backend. Some clients can connect to a local server (e.g., llama.cpp’s simple server mode) or a bridge. Consult your client’s documentation for enabling a local model as the LLM engine while still attaching the Vulkan MCP.
+
+== 3) Agentic tools in IDEs for Vulkan projects
+
+Modern IDEs offer AI assistants and agentic workflows that can call tools, analyze projects, and perform guided changes. Below are common tools and Vulkan-oriented use cases.
+
+=== CLion (JetBrains)
+
+Options:
+
+- JetBrains AI Assistant (plugin)
+- JetBrains Junie (plugin)
+- GitHub Copilot / Copilot Chat (plugin)
+- Codeium (plugin)
+
+Vulkan-specific use cases:
+
+- Generate boilerplate for instance/device creation, queues, and swapchain setup using your project’s coding style
+- Draft synchronization scopes and barriers; then validate with the Vulkan Validation Layers
+- Summarize validation errors and map them to the relevant Vulkan Guide sections
+- Write small tests for feature/extension queries and profile toggles
+- Automatically understand and suggest fixes for VUID reported warnings and errors from Validation Layers directly within your project.
+
+Tips:
+
+- Keep your vk.xml or Vulkan-Headers dependency in sync; assistants can reference it for enums and structure definitions
+- Use CLion/IDE inspections and run-time sanitizers alongside AI suggestions
+
+=== Android Studio
+
+Options:
+
+- Gemini in Android Studio
+- GitHub Copilot / Copilot Chat (plugin)
+
+Vulkan-specific use cases:
+
+- Create or adjust Vulkan initialization for Android (ANativeWindow, VK_KHR_surface, VK_KHR_android_surface)
+- Generate Gradle/CMake integration snippets for NDK-based Vulkan samples
+- Explain and fix mobile-specific validation messages (tiling, Y′CBCR sampling, protected memory, etc.)
+
+Tips:
+
+- Attach a device or emulator and ask the assistant to tailor swapchain and color space selection to the active device
+- Use Android GPU profiling tools alongside AI-generated changes
+
+=== Visual Studio
+
+Options:
+
+- GitHub Copilot / Copilot Chat
+- Azure AI extension options
+
+Vulkan-specific use cases:
+
+- Port small D3D samples to Vulkan with step-by-step assistance referencing the Vulkan Decoder Ring
+- Generate DXGI-to-WSI migration scaffolding and synchronize resource transitions
+- Summarize renderdoc/capture findings and propose minimal code diffs
+
+Tips:
+
+- Ask the assistant to keep generated code consistent with the Vulkan version defined by your MCP context
+
+=== Xcode
+
+Options:
+
+- Third-party plugins or external assistants via MCP-capable clients
+
+Vulkan-specific use cases:
+
+- Improve portability layers usage (e.g., MoltenVK) and suggest configuration alignment with your target Apple GPU
+- Create command-line tools and unit tests for Vulkan modules in cross-platform CMake projects
+
+Tips:
+
+- Consider a local model for proprietary code bases; combine with the Vulkan MCP to keep context precise and private
+
+== Good practices for AI + Vulkan
+
+- Treat AI output as a draft; compile, run, and profile just as you would hand-written code
+- Keep the Vulkan MCP active and set the version to "latest" so the LLM’s answers align with the right features and limits
+- Use the Validation Layers early; ask the assistant to explain errors and point to Documentation resources to better understand the problems.  Most LLMs can even suggest reasonable fixes for your project directly.
+- Prefer incremental refactors; have the assistant propose diffs, then review and test
+- AI can understand how text based assets work with your project and thus can help with text based asset creation or augmentation.  (i.e. you can request checking features in the gltf asset or slang shader).
