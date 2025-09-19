@@ -42,9 +42,11 @@ High-level steps:
 git clone https://github.com/gpx1000/mcp-Vulkan.git
 cd mcp-Vulkan
 ----
-3. Most MCP clients require a small JSON/YAML config to register the MCP server URL and advertised tools. (See below for an example JSON config)
-4. In your MCP client configuration, add a "Vulkan" tool/provider, pointing to the running mcp-Vulkan server (or node running in the command line).
-5. Test by asking your LLM: "Use the Vulkan MCP to set your Vulkan context, then list the extensions that are core in that version." The LLM should call the MCP, update its working context, and answer consistently with the latest Vulkan version.
+3. install dependencies: npm install
+4. build the MCP: npm run build
+5. Most MCP clients require a small JSON/YAML config to register the MCP server URL and advertised tools. (See below for an example JSON config)
+6. In your MCP client configuration, add a "Vulkan" tool/provider, pointing to the running mcp-Vulkan server (or node running in the command line).
+7. Test by asking your LLM: "Use the Vulkan MCP to set your Vulkan context, then list the extensions that are core in that version." The LLM should call the MCP, update its working context, and answer consistently with the latest Vulkan version.
   - The functions directly provided by the Vulkan MCP server are:
     search-vulkan-docs:
     Search Vulkan documentation for specific topics
