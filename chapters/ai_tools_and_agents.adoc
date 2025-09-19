@@ -148,7 +148,6 @@ Vulkan-specific use cases:
 
 Tips:
 
-- Keep your vk.xml or Vulkan-Headers dependency in sync; assistants can reference it for enums and structure definitions
 - Use CLion/IDE inspections and run-time sanitizers alongside AI suggestions
 
 === Android Studio
