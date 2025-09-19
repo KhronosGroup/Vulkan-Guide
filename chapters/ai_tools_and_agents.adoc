@@ -203,7 +203,7 @@ Tips:
 == Good practices for AI + Vulkan
 
 - Treat AI output as a draft; compile, run, and profile just as you would hand-written code
-- Keep the Vulkan MCP active and set the version to "latest" so the LLM’s answers align with the right features and limits
+- Keep the Vulkan MCP active so the LLM’s answers align with the right features and limits
 - Use the Validation Layers early; ask the assistant to explain errors and point to Documentation resources to better understand the problems.  Most LLMs can even suggest reasonable fixes for your project directly.
 - Prefer incremental refactors; have the assistant propose diffs, then review and test
 - AI can understand how text based assets work with your project and thus can help with text based asset creation or augmentation.  (i.e. you can request checking features in the gltf asset or slang shader).
