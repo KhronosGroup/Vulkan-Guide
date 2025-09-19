@@ -23,14 +23,14 @@ High-level steps:
 
 . Install an MCP-capable LLM client (for example, clients that support MCP bridges).
 +
-+  Major LLM services you can use with MCP-capable clients/bridges include:
-+  - Anthropic Claude (Claude Desktop supports MCP natively)
-+  - OpenAI models (via MCP bridges/clients)
-+  - Google Gemini (via MCP bridges/clients)
-+  - Mistral (via MCP bridges/clients)
-+  - Cohere (via MCP bridges/clients)
-+  - Groq API–served models (via MCP bridges/clients)
-+  - Local engines: llama.cpp and Ollama (via MCP-capable clients/bridges)
+..  Major LLM services you can use with MCP-capable clients/bridges include:
+  - Anthropic Claude (Claude Desktop supports MCP natively)
+  - OpenAI models (via MCP bridges/clients)
+  - Google Gemini (via MCP bridges/clients)
+  - Mistral (via MCP bridges/clients)
+  - Cohere (via MCP bridges/clients)
+  - Groq API–served models (via MCP bridges/clients)
+  - Local engines: llama.cpp and Ollama (via MCP-capable clients/bridges)
 . Install and configure the Vulkan MCP from mcp-Vulkan.
 
 === Example setup (generic MCP client)
@@ -45,7 +45,7 @@ cd mcp-Vulkan
 3. Most MCP clients require a small JSON/YAML config to register the MCP server URL and advertised tools. (See below for an example JSON config)
 4. In your MCP client configuration, add a "Vulkan" tool/provider, pointing to the running mcp-Vulkan server (or node running in the command line).
 5. Test by asking your LLM: "Use the Vulkan MCP to set your Vulkan context, then list the extensions that are core in that version." The LLM should call the MCP, update its working context, and answer consistently with the latest Vulkan version.
-+  - The functions directly provided by the Vulkan MCP server are:
+  - The functions directly provided by the Vulkan MCP server are:
     search-vulkan-docs:
     Search Vulkan documentation for specific topics
 
