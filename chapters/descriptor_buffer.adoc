@@ -101,6 +101,11 @@ vkGetDescriptorSetLayoutBindingOffsetEXT(device, ds_layout_0, 2, &binding_2_offs
 // ...
 ----
 
+[NOTE]
+====
+While it seems we could just go `VkPhysicalDeviceDescriptorBufferPropertiesEXT::storageBufferDescriptorSize * 3` to get the size, this is wrong as the driver might have to reserve extra memory for the descriptors for the VkDescriptorSetLayout. The storageBufferDescriptorSize value is used for mapping (see below) with `vkGetDescriptorEXT`.
+====
+
 == Creating Descriptor Buffers
 
 We will create a "special" `VkBuffer` with `VK_BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT` that now makes it a "descriptor buffer" `VkBuffer`.
