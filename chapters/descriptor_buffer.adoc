@@ -73,7 +73,7 @@ VkDescriptorSetLayoutBinding bindings_b[1] {
 VkDescriptorSetLayout ds_layout_0(bindings_a); // Set 0
 VkDescriptorSetLayout ds_layout_1(bindings_a); // Set 1
 VkDescriptorSetLayout ds_layout_2(bindings_b); // Set 2
-VkPipelineLayout pipeline_layot([ds_layout_0, ds_layout_1, ds_layout_2]);
+VkPipelineLayout pipeline_layout([ds_layout_0, ds_layout_1, ds_layout_2]);
 ----
 
 == Query Descriptor Set Layout Sizes
