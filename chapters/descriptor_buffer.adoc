@@ -131,6 +131,11 @@ image::{images}descriptor_buffer_2.svg[descriptor_buffer_2.svg]
 
 Using `vkGetDescriptorEXT` we find a spot in the "descriptor buffer" and map it you our resources.
 
+[NOTE]
+====
+You can actually use any host memory for this, but for simplicity, we will map it directly to the descriptor buffer for now.
+====
+
 The following code will map the 3 of the descriptors using a single resource buffer.
 
 [source,c++]
@@ -253,3 +258,80 @@ image::{images}descriptor_buffer_7.svg[descriptor_buffer_7.svg]
 That is it, from here you can just call `vkCmdDraw` (or other action commands such as `vkCmdDispatch`) and everything should be working!
 
 image::{images}descriptor_buffer_8.svg[descriptor_buffer_8.svg]
+
+== Descriptor is actually just memory
+
+When you call `vkGetDescriptorEXT` what is really happening? The driver is actually just taking the `VkDescriptorGetInfoEXT` information and turning it into a binary blob, which even the application can read now!
+
+[source,c++]
+----
+// Can be used to print on your machine as well
+void print_bytes(const void* memory, size_t size) {
+    const uint8_t* bytes = (uint8_t*)memory;
+    printf("--- (at %p) ---\n", memory);
+    for (size_t i = 0; i < size; ++i) {
+        printf("%02X ", bytes[i]);
+        if ((i + 1) % 16 == 0) {
+            printf("\n");
+        }
+    }
+    printf("\n");
+}
+
+
+void* some_host_memory = buffer.GetMappedMemory();
+vkGetDescriptorEXT(device, get_info, descriptor_size, some_host_memory);
+
+print_bytes(some_host_memory, descriptor_size);
+
+// printf output running on Lavapipe
+// This represents what a "descriptor" is as a binary blob
+--- (at 0x71841c1e7240) ---
+00 80 1E 1C 84 71 00 00 10 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+----
+
+=== Copying the descriptor yourself
+
+So with this knowledge, we should now realize we can actually just `memcpy` the descriptor ourselves.
+
+[source,c++]
+----
+void* host_memory = malloc(descriptor_size);
+
+VkDescriptorGetInfoEXT get_info;
+get_info.type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+get_info.data.pStorageBuffer->range = 4;
+get_info.data.pStorageBuffer->address = buffer_x_address;
+vkGetDescriptorEXT(get_info, descriptor_size, host_memory);
+
+void* descriptor_ptr = descriptor_buffer_a.GetMappedMemory();
+
+memcpy(descriptor_ptr, host_memory, descriptor_size)
+----
+
+image::{images}descriptor_buffer_9.svg[descriptor_buffer_9.svg]
+
+
+=== Copying the descriptor on the GPU
+
+So we can go another step and make our descriptor buffer not even host visible.
+
+We can write the descriptor into a "staging" `VkBuffer` and then copy it on the GPU.
+
+[source,c++]
+----
+void* staging_buffer_ptr = staging_buffer.GetMappedMemory();
+
+vkGetDescriptorEXT(get_info, descriptor_size, staging_buffer_ptr);
+
+vkCmdCopyBuffer(srcBuffer = staging_buffer, dstBuffer = descriptor_buffer_a);
+----
+
+image::{images}descriptor_buffer_10.svg[descriptor_buffer_10.svg]
+
+=== Don't forget to add synchronization
+
+When copying memory into your descriptor buffer, make sure to add a barrier with `VK_ACCESS_2_DESCRIPTOR_BUFFER_READ_BIT_EXT` to ensure that any writes will be visible by the GPU when it needs to access it!
