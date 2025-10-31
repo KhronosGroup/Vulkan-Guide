@@ -110,6 +110,8 @@ The Vulkan Guide content is also viewable from https://docs.vulkan.org/guide/lat
 
   * `VK_KHR_buffer_device_address`, `VK_EXT_buffer_device_address`
 
+==== xref:{chapters}buffer_device_address_alignment.adoc[Buffer Device Address - Alignment]
+
 == xref:{chapters}pipeline_cache.adoc[Pipeline Caching/Derivatives]
 
 == xref:{chapters}threading.adoc[Threading]

@@ -41,6 +41,7 @@
 *** xref:{chapters}sparse_resources.adoc[]
 *** xref:{chapters}protected.adoc[]
 *** xref:{chapters}buffer_device_address.adoc[]
+**** xref:{chapters}buffer_device_address_alignment.adoc[]
 ** xref:{chapters}pipeline_cache.adoc[]
 ** xref:{chapters}threading.adoc[]
 ** xref:{chapters}depth.adoc[]
