@@ -314,7 +314,7 @@ xref:{chapters}extensions/cleanup.adoc#vk_khr_depth_stencil_resolve[VK_KHR_depth
 
 以下に、深度テストの概要を説明します。
 
-image::../../../chapters/images/depth_test.png[depth_test]
+image::../../../chapters/images/depth_test.svg[depth_test]
 
 [[depth-compare-operation]]
 ==== 深度比較操作
