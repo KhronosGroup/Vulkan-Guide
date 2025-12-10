@@ -7,7 +7,7 @@ ifndef::images[:images: images/]
 
 [[slang-in-vulkan]]
 = Slang in Vulkan
-:toc:
+
 
 Vulkan does not directly consume shaders in a human-readable text format, but instead uses xref:{chapters}what_is_spirv.adoc[SPIR-V] as an intermediate representation. This opens the option to use shader languages other than e.g. GLSL, as long as they can target the Vulkan SPIR-V environment.
 
@@ -15,12 +15,11 @@ link:https://github.com/shader-slang/slang[Slang] is a modern shading language a
 
 With link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst#unsupported-hlsl-features[a few exceptions], all Vulkan features and shader stages available with GLSL can be used with Slang too, including recent Vulkan additions like hardware accelerated ray tracing. On the other hand, Slang to SPIR-V supports Vulkan exclusive features that are not (yet) available in DirectX.
 
-image::{images}what_is_spirv_dxc.png[what_is_spriv_dxc.png]
 
 [[educational-resources]]
 == Educational resources
 
-For Slang, the official link:https://github.com/shader-slang/slang[GitHub repository] and link:https://docs.shader-slang.org/en/latest/[documentation] are the best resources to get started.
+For Slang, the official link:https://github.com/shader-slang/slang[GitHub repository] and link:https://docs.shader-slang.org/en/latest/[documentation] are the best resources to get started.  Additionally, the best place to get help is the link:https://khr.io/slangdiscord[slang discord server].
 
 == Why Use Slang for Vulkan?
 
@@ -34,7 +33,7 @@ There are several advantages to using Slang for Vulkan development:
 
 == Differences Between HLSL and Slang
 
-While Slang is built on HLSL and maintains backward compatibility, it adds several powerful features that make shader development more efficient, maintainable, and flexible.
+While Slang is built on HLSL, it adds several powerful features that make shader development more efficient, maintainable, and flexible.
 
 === Generics and Templates
 
@@ -148,7 +147,7 @@ While Slang maintains HLSL syntax compatibility, it introduces some new syntax e
 
 === Compilation Differences
 
-Slang provides its own compiler (`slangc`) with different capabilities than the HLSL compiler:
+Slang provides its own compiler (`slangc`) and runtime compilation API with different capabilities than the HLSL compiler:
 
 * *Multi-target compilation*: Compile the same shader for multiple graphics APIs
 * *Cross-compilation*: Generate code for different shader stages from a single source
@@ -179,7 +178,7 @@ From the application's point-of-view, using Slang is exactly the same as using G
 
 == Migration Guide: from HLSL to Slang
 
-Migrating from HLSL to Slang can be done incrementally, as Slang maintains backward compatibility with HLSL. This guide provides a step-by-step approach to migrating your shaders.
+Migrating from HLSL to Slang can be done incrementally, as Slang is similar enough to HLSL that it mostly supports HLSL. This guide provides a step-by-step approach to migrating your shaders.
 
 [TIP]
 ====
@@ -459,6 +458,13 @@ For HLSL compatibility mode:
 [source]
 ----
 slangc -profile glsl_spirv -entry main -o output.spv -language hlsl input.hlsl
+----
+
+For GLSL compatibility mode:
+
+[source]
+----
+slangc -profile glsl_spirv -entry main -o output.spv -language glsl input.glsl
 ----
 
 Key command-line options include:

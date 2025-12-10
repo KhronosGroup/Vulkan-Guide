@@ -7,7 +7,6 @@ ifndef::images[:images: images/]
 
 [[hlsl-in-vulkan]]
 = HLSL in Vulkan
-:toc:
 
 Vulkan does not directly consume shaders in a human-readable text format, but instead uses xref:{chapters}what_is_spirv.adoc[SPIR-V] as an intermediate representation. This opens the option to use shader languages other than e.g. GLSL, as long as they can target the Vulkan SPIR-V environment.
 
@@ -68,7 +67,7 @@ struct SceneUBO {
     float4x4 projection;
 };
 [[vk::binding(0, 0)]]
-ConstantBuffer<SceneUBO> ubo;
+ConstantBuffer<SceneUBO> ubo : register(0, 0);
 // Vertex shader main function
 VSOutput main(VSInput input) {
     VSOutput output = (VSOutput)0;

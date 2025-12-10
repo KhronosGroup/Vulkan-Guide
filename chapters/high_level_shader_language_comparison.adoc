@@ -269,9 +269,9 @@ interface IVertexShader
     // Input structure with semantics
     struct Input
     {
-        float3 position : POSITION;
-        float3 normal : NORMAL;
-        float2 texCoord : TEXCOORD0;
+        float3 position;
+        float3 normal;
+        float2 texCoord;
     };
 
     // Output structure with semantics
@@ -471,7 +471,6 @@ struct MaterialResources
 };
 
 // Declare a parameter block with explicit binding
-[[vk::binding(0, 0)]]
 ParameterBlock<MaterialResources> material;
 
 // Usage in shader code
