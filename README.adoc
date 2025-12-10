@@ -29,7 +29,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 
 [NOTE]
 ====
-The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
+The Vulkan Guide content is also viewable from https://docs.vulkan.org/guide/latest/index.html
 ====
 
 :leveloffset: 1
@@ -63,6 +63,12 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 == xref:{chapters}decoder_ring.adoc[Vulkan Decoder Ring (GL, GLES, DirectX, and Metal)]
 
 = Using Vulkan
+
+== xref:{chapters}deprecated.adoc[Deprecated]
+
+== xref:{chapters}windowing_audio_input.adoc[Windowing, Audio, and Input]
+
+== xref:{chapters}ide.adoc[Development Environments & IDEs]
 
 == xref:{chapters}vulkan_profiles.adoc[Vulkan Profiles]
 
@@ -104,6 +110,8 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
   * `VK_KHR_buffer_device_address`, `VK_EXT_buffer_device_address`
 
+=== xref:{chapters}buffer_device_address_alignment.adoc[Buffer Device Address - Alignment]
+
 == xref:{chapters}pipeline_cache.adoc[Pipeline Caching/Derivatives]
 
 == xref:{chapters}threading.adoc[Threading]
@@ -123,6 +131,8 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 === xref:{chapters}descriptor_arrays.adoc[Descriptor Arrays]
 
 === xref:{chapters}descriptor_dynamic_offset.adoc[Descriptor Dynamic Offset]
+
+=== xref:{chapters}descriptor_buffer.adoc[Descriptor Buffers (VK_EXT_descriptor_buffer)]
 
 === xref:{chapters}location_component_interface.adoc[Location and Component Interface]
 
