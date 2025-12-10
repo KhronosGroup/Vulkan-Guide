@@ -464,7 +464,7 @@ For GLSL compatibility mode:
 
 [source]
 ----
-slangc -profile glsl_spirv -entry main -o output.spv -language glsl input.glsl
+slangc -profile glsl_spirv -entry main -o output.spv -allow-glsl input.glsl
 ----
 
 Key command-line options include:
@@ -473,6 +473,7 @@ Key command-line options include:
 * `-entry`: Specifies the entry point function
 * `-o`: Specifies the output file
 * `-language`: Specifies the input language (default is Slang)
+* `-allow-glsl`: Enables GLSL as an input language
 * `-target`: Specifies the target platform (e.g., `vulkan`)
 
 === Runtime compilation using the library
