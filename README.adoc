@@ -134,6 +134,8 @@ The Vulkan Guide content is also viewable from https://docs.vulkan.org/guide/lat
 
 === xref:{chapters}descriptor_buffer.adoc[Descriptor Buffers (VK_EXT_descriptor_buffer)]
 
+=== xref:{chapters}descriptor_heap.adoc[Descriptor Heaps (VK_EXT_descriptor_heap)]
+
 === xref:{chapters}location_component_interface.adoc[Location and Component Interface]
 
 === xref:{chapters}push_constants.adoc[Push Constants]

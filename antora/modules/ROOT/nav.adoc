@@ -52,6 +52,7 @@
 *** xref:{chapters}descriptor_arrays.adoc[]
 *** xref:{chapters}descriptor_dynamic_offset.adoc[]
 *** xref:{chapters}descriptor_buffer.adoc[]
+*** xref:{chapters}descriptor_heap.adoc[]
 *** xref:{chapters}location_component_interface.adoc[]
 *** xref:{chapters}push_constants.adoc[]
 *** xref:{chapters}ways_to_provide_spirv.adoc[]
