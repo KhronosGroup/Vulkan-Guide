@@ -65,7 +65,7 @@ The following table lists deprecated items in Vulkan along with their replacemen
 |With VK_KHR_synchronization2
 |link:https://vulkan.gpuinfo.org/displayextensiondetail.php?extension=VK_KHR_synchronization2[View on GPU Info]
 
-|VK_PIPELINE_STAGE_ALL_TRANSFER_BIT
+|VK_PIPELINE_STAGE_TRANSFER_BIT
 |Used to represent all transfer operations in the pipeline.
 |Split into more specific flags: `VK_PIPELINE_STAGE_2_COPY_BIT_KHR`, `VK_PIPELINE_STAGE_2_RESOLVE_BIT_KHR`, `VK_PIPELINE_STAGE_2_BLIT_BIT_KHR`, and `VK_PIPELINE_STAGE_2_CLEAR_BIT_KHR`.
 |With VK_KHR_synchronization2
@@ -421,9 +421,9 @@ vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
 Check for the availability of the VK_KHR_synchronization2 extension and use the appropriate API. When using the new API, choose the most specific flag that applies to your use case.
 
 [[all_transfer_replacement]]
-=== VK_PIPELINE_STAGE_ALL_TRANSFER_BIT
+=== VK_PIPELINE_STAGE_TRANSFER_BIT
 
-`VK_PIPELINE_STAGE_ALL_TRANSFER_BIT` was used to represent all transfer operations in the pipeline. With VK_KHR_synchronization2, it was split into more specific flags.
+`VK_PIPELINE_STAGE_TRANSFER_BIT` was used to represent all transfer operations in the pipeline. With VK_KHR_synchronization2, it was split into more specific flags.
 
 ==== What It Was
 
@@ -442,7 +442,7 @@ Split into more specific flags:
 
 [source,cpp]
 ----
-// DEPRECATED: Using VK_PIPELINE_STAGE_ALL_TRANSFER_BIT
+// DEPRECATED: Using VK_PIPELINE_STAGE_TRANSFER_BIT
 VkImageMemoryBarrier imageBarrier = {
     .srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT,
     .dstAccessMask = VK_ACCESS_SHADER_READ_BIT,
@@ -453,7 +453,7 @@ VkImageMemoryBarrier imageBarrier = {
 };
 vkCmdPipelineBarrier(
     commandBuffer,
-    VK_PIPELINE_STAGE_ALL_TRANSFER_BIT,
+    VK_PIPELINE_STAGE_TRANSFER_BIT,
     VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
     0,
     0, nullptr,
