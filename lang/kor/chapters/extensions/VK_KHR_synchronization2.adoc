@@ -97,9 +97,9 @@ VkSubpassDependency2 dependency = {
   * `VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR`
   * `VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR`
 
-=== VK_PIPELINE_STAGE_ALL_TRANSFER_BIT 분할하기
+=== VK_PIPELINE_STAGE_TRANSFER_BIT 분할하기
 
-`VK_PIPELINE_STAGE_ALL_TRANSFER_BIT` (현재 `VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KHR`)은 하나의 파이프라인 스테이지 플래그에 통합하는 대신 다양한 스테이징 명령의 전용 스테이지를 지정하는 4개의 새로운 스테이지 플래그로 분할되었습니다.
+`VK_PIPELINE_STAGE_TRANSFER_BIT` (현재 `VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KHR`)은 하나의 파이프라인 스테이지 플래그에 통합하는 대신 다양한 스테이징 명령의 전용 스테이지를 지정하는 4개의 새로운 스테이지 플래그로 분할되었습니다.
 
   * `VK_PIPELINE_STAGE_2_COPY_BIT_KHR`
   * `VK_PIPELINE_STAGE_2_RESOLVE_BIT_KHR`
@@ -150,7 +150,7 @@ VkSubpassDependency2 dependency = {
   .dstAccessMask = VK_ACCESS_2_NONE_KHR;
 ----
 
-  * 첫 번째 동기화 범위에서의 `VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT` 
+  * 첫 번째 동기화 범위에서의 `VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT`
 +
 [source,cpp]
 ----
