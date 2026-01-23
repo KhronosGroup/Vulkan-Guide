@@ -26,7 +26,11 @@ Here is a example of what a "descriptor" could look like:
 0x12345678 0xFFFF0001 0x10101010 0x11223344
 ----
 
-It is **not important** at all to the developer what the binary data of a descriptor means. What **is important** is understanding that unlike Vulkan 1.0, the driver is now just handing you back an opaque, internal data structure. Instead of having a `VkDescriptorSet` object the driver controls, the application is now responsible to manage that this data is at the correct spot in memory for the GPU to read from.
+It is **not important** at all to the developer what the binary data of a descriptor means.
+
+What **is important** is understanding that unlike Vulkan 1.0, the driver is now just handing you back an opaque, variable sized, internal data structure. 
+
+Instead of having a `VkDescriptorSet` object the driver controls, the application is now responsible to manage that this data is at the correct spot in memory for the GPU to read from.
 
 === Multiple descriptors for a single resource
 
@@ -36,14 +40,14 @@ image::{images}descriptor_heap_descriptor_example.svg[descriptor_heap_descriptor
 
 In this image each `Descriptor Blob` is just an indirection pointing to where in the `VkBuffer` the shader will access memory.
 
-In Vulkan 1.0, the application could not explicitly manage these `Descriptor Blobs`, but with `VK_EXT_descriptor_heap`, the application now controls their corresponding memory allocations.
+In Vulkan 1.0, the application was not even aware of these "descriptor blobs", but with `VK_EXT_descriptor_heap`, the application are now given, and incharge of managing, these "descriptor blobs" to make sure they are in the right spot of memory for the shader to access.
 
 == How do we get the descriptor binary blob
 
 For uniform and storage buffers, you first need to create a `VkBuffer`.
 
 * With Vulkan 1.0 you would call `vkUpdateDescriptorSets` where the driver would handle it for you.
-* With `VK_EXT_descriptor_buffer` you call `vkGetBufferDeviceAddress()` to get the `VkBuffer`'s address, then provide it along with a range to `vkGetDescriptorEXT()`.
+* With `VK_EXT_descriptor_buffer` you call `vkGetBufferDeviceAddress()` to get the `VkBuffer` address, then provide it along with a range to `vkGetDescriptorEXT()`.
 * With `VK_EXT_descriptor_heap` it is the same, but the address and range are provided to `vkWriteResourceDescriptorsEXT()`
 
 image::{images}descriptor_heap_blob_example_buffer.svg[descriptor_heap_blob_example_buffer.svg]
