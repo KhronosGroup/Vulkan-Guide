@@ -232,4 +232,4 @@ For more in-depth information, consult the performance guides from major GPU ven
 * **ARM Mali GPU Best Practices**: https://developer.arm.com/documentation/101897/latest/[Official ARM guidance for tilers]
 * **Imagination PowerVR Architecture**: https://docs.imgtec.com/starter-guides/powervr-architecture/html/index.html[Tiler architecture deep-dive]
 * **HUAWEI Maleoon GPU Best Practices**: https://developer.huawei.com/consumer/en/doc/best-practices/bpta-maleoon-gpu-best-practices[Broadly applicable mobile tiler optimizations]
-* **Qualcomm Adreno GPU Guide**: https://developer.qualcomm.com/software/adreno-gpu-sdk/gpu-best-practices[Best practices for Adreno architectures]
+* **Samsung GPU framebuffer**: https://developer.samsung.com/galaxy-gamedev/resources/articles/gpu-framebuffer.html[Explains how to optimize framebuffer usage for better performance]
