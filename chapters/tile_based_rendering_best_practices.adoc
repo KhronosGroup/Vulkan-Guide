@@ -28,9 +28,8 @@ By using the right render pass configurations and memory flags, you give the imp
 
 While every vendor has a slightly different design, they generally share common characteristics.
 First, it is important to realize that the **tile size** is determined by the hardware and is not something you can query or control in core Vulkan.
-Depending on the device and the complexity of your attachments, tiles might be anything from 16x16 to 64x128 pixels.
+Depending on the device and the complexity of your attachments, tiles might be anything in size of pixels.
 The GPU chooses a size that fits its internal memory budget.
-Larger tiles generally allow for better parallelism, but they also require more on-chip memory.
 Some vendor extensions (like `VK_QCOM_tile_shading`) might expose these details, but for a cross-platform app, you should assume the tile size is opaque.
 
 Second, the **on-chip memory** used for tiles is managed entirely by the driver.
@@ -69,6 +68,8 @@ By telling the GPU you don't care about the final state of these images, you pre
 When using **Dynamic Rendering** (`VK_KHR_dynamic_rendering`), you specify these same operations in the `VkRenderingInfo` structure.
 This extension simplifies your code by removing the need for render pass and framebuffer objects, but the hardware logic remains identical.
 You must remain disciplined about your load and store operations to avoid performance regressions.
+
+When using traditional render passes, try to structure them so that the driver can "merge" subpasses.
 
 [[transient-attachments]]
 === Transient Attachments and Lazy Allocation
@@ -123,16 +124,6 @@ It's a powerful tool, but it is strictly restricted to the **current pixel**.
 You cannot use this extension to read neighboring pixels.
 Common post-processing effects like bloom, FXAA, or blurs still require a separate sampling pass because they depend on a wider neighborhood of data that might cross tile boundaries.
 
-[[vk-ext-robustness2]]
-=== Robustness and Performance
-
-Safety and performance often go hand-in-hand on mobile.
-The `VK_EXT_robustness2` extension provides stricter guarantees about out-of-bounds access.
-While it might seem like a debugging tool, it is highly relevant for TBR performance.
-
-Out-of-bounds array or descriptor access on a mobile GPU can trigger expensive hardware recovery paths or even cause device hangs that require a full system reset.
-By enabling features like `nullDescriptor`, you can simplify your shader logic and let the hardware handle edge cases through well-defined, efficient paths.
-This is far better than the unpredictable (and often slow) behavior of undefined out-of-bounds access.
 
 [[performance-considerations]]
 == Advanced Performance Tuning
@@ -172,10 +163,10 @@ On mobile GPUs, concurrency is everything.
 The GPU has a limited number of execution units (EUs), and it tries to run thousands of shader instances in parallel to hide memory latency.
 If a single shader is too complex—using a large number of registers or running for hundreds of lines—it can "clog" the EUs and prevent other work from starting.
 
-A common rule of thumb is to avoid shaders that exceed 800 lines of code.
+A common rule of thumb is to avoid shaders that have monolithic large files of code.
 While modern hardware is becoming more capable, complex shaders still increase register pressure.
 If a shader uses too many General Purpose Registers (GPRs), the GPU may only be able to run a few threads at a time on each EU, leaving the rest of the hardware idle.
-If you find yourself with a massive shader that is dragging down performance, consider splitting it into smaller draws or subpasses.
+If you find yourself with a massive shader that is dragging down performance, consider splitting it into smaller draws or use subpasses with their own smaller units of work.
 While this adds a small amount of overhead, the increase in EU concurrency can often lead to a net gain in frame rate.
 
 You can also help the compiler by keeping your shader logic organized.
@@ -204,13 +195,11 @@ Advanced samplers on some hardware can even perform operations like convolution,
 [[synchronization-and-subpasses]]
 === Synchronization and Pipeline Flow
 
-In a power-constrained environment, you want the CPU and GPU to work as independently as possible.
 Frequent synchronization points—like calling `vkQueueWaitIdle`—can cause the GPU to stall while waiting for the CPU, or vice versa.
 
-When using traditional render passes, try to structure them so that the driver can "merge" subpasses.
 This allows the GPU to pass data between subpasses entirely through tile memory, avoiding expensive writes to system RAM.
 For this to work, subpasses usually need a simple dependency chain and consistent attachments.
-Similarly, for the best throughput, ensure your swapchain has enough images (usually 3 or 4 for heavy loads) to keep the GPU busy while the CPU prepares the next frame.
+For the best throughput, ensure your swapchain has enough images (usually 3 or 4 for heavy loads) to keep the GPU busy while the CPU prepares the next frame.
 
 [[best-practices-summary]]
 == Summary of Best Practices
