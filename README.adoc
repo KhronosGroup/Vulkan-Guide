@@ -170,6 +170,8 @@ The Vulkan Guide content is also viewable from https://docs.vulkan.org/guide/lat
 
 == xref:{chapters}hlsl.adoc[Using HLSL shaders]
 
+== xref:{chapters}slang.adoc[Using Slang shaders]
+
 == xref:{chapters}high_level_shader_language_comparison.adoc[High Level Shader Language Comparison]
 
 = When and Why to use Extensions
