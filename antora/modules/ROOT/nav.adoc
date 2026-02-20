@@ -56,6 +56,7 @@
 *** xref:{chapters}location_component_interface.adoc[]
 *** xref:{chapters}push_constants.adoc[]
 *** xref:{chapters}ways_to_provide_spirv.adoc[]
+*** xref:{chapters}buffer_array_length.adoc[]
 ** xref:{chapters}robustness.adoc[]
 ** xref:{chapters}dynamic_state.adoc[]
 *** xref:{chapters}dynamic_state_map.adoc[]
