@@ -142,6 +142,8 @@ The Vulkan Guide content is also viewable from https://docs.vulkan.org/guide/lat
 
 === xref:{chapters}ways_to_provide_spirv.adoc[Ways to Provide SPIR-V]
 
+=== xref:{chapters}buffer_array_length.adoc[Buffer Array Length (OpArrayLength)]
+
 == xref:{chapters}robustness.adoc[Robustness]
 
   * `VK_EXT_image_robustness`, `VK_KHR_robustness2`, `VK_EXT_pipeline_robustness`
