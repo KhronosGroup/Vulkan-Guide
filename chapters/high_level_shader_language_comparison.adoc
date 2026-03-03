@@ -843,22 +843,15 @@ groupshared float4 sharedData[1024];
 
 ==== Barriers
 
-[NOTE]
-====
-Barriers heavily differ between GLSL and HLSL. With one exception there is no direct mapping. To match HLSL in GLSL you often need to call multiple different barrier types in glsl.
-====
-
 Example:
 
 GLSL:
 [source,glsl]
 ----
-groupMemoryBarrier();
 barrier();
 for (int j = 0; j < 256; j++) {
     doSomething;
 }
-groupMemoryBarrier();
 barrier();
 ----
 
@@ -872,16 +865,25 @@ for (int j = 0; j < 256; j++) {
 GroupMemoryBarrierWithGroupSync();
 ----
 
+[NOTE]
+====
+Barriers heavily differ between GLSL and HLSL. Some HLSL barriers don't have direct mapping to GLSL (such functions are in __italics__, and GLSL barriers have been used for them as accurately as possible).
+====
+
 |====
 | *GLSL*  | *HLSL*
-| groupMemoryBarrier | GroupMemoryBarrier
-| groupMemoryBarrier + barrier | GroupMemoryBarrierWithGroupSync
-| memoryBarrier + memoryBarrierImage + memoryBarrierImage | DeviceMemoryBarrier
-| memoryBarrier + memoryBarrierImage + memoryBarrierImage + barrier | DeviceMemoryBarrierWithGroupSync
-| All above barriers + barrier | AllMemoryBarrierWithGroupSync
-| All above barriers | AllMemoryBarrier
-| memoryBarrierShared (only) | n.a.
+| memoryBarrierShared | __GroupMemoryBarrier__
+| barrier | GroupMemoryBarrierWithGroupSync
+| memoryBarrierImage + memoryBarrierBuffer | DeviceMemoryBarrier
+| memoryBarrierImage + memoryBarrierBuffer + barrier | __DeviceMemoryBarrierWithGroupSync__
+| memoryBarrier + barrier | AllMemoryBarrierWithGroupSync
+| memoryBarrier | AllMemoryBarrier
 |====
+
+[NOTE]
+====
+`barrier` implicitly sets a memory barrier for `shared`/`groupshared` memory. Roughly speaking, the `barrier` contains the `memoryBarrierShared`/`GroupMemoryBarrier`.
+====
 
 === Mesh, task (amplification) and geometry shaders
 
