@@ -56,10 +56,11 @@ HLSL:
 float4x3 mat = (float4x3)(ubo.view);
 ----
 
-[NOTE]
-====
-An important difference: Matrices in GLSL are column-major, while matrices in HLSL are row-major. This affects things like matrix construction.
-====
+=== Matrix Layout
+
+It is important to be mindful that matrices in GLSL are column-major, while matrices in HLSL are row-major. This affects things like matrix construction.
+
+image::{images}high_level_shader_language_comparison_matrix.png[high_level_shader_language_comparison_matrix.png]
 
 == Implicit vk Namespace
 
