@@ -20,7 +20,7 @@ At the core, Vulkan is an link:https://registry.khronos.org/vulkan/#apispecs[API
 
 The Khronos Group, along with the Vulkan Specification, releases link:https://www.open-std.org/jtc1/sc22/wg14/www/standards[C99] link:https://github.com/KhronosGroup/Vulkan-Headers/tree/main/include/vulkan[header files] generated from the link:https://registry.khronos.org/vulkan/#apiregistry[API Registry] that developers can use to interface with the Vulkan API.
 
-For those who might not work with C code, there are various link:https://github.com/KhronosGroup/Khronosdotorg/blob/main/api/vulkan/resources.md#language-bindings[language] link:https://github.com/vinjn/awesome-vulkan#bindings[bindings] out there.
+For those who might not work with C code, there are various language bindings out there.
 
 == Vulkan and OpenGL
 
