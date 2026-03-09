@@ -82,6 +82,12 @@ The following table lists deprecated items in Vulkan along with their replacemen
 |Renamed to `VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR` to better describe the scope of what resources in the shader are described by the access flag.
 |With VK_KHR_synchronization2
 |link:https://vulkan.gpuinfo.org/displayextensiondetail.php?extension=VK_KHR_synchronization2[View on GPU Info]
+
+|Pipeline Objects
+|`VkPipeline` objects (graphics and compute) used to bind shaders and fixed-function state as a monolithic unit.
+|Use Shader Objects via `VK_EXT_shader_object` for a pipeline-free workflow that binds shaders and state directly. See <<pipelines_shader_objects_replacement>> for details.
+|With VK_EXT_shader_object
+|link:https://vulkan.gpuinfo.org/displayextensiondetail.php?extension=VK_EXT_shader_object[View on GPU Info]
 |===
 
 == How to Use This Guide
@@ -1094,3 +1100,108 @@ void RenderFrame(VkCommandBuffer commandBuffer, VkImageView colorImageView, VkCl
     }
 }
 ----
+
+
+[[pipelines_shader_objects_replacement]]
+=== Pipeline Objects
+
+Pipeline objects (`VkPipeline` for graphics and compute) are not formally deprecated, but when `VK_EXT_shader_object` is available they are recommended to be replaced by Shader Objects for a more flexible, modular workflow.
+
+==== What They Were
+
+Pipelines encapsulate shader stages and fixed-function state into a single monolithic object created up front (e.g., via `vkCreateGraphicsPipelines` / `vkCreateComputePipelines`). They are efficient at execution time, but can be expensive to create and inflexible when frequently changing shaders or state.
+
+==== Replacement
+
+Shader Objects (`VK_EXT_shader_object`) allow you to:
+
+* Create shader objects directly from SPIR-V with `vkCreateShadersEXT`.
+* Bind them per-stage at command recording time with `vkCmdBindShadersEXT`.
+* Set most fixed-function state dynamically via existing dynamic state commands.
+
+This “pipeline-free” approach reduces pipeline permutation explosion and can simplify hot-reloading and rapid iteration.
+
+See also: link:ways_to_provide_spirv.adoc[Shader Objects section of ways to provide spirv].
+
+==== Code Example
+
+[source,cpp]
+----
+// Traditional: bind a pre-baked pipeline
+vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+
+// Shader Objects: create and bind shaders directly
+VkShaderCreateInfoEXT vsCI{ };
+vsCI.sType = VK_STRUCTURE_TYPE_SHADER_CREATE_INFO_EXT;
+vsCI.stage = VK_SHADER_STAGE_VERTEX_BIT;
+vsCI.codeType = VK_SHADER_CODE_TYPE_SPIRV_EXT;
+vsCI.pCode = vertSpirv; // const void*
+vsCI.codeSize = vertSpirvSize;
+
+VkShaderCreateInfoEXT fsCI{ };
+fsCI.sType = VK_STRUCTURE_TYPE_SHADER_CREATE_INFO_EXT;
+fsCI.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+fsCI.codeType = VK_SHADER_CODE_TYPE_SPIRV_EXT;
+fsCI.pCode = fragSpirv;
+fsCI.codeSize = fragSpirvSize;
+
+VkShaderEXT shaders[2]{};
+vkCreateShadersEXT(device, 1, &vsCI, nullptr, &shaders[0]);
+vkCreateShadersEXT(device, 1, &fsCI, nullptr, &shaders[1]);
+
+// Bind shaders instead of a pipeline
+vkCmdBindShadersEXT(cmd, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, shaders);
+
+// Set dynamic state as needed (examples)
+vkCmdSetViewport(cmd, 0, 1, &viewport);
+vkCmdSetScissor(cmd, 0, 1, &scissor);
+// ... other dynamic states as required
+
+// Draw as usual
+vkCmdDraw(cmd, vertexCount, 1, 0, 0);
+----
+
+==== Fallback Strategy
+
+To support both approaches:
+
+1. Detect `VK_EXT_shader_object` support and enable the feature at device creation time.
+2. If unavailable, fall back to pre-baked pipelines.
+
+[source,cpp]
+----
+bool hasShaderObject = false;
+
+uint32_t extCount = 0;
+vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extCount, nullptr);
+std::vector<VkExtensionProperties> exts(extCount);
+vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extCount, exts.data());
+for (const auto& e : exts) {
+    if (strcmp(e.extensionName, VK_EXT_SHADER_OBJECT_EXTENSION_NAME) == 0) {
+        hasShaderObject = true;
+        break;
+    }
+}
+
+VkDeviceCreateInfo devCI{ VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO };
+
+VkPhysicalDeviceShaderObjectFeaturesEXT shaderObjectFeatures{ };
+shaderObjectFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OBJECT_FEATURES_EXT;
+shaderObjectFeatures.shaderObject = VK_TRUE;
+
+if (hasShaderObject) {
+    devCI.pNext = &shaderObjectFeatures; // enable feature
+    // also add VK_EXT_shader_object to enabled extension list
+}
+
+vkCreateDevice(physicalDevice, &devCI, nullptr, &device);
+
+// Later when recording command buffers
+if (hasShaderObject) {
+    // Use Shader Objects path (vkCreateShadersEXT / vkCmdBindShadersEXT)
+} else {
+    // Use traditional pre-baked pipelines
+}
+----
+
+Note: Shader Objects can coexist with pipelines. Applications may choose per-pass which path is more appropriate.
