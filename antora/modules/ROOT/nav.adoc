@@ -60,6 +60,7 @@
 ** xref:{chapters}robustness.adoc[]
 ** xref:{chapters}dynamic_state.adoc[]
 *** xref:{chapters}dynamic_state_map.adoc[]
+** xref:{chapters}compute_shaders.adoc[]
 ** xref:{chapters}subgroups.adoc[]
 ** xref:{chapters}shader_memory_layout.adoc[]
 ** xref:{chapters}atomics.adoc[]
