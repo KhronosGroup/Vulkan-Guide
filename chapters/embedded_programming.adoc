@@ -1,0 +1,132 @@
+// Copyright 2026 Holochip, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[embedded-programming]]
+= Embedded Programming
+
+Embedded programming has a host of specific techniques and unique constraints over traditional desktop development. While desktop environments often provide an abundance of memory, high thermal ceilings, and sophisticated window managers that abstract away the hardware, embedded systems are defined by their strict constraints. These devices range from industrial controllers and medical kiosks to automotive instrument clusters, smart televisions, and high-end wearables. Each demands a rigorous approach to resource management and a deep understanding of the underlying hardware architecture.
+
+== Hardware Architecture: Power and Bandwidth
+
+The primary constraint in embedded systems is often power consumption and its corollary, thermal management. Most embedded GPUs use a Unified Memory Architecture (UMA) where the GPU shares the same physical RAM as the CPU. This differs from desktop systems with dedicated Video RAM (VRAM) connected via a high-speed PCIe bus.
+
+In an embedded UMA system, every byte transferred between the GPU and RAM consumes significant power and competes with the CPU for limited memory bandwidth. This shared bus can easily become a bottleneck, especially when rendering at high resolutions like 4K on smart televisions.
+
+=== Tile-Based Rendering (TBR)
+
+To combat these bandwidth constraints, almost all embedded GPUs (such as Broadcom VideoCore, ARM Mali, and Imagination PowerVR) use Tile-Based Rendering (TBR) or Tile-Based Deferred Rendering (TBDR). By processing the scene in small, on-chip tiles, these GPUs can perform many operations — including depth testing, blending, and even some fragment shading — entirely within fast, local on-chip memory, only writing the final results back to the main RAM.
+
+This architecture is fundamental to embedded performance, but it is covered in depth in a separate chapter.
+
+See the xref:tile_based_rendering_best_practices.adoc[Tile Based Rendering Best Practices] chapter for more information on how these GPUs work.
+
+=== Graphics vs. Compute Bandwidth
+
+A critical performance distinction in embedded GPUs is the difference in effective bandwidth between graphics and compute pipelines. While desktop GPUs often treat these as equally capable, embedded tilers are heavily optimized for the fixed-function flow of the graphics pipeline, where the hardware can leverage the Tile-Based architecture to its fullest extent.
+
+* **Effective Bandwidth and Caching**: Fragment shaders benefit from the Tile-Based architecture, which allows them to interact with data in the on-chip tile buffer. This local memory has significantly higher bandwidth and lower latency than main RAM. Compute shaders typically operate on a linear memory model and often do not benefit from the same level of tiling-related bandwidth reduction. Since compute shaders often bypass the tiler's specialized hardware for depth testing and hidden surface removal, they may incur significantly higher memory traffic for the same logical operation. Consequently, moving work from a compute shader to a fragment shader (e.g., using a full-screen quad or a subpass) can often yield higher performance by keeping intermediate data within the tile buffer.
+* **Compression and USAGE_STORAGE**: Hardware compression technologies like ARM's Frame Buffer Compression (AFBC) are vital for reducing bandwidth in UMA systems. However, these compression schemes often have strict requirements that are incompatible with the random-access nature of storage images. A common pitfall is enabling `VK_IMAGE_USAGE_STORAGE_BIT` on an image that only needs to be sampled. On many embedded GPUs, the presence of the storage bit disables compression entirely for that image to ensure that any workgroup can write to any texel at any time. This forces the GPU to perform uncompressed memory transactions, which can increase power consumption and saturate the shared memory bus. Developers should carefully audit their image usage flags and only enable storage usage for images that truly require random-access writes; for standard read-only access, always prefer `VK_IMAGE_USAGE_SAMPLED_BIT` or `VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT` to preserve compression.
+
+== Memory Management in UMA
+
+In an embedded environment, memory is not just limited; it is often shared between the CPU and GPU in a Unified Memory Architecture (UMA). This means that every byte allocated by the GPU is a byte taken away from the system's general-purpose RAM.
+
+=== Identifying Memory Types
+
+Developers must query `vkGetPhysicalDeviceMemoryProperties` and look for the specific memory heaps and types available. On most UMA systems, you will find a single heap that has both `VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT` and `VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT` set for some memory types. This indicates that the CPU can directly access the same memory that the GPU uses, allowing for zero-copy data transfers.
+
+[NOTE]
+====
+Even though the memory is physically shared, the GPU may still have a dedicated cache. Forgetting to call `vkFlushMappedMemoryRanges` or `vkInvalidateMappedMemoryRanges` (or using `VK_MEMORY_PROPERTY_HOST_COHERENT_BIT`) will lead to corruption, just as it would on desktop.
+====
+
+=== Lazily Allocated Memory and Transient Attachments
+
+For intermediate data that only exists during a render pass, such as G-buffer attachments in a deferred renderer, Vulkan provides the "lazily-allocated" memory property. This is a key optimization for tile-based architectures to keep transient data on-chip.
+
+When an image is created with `VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT` and backed by memory with `VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT`, the implementation may not actually allocate physical system RAM for that image. Instead, the data only exists in the GPU's on-chip tile buffer during the render pass.
+
+Detailed usage of these bits is covered in the TBD [Transient Attachments] section.
+
+=== Sub-allocation and Fragmentation
+
+Embedded systems often have a very low `maxMemoryAllocationCount` (sometimes as low as 4096). This makes sub-allocation mandatory.
+
+* **Custom Allocators**: Use the xref:{chapters}memory_allocation.adoc[Memory Allocation] strategies to allocate large blocks (e.g., 64MB or 256MB) and sub-allocate buffers and images within them.
+* **Memory Alignment**: Alignment requirements for certain resources (like `minStorageBufferOffsetAlignment`) can be much larger on embedded GPUs than on desktop counterparts. Always check the limits in `VkPhysicalDeviceProperties`.
+* **Fragmented Memory**: In systems with long uptimes (like industrial controllers), memory fragmentation can lead to allocation failures even when "free" memory appears available. Reusing allocations or using a robust allocator like the Vulkan Memory Allocator (VMA) is highly recommended.
+
+== The Direct-to-Display Workflow (VK_KHR_display)
+
+Many embedded systems, particularly in automotive and industrial contexts, do not run a window manager like Wayland, X11, or Windows. Instead, the application needs to render directly to the physical display hardware or through a specialized compositor like QNX Screen. Vulkan provides this capability via the `VK_KHR_display` extension or platform-specific extensions like `VK_QNX_screen_surface`.
+
+The workflow for `VK_KHR_display` involves a direct negotiation with the display hardware:
+
+1. **Enumerate Displays**: Call `vkGetPhysicalDeviceDisplayPropertiesKHR` to find the available physical screens (`VkDisplayKHR`).
+2. **Select a Mode**: For a given display, query its supported modes (resolution and refresh rate) using `vkGetDisplayModePropertiesKHR`.
+3. **Identify Planes**: Hardware displays often have multiple "planes" for composition (e.g., a background video plane and a foreground UI plane). These are hardware-level overlays that can be combined without GPU interaction, saving power. Use `vkGetPhysicalDeviceDisplayPlanePropertiesKHR` to find them.
+4. **Find a Suitable Plane**: Check which planes can be used with your chosen display using `vkGetDisplayPlaneSupportedDisplaysKHR`.
+5. **Create the Surface**: Use `vkCreateDisplayPlaneSurfaceKHR` with the selected mode and plane to create a `VkSurfaceKHR`.
+
+Using hardware planes is a key optimization in automotive clusters, where a static background or video feed can be placed on a lower plane while the Gauges are rendered on a higher plane, potentially with different update rates and transparency.
+
+== Platform-Specific Deep Dives
+
+Embedded Vulkan development varies significantly depending on the target platform. Below are technical details for common non-mobile embedded targets.
+
+=== Raspberry Pi: VideoCore VI and VII
+
+The Raspberry Pi 4 (VideoCore VI) and Pi 5 (VideoCore VII) are the most popular single-board computers for Vulkan development. The primary driver is the Mesa `v3dv` driver.
+
+* **Control Lists (CL)**: The VideoCore GPU doesn't use standard command buffers in the way a desktop GPU does. Instead, the driver generates "Control Lists" that the hardware's V3D unit executes.
+* **Contiguous Memory Allocator (CMA)**: On Linux, the GPU requires physically contiguous memory. This is managed by the kernel's CMA pool. If your application crashes or fails to allocate memory despite plenty of RAM being available, you may need to increase the CMA size in `/boot/config.txt`.
+** Example: `dtoverlay=vc4-kms-v3d,cma-512` allocates 512MB to the GPU.
+* **Performance Tipping Points**: The `v3dv` driver is very efficient, but it has specific "tipping points" where it must flush the tile buffer to RAM (a "resolve"). To avoid this, ensure your render passes are structured to fit within the tile buffer limits (which vary based on the number of samples and the format of the attachments).
+
+=== Smart Televisions and Set-Top Boxes
+
+TV platforms (Android TV, Tizen, WebOS, or custom Linux) are media-centric and often use low-power SoCs that are optimized for video decoding over complex 3D rendering.
+
+* **A/V Synchronization**: When building a media player, synchronizing the Vulkan presentation with audio is critical to avoid "lip-sync" issues. Use `VK_GOOGLE_display_timing` to get precise information about when a frame was actually displayed. Newer extensions like `VK_KHR_present_id` and `VK_KHR_present_wait` allow the application to wait for a specific frame to be shown, enabling tighter control over the presentation loop.
+* **HDR and Color Spaces**: TVs are the primary target for High Dynamic Range (HDR). Vulkan supports this via `VK_EXT_swapchain_colorspace` (e.g., `VK_COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT` or `VK_COLOR_SPACE_HDR10_ST2084_EXT`). Use `VK_EXT_hdr_metadata` to pass static metadata like MaxCLL (Maximum Content Light Level) and MaxFALL (Maximum Frame Average Light Level) to the display, which the TV uses to adjust its tone-mapping.
+* **Hardware Composition**: Many TV SoCs allow the Vulkan swapchain to be one layer in a multi-layered hardware compositor. This allows for a 4K video background (decoded by a hardware block) and a 1080p Vulkan UI overlay to be combined without the GPU needing to touch the 4K video pixels. This "scaling" capability is crucial for performance, as rendering a complex UI at 4K on a low-end TV SoC is often impossible at 60 FPS.
+* **Refresh Rate Management**: TVs often support multiple refresh rates (e.g., 23.976 Hz for cinema, 50 Hz for PAL, 60 Hz for NTSC). Applications should query `vkGetPhysicalDeviceSurfacePresentModesKHR` and may need to recreate the swapchain when the media format changes to match the display's refresh rate, avoiding judder.
+
+=== Wearables and Smartwatches
+
+Wearables are the most constrained devices, often running on batteries for days. Every ALU operation and every memory access translates directly to reduced battery life.
+
+* **Subgroup Operations**: Use `VK_KHR_shader_subgroup` to share data between shader invocations. For example, if you need to calculate an average of pixels in a neighborhood, use subgroup arithmetic instead of writing to and reading from shared memory (`shared` variables). This keeps the data within the GPU's register file, saving significant power.
+* **Reduced Precision**: Most embedded GPUs are twice as fast when performing 16-bit arithmetic compared to 32-bit. Use `VK_KHR_shader_float16_int8` to use half-precision types. This not only doubles throughput but also reduces the number of registers used by the shader, which allows more workgroups to run in parallel.
+* **Circular Display Optimization**: Since many smartwatches use circular displays within square memory buffers, the corners represent approximately 21.5% of the total area (the geometric difference between a square and its inscribed circle). While Vulkan renders to rectangular surfaces, you can use `discard` or `VK_EXT_discard_rectangles` (if supported) to avoid fragment processing in these non-visible regions, significantly reducing GPU ALU load and power consumption.
+
+=== Automotive and Vulkan SC
+
+Automotive systems (Instrument clusters and Infotainment) require extreme reliability and deterministic performance, often with formal safety certifications like ISO 26262.
+
+* **Vulkan SC (Safety Critical)**: For systems that must be certified for safety (like digital dashboards showing speed and warnings), Vulkan SC is used. It is a subset of Vulkan 1.2 that removes all non-deterministic behavior, such as runtime shader compilation and unbounded memory growth.
+** **No Runtime Pipeline Creation**: In Vulkan SC, pipelines cannot be created during the main application loop. They must be pre-compiled and loaded during an initialization phase or using an offline tool. This ensures that no sudden stalls occur during rendering.
+** **Resource Reservation**: All objects (buffers, images, descriptor sets, and even the number of command buffers) must be pre-declared at device creation. This is done by passing a `VkDeviceObjectReservationCreateInfo` struct to `vkCreateDevice` via the `pNext` chain, which allows the driver to pre-allocate all necessary management structures.
+* **QNX Screen Integration**: On QNX Neutrino, Vulkan integrates with the Screen Graphics Subsystem. Developers use `VK_QNX_screen_surface` to create a surface from a Screen window or stream, which is the standard for mission-critical automotive software.
+* **Predictability over Peak Performance**: In automotive, a consistent 60 FPS is better than a variable 120 FPS. Any stutter could be perceived as a system failure. Use `VkPipelineCache` and ensure every possible pipeline state is warmed up before the car's splash screen finishes. In Vulkan SC, this "warm-up" is baked into the initialization phase by design.
+
+== Reliability and Predictability
+
+In mission-critical embedded systems, the focus shifts from "how fast can this go" to "can this go this fast forever?"
+
+* **Thermal Throttling**: Embedded devices often lack active cooling. If the GPU exceeds thermal limits, the hardware will drop its clock speed. A robust application should monitor the device temperature (if possible through platform APIs) and gracefully reduce the frame rate or visual complexity to avoid a sudden, drastic throttle.
+* **Robustness Extensions**: Use `VK_KHR_robustness2`. This ensures that if a shader performs out-of-bounds access, (e.g., due to a logic error or a bit-flip in radiation-hardened environments), the access is handled deterministically rather than causing a GPU hang or "TDR" (Timeout Detection and Recovery).
+* **Pipeline Predeterminism**: In many embedded scenarios, the application should not use any dynamic state that isn't necessary. The more state that is baked into the pipeline at creation time, the more the driver can optimize the generated machine code.
+
+== External Resources
+
+* link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples]: Practical examples of embedded optimizations (subpasses, lazy allocation, pre-rotation).  Several Vulkan Samples work on embedded systems.
+* link:https://registry.khronos.org/vulkan/[Vulkan Registry]: Official documentation for the various extensions mentioned above.
+* link:https://developer.arm.com/graphics[ARM Graphics Developer]: Detailed documentation on Mali GPU architecture and optimization.
+* link:https://developer.arm.com/documentation/101897/0304/Buffers-and-textures/AFBC-textures-for-Vulkan[ARM: AFBC Textures for Vulkan]: Specific guidance on avoiding compression-disabling flags.
+* link:https://docs.mesa3d.org/drivers/v3d.html[Mesa V3D/V3DV Documentation]: Technical details on the Raspberry Pi Vulkan driver implementation and the underlying VideoCore architecture.
+* link:https://www.khronos.org/vulkansc/[Vulkan SC]: Official page for Safety Critical Vulkan.
+* link:https://registry.khronos.org/vulkan/specs/latest/html/vkspec.html#VK_KHR_display[Vulkan Spec: VK_KHR_display]: Deep dive into the direct-to-display extension.
