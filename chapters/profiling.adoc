@@ -1,0 +1,215 @@
+// Copyright 2026 Holochip, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[profiling]]
+= Profiling
+
+Profiling in Vulkan is fundamentally different from traditional graphics APIs. Because Vulkan is an explicit API, the driver performs minimal state tracking and error checking at runtime. This transparency means that performance bottlenecks are rarely "hidden" inside the driver; instead, they are direct consequences of how the application manages resources, records commands, and synchronizes work between the CPU and GPU.
+
+This chapter provides a deep dive into identifying performance issues, using hardware metrics to find root causes, and implementing a robust profiling strategy.
+
+== The Profiling Mindset
+
+In Vulkan, you are responsible for the entire execution timeline. A common mistake is to treat the GPU as a "black box." To profile effectively, you must understand the asynchronous relationship between the CPU and GPU.
+
+*   **CPU Work**: Command buffer recording, descriptor updates, and pipeline creation.
+*   **Submission**: Handing off work to the GPU via `vkQueueSubmit`.
+*   **GPU Work**: Executing the commands in the order (and overlap) allowed by your synchronization.
+
+A performance "bubble" occurs when one processor is waiting for the other due to inefficient synchronization, such as excessive use of `vkDeviceWaitIdle` or poorly placed barriers.
+
+== Instrumentation and Annotation
+
+Before using any profiling tool, your application should be properly instrumented. Without names and labels, a profiler trace is just a sea of anonymous handles (e.g., `VkBuffer 0x559e...`).
+
+=== Naming Objects
+Use `VK_EXT_debug_utils` to assign human-readable names to every important Vulkan object. This is essential for identifying which buffer or image is causing memory bandwidth issues in a trace.
+
+[source,cpp]
+----
+VkDebugUtilsObjectNameInfoEXT name_info = {VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT};
+name_info.objectType = VK_OBJECT_TYPE_IMAGE;
+name_info.objectHandle = (uint64_t)my_texture_image;
+name_info.pObjectName = "Main Depth Buffer";
+
+vkSetDebugUtilsObjectNameEXT(device, &name_info);
+----
+
+=== Command Buffer Labels
+Labels allow you to group draw calls and dispatch commands into logical regions (e.g., "Shadow Pass", "Post-Processing"). These labels appear in tools like RenderDoc, NVIDIA Nsight, and AMD RGP.
+
+[source,cpp]
+----
+VkDebugUtilsLabelEXT label = {VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT};
+label.pLabelName = "Deferred Lighting Pass";
+label.color[0] = 1.0f; // Red component
+
+vkCmdBeginDebugUtilsLabelEXT(command_buffer, &label);
+// ... draw calls ...
+vkCmdEndDebugUtilsLabelEXT(command_buffer);
+----
+
+=== GPU Timestamps
+While CPU-side timers can measure how long `vkQueueSubmit` takes, they cannot measure how long the GPU takes to execute the work. Use `VkQueryPool` to capture accurate hardware timestamps on the GPU timeline.
+
+[source,cpp]
+----
+// 1. Create a query pool for timestamps
+VkQueryPoolCreateInfo query_pool_info = {VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO};
+query_pool_info.queryType = VK_QUERY_TYPE_TIMESTAMP;
+query_pool_info.queryCount = 2;
+vkCreateQueryPool(device, &query_pool_info, nullptr, &query_pool);
+
+// 2. Record timestamps in a command buffer
+vkCmdResetQueryPool(command_buffer, query_pool, 0, 2);
+vkCmdWriteTimestamp(command_buffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, query_pool, 0);
+
+// ... Work to be measured (e.g., a specific render pass) ...
+
+vkCmdWriteTimestamp(command_buffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, query_pool, 1);
+
+// 3. Retrieve results (usually in the next frame to avoid blocking)
+uint64_t results[2];
+vkGetQueryPoolResults(device, query_pool, 0, 2, sizeof(results), results,
+                      sizeof(uint64_t), VK_QUERY_RESULT_64_BIT | VK_QUERY_RESULT_WAIT_BIT);
+
+// 4. Convert to milliseconds
+// timestampPeriod is retrieved from VkPhysicalDeviceLimits
+float elapsed_ms = (results[1] - results[0]) * physical_device_properties.limits.timestampPeriod / 1e6f;
+----
+
+== CPU-Side Bottlenecks
+
+Even with Vulkan's low overhead, the CPU can still be the bottleneck.
+
+=== Command Recording Overhead
+The most expensive part of the CPU's Vulkan workload is recording command buffers.
+
+*   **Secondary Command Buffers**: Use these to parallelize recording across multiple CPU threads.
+*   **State Changes**: While `vkCmdBindPipeline` is cheaper than its OpenGL equivalent, it still triggers internal driver state updates. Sort draw calls by pipeline to minimize these.
+*   **Descriptor Updates**: `vkUpdateDescriptorSets` is a heavyweight CPU operation. If your profiler shows high CPU time in this call, consider:
+    - **Descriptor Indexing**: (`VK_EXT_descriptor_indexing`) to bind all textures once and index them in the shader.
+    - **Descriptor Buffers**: (`VK_EXT_descriptor_buffer`) to manage descriptors as raw memory, bypassing the CPU-heavy update calls.
+
+=== Submission and Synchronization
+Calling `vkQueueSubmit` frequently with small amounts of work is a major performance killer. Each submission has a high fixed cost. Batch as many command buffers as possible into a single submission.
+
+Avoid `vkDeviceWaitIdle` or `vkQueueWaitIdle` in your main loop. These calls drain the entire GPU pipeline, forcing the CPU to wait until the GPU is completely empty. Instead, use a ring buffer of fences to track frame completion and keep the GPU fed with work for future frames.
+
+[source,cpp]
+----
+// Configuration for double-buffering
+const uint32_t MAX_FRAMES_IN_FLIGHT = 2;
+uint32_t current_frame = 0;
+
+// One fence per frame in flight
+VkFence frame_fences[MAX_FRAMES_IN_FLIGHT];
+
+// Create fences in the signaled state so the first frame doesn't block
+VkFenceCreateInfo fence_info = {VK_STRUCTURE_TYPE_FENCE_CREATE_INFO};
+fence_info.flags = VK_FENCE_SIGNALED_BIT;
+for (uint32_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+    vkCreateFence(device, &fence_info, nullptr, &frame_fences[i]);
+}
+
+// Main Loop
+while (running) {
+    uint32_t frame_index = current_frame % MAX_FRAMES_IN_FLIGHT;
+
+    // Wait for the GPU to finish the work from the previous time this frame slot was used
+    vkWaitForFences(device, 1, &frame_fences[frame_index], VK_TRUE, UINT64_MAX);
+    vkResetFences(device, 1, &frame_fences[frame_index]);
+
+    // ... Record command buffers for this frame ...
+
+    VkSubmitInfo submit_info = {VK_STRUCTURE_TYPE_SUBMIT_INFO};
+    submit_info.commandBufferCount = 1;
+    submit_info.pCommandBuffers = &command_buffers[frame_index];
+
+    // The fence will be signaled when the GPU finishes executing this submission
+    vkQueueSubmit(queue, 1, &submit_info, frame_fences[frame_index]);
+
+    current_frame++;
+}
+----
+
+This pattern allows the CPU to start preparing `frame N+1` while the GPU is still processing `frame N`. Using `vkDeviceWaitIdle` would force the GPU to finish `frame N` entirely before the CPU even begins recording `frame N+1`.
+
+== GPU-Side Bottlenecks
+
+Once you confirm you are GPU-bound (e.g., your frame time is dominated by GPU execution rather than CPU wait time), you need to look at hardware-specific metrics.
+
+=== Understanding Hardware Metrics
+Most vendor-specific tools provide metrics that help identify which part of the GPU pipeline is struggling:
+
+*   **Occupancy**: The ratio of active "warps" or "wavefronts" (groups of threads) to the maximum possible on the hardware. Low occupancy often means your shaders are using too many registers, preventing the GPU from hiding latency.
+*   **Stalls**: Occurs when the GPU's execution units (ALUs) are waiting for data.
+    - **Memory Stall**: Waiting for data to arrive from VRAM or L2 cache.
+    - **Execution Stall**: Waiting for a previous instruction to finish (e.g., a long-latency math operation).
+*   **Bandwidth Utilization**: High utilization of the memory controller indicates you are "memory bound."
+
+=== Common GPU Issues
+*   **Vertex Bound**: Too many vertices or inefficient vertex fetch. Use `VK_KHR_mesh_shader` to replace the traditional vertex pipeline if geometry is the bottleneck.
+*   **Fragment Bound (Fill Rate)**: High overdraw is the most common cause.
+    - **Early-Z**: Ensure you are using `VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT` and front-to-back sorting.
+    - **Overdraw Analysis**: Use RenderDoc's overdraw overlay to find areas where the same pixel is shaded multiple times.
+*   **Bandwidth Bound**: Caused by large, uncompressed textures or too many render target attachments.
+    - Use texture compression (ASTC, BCn).
+    - Use `VK_ATTACHMENT_LOAD_OP_CLEAR` instead of manual `vkCmdClearColorImage` to allow the hardware to optimize memory bandwidth.
+
+== Synchronization Bubbles
+
+A "bubble" is a period where the GPU is idle because it is waiting for a synchronization dependency that hasn't been met yet.
+
+*   **Identifying Bubbles**: Tools like **AMD Radeon GPU Profiler (RGP)** or **NVIDIA Nsight Systems** show the GPU timeline. If you see large gaps between workloads where no queues are active, you have a bubble.
+*   **Root Causes**:
+    - **Restrictive Barriers**: Using `VK_PIPELINE_STAGE_ALL_COMMANDS_BIT` forces the GPU to wait for all previous work to finish before starting the next task, even if they aren't dependent.
+    - **CPU-GPU Synchronization**: The CPU isn't submitting work fast enough, or it's waiting for a fence from a previous frame too early.
+
+== Choosing the Right Tool
+
+Profiling tools are generally categorized by the level of detail they provide. Understanding which tool to use for a specific problem is key to a fast optimization cycle.
+
+=== API and System-Level Tracing
+
+These tools show the high-level relationship between CPU threads and GPU queues. They are essential for finding synchronization bubbles and seeing the "big picture" of your frame.
+
+*   **link:https://developer.nvidia.com/nsight-systems[NVIDIA Nsight Systems]**: A system-wide profiling tool that provides a unified view of CPU and GPU activity. It excels at identifying CPU-GPU synchronization issues, command submission overhead, and system-level bottlenecks.
+*   **link:https://gpuopen.com/rgp/[AMD Radeon GPU Profiler (RGP)]**: A low-level performance analysis tool for AMD Radeon GPUs. It provides a detailed timeline of GPU workloads, allowing you to see exactly how command buffers are executed and identify hardware-level stalls.
+*   **link:https://developer.android.com/agi[Android GPU Inspector (AGI)]**: Google's profiler for the Android platform. It provides Vulkan API tracing and GPU performance analysis, supporting system trace correlation with GPU workloads to identify rendering bottlenecks on Android devices.
+*   **link:https://www.vktracer.com[VKtracer]**: A lightweight, cross-vendor, and cross-platform Vulkan profiler. It logs API calls and their timings by acting as a Vulkan layer, making it useful for identifying expensive `vkUpdateDescriptorSets` or `vkQueueSubmit` calls without hardware-specific setup.
+
+=== Hardware-Specific Counter Profilers
+
+These provide the deepest dive into the GPU's internals, such as occupancy, cache hits, and the balance between ALU and texture units.
+
+*   **link:https://developer.nvidia.com/nsight-graphics[NVIDIA Nsight Graphics]**: A comprehensive graphics debugger and profiler for NVIDIA GPUs. It offers detailed shader profiling, hardware unit utilization, and memory analysis to find the root cause of GPU-side bottlenecks.
+*   **link:https://developer.arm.com/Tools%20and%20Software/Streamline%20Performance%20Analyzer[Arm Streamline Performance Analyzer]**: Part of Arm Mobile Studio, it visualizes the performance of mobile applications on Arm-based devices, providing CPU, GPU, and system-level metrics.
+*   **link:https://developer.qualcomm.com/software/snapdragon-profiler[Qualcomm Snapdragon Profiler]**: Targets Adreno GPUs on Snapdragon devices, providing detailed GPU metrics, API trace capture, and shader profiling for mobile Vulkan optimization.
+*   **link:https://developer.imaginationtech.com/pvrtune/[Imagination PVRTune]**: A real-time hardware performance analysis tool for PowerVR GPUs that helps identify bottlenecks in mobile architectures (TBR/TBDR).
+
+=== Frame Debuggers (with timing)
+
+While primarily for debugging, these are often the first stop for performance analysis.
+
+*   **link:https://renderdoc.org/[RenderDoc]**: A multi-platform, open-source frame debugger. It provides per-draw call timings and overdraw visualization. While timing results aren't as accurate as hardware counters (as they don't account for pipeline overlap), they are invaluable for identifying which pass is the primary time-sink.
+
+== Pipeline Integration
+
+Automating performance testing in CI/CD is the only way to catch regressions early in development.
+
+1.  **Repeatable Captures**: Use **link:https://github.com/LunarG/gfxreconstruct[GFXReconstruct]** to record a sequence of frames. This ensures that every test run uses the exact same API calls, removing the variance of interactive input.
+2.  **Headless Replay**: Replay the capture in your CI environment using `gfxrecon-replay`.
+3.  **Metrics Extraction**:
+    - Use command-line interfaces (e.g., `nsys profile` or `rgp`) to capture hardware metrics during the replay.
+    - Compare the results (e.g., average frame time, peak VRAM usage) against a known baseline.
+4.  **Reporting**: If performance drops beyond a set threshold (e.g., 5%), fail the build and attach the trace for developer review.
+
+== Further Reading
+
+*   link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/performance[Vulkan Samples: Performance Best Practices]: Practical examples of every optimization mentioned here.
+*   link:https://gpuopen.com/learn/vulkan-barriers-explained/[Vulkan Barriers Explained]: The definitive guide to avoiding synchronization bubbles.
+*   link:https://developer.nvidia.com/blog/vulkan-dos-donts/[NVIDIA Vulkan Dos and Don'ts]: High-level design patterns for maximum performance.
