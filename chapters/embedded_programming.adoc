@@ -72,7 +72,10 @@ The workflow for `VK_KHR_display` involves a direct negotiation with the display
 5. **Create the Surface**: Use `vkCreateDisplayPlaneSurfaceKHR` with the selected mode and plane to create a `VkSurfaceKHR`.
 
 Using hardware planes is a key optimization in automotive clusters, where a static background or video feed can be placed on a lower plane while the Gauges are rendered on a higher plane, potentially with different update rates and transparency.
-
+[NOTE]
+====
+For those who want to develop locally, using a new TTY terminal (`Ctrl + Alt + F3`) on most linux distributions will allow you to use VK_KHR_display. You can also test it out with vkcube by calling `vkcube --wsi display`
+====
 == Platform-Specific Deep Dives
 
 Embedded Vulkan development varies significantly depending on the target platform. Below are technical details for common non-mobile embedded targets.
