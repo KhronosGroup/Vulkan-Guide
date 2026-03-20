@@ -58,8 +58,8 @@ A few important things to note:
 
 - The `WorkgroupSize` decoration will take precedence over any `LocalSize` or `LocalSizeId` in the same module.
 - `LocalSizeId` was added in the extension `VK_KHR_maintenance4` (made core in Vulkan 1.3) to allow the ability to use specialization constants to set the size.
-- There is a `maxComputeWorkGroupSize` limit how large the `X`, `Y`, and `Z` size can each be (most implementations {max-compute-workgroup-size-link}[support around 1024 for each dimension])
-- There is a `maxComputeWorkGroupInvocations` limit how large the product of `X` * `Y` * `Z` can be (most implementations link:https://vulkan.gpuinfo.org/displaydevicelimit.php?name=maxComputeWorkGroupInvocations&platform=all[support around 1024])
+- There is a `maxComputeWorkGroupSize` limit how large the `X`, `Y`, and `Z` size can each be. Most implementations {max-compute-workgroup-size-link}[support around 1024 for each dimension]
+- There is a `maxComputeWorkGroupInvocations` limit how large the product of `X` * `Y` * `Z` can be. Most implementations link:https://vulkan.gpuinfo.org/displaydevicelimit.php?name=maxComputeWorkGroupInvocations&platform=all[support around 1024]
 
 === Local and Global Workgroups
 
