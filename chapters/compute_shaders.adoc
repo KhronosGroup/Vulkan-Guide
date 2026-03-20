@@ -80,7 +80,7 @@ There is a `maxComputeSharedMemorySize` limit (link:https://vulkan.gpuinfo.org/d
 
 === Shared Memory Race Conditions
 
-It is very easy to get into race conditions with shared memory.
+It is very easy to have race conditions when using shared memory.
 
 The classic example is having multiple invocations initializing something to the same value.
 
