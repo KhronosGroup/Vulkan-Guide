@@ -31,7 +31,7 @@ For those who are more familiar with graphics in Vulkan, compute will be a simpl
 - Call `vkCmdDispatch` instead of `vkCmdDraw`
 - Use `vkCreateComputePipelines` instead of `vkCreateGraphicsPipelines`
 - Make sure your `VkQueue` xref:{chapters}queues.adoc[supports] `VK_QUEUE_COMPUTE_BIT`
-- When binding descriptors or pipeline to your command buffer, make sure to use `VK_PIPELINE_BIND_POINT_COMPUTE`
+- When binding descriptors and pipelines to your command buffer, make sure to use `VK_PIPELINE_BIND_POINT_COMPUTE`
 
 == SPIR-V Terminology
 
