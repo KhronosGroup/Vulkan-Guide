@@ -82,7 +82,7 @@ There is a `maxComputeSharedMemorySize` limit (link:https://vulkan.gpuinfo.org/d
 
 It is very easy to have race conditions when using shared memory.
 
-The classic example is having multiple invocations initializing something to the same value.
+The classic example is when multiple invocations initialize something to the same value.
 
 [source,glsl]
 ----
