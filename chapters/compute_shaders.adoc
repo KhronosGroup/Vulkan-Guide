@@ -37,7 +37,7 @@ For those who are more familiar with graphics in Vulkan, compute will be a simpl
 
 The smallest unit of work that is done is called an `invocation`. It is a "thread" or "lane" of work.
 
-`Invocations` are partitioned into `subgroups`, where `invocations` within a `subgroup` can synchronize and share data with each other efficiently. (See more in the xref:{chapters}subgroups.adoc[subgroup chapter])
+Multiple `Invocations` are organized into `subgroups`, where `invocations` within a `subgroup` can synchronize and share data with each other efficiently. (See more in the xref:{chapters}subgroups.adoc[subgroup chapter])
 
 Next we have `workgroups` which is the smallest unit of work that an application can define. A `workgroup` is a collection of `invocations` that execute the same shader.
 
