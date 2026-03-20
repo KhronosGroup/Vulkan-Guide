@@ -63,7 +63,7 @@ A few important things to note:
 
 === Local and Global Workgroups
 
-When a `vkCmdDispatch` is called, it sets the number of workgroups to dispatch. This produces a `global workgroup` space that the GPU will work on. Each single workgroup is a `local workgroup`. An `invocation` within a `local workgroup` can share data with other members of the `local workgroup` through shared variables and issue memory and control flow barriers to synchronize with other members of the `local workgroup`.
+When `vkCmdDispatch` is called, it sets the number of workgroups to dispatch. This produces a `global workgroup` space that the GPU will work on. Each single workgroup is a `local workgroup`. An `invocation` within a `local workgroup` can share data with other members of the `local workgroup` through shared variables as well as issue memory and control flow barriers to synchronize with other members of the `local workgroup`.
 
 [NOTE]
 ====
