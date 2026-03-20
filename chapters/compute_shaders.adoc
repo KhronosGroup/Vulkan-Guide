@@ -126,7 +126,7 @@ void main() {
 
 Luckily this problem can be caught automatically using the link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/main/docs/gpu_validation.md[GPU-AV] feature in Vulkan Validation Layers!
 
-As of March 2026 (TODO - Add SDK version when released in May) when using GPU-AV, it will attempt to detect these races for you. There are a link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/main/layers/gpuav/shaders/instrumentation/shared_memory_data_race.comp#L47[few limitations], but highly suggest trying out if having strange issues around your shared memory accesses.
+As of March 2026 (TODO - Add SDK version when released in May), GPU-AV will attempt to detect these races for you. There are a link:https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/main/layers/gpuav/shaders/instrumentation/shared_memory_data_race.comp#L47[few limitations], but highly suggest trying out if having strange issues around your shared memory accesses.
 
 === Explicit Layout of shared memory
 
