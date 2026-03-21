@@ -227,7 +227,7 @@ These are supplemental references for the various Vulkan Extensions. Please cons
 
 == xref:{chapters}extensions/VK_KHR_shader_subgroup_uniform_control_flow.adoc[VK_KHR_shader_subgroup_uniform_control_flow]
 
-== xref:{chapters}extensions/VK_KHR_debug_utils.adoc[VK_KHR_debug_utils]
+== xref:{chapters}extensions/VK_EXT_debug_utils.adoc[VK_EXT_debug_utils]
 
 = link:CONTRIBUTING.adoc[Contributing]
 
