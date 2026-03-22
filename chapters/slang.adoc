@@ -14,17 +14,21 @@ image::{images}slang-write-once-run-anywhere-graphic.webp[Slang overview]
 
 Slang is developed in the link:https://github.com/shader-slang[Open Source] and is under the link:https://www.khronos.org/news/press/khronos-group-launches-slang-initiative-hosting-open-source-compiler-contributed-by-nvidia[goverance of Khronos], meaning it has broad industry support and is actively maintained.
 
-It's syntax is similar to xref:{chapters}hlsl.adoc[HLSL] with additions like modules to make the language easier to use and to better handle complex code bases. 
+It's syntax is similar to xref:{chapters}hlsl.adoc[HLSL] with additions like modules to make the language easier to use and to better handle complex code bases.
+
+It has great tooling-support with debuggers like link:https://renderdoc.org/[RenderDoc] and link:https://developer.nvidia.com/nsight-graphics[Night]. Syntax highlighting is available for most popular IDEs like link:https://marketplace.visualstudio.com/items?itemName=shader-slang.slang-vs-extension[Visual Studio] and link:https://marketplace.visualstudio.com/items?itemName=shader-slang.slang-language-extension[Visual Studio Code].
 
 == Educational resources
 
 If you are new to Slang, here are some educational points:
 
 * link:https://shader-slang.org/[Slang website]
+* link:https://shader-slang.org/docs/getting-started/[Getting started with Slang]
 * link:https://docs.shader-slang.org/en/latest/external/slang/docs/user-guide/[Slang Users's Guide]
 * link:https://docs.shader-slang.org/en/latest/external/slang/docs/user-guide/a2-01-spirv-target-specific.html[SPIR-V specific functionalities]
 * link:https://shader-slang.org/docs/coming-from-hlsl/[Porting from HLSL]
 * link:https://shader-slang.org/docs/coming-from-glsl/[Porting from GLSL]
+* link:https://shader-slang.org/slang-playground/[Interactive Slang shader playground]
 * xref:samples::README.adoc[The Vulkan Samples come with Slang shaders]
 
 == Key differences
