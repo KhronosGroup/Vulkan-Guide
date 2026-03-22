@@ -6,30 +6,30 @@ ifndef::images[:images: images/]
 
 = Slang Shading Language in Vulkan
 
-image::{images}slang-write-once-run-anywhere-graphic.webp[Slang overview]
-
 Vulkan does not directly consume shaders in a human-readable text format, but instead uses xref:{chapters}what_is_spirv.adoc[SPIR-V] as an intermediate representation. This opens the option to use shader languages other than e.g. GLSL, as long as they can target the Vulkan SPIR-V environment.
 
 One such language is the link:https://shader-slang.org[Slang Shading Language] developed by NVIDIA. It was designed to address the evolving needs of real-time graphics development, especially in regards to shader code bases getting larger and more complex. It supports multiple APIs, among them is first-class support for Vulkan's SPIR-V.
 
+image::{images}slang-write-once-run-anywhere-graphic.webp[Slang overview]
+
 Slang is developed in the link:https://github.com/shader-slang[Open Source] and is under the link:https://www.khronos.org/news/press/khronos-group-launches-slang-initiative-hosting-open-source-compiler-contributed-by-nvidia[goverance of Khronos], meaning it has broad industry support and is actively maintained.
 
-It's syntax is similar to xref:{chapters}HLSL.adoc[HLSL] with additions like modules to make the language easier to use and to better handle complex code bases. 
+It's syntax is similar to xref:{chapters}hlsl.adoc[HLSL] with additions like modules to make the language easier to use and to better handle complex code bases. 
 
 == Educational resources
 
 If you are new to Slang, here are some educational points:
 
 * link:https://shader-slang.org/[Slang website]
-* link:https://docs.shader-slang.org/en/latest/external/slang/docs/user-guide/[Slang Users's Guide].
+* link:https://docs.shader-slang.org/en/latest/external/slang/docs/user-guide/[Slang Users's Guide]
 * link:https://docs.shader-slang.org/en/latest/external/slang/docs/user-guide/a2-01-spirv-target-specific.html[SPIR-V specific functionalities]
 * link:https://shader-slang.org/docs/coming-from-hlsl/[Porting from HLSL]
 * link:https://shader-slang.org/docs/coming-from-glsl/[Porting from GLSL]
-* xref:samples::README.adoc[The Vulkan Samples support Slang shaders]
+* xref:samples::README.adoc[The Vulkan Samples come with Slang shaders]
 
 == Key differences
 
-Some of the key differences for Vulkan developers compared to GLSL and HLSL:
+Some of the key differences for Vulkan developers compared to GLSL and/or HLSL:
 
 * C{pp} syntax based on HLSL
 	* Modules
