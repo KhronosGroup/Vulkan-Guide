@@ -47,11 +47,16 @@ While slightly annoying, Vulkan spec uses `WorkGroup` while the SPIR-V spec spel
 
 === Workgroup Size
 
-Setting the `workgroup` size can be done in 3 ways
+Setting the `workgroup` size can be done in 3 ways in SPIR-V:
 
 1. Using the `WorkgroupSize` built-in (link:https://godbolt.org/z/ees83eT7x[example])
 2. Using the `LocalSize` execution mode (link:https://godbolt.org/z/3zn1Preb8[example])
 3. Using the `LocalSizeId` execution mode (link:https://godbolt.org/z/dP7daqTas[example])
+
+[NOTE]
+====
+Examples how to do this in link:https://godbolt.org/z/cP8esohKz[glsl], link:https://godbolt.org/z/6W41K4bbz[hlsl], and link:https://godbolt.org/z/94erx7eTT[slang]
+====
 
 A few important things to note:
 
