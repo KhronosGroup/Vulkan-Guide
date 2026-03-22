@@ -1,4 +1,4 @@
-// Copyright 2019-2024 The Khronos Group, Inc.
+// Copyright 2019-2026 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 = Vulkan^®^ Guide
@@ -171,6 +171,8 @@ The Vulkan Guide content is also viewable from https://docs.vulkan.org/guide/lat
 == xref:{chapters}common_pitfalls.adoc[Common Pitfalls]
 
 == xref:{chapters}hlsl.adoc[Using HLSL shaders]
+
+== xref:{chapters}slang.adoc[Using Slang shaders]
 
 == xref:{chapters}high_level_shader_language_comparison.adoc[High Level Shader Language Comparison]
 
