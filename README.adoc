@@ -154,6 +154,8 @@ The Vulkan Guide content is also viewable from https://docs.vulkan.org/guide/lat
 
 === xref:{chapters}dynamic_state_map.adoc[Dynamic State Map]
 
+== xref:{chapters}compute_shaders.adoc[Compute Shaders]
+
 == xref:{chapters}subgroups.adoc[Subgroups]
 
   * `VK_EXT_subgroup_size_control`, `VK_KHR_shader_subgroup_extended_types`, `VK_EXT_shader_subgroup_ballot`, `VK_EXT_shader_subgroup_vote`
