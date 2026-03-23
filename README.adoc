@@ -70,6 +70,8 @@ The Vulkan Guide content is also viewable from https://docs.vulkan.org/guide/lat
 
 == xref:{chapters}ide.adoc[Development Environments & IDEs]
 
+== xref:{chapters}ai_tools_and_agents.adoc[AI-assisted Vulkan Development: MCP, Local LLMs, and Agentic IDE Tools]
+
 == xref:{chapters}vulkan_profiles.adoc[Vulkan Profiles]
 
 == xref:{chapters}loader.adoc[Loader]
