@@ -315,7 +315,7 @@ Vulkan에서는 xref:{chapters}extensions/cleanup.adoc#vk_khr_depth_stencil_reso
 
 다음은 깊이 테스트에 대한 개괄적인 개요입니다.
 
-image::../../../chapters/images/depth_test.png[depth_test]
+image::../../../chapters/images/depth_test.svg[depth_test]
 
 [[depth-compare-operation]]
 ==== 깊이 비교 연산(Depth Compare Operation)

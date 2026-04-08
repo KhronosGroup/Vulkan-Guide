@@ -71,17 +71,7 @@ Some device migth support `bufferDeviceAddress`, but not `shaderInt64`. The way 
 
 === Alignment
 
-All variables accessed with `PhysicalStorageBuffer` must have an `Aligned` memory operand to it.
-
-[source,swift]
-----
-%x = OpLoad %type %ptr Aligned 16
-OpStore %ptr %obj Aligned 16
-----
-
-Shading languages will have a default, but can allow you to align it explicitly (ex `buffer_reference_alignment`).
-
-The goal of this alignment is this is a promise for how aligned this specific pointer is. The user is responsible to confirm the address they use is aligned to it.
+See dedicated xref:{chapters}sparse_resources.adoc#sparse-resources[BDA Alignment chapter].
 
 === Nullptr
 

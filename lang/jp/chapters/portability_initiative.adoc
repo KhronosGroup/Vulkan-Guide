@@ -31,6 +31,6 @@ image::../../../chapters/images/portability_initiative_macos.png[portability_ini
 
 == gfx-rs
 
-現在、Mozilla は link:https://github.com/gfx-rs/portability[gfx-rs の移植性]を推進しており、link:https://gfx-rs.github.io/2017/07/24/low-level.html[gfx-hal] を他のさまざまなAPIとのインターフェイスとして使用しています。
+現在、Mozilla は link:https://github.com/gfx-rs/portability[gfx-rs の移植性]を推進しており、link:https://github.com/gfx-rs/wgpu/pull/1471[wgpu-hal] を他のさまざまなAPIとのインターフェイスとして使用しています。
 
 image::../../../chapters/images/portability_initiative_gfxrs.png[portability_initiative_gfxrs.png]

@@ -7,8 +7,6 @@ name: CI
 
 # Controls when the action will run.
 on:
-  # Triggers the workflow on push or manual dispatch
-  push:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -44,4 +42,4 @@ jobs:
       - name: awesome_bot
         run: |
           gem install awesome_bot
-          awesome_bot --request-delay 2 -t 20 --allow-redirect --allow-dupe chapters/*.adoc chapters/extensions/*.adoc --white-list https://apps.apple.com/,https://www.youtube.com/,https://khr.io/slack,https://www.khronos.org/opengl/
+          awesome_bot --request-delay 2 -t 20 --allow-redirect --allow-dupe chapters/*.adoc chapters/extensions/*.adoc --white-list http://schemas.android.com/apk/res/android.xsd,https://apps.apple.com/,https://www.youtube.com/,https://khr.io/slack,https://www.khronos.org/opengl/

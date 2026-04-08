@@ -12,7 +12,7 @@ ifndef::images[:images: ../images/]
 Vulkan 1.2에서 코어로 승격됨
 ====
 
-`VkFramebuffer` 를 생성할 때 일반적으로 `VkFramebufferCreateInfo::pAttachments` 에서 사용 중인 `VkImageView`s`` 를 전달해야 합니다. `VkImageView` 가 필요하면 애플리케이션이 각 스왑체인 이미지에 대한 프레임버퍼를 만들어야 합니다. `VK_KHR_imageless_framebuffer` 를 사용하면 `vkCmdBeginRenderPass` 시점에 `VkImageView` 정보가 대신 제공됩니다. 이는 모든 스왑체인 이미지에 대해 `VkFramebuffer` 하나만 필요하다는 것을 의미합니다. 주의할 점은 스왑체인의 크기가 변경되더라도 `VkFramebuffer`는 `높이(height)`와 `폭(width)`과 같은 정보를 조정하기 위해 다시 생성되어야 한다는 것입니다.
+`VkFramebuffer` 를 생성할 때 일반적으로 `VkFramebufferCreateInfo::pAttachments` 에서 사용 중인 ``VkImageView``s 를 전달해야 합니다. `VkImageView` 가 필요하면 애플리케이션이 각 스왑체인 이미지에 대한 프레임버퍼를 만들어야 합니다. `VK_KHR_imageless_framebuffer` 를 사용하면 `vkCmdBeginRenderPass` 시점에 `VkImageView` 정보가 대신 제공됩니다. 이는 모든 스왑체인 이미지에 대해 `VkFramebuffer` 하나만 필요하다는 것을 의미합니다. 주의할 점은 스왑체인의 크기가 변경되더라도 `VkFramebuffer`는 `높이(height)`와 `폭(width)`과 같은 정보를 조정하기 위해 다시 생성되어야 한다는 것입니다.
 
 이미지 없는 `VkFramebuffer` 를 이용하려면
 

@@ -29,7 +29,7 @@ The Vulkan Guide is designed to help developers get up and going with the world 
 
 [NOTE]
 ====
-The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
+The Vulkan Guide content is also viewable from https://docs.vulkan.org/guide/latest/index.html
 ====
 
 :leveloffset: 1
@@ -64,6 +64,10 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 = Using Vulkan
 
+== xref:{chapters}deprecated.adoc[Deprecated]
+
+== xref:{chapters}windowing_audio_input.adoc[Windowing, Audio, and Input]
+
 == xref:{chapters}ide.adoc[Development Environments & IDEs]
 
 == xref:{chapters}tile_based_rendering_best_practices.adoc[Tile Based Rendering (TBR) Best Practices]
@@ -71,7 +75,6 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 == xref:{chapters}vulkan_profiles.adoc[Vulkan Profiles]
 
 == xref:{chapters}loader.adoc[Loader]
-
 
 == xref:{chapters}layers.adoc[Layers]
 
@@ -109,6 +112,8 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
   * `VK_KHR_buffer_device_address`, `VK_EXT_buffer_device_address`
 
+=== xref:{chapters}buffer_device_address_alignment.adoc[Buffer Device Address - Alignment]
+
 == xref:{chapters}pipeline_cache.adoc[Pipeline Caching/Derivatives]
 
 == xref:{chapters}threading.adoc[Threading]
@@ -129,11 +134,17 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
 
 === xref:{chapters}descriptor_dynamic_offset.adoc[Descriptor Dynamic Offset]
 
+=== xref:{chapters}descriptor_buffer.adoc[Descriptor Buffers (VK_EXT_descriptor_buffer)]
+
+=== xref:{chapters}descriptor_heap.adoc[Descriptor Heaps (VK_EXT_descriptor_heap)]
+
 === xref:{chapters}location_component_interface.adoc[Location and Component Interface]
 
 === xref:{chapters}push_constants.adoc[Push Constants]
 
 === xref:{chapters}ways_to_provide_spirv.adoc[Ways to Provide SPIR-V]
+
+=== xref:{chapters}buffer_array_length.adoc[Buffer Array Length (OpArrayLength)]
 
 == xref:{chapters}robustness.adoc[Robustness]
 
@@ -144,6 +155,8 @@ The Vulkan Guide can be built as a single page using `asciidoctor guide.adoc`
   * `VK_EXT_extended_dynamic_state`, `VK_EXT_extended_dynamic_state2`, `VK_EXT_extended_dynamic_state3`, `VK_EXT_vertex_input_dynamic_state`, `VK_EXT_color_write_enable`, `VK_EXT_attachment_feedback_loop_dynamic_state`
 
 === xref:{chapters}dynamic_state_map.adoc[Dynamic State Map]
+
+== xref:{chapters}compute_shaders.adoc[Compute Shaders]
 
 == xref:{chapters}subgroups.adoc[Subgroups]
 
@@ -218,7 +231,7 @@ These are supplemental references for the various Vulkan Extensions. Please cons
 
 == xref:{chapters}extensions/VK_KHR_shader_subgroup_uniform_control_flow.adoc[VK_KHR_shader_subgroup_uniform_control_flow]
 
-== xref:{chapters}extensions/VK_KHR_debug_utils.adoc[VK_KHR_debug_utils]
+== xref:{chapters}extensions/VK_EXT_debug_utils.adoc[VK_EXT_debug_utils]
 
 = link:CONTRIBUTING.adoc[Contributing]
 

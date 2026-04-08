@@ -92,9 +92,9 @@ VkSubpassDependency2 dependency = {
   * `VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR`
   * `VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR`
 
-=== VK_PIPELINE_STAGE_ALL_TRANSFER_BIT の分割
+=== VK_PIPELINE_STAGE_TRANSFER_BIT の分割
 
-`VK_PIPELINE_STAGE_ALL_TRANSFER_BIT`（現在は `VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KHR` ）は、1つのパイプラインステージフラグにまとめられるのではなく、さまざまなステージングコマンドの専用ステージを指定する4つの新しいステージフラグに分割されました。
+`VK_PIPELINE_STAGE_TRANSFER_BIT`（現在は `VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KHR` ）は、1つのパイプラインステージフラグにまとめられるのではなく、さまざまなステージングコマンドの専用ステージを指定する4つの新しいステージフラグに分割されました。
 
   * `VK_PIPELINE_STAGE_2_COPY_BIT_KHR`
   * `VK_PIPELINE_STAGE_2_RESOLVE_BIT_KHR`

@@ -21,11 +21,6 @@ image::../../images/khronos_logo.png[Khronos logo]
 
 Vulkan Guide は、開発者が Vulkan の世界へ足を踏み出すための手助けをするものです。このガイドは気軽に読める内容を目指しており、知りたいトピックに対して参考になるさまざまな資料を紹介します。ここには、Vulkan の多くのニュアンスに対する理解を促すための情報が記載されています。
 
-[NOTE]
-====
-Vulkan Guide は、`asciidoctor guide.adoc` を使って1つのページとしてビルドできます。
-====
-
 :leveloffset: 1
 
 = 概要

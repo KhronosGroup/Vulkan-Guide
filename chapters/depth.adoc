@@ -315,7 +315,7 @@ The depth test compares the framebuffer depth coordinate `Zf` with the depth val
 
 The following gives a high level overview of the depth test.
 
-image::{images}depth_test.png[depth_test]
+image::{images}depth_test.svg[depth_test]
 
 [[depth-compare-operation]]
 ==== Depth Compare Operation

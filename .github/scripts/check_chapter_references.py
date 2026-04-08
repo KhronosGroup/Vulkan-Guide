@@ -16,7 +16,6 @@ from pathlib import Path
 
 # Paths to the files that need to be checked
 README_PATH = "README.adoc"
-GUIDE_PATH = "guide.adoc"
 NAV_PATH = "antora/modules/ROOT/nav.adoc"
 
 # Directories to scan for chapter files
@@ -96,31 +95,6 @@ def check_readme_references(chapter_files):
         print(f"Error checking README.adoc: {e}")
         return list(chapter_files.values())
 
-def check_guide_references(chapter_files):
-    """
-    Check if all chapter files are referenced in guide.adoc.
-    Returns a list of files that are not referenced.
-    """
-    try:
-        with open(GUIDE_PATH, 'r', encoding='utf-8') as f:
-            guide_content = f.read()
-
-        missing_files = []
-        for file_path, info in chapter_files.items():
-            # Convert path to the format used in guide.adoc
-            rel_path = file_path.replace(CHAPTERS_DIR + "/", "")
-
-            # Check if the file is referenced in guide.adoc
-            # The pattern needs to match both include:{chapters}file.adoc[] and include::{chapters}file.adoc[]
-            if not (re.search(rf'include:\{{chapters\}}{re.escape(rel_path)}', guide_content) or
-                   re.search(rf'include::\{{chapters\}}{re.escape(rel_path)}', guide_content)):
-                missing_files.append(info)
-
-        return missing_files
-    except Exception as e:
-        print(f"Error checking guide.adoc: {e}")
-        return list(chapter_files.values())
-
 def check_nav_references(chapter_files):
     """
     Check if all chapter files are referenced in nav.adoc.
@@ -193,54 +167,6 @@ def update_readme(missing_files):
         print(f"Error updating README.adoc: {e}")
         return False
 
-def update_guide(missing_files):
-    """
-    Update guide.adoc to include missing chapter references.
-    Returns True if the file was updated, False otherwise.
-    """
-    if not missing_files:
-        return False
-
-    try:
-        with open(GUIDE_PATH, 'r', encoding='utf-8') as f:
-            content = f.readlines()
-
-        # Find appropriate sections to add the missing files
-        extensions_section_idx = None
-        main_section_idx = None
-
-        for i, line in enumerate(content):
-            if "= When and Why to use Extensions" in line:
-                extensions_section_idx = i
-            elif "= Using Vulkan" in line:
-                main_section_idx = i
-
-        if extensions_section_idx is None or main_section_idx is None:
-            print("Could not find appropriate sections in guide.adoc")
-            return False
-
-        # Add missing files to appropriate sections
-        for file_info in missing_files:
-            rel_path = file_info["path"].replace(CHAPTERS_DIR + "/", "")
-
-            if file_info["is_extension"]:
-                # Add to extensions section
-                content.insert(extensions_section_idx + 2, f"include::{{chapters}}{rel_path}[]\n\n")
-                extensions_section_idx += 2  # Adjust index for next insertion
-            else:
-                # Add to main section
-                content.insert(main_section_idx + 2, f"include::{{chapters}}{rel_path}[]\n\n")
-                main_section_idx += 2  # Adjust index for next insertion
-
-        # Write updated content back to file
-        with open(GUIDE_PATH, 'w', encoding='utf-8') as f:
-            f.writelines(content)
-
-        return True
-    except Exception as e:
-        print(f"Error updating guide.adoc: {e}")
-        return False
-
 def update_nav(missing_files):
     """
     Update nav.adoc to include missing chapter references.
@@ -301,27 +227,22 @@ def main():
 
     # Check if all chapter files are referenced in the three files
     readme_missing = check_readme_references(chapter_files)
-    guide_missing = check_guide_references(chapter_files)
     nav_missing = check_nav_references(chapter_files)
 
     print(f"Missing from README.adoc: {len(readme_missing)}")
-    print(f"Missing from guide.adoc: {len(guide_missing)}")
     print(f"Missing from nav.adoc: {len(nav_missing)}")
 
     # Update files if needed
     readme_updated = update_readme(readme_missing)
-    guide_updated = update_guide(guide_missing)
     nav_updated = update_nav(nav_missing)
 
     if readme_updated:
         print("Updated README.adoc")
-    if guide_updated:
-        print("Updated guide.adoc")
     if nav_updated:
         print("Updated nav.adoc")
 
     # Return non-zero exit code if any files were missing references
-    if readme_missing or guide_missing or nav_missing:
+    if readme_missing or nav_missing:
         print("Some chapter files were missing references and have been added.")
         return 1
     else:

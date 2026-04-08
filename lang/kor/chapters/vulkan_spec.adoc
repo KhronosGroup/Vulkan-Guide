@@ -51,7 +51,7 @@ PDF 포맷은 `pdf/vkspec.pdf` 파일을 보세요.
 
 https://registry.khronos.org/vulkan/specs/latest/pdf/vkspec.pdf
 
-Vulkan SDK는 PDF 버전도 함께 제공됩니다(https://vulkan.lunarg.com/doc/sdk/1.4.304.0/windows/1.4-extensions/vkspec.pdf).
+Vulkan SDK는 PDF 버전도 함께 제공됩니다(https://vulkan.lunarg.com/doc/sdk/1.4.341.1/windows/1.4-extensions/vkspec.pdf).
 
 === Man pages
 

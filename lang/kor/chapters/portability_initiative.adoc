@@ -35,7 +35,7 @@ image::../../../chapters/images/portability_initiative_macos.png[portability_ini
 
 == gfx-rs
 
-현재 Mozilla는 link:https://github.com/gfx-rs/portability[gfx-rs 이식성]을 추짛나고 있으며 link:https://gfx-rs.github.io/2017/07/24/low-level.html[gfx-hal]를 다른 다양한 API와의 인터페이스로 사용하고 있습니다.
+현재 Mozilla는 link:https://github.com/gfx-rs/portability[gfx-rs 이식성]을 추짛나고 있으며 link:https://github.com/gfx-rs/wgpu/pull/1471[wgpu-hal]를 다른 다양한 API와의 인터페이스로 사용하고 있습니다.
 
 image::../../../chapters/images/portability_initiative_gfxrs.png[portability_initiative_gfxrs.png]
 

@@ -33,7 +33,7 @@ image::{images}portability_initiative_macos.png[portability_initiative_macos.png
 
 == gfx-rs
 
-Mozilla is currently helping drive link:https://github.com/gfx-rs/portability[gfx-rs portability] to use link:https://gfx-rs.github.io/2017/07/24/low-level.html[gfx-hal] as a way to interface with various other APIs.
+Mozilla is currently helping drive link:https://github.com/gfx-rs/portability[gfx-rs portability] to use link:https://github.com/gfx-rs/wgpu/pull/1471[wgpu-hal] as a way to interface with various other APIs.
 
 image::{images}portability_initiative_gfxrs.png[portability_initiative_gfxrs.png]
 
