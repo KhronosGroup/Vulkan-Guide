@@ -65,6 +65,8 @@ The Vulkan Guide content is also viewable from https://docs.vulkan.org/guide/lat
 = Using Vulkan
 
 == xref:{chapters}deprecated.adoc[Deprecated]
+== xref:{chapters}embedded_programming.adoc[Embedded Programming]
+
 
 == xref:{chapters}windowing_audio_input.adoc[Windowing, Audio, and Input]
 
