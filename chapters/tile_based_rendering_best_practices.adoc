@@ -72,9 +72,10 @@ This extension simplifies your code by removing the need for render pass and fra
 You must remain disciplined about your load and store operations to avoid performance regressions.
 
 When using traditional render passes, try to structure them so that the driver can "merge" subpasses.
-Subpass merging is a powerful feature where the driver combines multiple logical subpasses into a single hardware pass.
-This ensures that intermediate data (like G-buffer attributes in a deferred renderer) stays entirely within the tile memory and is never written to external VRAM.
-While modern extensions like `VK_KHR_dynamic_rendering_local_read` provide similar benefits for dynamic rendering, subpass merging remains the most reliable way to achieve peak efficiency in complex pipelines using traditional render passes.
+Subpasses can be key to achieving good performance with traditional rendering pipelines, but merging is not guaranteed — it is implementation-dependent.
+When subpasses are merged, the driver combines multiple logical subpasses into a single hardware pass, ensuring that intermediate data (like G-buffer attributes in a deferred renderer) stays entirely within the tile memory and is never written to external VRAM.
+Applications can use `VK_EXT_subpass_merge_feedback` to check whether their subpasses are actually being merged.
+Modern pipelines using dynamic rendering can obtain similar benefits to subpasses by using `VK_KHR_dynamic_rendering_local_read`.
 To encourage merging, keep your subpass dependencies simple and avoid introducing any "global" dependencies (like pipeline barriers or descriptor set updates) that might force the driver to split the pass.
 
 [[transient-attachments]]
@@ -155,8 +156,8 @@ This allows the tiler's geometry engine to start working as soon as the data is 
 [[depth-and-hsr]]
 === Depth Testing and Hidden Surface Removal
 
-Tilers are designed to minimize the impact of overdraw through hardware-based Hidden Surface Removal (HSR) or forward pixel killing.
-To make these hardware optimizations work effectively:
+Many tilers can help reduce the impact of overdraw through hardware-based Hidden Surface Removal (HSR) or forward pixel killing, though the level of support varies across implementations and overdraw still has a cost.
+To help these hardware optimizations work effectively (where supported):
 
 *   Use a consistent `VkCompareOp` (usually `LESS` or `LESS_OR_EQUAL`) throughout your render pass. Frequent changes to the depth comparison function can disable hardware depth culling.
 *   Enable depth writing (`depthWriteEnable`) whenever possible. If it's disabled, the GPU cannot update its internal depth culling blocks, leading to more overdraw for subsequent draws.
@@ -177,6 +178,8 @@ Note that some modern desktop GPUs also benefit from `float16` throughput and st
 Treat `mediump` as a hardware hint, not a guarantee.
 Some GPUs might still run at full 32-bit precision internally, while others will show visible artifacts.
 Testing on as many devices as possible is the only way to be sure your precision choices are safe, as a shader that looks perfect on one device might be broken on another that actually employs 16-bit math.
+Always verify performance of your `float16` optimizations: adding `float16` to everything without careful consideration is usually not a good idea.
+In some cases, it just introduces unnecessary conversions (f32 → f16 → f32), and while most mobile GPU compilers can detect and optimize this, the heuristics are not always reliable.
 
 Another subtle trick is **texture prefetch**.
 Tilers are very efficient at fetching texture data if the texture coordinates are "predictable" — usually meaning they are passed directly from the vertex shader.
