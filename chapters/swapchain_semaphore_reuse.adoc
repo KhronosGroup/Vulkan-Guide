@@ -40,33 +40,33 @@ Here's pseudocode that demonstrates a common issue (and yes, it often works with
 [source, c]
 ----
 // !! BAD CODE WARNING !!
-const kNumberOfFramesInFlight = 2
-VkSemaphore submit_semaphores[kNumberOfFramesInFlight]
+const kNumberOfFramesInFlight = 2;
+VkSemaphore submit_semaphores[kNumberOfFramesInFlight];
 
 while (!quit) {
     // Wait on the frame fence.
     // This allows to reuse frame resources, but this does not include presentation resources
-    VkFence frame_fence = frame_fences[frame_index]
-    vkWaitForFences(frame_fence)
-    vkResetFences(frame_fence)
+    VkFence frame_fence = frame_fences[frame_index];
+    vkWaitForFences(frame_fence);
+    vkResetFences(frame_fence);
 
     ...
 
     // WARNING: this code uses current in-flight frame index to get unused submit semaphore.
     // Usually, the assumption is that if we wait on the previous frame then submit_semaphores
     // are not used by the vkQueuePresentKHR from that frame anymore. That's not necessarily true.
-    VkSemaphore submit_semaphore = submit_semaphores[frame_index]
+    VkSemaphore submit_semaphore = submit_semaphores[frame_index];
 
-    VkSubmitInfo submit_info
-    submit_info.pSignalSemaphores = &submit_semaphore
-    vkQueueSubmit(queue, &submit_info)
+    VkSubmitInfo submit_info;
+    submit_info.pSignalSemaphores = &submit_semaphore;
+    vkQueueSubmit(queue, &submit_info);
 
     // WARNING: submit_semaphore may still be in use by one of the previous presentation operations
-    VkPresentInfo present_info
-    present_info.pWaitSemaphores = &submit_semaphore
-    vkQueuePresentKHR(queue, &present_info)
+    VkPresentInfo present_info;
+    present_info.pWaitSemaphores = &submit_semaphore;
+    vkQueuePresentKHR(queue, &present_info);
 
-    frame_index = (frame_index + 1) % kNumberOfFramesInFlight
+    frame_index = (frame_index + 1) % kNumberOfFramesInFlight;
 }
 ----
 
@@ -82,50 +82,50 @@ Here's pseudocode showing how to set up a rendering frame that correctly reuses 
 [source, c]
 ----
 // !! GOOD CODE EXAMPLE !!
-VkImage swapchain_images[num_swapchain_images]
+VkImage swapchain_images[num_swapchain_images];
 
 // Resources indexed by the current in-flight frame index
-const kNumberOfFramesInFlight = 2
+const kNumberOfFramesInFlight = 2;
 VkFence frame_fences[kNumberOfFramesInFlight];
 VkSemaphore acquire_semaphores[kNumberOfFramesInFlight];
 VkCommandBuffer command_buffers[kNumberOfFramesInFlight];
 int frame_index = 0; // 0..kNumberOfFramesInFlight-1
 
 // Semaphores that are waited on by QueuePresent are buffered based on the number of swapchain images
-VkSemaphore submit_semaphores[swapchain_image_count]
+VkSemaphore submit_semaphores[swapchain_image_count];
 
 while (!quit) {
-    VkFence frame_fence = frame_fences[frame_index]
-    vkWaitForFences(frame_fence)
-    vkResetFences(frame_fence)
+    VkFence frame_fence = frame_fences[frame_index];
+    vkWaitForFences(frame_fence);
+    vkResetFences(frame_fence);
 
     uint32_t image_index;
-    VkSemaphore acquire_semaphore = acquire_semaphores[frame_index]
-    vkAcquireNextImageKHR(swapchain, acquire_semaphore, &image_index)
+    VkSemaphore acquire_semaphore = acquire_semaphores[frame_index];
+    vkAcquireNextImageKHR(swapchain, acquire_semaphore, &image_index);
 
     // Index submit semaphore with the acquired swapchain image index.
     // It's the only resource in this example indexed by image_index.
     // All other resources, including acquire_semaphore, are indexed with current in-flight frame index.
-    VkSemaphore submit_semaphore = submit_semaphores[image_index]
+    VkSemaphore submit_semaphore = submit_semaphores[image_index];
 
-    VkCommandBuffer command_buffer = command_buffers[frame_index]
-    vkBeginCommandBuffer(command_buffer)
-    RecordCommands(command_buffer)
-    vkEndCommandBuffer(command_buffer)
+    VkCommandBuffer command_buffer = command_buffers[frame_index];
+    vkBeginCommandBuffer(command_buffer);
+    RecordCommands(command_buffer);
+    vkEndCommandBuffer(command_buffer);
 
-    VkSubmitInfo submit_info
-    submit_info.pWaitSemaphores = &acquire_semaphore
-    submit_info.pCommandBuffers = &command_buffer
-    submit_info.pSignalSemaphores = &submit_semaphore
-    vkQueueSubmit(queue, &submit_info, frame_fence)
+    VkSubmitInfo submit_info;
+    submit_info.pWaitSemaphores = &acquire_semaphore;
+    submit_info.pCommandBuffers = &command_buffer;
+    submit_info.pSignalSemaphores = &submit_semaphore;
+    vkQueueSubmit(queue, &submit_info, frame_fence);
 
-    VkPresentInfo present_info
-    present_info.pWaitSemaphores = &submit_semaphore
-    present_info.pSwapchains = &swapchain
-    present_info.pImageIndices = &image_index
-    vkQueuePresent(queue, &present_info)
+    VkPresentInfo present_info;
+    present_info.pWaitSemaphores = &submit_semaphore;
+    present_info.pSwapchains = &swapchain;
+    present_info.pImageIndices = &image_index;
+    vkQueuePresent(queue, &present_info);
 
-    frame_index = (frame_index + 1) % kNumberOfFramesInFlight
+    frame_index = (frame_index + 1) % kNumberOfFramesInFlight;
 }
 ----
 

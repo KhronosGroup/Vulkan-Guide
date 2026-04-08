@@ -72,6 +72,8 @@ The Vulkan Guide content is also viewable from https://docs.vulkan.org/guide/lat
 
 == xref:{chapters}ide.adoc[Development Environments & IDEs]
 
+== xref:{chapters}tile_based_rendering_best_practices.adoc[Tile Based Rendering (TBR) Best Practices]
+
 == xref:{chapters}vulkan_profiles.adoc[Vulkan Profiles]
 
 == xref:{chapters}loader.adoc[Loader]
@@ -156,6 +158,8 @@ The Vulkan Guide content is also viewable from https://docs.vulkan.org/guide/lat
 
 === xref:{chapters}dynamic_state_map.adoc[Dynamic State Map]
 
+== xref:{chapters}compute_shaders.adoc[Compute Shaders]
+
 == xref:{chapters}subgroups.adoc[Subgroups]
 
   * `VK_EXT_subgroup_size_control`, `VK_KHR_shader_subgroup_extended_types`, `VK_EXT_shader_subgroup_ballot`, `VK_EXT_shader_subgroup_vote`
@@ -229,7 +233,7 @@ These are supplemental references for the various Vulkan Extensions. Please cons
 
 == xref:{chapters}extensions/VK_KHR_shader_subgroup_uniform_control_flow.adoc[VK_KHR_shader_subgroup_uniform_control_flow]
 
-== xref:{chapters}extensions/VK_KHR_debug_utils.adoc[VK_KHR_debug_utils]
+== xref:{chapters}extensions/VK_EXT_debug_utils.adoc[VK_EXT_debug_utils]
 
 = link:CONTRIBUTING.adoc[Contributing]
 
