@@ -1163,45 +1163,35 @@ vkCmdDraw(cmd, vertexCount, 1, 0, 0);
 
 ==== Fallback Strategy
 
-To support both approaches:
+Rather than maintaining two separate code paths (one for shader objects and one for traditional pipelines), the recommended approach is to write your application using only the Shader Objects API and rely on the link:https://github.com/KhronosGroup/Vulkan-ExtensionLayer/blob/main/docs/shader_object_layer.md[`VK_LAYER_KHRONOS_shader_object` extension layer] to transparently provide `VK_EXT_shader_object` support on drivers that do not natively implement it.
 
-1. Detect `VK_EXT_shader_object` support and enable the feature at device creation time.
-2. If unavailable, fall back to pre-baked pipelines.
+The extension layer translates Shader Object calls into pipeline-based operations under the hood, so your application does not need to include any pipeline fallback logic.
+
+1. Write your rendering code exclusively against the Shader Objects API (`vkCreateShadersEXT`, `vkCmdBindShadersEXT`, dynamic state commands).
+2. Enable the `VK_LAYER_KHRONOS_shader_object` layer at deployment time for platforms where native `VK_EXT_shader_object` support is not available. The layer automatically disables itself when the underlying driver already provides the extension.
 
 [source,cpp]
 ----
-bool hasShaderObject = false;
-
-uint32_t extCount = 0;
-vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extCount, nullptr);
-std::vector<VkExtensionProperties> exts(extCount);
-vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extCount, exts.data());
-for (const auto& e : exts) {
-    if (strcmp(e.extensionName, VK_EXT_SHADER_OBJECT_EXTENSION_NAME) == 0) {
-        hasShaderObject = true;
-        break;
-    }
-}
-
-VkDeviceCreateInfo devCI{ VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO };
+// Write shader object code only — no pipeline fallback needed.
+// Enable VK_EXT_shader_object at device creation time.
 
 VkPhysicalDeviceShaderObjectFeaturesEXT shaderObjectFeatures{ };
 shaderObjectFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OBJECT_FEATURES_EXT;
 shaderObjectFeatures.shaderObject = VK_TRUE;
 
-if (hasShaderObject) {
-    devCI.pNext = &shaderObjectFeatures; // enable feature
-    // also add VK_EXT_shader_object to enabled extension list
-}
+VkDeviceCreateInfo devCI{ VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO };
+devCI.pNext = &shaderObjectFeatures;
+// add VK_EXT_shader_object to enabled extension list
+// ...
 
 vkCreateDevice(physicalDevice, &devCI, nullptr, &device);
 
-// Later when recording command buffers
-if (hasShaderObject) {
-    // Use Shader Objects path (vkCreateShadersEXT / vkCmdBindShadersEXT)
-} else {
-    // Use traditional pre-baked pipelines
-}
+// Record command buffers using only Shader Objects
+vkCmdBindShadersEXT(cmd, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, shaders);
+vkCmdSetViewport(cmd, 0, 1, &viewport);
+vkCmdSetScissor(cmd, 0, 1, &scissor);
+// ... other dynamic states as required
+vkCmdDraw(cmd, vertexCount, 1, 0, 0);
 ----
 
-Note: Shader Objects can coexist with pipelines. Applications may choose per-pass which path is more appropriate.
+NOTE: The extension layer requires `VK_KHR_dynamic_rendering` support on the target device. It is not currently available on Android, where `VK_KHR_dynamic_rendering` support is limited.
