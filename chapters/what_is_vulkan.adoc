@@ -36,7 +36,7 @@ image::{images}what_is_vulkan_decision.png[what_is_vulkan_decision.png]
 
 == Using helping libraries
 
-While some developers may want to try using Vulkan with no help, it is common to use some lighter libraries in your development flow to help abstract some of the more tedious aspect of Vulkan. Here are some link:https://github.com/KhronosGroup/Khronosdotorg/blob/main/api/vulkan/resources.md#libraries[libraries] to link:https://github.com/vinjn/awesome-vulkan#libraries[help with development]
+While some developers may want to try using Vulkan with no help, it is common to use some lighter libraries in your development flow to help abstract some of the more tedious aspect of Vulkan. Here are some link:https://www.vulkan.org/tools#702702a4-702702a4[libraries] to link:https://github.com/vinjn/awesome-vulkan#libraries[help with development]
 
 image::{images}what_is_vulkan_layer.png[what_is_vulkan_layer]
 
