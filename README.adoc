@@ -60,6 +60,8 @@ The Vulkan Guide content is also viewable from https://docs.vulkan.org/guide/lat
 
 == xref:{chapters}validation_overview.adoc[Vulkan Validation Overview]
 
+== xref:{chapters}profiling.adoc[Profiling]
+
 == xref:{chapters}decoder_ring.adoc[Vulkan Decoder Ring (GL, GLES, DirectX, and Metal)]
 
 = Using Vulkan
