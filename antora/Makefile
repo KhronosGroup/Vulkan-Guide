@@ -1,4 +1,4 @@
-# Copyright 2022-2023 The Khronos Group Inc.
+# Copyright 2022-2026 The Khronos Group Inc.
 # SPDX-License-Identifier: Apache-2.0
 
 # Configure Vulkan Guide Antora tree with transformed markup files.
@@ -24,6 +24,7 @@ setup_spec:
 	mkdir -p $(ROOT)/images
 	$(CP) $(wildcard chapters/images/[A-Za-z]*.png) $(ROOT)/images/
 	$(CP) $(wildcard chapters/images/[A-Za-z]*.svg) $(ROOT)/images/
+	$(CP) $(wildcard chapters/images/[A-Za-z]*.webp) $(ROOT)/images/
 	$(CP) $(wildcard images/[A-Za-z]*.png) $(ROOT)/images/
 	mkdir -p $(ROOT)/images/extensions
 	$(CP) $(wildcard chapters/images/extensions/[A-Za-z]*.png) $(ROOT)/images/extensions
