@@ -31,8 +31,7 @@ If you are new to Slang, here are some educational points:
 * link:https://shader-slang.org/slang-playground/[Interactive Slang shader playground]
 * xref:samples::README.adoc[The Vulkan Samples come with Slang shaders]
 
-== Key differences
-
+== 
 Some of the key differences for Vulkan developers compared to GLSL and/or HLSL:
 
 * C{pp} syntax based on HLSL
@@ -43,9 +42,63 @@ Some of the key differences for Vulkan developers compared to GLSL and/or HLSL:
 * Multiple shader stages in a single file
 * Automatic generation of binding points
 
-== From the application's point-of-view
+== Key differences between Slang and GLSL
 
-From the application's point-of-view, using Slang is exactly the same as using GLSL. As the application always consumes shaders in the SPIR-V format, the only difference is in the tooling to generate the SPIR-V shaders from the desired shading language.
+This section summarizes the most important differences a developer will encounter when moving from GLSL to Slang.
+
+[cols="1,1,1", options="header"]
+|===
+|Feature |Slang |GLSL
+
+|Programming style
+|Object-oriented (C{pp}-like)
+|Procedural (C-like)
+
+|Stages per source file
+|Multiple
+|One
+
+|Entry point name
+|User-defined
+|Always `main`
+
+|Stage declaration
+|`[shader("...")]` attribute
+|Compiler flag or file extension
+
+|Vector types
+|`float2`, `float3`, `float4`
+|`vec2`, `vec3`, `vec4`
+
+|Matrix types
+|`float2x2`–`float4x4`
+|`mat2`–`mat4`
+
+|Default matrix layout
+|Column-major (Command-line), row-major (Library)
+|Column-major
+
+|Resource binding
+|Automatic or explicit
+|`layout(set=M, binding=N)` — always explicit
+
+|File reuse
+|`import` module system
+|`#include` preprocessor
+
+|Namespaces
+|Yes
+|No
+
+|Interfaces and generics
+|Yes
+|No
+
+|Pointers
+|Yes (for GPU-side use)
+|No
+
+|===
 
 == Syntax comparison
 
@@ -145,6 +198,10 @@ float4 fragmentMain(VSOutput input)
     return samplerColor.Sample(input.UV);
 }
 ----
+
+== Using Slang in your application
+
+From the application's point-of-view, using Slang is exactly the same as using GLSL. As the application always consumes shaders in the SPIR-V format, the only difference is in the tooling to generate the SPIR-V shaders from the desired shading language.
 
 == Compiling shaders
 
