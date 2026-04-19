@@ -31,17 +31,6 @@ If you are new to Slang, here are some educational points:
 * link:https://shader-slang.org/slang-playground/[Interactive Slang shader playground]
 * xref:samples::README.adoc[The Vulkan Samples come with Slang shaders]
 
-== 
-Some of the key differences for Vulkan developers compared to GLSL and/or HLSL:
-
-* C{pp} syntax based on HLSL
-	* Modules
-	* Interfaces and generics
-	* Namespaces
-	* Pointers
-* Multiple shader stages in a single file
-* Automatic generation of binding points
-
 == Key differences between Slang and GLSL
 
 This section summarizes the most important differences a developer will encounter when moving from GLSL to Slang.
