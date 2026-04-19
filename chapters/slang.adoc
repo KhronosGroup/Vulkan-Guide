@@ -8,15 +8,15 @@ ifndef::images[:images: images/]
 
 Vulkan does not directly consume shaders in a human-readable text format, but instead uses xref:{chapters}what_is_spirv.adoc[SPIR-V] as an intermediate representation. This opens the option to use shader languages other than e.g. GLSL, as long as they can target the Vulkan SPIR-V environment.
 
-One such language is the link:https://shader-slang.org[Slang Shading Language] developed by NVIDIA. It was designed to address the evolving needs of real-time graphics development, especially in regards to shader code bases getting larger and more complex. It supports multiple APIs, among them is first-class support for Vulkan's SPIR-V.
+One such language is the link:https://shader-slang.org[Slang Shading Language] developed by NVIDIA. It was designed to address the evolving needs of real-time graphics development, especially with regard to shader code bases getting larger and more complex. It supports multiple APIs, among them is first-class support for Vulkan's SPIR-V.
 
 image::{images}slang-write-once-run-anywhere-graphic.webp[Slang overview]
 
-Slang is developed in the link:https://github.com/shader-slang[Open Source] and is under the link:https://www.khronos.org/news/press/khronos-group-launches-slang-initiative-hosting-open-source-compiler-contributed-by-nvidia[goverance of Khronos], meaning it has broad industry support and is actively maintained.
+Slang is developed in the link:https://github.com/shader-slang[Open Source] and is under the link:https://www.khronos.org/news/press/khronos-group-launches-slang-initiative-hosting-open-source-compiler-contributed-by-nvidia[governance of Khronos], meaning it has broad industry support and is actively maintained.
 
-It's syntax is similar to xref:{chapters}hlsl.adoc[HLSL] with additions like modules to make the language easier to use and to better handle complex code bases.
+Its syntax is similar to xref:{chapters}hlsl.adoc[HLSL] with additions like modules to make the language easier to use and to better handle complex code bases.
 
-It has great tooling-support with debuggers like link:https://renderdoc.org/[RenderDoc] and link:https://developer.nvidia.com/nsight-graphics[Night]. Syntax highlighting is available for most popular IDEs like link:https://marketplace.visualstudio.com/items?itemName=shader-slang.slang-vs-extension[Visual Studio] and link:https://marketplace.visualstudio.com/items?itemName=shader-slang.slang-language-extension[Visual Studio Code].
+It has great tooling support with debuggers like link:https://renderdoc.org/[RenderDoc] and link:https://developer.nvidia.com/nsight-graphics[Nsight]. Syntax highlighting is available for most popular IDEs like link:https://marketplace.visualstudio.com/items?itemName=shader-slang.slang-vs-extension[Visual Studio] and link:https://marketplace.visualstudio.com/items?itemName=shader-slang.slang-language-extension[Visual Studio Code].
 
 == Educational resources
 
@@ -24,7 +24,7 @@ If you are new to Slang, here are some educational points:
 
 * link:https://shader-slang.org/[Slang website]
 * link:https://shader-slang.org/docs/getting-started/[Getting started with Slang]
-* link:https://docs.shader-slang.org/en/latest/external/slang/docs/user-guide/[Slang Users's Guide]
+* link:https://docs.shader-slang.org/en/latest/external/slang/docs/user-guide/[Slang User's Guide]
 * link:https://docs.shader-slang.org/en/latest/external/slang/docs/user-guide/a2-01-spirv-target-specific.html[SPIR-V specific functionalities]
 * link:https://shader-slang.org/docs/coming-from-hlsl/[Porting from HLSL]
 * link:https://shader-slang.org/docs/coming-from-glsl/[Porting from GLSL]
@@ -51,7 +51,7 @@ From the application's point-of-view, using Slang is exactly the same as using G
 
 Slang and GLSL differ heavily in their syntax. While GLSL is more procedural (like C), Slang is more object-oriented (like C{pp}).
 
-Here is the same shader written in both languages to give quick comparison on how they basically differ, including the aforementioned namespace that e.g. adds explicit locations:
+Here is the same shader written in both languages to give a quick comparison on how they basically differ, including the aforementioned namespace that e.g. adds explicit locations:
 
 === GLSL
 
