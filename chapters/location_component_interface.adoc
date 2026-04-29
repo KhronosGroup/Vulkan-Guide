@@ -128,32 +128,46 @@ Some shader stages, like geometry shaders, have an array around its interface ma
 
 == Matrix
 
-A matrix is viewed as an array, which consume all 4 components.
-
-So something like
+A matrix is stored as an array of vector, this means something like
 
 [source,glsl]
 ----
 layout(location = 0) in mat3x2 a;
 ----
 
-From a `Location`/`Component` point-of-view looks like
+consumes locations and components identically to
 
 [source,glsl]
 ----
 // N == 3
-// Arrays consume whole Location
+// Arrays is stride is per Location
 layout(location = 0) in vec2 a[3];
 ----
 
-As stated above, arrays consume the whole `Location` so the following is **not** allowed.
+which in turn is stored identically to
+
+[source,glsl]
+----
+// Each vector consumes only the first 2 components of each location
+layout(location = 0) vec2 a0;
+layout(location = 1) vec2 a1;
+layout(location = 2) vec2 a2;
+----
+
+This means the following is allowed:
 
 [source,glsl]
 ----
 layout(location = 0) in mat3x2 a;
-layout(location = 2, component = 2) in float b;
+layout(location = 1, component = 2) in float b;
+layout(location = 2, component = 2) in float c;
 ----
 
-`float b` is invalid because the implicit array of the matrix consumes all of `Location` 2.
+The `b` and `c` float are still valid here.
 
 image::{images}location_example_matrix.svg[location_example_matrix]
+
+[NOTE]
+====
+Unlike arrays or independent vectors, link:https://godbolt.org/z/f81PvP538[matrices cannot be decorated with `Component`], so will always be packed from component 0.
+====
