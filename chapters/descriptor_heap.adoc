@@ -423,3 +423,19 @@ In this example if the descriptor sizes are:
 we would use that size as an array stride inside the heap.
 
 image::{images}descriptor_heap_untyped_stride.svg[descriptor_heap_untyped_stride.svg]
+
+== Combined Image Samplers
+
+The `VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER` is a special descriptor and deserves it's own mention if you are planning to use it with `VK_EXT_descriptor_heap`.
+
+The main issue is the "single descriptor" needs to both belong in the Resource heap (for the sampled image) and the Sampler heap (for the sampler).
+
+This means for the untyped pointer model, it is not possible at all to use a combined image sampler. This would require some way to set the array stride separately for both the sampled image and sampler, which was actively decided to not support. Therefor, if you want to tranisition to using untyped pointers, you will need to use seperate sampled images and samplers.
+
+If you are using the binding mappings, you will see the `samplerHeapOffset` and `samplerHeapArrayStride` which allow you to bind the sampler portion.
+
+[NOTE]
+====
+It is confusing at first that when using `VK_DESCRIPTOR_TYPE_SAMPLER` you use the `heapOffset` to set the offset in the Sampler heap. 
+But when using `VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER` the `heapOffset` is for the Resource heap and the `samplerHeapOffset` is for the Sampler heap.
+====
