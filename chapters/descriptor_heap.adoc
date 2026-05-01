@@ -262,8 +262,8 @@ Like the previous example, the `pushOffset = 16` sets `indirectAddress` to `0x40
 From `0x4040`, each `shaderIndex` jumps to the next uint32_t and gets the offset from the indirect uniform buffer.
 
 ----
-u_buffers[0] offset = 0x00 + (0x20 * 1)
-u_buffers[1] offset = 0x00 + (0x60 * 1)
+u_buffers[0] offset = 0x00 + (0x60 * 1)
+u_buffers[1] offset = 0x00 + (0x20 * 1)
 ----
 
 === VkDescriptorMappingSourceEXT Inline Access
