@@ -327,7 +327,7 @@ image::{images}descriptor_heap_push_address.svg[descriptor_heap_push_address.svg
 
 The results are: `x == vec4(2)` and `y == vec4(3)`
 
-This is similar to the previous example, just with an extra level of indirection
+This is similar to the previous example but it uses an extra level of indirection to read the descriptor from a buffer instead of inside the push data.
 
 [NOTE]
 ====
