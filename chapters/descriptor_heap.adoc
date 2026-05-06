@@ -270,9 +270,12 @@ u_buffers[1] offset = 0x00 + (0x20 * 1)
 
 For these mappings, it is similar to xref:{chapters}extensions/VK_EXT_inline_uniform_block.adoc#VK_EXT_inline_uniform_block[VK_EXT_inline_uniform_block] where the data is read without a descriptor.
 
-There 2 main restrictions are these have to be Uniform Buffers (read only) and there is no arrays of descriptors in the shader.
+There 2 main restrictions are
 
-The new shader code looks like:
+1. There is no descriptors arrays allowed (because there is no defined math how that would work).
+2. The descriptor types are limited (images and samplers are not allowed)
+
+The the following examples, the new shader code looks like:
 
 [source,glsl]
 ----
@@ -300,6 +303,11 @@ From an offset of `0x90` the remaining offsets depends on where the shader acces
 
 Since `payload[1]` is has a 16 (0x10) byte offset into the `u_buffer` struct, it effectively is grabbing `0x90 + 0x10` here.
 
+[NOTE]
+====
+Only Uniform Buffers are allowed for this mapping, as it must be read only.
+====
+
 ==== VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_DATA_EXT
 
 Using the same shader as the previous example, this just removes the heap and loads directly from the push data.
@@ -307,6 +315,11 @@ Using the same shader as the previous example, this just removes the heap and lo
 image::{images}descriptor_heap_push_data.svg[descriptor_heap_push_data.svg]
 
 The results are: `x == vec4(2)` and `y == vec4(3)`
+
+[NOTE]
+====
+Only Uniform Buffers are allowed for this mapping, as it must be read only.
+====
 
 ==== VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT
 
@@ -316,6 +329,11 @@ The results are: `x == vec4(2)` and `y == vec4(3)`
 
 This is similar to the previous example, just with an extra level of indirection
 
+[NOTE]
+====
+Only Uniform Buffers, Storage Buffers, and Acceleration Structures are allowed for this mapping.
+====
+
 ==== VK_DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT
 
 image::{images}descriptor_heap_indirect_address.svg[descriptor_heap_indirect_address.svg]
@@ -324,6 +342,10 @@ The results are: `x == vec4(2)` and `y == vec4(3)`
 
 This is similar to the previous example, just with yet-another level of indirection
 
+[NOTE]
+====
+Only Uniform Buffers, Storage Buffers, and Acceleration Structures are allowed for this mapping.
+====
 
 === VkDescriptorMappingSourceEXT Shader Record
 
