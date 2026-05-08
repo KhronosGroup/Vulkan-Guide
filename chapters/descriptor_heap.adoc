@@ -28,7 +28,7 @@ Here is a example of what a "descriptor" could look like:
 
 It is **not important** at all to the developer what the binary data of a descriptor means.
 
-What **is important** is understanding that unlike Vulkan 1.0, the driver is now just handing you back an opaque, variable sized, internal data structure. 
+What **is important** is understanding that unlike Vulkan 1.0, the driver is now just handing you back an opaque, variable sized, internal data structure.
 
 Instead of having a `VkDescriptorSet` object the driver controls, the application is now responsible to manage that this data is at the correct spot in memory for the GPU to read from.
 
@@ -446,6 +446,47 @@ we would use that size as an array stride inside the heap.
 
 image::{images}descriptor_heap_untyped_stride.svg[descriptor_heap_untyped_stride.svg]
 
+== Alignment
+
+One of the hardest issues making an application portable across vendors is mastering the art of alignment.
+
+=== Binding the heap
+
+If you want to bind somewhere inside your heap memory, you will want to be aware of the `resourceHeapAlignment` and `samplerHeapAlignment`.
+
+image::{images}descriptor_heap_bind_alignment.svg[descriptor_heap_bind_alignment.svg]
+
+[NOTE]
+====
+The spec allows these alignments to be as high as 64k, but currently seems to at most
+link:https://vulkan.gpuinfo.org/displayextensionproperty.php?extensionname=VK_EXT_descriptor_heap&extensionproperty=resourceHeapAlignment&platform=all[64]
+or
+link:https://vulkan.gpuinfo.org/displayextensionproperty.php?extensionname=VK_EXT_descriptor_heap&extensionproperty=samplerHeapAlignment&platform=all[32]
+on most devices.
+====
+
+=== Descriptor alignment
+
+For each descriptor accessed the `samplerDescriptorAlignment`, `imageDescriptorAlignment`, and  `bufferDescriptorAlignment` are important.
+
+The nice part is the spec requires that the `descriptorAlignment` is less than or equal to the `*descriptorSize`, so you are always able to tightly pack an array of descriptors together.
+
+The two main times you can get in trouble with alignment.
+
+First is when you set the offset to the descriptor wrong.
+
+image::{images}descriptor_heap_offset_alignment.svg[descriptor_heap_offset_alignment.svg]
+
+Second is when you do descriptor indexing that are non-packed (strided).
+
+image::{images}descriptor_heap_stride_alignment.svg[descriptor_heap_stride_alignment.svg]
+
+=== Indirect Buffer alignment
+
+Some mappings (such as `VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT`) have an "indirect" Uniform or Storage buffer used. Access into these buffer need to be aligned with either `minUniformBufferOffsetAlignment` or `minStorageBufferOffsetAlignment`.
+
+image::{images}descriptor_heap_indirect_alignment.svg[descriptor_heap_indirect_alignment.svg]
+
 == Combined Image Samplers
 
 The `VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER` is a special descriptor and deserves it's own mention if you are planning to use it with `VK_EXT_descriptor_heap`.
@@ -458,6 +499,6 @@ If you are using the binding mappings, you will see the `samplerHeapOffset` and 
 
 [NOTE]
 ====
-It is confusing at first that when using `VK_DESCRIPTOR_TYPE_SAMPLER` you use the `heapOffset` to set the offset in the Sampler heap. 
+It is confusing at first that when using `VK_DESCRIPTOR_TYPE_SAMPLER` you use the `heapOffset` to set the offset in the Sampler heap.
 But when using `VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER` the `heapOffset` is for the Resource heap and the `samplerHeapOffset` is for the Sampler heap.
 ====
