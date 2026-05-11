@@ -1,0 +1,13 @@
+version = 1
+
+[[annotations]]
+path = [
+    ".gitignore",
+    "images/khronos_logo.png",
+    "images/vulkan_logo.png",
+    "chapters/**.md",
+    "chapters/**.png",
+    "chapters/**.svg",
+]
+SPDX-FileCopyrightText = "2026 The Khronos Group, Inc."
+SPDX-License-Identifier = "CC-BY-4.0"
