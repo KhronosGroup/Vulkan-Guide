@@ -90,15 +90,17 @@ Make sure if writing to the heap on the GPU, prior to reading descriptors from t
 [[descriptor-heap-size]]
 === Descriptor Size
 
-Each `VkDescriptorType` is going to have a different size for its descriptor blob
+Each `VkDescriptorType` is going to have a different size for its descriptor blob.
 
-For simplicity, there are few `VkPhysicalDeviceDescriptorHeapPropertiesEXT` values that can be used:
+For simplicity, there are 3 values in `VkPhysicalDeviceDescriptorHeapPropertiesEXT` to handle the general cases:
 
 * `samplerDescriptorSize`
 * `bufferDescriptorSize`
 * `imageDescriptorSize`
 
-For some specific use cases it is useful to be able to pack specific descriptors into memory more tightly than this when the implementation allows for this with `vkGetPhysicalDeviceDescriptorSizeEXT`.
+If you want to pack descriptors even more tightly in memory, you can use `vkGetPhysicalDeviceDescriptorSizeEXT` to get the exact size.
+
+For example, if a driver needs `16` bytes for a Uniform Buffer, but `32` bytes for a Storage Buffer, then `bufferDescriptorSize` will be `32` (the worst case size). By calling `vkGetPhysicalDeviceDescriptorSizeEXT(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER)` you can get the exact size (`16` in this case) from the driver.
 
 == Binding to the Command Buffer
 
