@@ -8,7 +8,7 @@ path = [
     "chapters/**.md",
     "chapters/**.png",
     "chapters/**.svg",
-    "chapters/slang-write-once-run-anywhere-graphic.webp",
+    "chapters/images/slang-write-once-run-anywhere-graphic.webp",
 ]
 SPDX-FileCopyrightText = "2026 The Khronos Group, Inc."
 SPDX-License-Identifier = "CC-BY-4.0"
