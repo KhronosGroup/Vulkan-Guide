@@ -51,6 +51,9 @@ jobs:
             sources:
             - url: .
               start_path: antora
+          asciidoc:
+            attributes:
+              project-local-ci: ''
           ui:
             bundle:
               url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
