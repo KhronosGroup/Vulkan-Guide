@@ -29,7 +29,9 @@ If you are new to Slang, here are some educational points:
 * link:https://shader-slang.org/docs/coming-from-hlsl/[Porting from HLSL]
 * link:https://shader-slang.org/docs/coming-from-glsl/[Porting from GLSL]
 * link:https://shader-slang.org/slang-playground/[Interactive Slang shader playground]
+ifndef::project-local-ci[]
 * xref:samples::README.adoc[The Vulkan Samples come with Slang shaders]
+endif::[]
 
 == Key differences between Slang and GLSL
 
