@@ -485,9 +485,20 @@ image::{images}descriptor_heap_stride_alignment.svg[descriptor_heap_stride_align
 
 === Indirect Buffer alignment
 
-Some mappings (such as `VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT`) have an "indirect" Uniform or Storage buffer used. Access into these buffer need to be aligned with either `minUniformBufferOffsetAlignment` or `minStorageBufferOffsetAlignment`.
+Some mappings have an "indirect" Uniform buffer used.
+
+At first, you might think these access need to be aligned to `minUniformBufferOffsetAlignment`, but since these are being accessed as "indirect buffers" and not a "descriptor" they follow scalar alignment rules.
+
+- `VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT`/`VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT` will load a `uint32_t` offset. Needs to be aligned to 4 bytes.
+- `VK_DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT` will load a `VkDeviceAddress` to the final descriptor. Needs to be aligned to 8 bytes.
+
+Using the following diagram:
 
 image::{images}descriptor_heap_indirect_alignment.svg[descriptor_heap_indirect_alignment.svg]
+
+both `0x4000` and `0x4008` are aligned to 8 bytes which is valid. If it was `0x4004` that would be invalid.
+
+The final address (`0x8000` and `0x8040`) need to be aligned to `minUniformBufferOffsetAlignment` as it accesses that memory as an Uniform Buffer Descriptor.
 
 == Combined Image Samplers
 
