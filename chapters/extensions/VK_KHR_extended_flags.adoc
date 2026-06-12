@@ -1,0 +1,55 @@
+// Copyright 2026 The Khronos Group, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifndef::chapters[:chapters: ../../]
+ifndef::images[:images: ../../images/]
+
+[[VK_KHR_extended_flags]]
+= VK_KHR_extended_flags
+
+The `VK_KHR_extended_flags` extension is the practical consequence of an ever-growing API running into a reality there are only finite bitmasks in an integer, but new extensions require new flags.
+
+This is not a flashy extension, but it provides the vital underlying mechanism that allows other extensions to introduce new flags.
+
+== Core Idea
+
+Normally, when you create a `VkImage` it will look like:
+
+[source,c++]
+----
+VkImageCreateInfo create_info{};
+create_info.flags = VK_IMAGE_CREATE_SPARSE_BINDING_BIT; // 0x00000001 (32-bit)
+create_info.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT;   // 0x00000002 (32-bit)
+// ...
+vkCreateImage(device, &create_info, nullptr, &image_handle);
+----
+
+Using `VK_KHR_extended_flags`, you can now pass 64-bit equivalents of these flags by chaining new structures into the `pNext`:
+
+[source,c++]
+----
+VkImageCreateFlags2CreateInfoKHR flags_ci{};
+flags_ci.flags = VK_IMAGE_CREATE_2_SPARSE_BINDING_BIT_KHR; // 0x00000001ULL (64-bit)
+
+VkImageUsageFlags2CreateInfoKHR usage_ci{};
+usage_ci.pNext = &flags_ci;
+usage_ci.usage = VK_IMAGE_USAGE_2_TRANSFER_DST_BIT_KHR;   // 0x00000002ULL (64-bit)
+
+VkImageCreateInfo create_info{};
+create_info.pNext = &usage_ci;
+// ...
+vkCreateImage(device, &create_info, nullptr, &image_handle);
+----
+
+== When 64 Bits Is Not Enough
+
+Initially, `VK_KHR_format_feature_flags2` expanded format features from 32 to 64 bits (`VkFormatFeatureFlags2`). Eventually, even those 64 bits were exhausted. This led to the creation of `VkFormatFeatureFlags4KHR`, which provides an *additional* 64 bits of space.
+
+If you search the specification for `VkFormatFeatureFlags3`, you won't find it. This historical quirk happened because of how the query structures evolved:
+
+* **`VkFormatProperties`** used `VkFormatFeatureFlags` (**32 flags max**).
+* **`VkFormatProperties2`** introduced the `pNext` chain support, but initially still relied on the original 32 flags.
+* **`VkFormatProperties3`** was introduced via an extension to expose the new **64-bit** `VkFormatFeatureFlags2` (passed via the `pNext` chain of `VkFormatProperties2`).
+* **`VkFormatProperties4`** was later introduced to add `VkFormatFeatureFlags4`, granting an **extra 64 bits** of room (also passed via `pNext`).
+
+Because `VkFormatProperties3` skipped using a "version 3" flag type and jumped straight to using `VkFormatFeatureFlags2`, the flag versions were bumped to "Version 4" to match the `VkFormatProperties4` structure they belong to.

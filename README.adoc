@@ -237,6 +237,8 @@ These are supplemental references for the various Vulkan Extensions. Please cons
 
 == xref:{chapters}extensions/VK_EXT_debug_utils.adoc[VK_EXT_debug_utils]
 
+== xref:{chapters}extensions/VK_KHR_extended_flags.adoc[VK_KHR_extended_flags]
+
 = link:CONTRIBUTING.adoc[Contributing]
 
 = link:LICENSE[License]
