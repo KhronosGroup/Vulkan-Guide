@@ -229,11 +229,11 @@ The results are: `x == vec4(4)` and `y == vec4(5)`
 
 The formula is `offset = heapOffset + (pushIndex * heapIndexStride) + (shaderIndex * heapArrayStride)`
 
-The `pushOffset = 8` sets `pushIndex` to `0x10`
+The `pushOffset = 8` sets `pushIndex` to `2`
 
 ----
-u_buffers[0] offset = 0x20 + (0x10 * 2) + (0 * 0x10)
-u_buffers[1] offset = 0x20 + (0x10 * 2) + (1 * 0x10)
+u_buffers[0] offset = 0x20 + (2 * 0x10) + (0 * 0x10)
+u_buffers[1] offset = 0x20 + (2 * 0x10) + (1 * 0x10)
 ----
 
 ==== VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT
@@ -355,6 +355,44 @@ Only Uniform Buffers, Storage Buffers, and Acceleration Structures are allowed f
 ====
 todo - Add Ray Tracing section
 ====
+
+=== VkDescriptorMappingSourceEXT bindingCount alias
+
+When setting `VkDescriptorSetAndBindingMappingEXT`, there are `firstBinding` and `bindingCount` fields.
+
+The idea is that with a single mapping, you can apply the offsets for multiple bindings within a descriptor set.
+
+For example, imagine the following shader:
+
+[source,glsl]
+----
+layout(binding = 1) uniform sampler2D a[4];
+layout(binding = 3) uniform sampler2D b;
+layout(binding = 4) uniform sampler2D c;
+----
+
+If the mapping is configured as follows:
+
+[source,c++]
+----
+VkDescriptorSetAndBindingMappingEXT mapping;
+mapping.firstBinding = 1;
+mapping.bindingCount = 4; // Covers bindings 1, 2, 3, and 4
+mapping.source = VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_CONSTANT_OFFSET_EXT;
+mapping.sourceData.heapOffset = 0;
+mapping.sourceData.heapArrayStride = 0x10;
+----
+
+Each binding can be viewed as an index into the mapping. The respective offsets for each descriptor are calculated as follows:
+
+- `a[0]` = `0x00`
+- `a[1]` = `0x10`
+- `a[2]` = `0x20`
+- `a[3]` = `0x30`
+- `b`    = `0x20`
+- `c`    = `0x30`
+
+Note that both `a[2]` and `b` share the same descriptor offset here. This overlapping behavior is completely by design!
 
 == Untyped shader model
 
