@@ -486,6 +486,11 @@ we would use that size as an array stride inside the heap.
 
 image::{images}descriptor_heap_untyped_stride.svg[descriptor_heap_untyped_stride.svg]
 
+[NOTE]
+====
+Make sure to use property values like `bufferDescriptorSize` instead of `vkGetPhysicalDeviceDescriptorSizeEXT` here. The `vkGetPhysicalDeviceDescriptorSizeEXT` is only for when using the mappings.
+====
+
 == Alignment
 
 One of the hardest issues making an application portable across vendors is mastering the art of alignment.
