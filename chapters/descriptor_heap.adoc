@@ -553,3 +553,31 @@ If you are using the binding mappings, you will see the `samplerHeapOffset` and 
 It is confusing at first that when using `VK_DESCRIPTOR_TYPE_SAMPLER` you use the `heapOffset` to set the offset in the Sampler heap.
 But when using `VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER` the `heapOffset` is for the Resource heap and the `samplerHeapOffset` is for the Sampler heap.
 ====
+
+Some mappings also have a `useCombinedImageSamplerIndex`, which is a way to pack the same index for both the sampled image and sampler.
+
+For example, if using `VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_PUSH_INDEX_EXT` instead of going
+
+[source,c++]
+----
+VkDescriptorMappingSourcePushIndexEXT::pushOffset = 0;
+VkDescriptorMappingSourcePushIndexEXT::samplerPushOffset = 4;
+
+vkCmdPushDataEXT(offset = 0, size = 4, value = 6); // image offset to 6
+vkCmdPushDataEXT(offset = 0, size = 4, value = 7); // sampler offset to 7
+----
+
+you now can pack it into a single 32-bit word.
+
+[source,c++]
+----
+VkDescriptorMappingSourcePushIndexEXT::pushOffset = 0;
+VkDescriptorMappingSourcePushIndexEXT::useCombinedImageSamplerIndex = true;
+VkDescriptorMappingSourcePushIndexEXT::samplerPushOffset = IGNORED; 
+
+uint32_t image_index = 6;
+uint32_t sampler_index = 7;
+// equation found in spec
+uint32_t combined_index = (image_index & 0xfffff) | ((sampler_index & 0xfff) << 20);
+vkCmdPushDataEXT(offset = 0, size = 4, value = combined_index);
+----
