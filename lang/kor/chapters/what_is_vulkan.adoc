@@ -20,7 +20,7 @@ Vulkan은 회사나 언어가 아니라 개발자가 크로스 플랫폼 및 크
 
 크로노스 그룹은 Vulkan 사양과 함께 개발자가 Vulkan API와 인터페이스하는 데 사용할 수 있는 link:https://registry.khronos.org/vulkan/#apiregistry[API Registry]에서 생성된 link:https://www.open-std.org/jtc1/sc22/wg14/www/standards[C99] link:https://github.com/KhronosGroup/Vulkan-Headers/tree/main/include/vulkan[header files]을 공개합니다.
 
-C 코드로 작업할 수 없는 분들을 위해 다양한 link:https://github.com/KhronosGroup/Khronosdotorg/blob/main/api/vulkan/resources.md#language-bindings[언어] link:https://github.com/vinjn/awesome-vulkan#bindings[바인딩]이 있습니다.
+C 코드로 작업할 수 없는 분들을 위해 다양한 언어 바인딩이 있습니다.
 
 == Vulkan 과 OpenGL
 

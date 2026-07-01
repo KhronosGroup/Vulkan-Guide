@@ -1,0 +1,215 @@
+// Copyright 2025 Holochip, Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+// Required for both single-page and combined guide xrefs to work
+ifndef::chapters[:chapters:]
+ifndef::images[:images: images/]
+
+[[TileBasedRenderingBestPractices]]
+= Tile Based Rendering (TBR) Best Practices
+
+Tile Based Rendering (TBR) is a rendering architecture widely used in mobile GPUs and increasingly in some desktop designs.
+Unlike traditional "immediate mode" GPUs that process the entire screen as one large task, a tiler breaks the framebuffer down into small, manageable screen regions called tiles.
+The goal is to keep as much work as possible on-chip, inside fast local memory, before finally writing the finished results out to the main system memory.
+
+For a Vulkan developer, this architecture means that memory bandwidth is often the most significant performance factor.
+If you can keep your data within the tile memory, your application will be faster and consume less power.
+If you force the GPU to constantly "round-trip" data back and forth between the chip and external VRAM, performance will suffer.
+
+[[mobile-gpu-architectures]]
+== Understanding Tiler Architectures
+
+Mobile GPUs operate in power-constrained environments, which makes bandwidth efficiency critical.
+Since Vulkan hides many of the internal hardware details — like the exact size of a tile or how the GPU schedules work — the best way to optimize is to provide the driver with clear intent.
+By using the right render pass configurations and memory flags, you give the implementation the information it needs to keep rendering on-chip.
+
+[[tbr-hardware-implementations]]
+=== How Hardware Tilers Work
+
+While every vendor has a slightly different design, they generally share common characteristics.
+First, it is important to realize that the **tile size** is determined by the hardware and is not something you can query or control in core Vulkan.
+Depending on the device and the complexity of your attachments, tiles might be anything in size of pixels.
+The GPU chooses a size that fits its internal memory budget.
+Some vendor extensions (like `VK_QCOM_tile_shading`) might expose these details, but for a cross-platform app, you should assume the tile size is opaque.
+
+Second, the **on-chip memory** used for tiles is managed entirely by the driver.
+You don't allocate "tile memory" directly.
+Instead, the number of attachments you use, their formats, and whether you enable MSAA all determine how much data needs to be stored per pixel.
+Because the total on-chip memory is fixed, using pixel formats with smaller bit depths can often allow the hardware to use larger tiles or avoid spilling data to external memory.
+If your attachments require more bits than the GPU has on-chip for a given tile size, the driver might have to use smaller tiles, which reduces efficiency.
+
+One often overlooked optimization for tilers involves the **binning pass**.
+Tilers usually process geometry twice: once to determine which triangles fall into which tiles (binning), and a second time to actually render the pixels.
+To speed up the binning pass, consider storing your vertex positions in a separate buffer from other attributes like UVs or normals.
+This allows the GPU to read only the data it needs to calculate tile coverage, significantly reducing unnecessary bandwidth.
+While the shader calculations for the binning pass should be performed at high precision (fp32), the vertex position data in memory only needs enough precision to maintain accuracy in the model's coordinate space.
+Using formats like `unorm16` for a typical 10-meter real-world equivalent model provides 0.15 mm quantization accuracy, which is sufficient for most use cases.
+
+[[tbr-optimization-considerations]]
+== Optimization Strategies for TBR
+
+Most performance gains on a tiler come from answering one question: "Do I really need to move this data to external memory?"
+
+[[attachment-management]]
+=== Attachment Load and Store Ops
+
+Your primary tool for controlling bandwidth is the render pass attachment configuration.
+Whether you are using traditional `VkRenderPass` objects or the modern `VK_KHR_dynamic_rendering` extension, the principles are the same.
+The `loadOp` and `storeOp` settings are not just cleanup steps; they are direct instructions to the hardware.
+
+If you are starting a new frame or a fresh pass, use `VK_ATTACHMENT_LOAD_OP_CLEAR`.
+This is significantly faster than using explicit clear commands like `vkCmdClearAttachments`, as it allows the hardware to initialize tile memory directly without any external memory traffic.
+If you know you are going to completely overwrite the tile's contents — for example, by rendering opaque geometry that covers the entire screen — you can use `VK_ATTACHMENT_LOAD_OP_DONT_CARE`.
+This tells the GPU it doesn't need to waste time loading the previous frame's data from memory OR performing a clear.
+
+Similarly, use `VK_ATTACHMENT_STORE_OP_DONT_CARE` for any attachment you don't need after the pass is finished.
+If you want to explicitly avoid writing back to memory but also don't want to logically discard the current contents (for example, if you plan to use the attachment in a subsequent render pass that is not a subpass), you can use `VK_ATTACHMENT_STORE_OP_NONE` (if available via `VK_KHR_separate_depth_stencil_layouts` or Vulkan 1.3).
+Depth attachments, stencil attachments, and multisampled color attachments are the most common candidates for `DONT_CARE`.
+By telling the GPU you don't care about the final state of these images, you prevent it from wasting bandwidth writing them back to main memory.
+
+When using **Dynamic Rendering** (`VK_KHR_dynamic_rendering`), you specify these same operations in the `VkRenderingInfo` structure.
+This extension simplifies your code by removing the need for render pass and framebuffer objects, but the hardware logic remains identical.
+You must remain disciplined about your load and store operations to avoid performance regressions.
+
+When using traditional render passes, try to structure them so that the driver can "merge" subpasses.
+Subpasses can be key to achieving good performance with traditional rendering pipelines, but merging is not guaranteed — it is implementation-dependent.
+When subpasses are merged, the driver combines multiple logical subpasses into a single hardware pass, ensuring that intermediate data (like G-buffer attributes in a deferred renderer) stays entirely within the tile memory and is never written to external VRAM.
+Applications can use `VK_EXT_subpass_merge_feedback` to check whether their subpasses are actually being merged.
+Modern pipelines using dynamic rendering can obtain similar benefits to subpasses by using `VK_KHR_dynamic_rendering_local_read`.
+To encourage merging, keep your subpass dependencies simple and avoid introducing any "global" dependencies (like pipeline barriers or descriptor set updates) that might force the driver to split the pass.
+
+[[transient-attachments]]
+=== Transient Attachments and Lazy Allocation
+
+For intermediate data that only lives during a single render pass, you should mark your images with `VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT`.
+When combined with memory that is `VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT`, some GPUs can avoid allocating any physical system memory for these attachments at all.
+The data exists only in the on-chip tile memory and is discarded when the pass ends.
+This is particularly useful for depth buffers or G-buffer attachments in a deferred renderer that are consumed in a later subpass.
+
+[[msaa-resolve-patterns]]
+=== Efficiency with MSAA
+
+Multisampling is particularly efficient on tilers because the "resolve" from a multisampled attachment down to a single-sampled one can often happen entirely on-chip.
+Instead of writing the massive multisampled buffer to VRAM and then reading it back to resolve it, the GPU resolves the tile just before it writes the final 1x color to memory.
+To trigger this, set the multisampled attachment's `storeOp` to `DONT_CARE` and provide a resolve attachment within the same subpass.
+Note that there is no universal "best" sample count; you should choose based on your quality needs and target hardware.
+Avoid using `vkCmdResolveImage` if possible, as it forces an expensive round-trip to main memory.
+
+[[tbr-vs-imr-detailed-analysis]]
+== TBR vs IMR: A Practical Comparison
+
+It is helpful to contrast tilers with Immediate Mode Renderers (IMR), which are common in high-end desktop GPUs.
+
+* **IMR GPUs** typically process triangles and write the resulting fragments to memory almost immediately. They rely on high-bandwidth memory and large caches to handle the traffic. Overdraw on an IMR is expensive because every pixel written potentially triggers a memory write.
+* **TBR GPUs** defer those writes. By "binning" the geometry and processing by tile, they can perform many operations — like blending and depth testing — entirely within the tile memory. The memory write only happens once the tile is finished.
+
+It is not necessary to write a custom path for TBR and IMR GPUs.
+In general, understanding how a tiler works will help you write code that is efficient for both architectures.
+While avoiding fragment overdraw is orthogonal to being a tiler (and tilers are often less susceptible to overdraw performance costs due to hardware Hidden Surface Removal), good attachment management and minimizing unnecessary work benefit every architecture.
+
+[[vulkan-extensions-comprehensive-guide]]
+== Modern Extensions for Tile Efficiency
+
+Standard Vulkan render passes are powerful, but several modern extensions provide even more control over how data is handled on-chip.
+
+[[vk-khr-dynamic-rendering-local-read]]
+=== Dynamic Rendering and Local Reads
+
+If you have moved to **Dynamic Rendering** to simplify your application, you might worry about losing the "input attachment" functionality that keeps subpasses efficient.
+The `VK_KHR_dynamic_rendering_local_read` extension is the solution.
+It allows your fragment shaders to read from the current pixel's color, depth, or stencil attachments without requiring an explicit render pass object.
+
+To use it effectively, you enable the feature at device creation and use `vkCmdSetRenderingAttachmentLocationsKHR` during command recording to map your images to input indices.
+In your shader, you can then use `subpassInput` (accessed via `subpassLoad`) just as you would in a traditional subpass.
+This keeps your data on-chip, avoiding the bandwidth penalty of writing intermediate G-buffer data to main memory.
+
+[[vk-ext-shader-tile-image]]
+=== Shader Tile Image
+
+While local reads are great for simple feedback, `VK_EXT_shader_tile_image` provides a more direct way for fragment shaders to interact with the tile.
+This extension allows you to access tile data as if it were a regular image, which is particularly useful for **programmable blending**, custom depth-stencil logic, or advanced transparency effects.
+
+It's a powerful tool, but it is strictly restricted to the **current pixel**.
+You cannot use this extension to read neighboring pixels.
+Common post-processing effects like bloom, FXAA, or blurs still require a separate sampling pass because they depend on a wider neighborhood of data that might cross tile boundaries.
+
+
+[[performance-considerations]]
+== Advanced Performance Tuning
+
+Beyond the basics of attachment management, several other factors influence how well your application runs on a tiler.
+
+[[pipelining-and-barriers]]
+=== Pipelining and Barriers
+
+On a tiler, the GPU usually processes the "binning" pass for the entire render pass before it starts the "fragment" pass for the first tile.
+To keep the hardware busy, you want these two stages to overlap as much as possible — the GPU should be binning the next frame while it is still shading the current one.
+
+Incorrect use of pipeline barriers can break this overlap.
+Avoid using broad barriers like `VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT` to `VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT`, as these often create unnecessary stalls.
+It is better to separate `VK_PIPELINE_STAGE_VERTEX_SHADER_BIT` and `VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT`, and mark resources according to the stages that actually use them.
+If you use a barrier that is too broad — like `VK_PIPELINE_STAGE_ALL_COMMANDS_BIT` — you might force the GPU to finish all pending fragment work before it can even start the binning pass for the next set of draws.
+Instead, use the most specific stages and access masks possible.
+For example, if a compute shader produces data for a vertex buffer, the barrier should only synchronize the compute stage with the vertex input stage.
+This allows the tiler's geometry engine to start working as soon as the data is ready, even if the fragment units are still busy with a previous task.
+
+[[depth-and-hsr]]
+=== Depth Testing and Hidden Surface Removal
+
+Many tilers can help reduce the impact of overdraw through hardware-based Hidden Surface Removal (HSR) or forward pixel killing, though the level of support varies across implementations and overdraw still has a cost.
+To help these hardware optimizations work effectively (where supported):
+
+*   Use a consistent `VkCompareOp` (usually `LESS` or `LESS_OR_EQUAL`) throughout your render pass. Frequent changes to the depth comparison function can disable hardware depth culling.
+*   Enable depth writing (`depthWriteEnable`) whenever possible. If it's disabled, the GPU cannot update its internal depth culling blocks, leading to more overdraw for subsequent draws.
+*   Avoid enabling "Alpha to Coverage" simultaneously with depth testing unless necessary, as it can consume extra hardware resources and reduce execution efficiency on some tilers.
+*   Avoid using `discard` or writing to `gl_FragDepth` in your shaders unless absolutely necessary, as these operations can force the GPU to disable "early" depth testing and wait for the fragment shader to finish before it can determine visibility.
+
+Modern designs, such as the Arm Immortalis-G925, further evolve these concepts with features like a hardware **fragment pre-pass** that can handle overdraw reduction automatically.
+While manual front-to-back sorting has long been a key recommendation to help the hardware, these newer architectures can often handle the optimization without application-side intervention.
+
+[[precision-and-prefetch]]
+=== Precision and Texture Optimization
+
+Using `mediump` (16-bit) instead of `highp` (32-bit) in your shaders is a classic mobile optimization.
+While this is technically orthogonal to the tiling process, it is highly recommended for mobile GPUs because it significantly reduces memory bandwidth and register pressure.
+Many developers prefer using explicit types, such as `float16`, where supported by hardware and extensions.
+Note that some modern desktop GPUs also benefit from `float16` throughput and storage.
+
+Treat `mediump` as a hardware hint, not a guarantee.
+Some GPUs might still run at full 32-bit precision internally, while others will show visible artifacts.
+Testing on as many devices as possible is the only way to be sure your precision choices are safe, as a shader that looks perfect on one device might be broken on another that actually employs 16-bit math.
+Always verify performance of your `float16` optimizations: adding `float16` to everything without careful consideration is usually not a good idea.
+In some cases, it just introduces unnecessary conversions (f32 → f16 → f32), and while most mobile GPU compilers can detect and optimize this, the heuristics are not always reliable.
+
+Another subtle trick is **texture prefetch**.
+Tilers are very efficient at fetching texture data if the texture coordinates are "predictable" — usually meaning they are passed directly from the vertex shader.
+Ideally, any coordinate manipulation (like scaling or offsets) should be done in the vertex shader.
+If you perform complex math on your coordinates inside the fragment shader before sampling, you might stall the hardware's prefetch units.
+
+You can also leverage **texture reuse patterns**.
+Many mobile GPUs can optimize scenarios where you sample multiple textures using the same coordinates, or sample the same texture with different offsets.
+Grouping these operations together — for example, by using a base coordinate and a set of constant offsets — allows the hardware to reduce memory requests and lower power consumption.
+Advanced samplers on some hardware can even perform operations like convolution, maximum, or minimum filters directly within the sampling unit if the shader is structured correctly.
+
+[[best-practices-summary]]
+== Summary of Best Practices
+
+If you want your Vulkan application to perform well on tile-based hardware, focus on these core principles:
+
+1.  **Communicate your intent clearly.** Use `loadOp` and `storeOp` to tell the GPU when it can discard data instead of wasting bandwidth.
+2.  **Keep data on-chip.** Leverage transient attachments, lazy memory allocation, and extensions like `VK_KHR_dynamic_rendering_local_read` to avoid external memory round-trips.
+3.  **Optimize the binning pass.** Separate vertex positions from other attributes to reduce the amount of data the geometry engine has to read.
+4.  **Allow for stage overlap.** Use specific pipeline barriers (e.g., separating `VERTEX_SHADER_BIT` and `FRAGMENT_SHADER_BIT`) to ensure the binning and fragment passes can overlap as much as possible.
+5.  **Leverage hardware depth culling.** Use consistent depth comparison operations and enable depth writes whenever possible to keep the hardware's Hidden Surface Removal (HSR) and early-Z logic active.
+6.  **Be smart with textures.** Perform coordinate math in the vertex shader to enable hardware prefetch and group similar sampling operations to leverage texture reuse units.
+7.  **Manage precision carefully.** Use `mediump` or explicit 16-bit types to improve bandwidth and occupancy on mobile GPUs, and keep in mind that some desktop GPUs can also benefit from 16-bit math. Always verify the visual results across a range of target hardware.
+
+[[additional-resources]]
+== Additional Resources
+
+For more in-depth information, consult the performance guides from major GPU vendors:
+
+* **ARM Mali GPU Best Practices**: https://developer.arm.com/documentation/101897/latest/[Official ARM guidance for tilers]
+* **Imagination PowerVR Architecture**: https://docs.imgtec.com/starter-guides/powervr-architecture/html/index.html[Tiler architecture deep-dive]
+* **HUAWEI Maleoon GPU Best Practices**: https://developer.huawei.com/consumer/en/doc/best-practices/bpta-maleoon-gpu-best-practices[Broadly applicable mobile tiler optimizations]
+* **Samsung GPU framebuffer**: https://developer.samsung.com/galaxy-gamedev/resources/articles/gpu-framebuffer.html[Explains how to optimize framebuffer usage for better performance]

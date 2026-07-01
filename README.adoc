@@ -1,4 +1,4 @@
-// Copyright 2019-2024 The Khronos Group, Inc.
+// Copyright 2019-2026 The Khronos Group, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 = Vulkan^®^ Guide
@@ -65,10 +65,14 @@ The Vulkan Guide content is also viewable from https://docs.vulkan.org/guide/lat
 = Using Vulkan
 
 == xref:{chapters}deprecated.adoc[Deprecated]
+== xref:{chapters}embedded_programming.adoc[Embedded Programming]
+
 
 == xref:{chapters}windowing_audio_input.adoc[Windowing, Audio, and Input]
 
 == xref:{chapters}ide.adoc[Development Environments & IDEs]
+
+== xref:{chapters}tile_based_rendering_best_practices.adoc[Tile Based Rendering (TBR) Best Practices]
 
 == xref:{chapters}vulkan_profiles.adoc[Vulkan Profiles]
 
@@ -134,11 +138,15 @@ The Vulkan Guide content is also viewable from https://docs.vulkan.org/guide/lat
 
 === xref:{chapters}descriptor_buffer.adoc[Descriptor Buffers (VK_EXT_descriptor_buffer)]
 
+=== xref:{chapters}descriptor_heap.adoc[Descriptor Heaps (VK_EXT_descriptor_heap)]
+
 === xref:{chapters}location_component_interface.adoc[Location and Component Interface]
 
 === xref:{chapters}push_constants.adoc[Push Constants]
 
 === xref:{chapters}ways_to_provide_spirv.adoc[Ways to Provide SPIR-V]
+
+=== xref:{chapters}buffer_array_length.adoc[Buffer Array Length (OpArrayLength)]
 
 == xref:{chapters}robustness.adoc[Robustness]
 
@@ -149,6 +157,8 @@ The Vulkan Guide content is also viewable from https://docs.vulkan.org/guide/lat
   * `VK_EXT_extended_dynamic_state`, `VK_EXT_extended_dynamic_state2`, `VK_EXT_extended_dynamic_state3`, `VK_EXT_vertex_input_dynamic_state`, `VK_EXT_color_write_enable`, `VK_EXT_attachment_feedback_loop_dynamic_state`
 
 === xref:{chapters}dynamic_state_map.adoc[Dynamic State Map]
+
+== xref:{chapters}compute_shaders.adoc[Compute Shaders]
 
 == xref:{chapters}subgroups.adoc[Subgroups]
 
@@ -225,7 +235,9 @@ These are supplemental references for the various Vulkan Extensions. Please cons
 
 == xref:{chapters}extensions/VK_KHR_shader_subgroup_uniform_control_flow.adoc[VK_KHR_shader_subgroup_uniform_control_flow]
 
-== xref:{chapters}extensions/VK_KHR_debug_utils.adoc[VK_KHR_debug_utils]
+== xref:{chapters}extensions/VK_EXT_debug_utils.adoc[VK_EXT_debug_utils]
+
+== xref:{chapters}extensions/VK_KHR_extended_flags.adoc[VK_KHR_extended_flags]
 
 = link:CONTRIBUTING.adoc[Contributing]
 

@@ -48,7 +48,7 @@ PDF フォーマットは `pdf/vkspec.pdf` ファイルをご覧ください。
 
 https://registry.khronos.org/vulkan/specs/latest/pdf/vkspec.pdf
 
-Vulkan SDKにもPDF版が付属しています（https://vulkan.lunarg.com/doc/sdk/1.4.304.0/windows/1.4-extensions/vkspec.pdf）。
+Vulkan SDKにもPDF版が付属しています（https://vulkan.lunarg.com/doc/sdk/1.4.341.1/windows/1.4-extensions/vkspec.pdf）。
 
 === マニュアルページ
 

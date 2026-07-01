@@ -97,9 +97,9 @@ The `VK_PIPELINE_STAGE_VERTEX_INPUT_BIT` (now `VK_PIPELINE_STAGE_2_VERTEX_INPUT_
   * `VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT_KHR`
   * `VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT_KHR`
 
-=== Splitting up VK_PIPELINE_STAGE_ALL_TRANSFER_BIT
+=== Splitting up VK_PIPELINE_STAGE_TRANSFER_BIT
 
-The `VK_PIPELINE_STAGE_ALL_TRANSFER_BIT` (now `VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KHR`) was split into 4 new stage flags which specify a dedicated stage for the various staging commands instead of having them combined into a single pipeline stage flag.
+The `VK_PIPELINE_STAGE_TRANSFER_BIT` (now `VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT_KHR`) was split into 4 new stage flags which specify a dedicated stage for the various staging commands instead of having them combined into a single pipeline stage flag.
 
   * `VK_PIPELINE_STAGE_2_COPY_BIT_KHR`
   * `VK_PIPELINE_STAGE_2_RESOLVE_BIT_KHR`

@@ -1,51 +1,153 @@
-// Copyright 2021-2024 The Khronos Group, Inc.
-// Copyright 2025 Holochip, Inc.
+// Copyright 2026 Sascha Willems
+// Copyright 2026 Holochip, Inc.
 // SPDX-License-Identifier: CC-BY-4.0
 
 ifndef::chapters[:chapters:]
 ifndef::images[:images: images/]
 
 [[slang-in-vulkan]]
-= Slang in Vulkan
+= Slang Shading Language in Vulkan
+
 
 
 Vulkan does not directly consume shaders in a human-readable text format, but instead uses xref:{chapters}what_is_spirv.adoc[SPIR-V] as an intermediate representation. This opens the option to use shader languages other than e.g. GLSL, as long as they can target the Vulkan SPIR-V environment.
 
+One such language is the link:https://shader-slang.org[Slang Shading Language] developed by NVIDIA. It was designed to address the evolving needs of real-time graphics development, especially with regard to shader code bases getting larger and more complex. It supports multiple APIs, among them is first-class support for Vulkan's SPIR-V.
+
+image::{images}slang-write-once-run-anywhere-graphic.webp[Slang overview]
 link:https://github.com/shader-slang/slang[Slang] is a modern shading language and compiler designed to extend xref:{chapters}hlsl.adoc[HLSL] with advanced features. It's largely backward-compatible with HLSL 2018 but adds features like generics, interfaces, and reflection capabilities. Slang can target multiple backends, including SPIR-V for Vulkan.
 
+Slang is developed in the link:https://github.com/shader-slang[Open Source] and is under the link:https://www.khronos.org/news/press/khronos-group-launches-slang-initiative-hosting-open-source-compiler-contributed-by-nvidia[governance of Khronos], meaning it has broad industry support and is actively maintained.
 With link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst#unsupported-hlsl-features[a few exceptions], all Vulkan features and shader stages available with GLSL can be used with Slang too, including recent Vulkan additions like hardware accelerated ray tracing. On the other hand, Slang to SPIR-V supports Vulkan exclusive features that are not (yet) available in DirectX.
 
+Its syntax is similar to xref:{chapters}hlsl.adoc[HLSL] with additions like modules to make the language easier to use and to better handle complex code bases.
+
+It has great tooling support with debuggers like link:https://renderdoc.org/[RenderDoc] and link:https://developer.nvidia.com/nsight-graphics[Nsight]. Syntax highlighting is available for most popular IDEs like link:https://marketplace.visualstudio.com/items?itemName=shader-slang.slang-vs-extension[Visual Studio] and link:https://marketplace.visualstudio.com/items?itemName=shader-slang.slang-language-extension[Visual Studio Code].
 
 [[educational-resources]]
 == Educational resources
 
+If you are new to Slang, here are some educational points:
+
+* link:https://shader-slang.org/[Slang website]
+* link:https://shader-slang.org/docs/getting-started/[Getting started with Slang]
+* link:https://docs.shader-slang.org/en/latest/external/slang/docs/user-guide/[Slang User's Guide]
+* link:https://docs.shader-slang.org/en/latest/external/slang/docs/user-guide/a2-01-spirv-target-specific.html[SPIR-V specific functionalities]
+* link:https://shader-slang.org/docs/coming-from-hlsl/[Porting from HLSL]
+* link:https://shader-slang.org/docs/coming-from-glsl/[Porting from GLSL]
+* link:https://shader-slang.org/slang-playground/[Interactive Slang shader playground]
+ifndef::project-local-ci[]
+* xref:samples::README.adoc[The Vulkan Samples come with Slang shaders]
+endif::[]
+
+== Key differences between Slang and GLSL
+
+This section summarizes the most important differences a developer will encounter when moving from GLSL to Slang.
+
+[cols="1,1,1", options="header"]
+|===
+|Feature |Slang |GLSL
+
+|Programming style
+|Object-oriented (C{pp}-like)
+|Procedural (C-like)
+
+|Stages per source file
+|Multiple
+|One
+
+|Entry point name
+|User-defined
+|Always `main`
+
+|Stage declaration
+|`[shader("...")]` attribute
+|Compiler flag or file extension
+
+|Vector types
+|`float2`, `float3`, `float4`
+|`vec2`, `vec3`, `vec4`
+
+|Matrix types
+|`float2x2`–`float4x4`
+|`mat2`–`mat4`
+
+|Default matrix layout
+|Column-major (Command-line), row-major (Library)
+|Column-major
+
+|Resource binding
+|Automatic or explicit
+|`layout(set=M, binding=N)` — always explicit
+
+|File reuse
+|`import` module system
+|`#include` preprocessor
 For Slang, the official link:https://github.com/shader-slang/slang[GitHub repository] and link:https://docs.shader-slang.org/en/latest/[documentation] are the best resources to get started.  Additionally, the best place to get help is the link:https://khr.io/slangdiscord[slang discord server].
 
 == Why Use Slang for Vulkan?
+|Namespaces
+|Yes
+|No
 
 There are several advantages to using Slang for Vulkan development:
+|Interfaces and generics
+|Yes
+|No
 
 * *Cross-API compatibility*: Write shaders that can be used with both Vulkan and DirectX, Metal, and WebGPU with minimal changes; Slang can also target CUDA and CPU execution
 * *Familiar syntax*: Developers with HLSL experience can leverage their existing knowledge
 * *Advanced language features*: Access to modern programming constructs like generics and interfaces
 * *Industry adoption*: Growing adoption in game engines and graphics applications
 * *Tooling support*: Rich ecosystem of tools and IDE integrations
+|Pointers
+|Yes (for GPU-side use)
+|No
 
 == Differences Between HLSL and Slang
+|===
 
+== Syntax comparison
 While Slang is largely compatible with HLSL 2018, it adds several powerful features that make shader development more efficient, maintainable, and flexible.
 
 === Generics and Templates
+Slang and GLSL differ heavily in their syntax. While GLSL is more procedural (like C), Slang is more object-oriented (like C{pp}).
 
+Here is the same shader written in both languages to give a quick comparison on how they basically differ, including the aforementioned namespace that e.g. adds explicit locations:
 Slang adds full support for generics, similar to C# or Java, allowing for type-safe parameterized code:
 
+=== GLSL
+
+In GLSL, you need one shader per stage.
+
+==== Vertex shader
+
+link:https://godbolt.org/z/6fefo9cWT[Try Online]
+[source,glsl]
 [source,slang]
 ----
 // Generic function in Slang
 T min<T>(T a, T b) {
     return a < b ? a : b;
 }
+#version 450
 
+layout (location = 0) in vec3 inPos;
+layout (location = 1) in vec2 inUV;
+
+layout (binding = 0) uniform UBO
+{
+	mat4 projection;
+	mat4 model;
+} ubo;
+
+layout (location = 0) out vec2 outUV;
+
+void main()
+{
+	outUV = inUV;
+	gl_Position = ubo.projection * ubo.model * vec4(inPos.xyz, 1.0);
+}
 // Usage
 float result = min<float>(1.0, 2.0);
 int intResult = min<int>(5, 3);
@@ -54,10 +156,13 @@ int intResult = min<int>(5, 3);
 HLSL has limited template support, but Slang's generics are more robust and flexible than HLSL's templates.
 
 === Interfaces and Polymorphism
+==== Fragment shader
 
 Slang introduces interfaces, enabling polymorphic behavior in shaders:
 
 [source,slang]
+link:https://godbolt.org/z/4ecx89TWE[Try Online]
+[source,glsl]
 ----
 // Define an interface
 interface IMaterial {
@@ -67,7 +172,17 @@ interface IMaterial {
 // Implement the interface
 struct LambertianMaterial : IMaterial {
     float3 albedo;
+#version 450
 
+layout (binding = 1) uniform sampler2D samplerColor;
+
+layout (location = 0) in vec2 inUV;
+
+layout (location = 0) out vec4 outFragColor;
+
+void main()
+{
+	outFragColor = texture(samplerColor, inUV);
     float3 evaluateBRDF(float3 viewDir, float3 lightDir, float3 normal) {
         return albedo / 3.14159;
     }
@@ -79,14 +194,53 @@ void shadeSurface(IMaterial material, ...) {
 }
 ----
 
+=== Slang
 This feature is not available in standard HLSL.
 
+In Slang, a single file can contain multiple shader stages. This helps reduce duplication. Also note how we don't have to specify explicit bindings, as they're implicitly deduced for `ubo` and `samplerColor` from their ordering.
 === Modules and Namespaces
 
 Slang provides a module system for better code organization:
 
+link:https://godbolt.org/z/rEYeG6EdY[Try Online]
 [source,slang]
 ----
+struct VSInput
+{
+	float3 Pos;
+	float2 UV;
+	float3 Normal;
+};
+
+struct VSOutput
+{
+	float4 Pos : SV_POSITION;
+	float2 UV;
+};
+
+struct UBO
+{
+    float4x4 projection;
+    float4x4 model;
+};
+ConstantBuffer<UBO> ubo;
+
+Sampler2D samplerColor;
+
+[shader("vertex")]
+VSOutput vertexMain(VSInput input)
+{
+	VSOutput output;
+	output.UV = input.UV;
+	output.Pos = mul(ubo.projection, mul(ubo.model, float4(input.Pos.xyz, 1.0)));
+	return output;
+}
+
+[shader("fragment")]
+float4 fragmentMain(VSOutput input)
+{
+    return samplerColor.Sample(input.UV);
+}
 // In file: lighting.slang
 module Lighting;
 
@@ -162,15 +316,19 @@ slangc -target dxbc -entry main -stage vertex shader.slang -o shader.vert.dxbc
 
 === Runtime Behavior Differences Compared to HLSL
 
+== Using Slang in your application
 Slang introduces some behavioral differences compared to standard HLSL:
 
+From the application's point-of-view, using Slang is exactly the same as using GLSL. As the application always consumes shaders in the SPIR-V format, the only difference is in the tooling to generate the SPIR-V shaders from the desired shading language.
 * *Dynamic dispatch*: Runtime polymorphism through interfaces
 * *Generic specialization*: Automatic specialization of generic code
 * *Reflection capabilities*: Access to shader structure through the reflection API
 
+== Compiling shaders
 [[applications-pov]]
 == From the application's point-of-view
 
+To get SPIR-V from Slang requires a compiler. Just like GLSL and HLSL, Slang comes with both an offline compiler (a binary for multiple operating systems) and a library for runtime compilation. Both can be downloaded via link:https://github.com/shader-slang/slang/releases[github] and are also part of the link:https://vulkan.lunarg.com/sdk/home[Vulkan SDK].
 From the application's point-of-view, using Slang is exactly the same as using GLSL or HLSL. As the application always consumes shaders in the SPIR-V format, the only difference is in the tooling to generate the SPIR-V shaders from the desired shading language.
 
 == Migrating from HLSL or GLSL to Slang
@@ -190,27 +348,36 @@ The Slang compiler can be downloaded from the link:https://github.com/shader-sla
 
 === Offline compilation using the stand-alone compiler
 
+Compiling a shader offline via the pre-compiled `slangc` binary is similar to compiling with glslang:
 Compiling a Slang shader offline is straightforward:
 
 [source]
 ----
+slangc texture.slang -target spirv -o texture.vert.spv
 slangc -target spirv -entry main -o output.spv input.slang
 ----
 
+This will generate a single SPIR-V file with all shader stages provided in the Slang source file.
+
+Specific shader stages can be compiled like this:
 For HLSL compatibility mode:
 
 [source]
 ----
 slangc -target spirv -lang hlsl -entry main -o output.spv input.hlsl
+slangc texture.slang -target spirv -entry vertexMain -stage vertex -o texture.vert.spv
 ----
 
 For GLSL compatibility mode:
+Capabilities are implicitly enabled based on feature usage, but can also be explicitly specified:
 
 [source]
 ----
+slangc heap.slang -target spirv -entry vertexMain -stage vertex -o heap.vert.spv -capability spvDescriptorHeapEXT
 slangc -target spirv -allow-glsl -entry main -o output.spv input.glsl
 ----
 
+The resulting SPIR-V can then be directly loaded by the app, same as SPIR-V generated from GLSL.
 Key command-line options include:
 
 * `-target`: Specifies the output format (use `spirv` for Vulkan)
@@ -222,10 +389,15 @@ Key command-line options include:
 
 === Runtime compilation using the library
 
+Slang can also be integrated into a Vulkan application using the Slang Compiler API. This allows for runtime compilation of shaders. Doing so requires you to include the slang compiler headers and link against the `slang` (or `slang-compiler`) library.
+
+Compiling Slang to SPIR-V at runtime then is pretty straight-forward:
 Slang can also be integrated into a Vulkan application for runtime compilation using the Slang API:
 
 [source, cpp]
 ----
+#include "slang/slang.h"
+#include "slang/slang-com-ptr.h"
 #include "slang.h"
 #include "slang-com-ptr.h"
 
@@ -273,11 +445,57 @@ VkShaderModule shaderModule;
 vkCreateShaderModule(device, &shaderModuleCI, nullptr, &shaderModule);
 ----
 
+...
+
+// Initialize the Slang shader compiler
+slang::createGlobalSession(slangGlobalSession.writeRef());
+auto slangTargets{ std::to_array<slang::TargetDesc>({ {.format{SLANG_SPIRV}, .profile{slangGlobalSession->findProfile("spirv")} } }) };
+auto slangOptions{ std::to_array<slang::CompilerOptionEntry>({ { slang::CompilerOptionName::EmitSpirvDirectly, {slang::CompilerOptionValueKind::Int, 1} } }) };
+slang::SessionDesc slangSessionDesc{
+	.targets{slangTargets.data()},
+	.targetCount{SlangInt(slangTargets.size())},
+	// Match GLSL's matrix layout
+	.defaultMatrixLayoutMode = SLANG_MATRIX_LAYOUT_COLUMN_MAJOR,
+	.compilerOptionEntries{slangOptions.data()},
+	.compilerOptionEntryCount{uint32_t(slangOptions.size())}
+};
 === Working with Shader Parameters
 
 Slang provides a structured way to declare shader parameters that maps cleanly onto Vulkan's descriptor model. Parameter blocks can be bound to a specific Vulkan descriptor set and binding using the `vk::binding` attribute:
+// Load and compile the shader
+Slang::ComPtr<slang::ISession> slangSession;
+slangGlobalSession->createSession(slangSessionDesc, slangSession.writeRef());
+Slang::ComPtr<slang::IModule> slangModule{ slangSession->loadModuleFromSource("shader", "shader.slang", nullptr, nullptr) };
+Slang::ComPtr<ISlangBlob> spirv;
+slangModule->getTargetCode(0, spirv.writeRef());
+VkShaderModuleCreateInfo shaderModuleCI{
+	.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
+	.codeSize = spirv->getBufferSize(),
+	.pCode = (uint32_t*)spirv->getBufferPointer()
+};
 
 [source, slang]
+// Create the shader module to be used by the application
+VkShaderModule shaderModule{};
+chk(vkCreateShaderModule(device, &shaderModuleCI, nullptr, &shaderModule));
+
+// Take shader stages from the single module we just compiled
+VkPipelineShaderStageCreateInfo vertexShader{
+	.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+	.stage = VK_SHADER_STAGE_VERTEX_BIT,
+	.module = shaderModule, .pName = "main"
+};
+VkPipelineShaderStageCreateInfo fragmentShader{
+	.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+	.stage = VK_SHADER_STAGE_FRAGMENT_BIT,
+	.module = shaderModule, .pName = "main"
+};
+VkGraphicsPipelineCreateInfo pipelineCI{
+	...
+	.stageCount = 2,
+	.pStages = shaderStages.data(),
+};
+chk(vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineCI, nullptr, &pipeline));
 ----
 // Define a parameter block for Vulkan
 [[vk::binding(0, 0)]]

@@ -65,7 +65,7 @@ The following table lists deprecated items in Vulkan along with their replacemen
 |With VK_KHR_synchronization2
 |link:https://vulkan.gpuinfo.org/displayextensiondetail.php?extension=VK_KHR_synchronization2[View on GPU Info]
 
-|VK_PIPELINE_STAGE_ALL_TRANSFER_BIT
+|VK_PIPELINE_STAGE_TRANSFER_BIT
 |Used to represent all transfer operations in the pipeline.
 |Split into more specific flags: `VK_PIPELINE_STAGE_2_COPY_BIT_KHR`, `VK_PIPELINE_STAGE_2_RESOLVE_BIT_KHR`, `VK_PIPELINE_STAGE_2_BLIT_BIT_KHR`, and `VK_PIPELINE_STAGE_2_CLEAR_BIT_KHR`.
 |With VK_KHR_synchronization2
@@ -82,6 +82,12 @@ The following table lists deprecated items in Vulkan along with their replacemen
 |Renamed to `VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT_KHR` to better describe the scope of what resources in the shader are described by the access flag.
 |With VK_KHR_synchronization2
 |link:https://vulkan.gpuinfo.org/displayextensiondetail.php?extension=VK_KHR_synchronization2[View on GPU Info]
+
+|Pipeline Objects
+|`VkPipeline` objects (graphics and compute) used to bind shaders and fixed-function state as a monolithic unit.
+|Use Shader Objects via `VK_EXT_shader_object` for a pipeline-free workflow that binds shaders and state directly. See <<pipelines_shader_objects_replacement>> for details.
+|With VK_EXT_shader_object
+|link:https://vulkan.gpuinfo.org/displayextensiondetail.php?extension=VK_EXT_shader_object[View on GPU Info]
 |===
 
 == How to Use This Guide
@@ -101,8 +107,8 @@ The following table lists deprecated items in Vulkan along with their replacemen
 == Additional Resources
 
 * link:https://docs.vulkan.org/spec/latest/[Vulkan Specification]: Official documentation for all Vulkan features
-* link:https://docs.vulkan.org/spec/latest/appendices/deprecation.html[Vulkan
- Specification Deprecation]: Current official list of deprecated Vulkan features
+* link:https://docs.vulkan.org/spec/latest/appendices/legacy.html[Vulkan
+ Specification Legacy]: Current official list of legacy Vulkan features
 * link:https://github.com/KhronosGroup/Vulkan-Samples[Vulkan Samples]: Sample code demonstrating various Vulkan features
 * link:checking_for_support.adoc[Checking for Support]: Guide on how to check for feature support at runtime
 * link:versions.adoc[Vulkan Versions]: Information about different Vulkan versions and their features
@@ -421,9 +427,9 @@ vkCmdPipelineBarrier2KHR(commandBuffer, &dependencyInfo);
 Check for the availability of the VK_KHR_synchronization2 extension and use the appropriate API. When using the new API, choose the most specific flag that applies to your use case.
 
 [[all_transfer_replacement]]
-=== VK_PIPELINE_STAGE_ALL_TRANSFER_BIT
+=== VK_PIPELINE_STAGE_TRANSFER_BIT
 
-`VK_PIPELINE_STAGE_ALL_TRANSFER_BIT` was used to represent all transfer operations in the pipeline. With VK_KHR_synchronization2, it was split into more specific flags.
+`VK_PIPELINE_STAGE_TRANSFER_BIT` was used to represent all transfer operations in the pipeline. With VK_KHR_synchronization2, it was split into more specific flags.
 
 ==== What It Was
 
@@ -442,7 +448,7 @@ Split into more specific flags:
 
 [source,cpp]
 ----
-// DEPRECATED: Using VK_PIPELINE_STAGE_ALL_TRANSFER_BIT
+// DEPRECATED: Using VK_PIPELINE_STAGE_TRANSFER_BIT
 VkImageMemoryBarrier imageBarrier = {
     .srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT,
     .dstAccessMask = VK_ACCESS_SHADER_READ_BIT,
@@ -453,7 +459,7 @@ VkImageMemoryBarrier imageBarrier = {
 };
 vkCmdPipelineBarrier(
     commandBuffer,
-    VK_PIPELINE_STAGE_ALL_TRANSFER_BIT,
+    VK_PIPELINE_STAGE_TRANSFER_BIT,
     VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
     0,
     0, nullptr,
@@ -1094,3 +1100,98 @@ void RenderFrame(VkCommandBuffer commandBuffer, VkImageView colorImageView, VkCl
     }
 }
 ----
+
+
+[[pipelines_shader_objects_replacement]]
+=== Pipeline Objects
+
+Pipeline objects (`VkPipeline` for graphics and compute) are not formally deprecated, but when `VK_EXT_shader_object` is available they are recommended to be replaced by Shader Objects for a more flexible, modular workflow.
+
+==== What They Were
+
+Pipelines encapsulate shader stages and fixed-function state into a single monolithic object created up front (e.g., via `vkCreateGraphicsPipelines` / `vkCreateComputePipelines`). They are efficient at execution time, but can be expensive to create and inflexible when frequently changing shaders or state.
+
+==== Replacement
+
+Shader Objects (`VK_EXT_shader_object`) allow you to:
+
+* Create shader objects directly from SPIR-V with `vkCreateShadersEXT`.
+* Bind them per-stage at command recording time with `vkCmdBindShadersEXT`.
+* Set most fixed-function state dynamically via existing dynamic state commands.
+
+This “pipeline-free” approach reduces pipeline permutation explosion and can simplify hot-reloading and rapid iteration.
+
+See also: link:ways_to_provide_spirv.adoc[Shader Objects section of ways to provide spirv].
+
+==== Code Example
+
+[source,cpp]
+----
+// Traditional: bind a pre-baked pipeline
+vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+
+// Shader Objects: create and bind shaders directly
+VkShaderCreateInfoEXT vsCI{ };
+vsCI.sType = VK_STRUCTURE_TYPE_SHADER_CREATE_INFO_EXT;
+vsCI.stage = VK_SHADER_STAGE_VERTEX_BIT;
+vsCI.codeType = VK_SHADER_CODE_TYPE_SPIRV_EXT;
+vsCI.pCode = vertSpirv; // const void*
+vsCI.codeSize = vertSpirvSize;
+
+VkShaderCreateInfoEXT fsCI{ };
+fsCI.sType = VK_STRUCTURE_TYPE_SHADER_CREATE_INFO_EXT;
+fsCI.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+fsCI.codeType = VK_SHADER_CODE_TYPE_SPIRV_EXT;
+fsCI.pCode = fragSpirv;
+fsCI.codeSize = fragSpirvSize;
+
+VkShaderEXT shaders[2]{};
+vkCreateShadersEXT(device, 1, &vsCI, nullptr, &shaders[0]);
+vkCreateShadersEXT(device, 1, &fsCI, nullptr, &shaders[1]);
+
+// Bind shaders instead of a pipeline
+vkCmdBindShadersEXT(cmd, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, shaders);
+
+// Set dynamic state as needed (examples)
+vkCmdSetViewport(cmd, 0, 1, &viewport);
+vkCmdSetScissor(cmd, 0, 1, &scissor);
+// ... other dynamic states as required
+
+// Draw as usual
+vkCmdDraw(cmd, vertexCount, 1, 0, 0);
+----
+
+==== Fallback Strategy
+
+Rather than maintaining two separate code paths (one for shader objects and one for traditional pipelines), the recommended approach is to write your application using only the Shader Objects API and rely on the link:https://github.com/KhronosGroup/Vulkan-ExtensionLayer/blob/main/docs/shader_object_layer.md[`VK_LAYER_KHRONOS_shader_object` extension layer] to transparently provide `VK_EXT_shader_object` support on drivers that do not natively implement it.
+
+The extension layer translates Shader Object calls into pipeline-based operations under the hood, so your application does not need to include any pipeline fallback logic.
+
+1. Write your rendering code exclusively against the Shader Objects API (`vkCreateShadersEXT`, `vkCmdBindShadersEXT`, dynamic state commands).
+2. Enable the `VK_LAYER_KHRONOS_shader_object` layer at deployment time for platforms where native `VK_EXT_shader_object` support is not available. The layer automatically disables itself when the underlying driver already provides the extension.
+
+[source,cpp]
+----
+// Write shader object code only — no pipeline fallback needed.
+// Enable VK_EXT_shader_object at device creation time.
+
+VkPhysicalDeviceShaderObjectFeaturesEXT shaderObjectFeatures{ };
+shaderObjectFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OBJECT_FEATURES_EXT;
+shaderObjectFeatures.shaderObject = VK_TRUE;
+
+VkDeviceCreateInfo devCI{ VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO };
+devCI.pNext = &shaderObjectFeatures;
+// add VK_EXT_shader_object to enabled extension list
+// ...
+
+vkCreateDevice(physicalDevice, &devCI, nullptr, &device);
+
+// Record command buffers using only Shader Objects
+vkCmdBindShadersEXT(cmd, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, shaders);
+vkCmdSetViewport(cmd, 0, 1, &viewport);
+vkCmdSetScissor(cmd, 0, 1, &scissor);
+// ... other dynamic states as required
+vkCmdDraw(cmd, vertexCount, 1, 0, 0);
+----
+
+NOTE: The extension layer requires `VK_KHR_dynamic_rendering` support on the target device. It is not currently available on Android, where `VK_KHR_dynamic_rendering` support is limited.
