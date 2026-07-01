@@ -25,7 +25,7 @@ For Slang, the official link:https://github.com/shader-slang/slang[GitHub reposi
 
 There are several advantages to using Slang for Vulkan development:
 
-* *Cross-API compatibility*: Write shaders that can be used with both Vulkan and DirectX with minimal changes
+* *Cross-API compatibility*: Write shaders that can be used with both Vulkan and DirectX, Metal, and WebGPU with minimal changes; Slang can also target CUDA and CPU execution
 * *Familiar syntax*: Developers with HLSL experience can leverage their existing knowledge
 * *Advanced language features*: Access to modern programming constructs like generics and interfaces
 * *Industry adoption*: Growing adoption in game engines and graphics applications
@@ -33,7 +33,7 @@ There are several advantages to using Slang for Vulkan development:
 
 == Differences Between HLSL and Slang
 
-While Slang is built on HLSL, it adds several powerful features that make shader development more efficient, maintainable, and flexible.
+While Slang is largely compatible with HLSL 2018, it adds several powerful features that make shader development more efficient, maintainable, and flexible.
 
 === Generics and Templates
 
@@ -42,8 +42,7 @@ Slang adds full support for generics, similar to C# or Java, allowing for type-s
 [source,slang]
 ----
 // Generic function in Slang
-template<T>
-T min(T a, T b) {
+T min<T>(T a, T b) {
     return a < b ? a : b;
 }
 
@@ -91,38 +90,37 @@ Slang provides a module system for better code organization:
 // In file: lighting.slang
 module Lighting;
 
-// Export functions to be used by other modules
-export float3 calculateDirectLighting(...) { ... }
+// Mark functions as public to be used by other modules
+public float3 calculateDirectLighting(...) { ... }
 
 // In file: main.slang
 import Lighting;
 
-// Use imported functions
-float3 directLight = Lighting::calculateDirectLighting(...);
+// Use imported functions - modules don't introduce namespaces
+float3 directLight = calculateDirectLighting(...);
 ----
 
 Standard HLSL lacks this module system, making it harder to organize large shader codebases.
 
 === Advanced Metaprogramming
 
-Slang offers powerful compile-time metaprogramming capabilities:
+Slang offers powerful compile-time metaprogramming through generics and specialization:
 
 [source,slang]
 ----
-// Compile-time reflection
 struct Material {
     float4 baseColor;
     float roughness;
     float metallic;
 };
-// Get all fields of a type at compile time
-__generic<T>
-void bindMaterial(ParameterBlock<T> block, Material material) {
-    __for(field in getFields(T)) {
-        block.setField(field.name, getField(material, field.name));
-    }
+
+// Generic function, specialized per parameter block type at compile time
+void bindMaterial<T>(ParameterBlock<T> block, Material material) {
+    // ...
 }
 ----
+
+Each instantiation of `bindMaterial<T>` is compiled into a distinct, fully-typed function, so there is no runtime overhead for the generic call. For inspecting struct fields at runtime, see <<reflection-and-shader-introspection,Reflection and Shader Introspection>> below.
 
 === Resource Binding Model
 
@@ -153,288 +151,34 @@ Slang provides its own compiler (`slangc`) and runtime compilation API with diff
 * *Cross-compilation*: Generate code for different shader stages from a single source
 * *Built-in reflection*: Generate reflection data during compilation
 * *Shader linking*: Link multiple shader modules together
-* *Diagnostic quality*: More detailed error messages and warnings
 
 Example of multi-target compilation:
 
 [source,bash]
 ----
-slangc -profile glsl_spirv -entry main -stage vertex shader.slang -o shader.vert.spv
-slangc -profile dxbc -entry main -stage vertex shader.slang -o shader.vert.dxbc
+slangc -target spirv -entry main -stage vertex shader.slang -o shader.vert.spv
+slangc -target dxbc -entry main -stage vertex shader.slang -o shader.vert.dxbc
 ----
 
-=== Runtime Behavior Differences
+=== Runtime Behavior Differences Compared to HLSL
 
-Slang introduces some runtime behavior differences:
+Slang introduces some behavioral differences compared to standard HLSL:
 
-* *Interface dispatch*: Runtime polymorphism through interfaces
+* *Dynamic dispatch*: Runtime polymorphism through interfaces
 * *Generic specialization*: Automatic specialization of generic code
-* *Reflection capabilities*: Runtime access to shader structure
+* *Reflection capabilities*: Access to shader structure through the reflection API
 
 [[applications-pov]]
 == From the application's point-of-view
 
 From the application's point-of-view, using Slang is exactly the same as using GLSL or HLSL. As the application always consumes shaders in the SPIR-V format, the only difference is in the tooling to generate the SPIR-V shaders from the desired shading language.
 
-== Migration Guide: from HLSL to Slang
+== Migrating from HLSL or GLSL to Slang
 
-Migrating from HLSL to Slang can be done incrementally, as Slang is similar enough to HLSL that it mostly supports HLSL. This guide provides a step-by-step approach to migrating your shaders.
+Slang is designed to make migration incremental, and the official Slang documentation maintains detailed, up-to-date migration guides:
 
-[TIP]
-====
-For a comprehensive guide on migrating from HLSL to Slang, see the official link:https://docs.shader-slang.org/en/latest/coming-from-hlsl.html[Coming from HLSL] documentation.
-====
-
-=== Step 1: Setting Up the Slang Compiler
-
-1. Download and install the Slang compiler from the https://github.com/shader-slang/slang[official repository]
-2. Update your build scripts to use `slangc` instead of `dxc` or other HLSL compilers
-3. Test compilation of existing HLSL shaders without modifications
-
-Example build script update:
-
-[source,bash]
-----
-# Before: Using DXC
-dxc -spirv -T vs_6_0 -E main shader.hlsl -Fo shader.vert.spv
-# After: Using Slang
-slangc -profile glsl_spirv -entry main -stage vertex shader.hlsl -o shader.vert.spv
-----
-
-=== Step 2: Rename Files and Add Module Declarations
-
-1. Rename your `.hlsl` files to `.slang` to indicate the language change
-2. Add module declarations at the top of each file
-3. Add export keywords to functions and types that need to be visible outside the module
-
-Example transformation:
-
-Before (shader.hlsl):
-[source,hlsl]
-----
-struct VSInput {
-    float3 position : POSITION;
-    float3 normal : NORMAL;
-};
-float4 transformPosition(float3 position) {
-    return mul(worldViewProj, float4(position, 1.0));
-}
-----
-
-After (shader.slang):
-[source,slang]
-----
-module Shaders.Transform;
-export struct VSInput {
-    float3 position : POSITION;
-    float3 normal : NORMAL;
-};
-export float4 transformPosition(float3 position) {
-    return mul(worldViewProj, float4(position, 1.0));
-}
-----
-
-=== Step 3: Leverage Imports Instead of Includes
-
-Replace `#include` directives with Slang's import system:
-
-Before (HLSL):
-[source,hlsl]
-----
-#include "common.hlsl"
-#include "lighting.hlsl"
-float3 calculateLighting(...) {
-    // Use functions from included files
-}
-----
-
-After (Slang):
-[source,slang]
-----
-module Shaders.Fragment;
-import Shaders.Common;
-import Shaders.Lighting;
-export float3 calculateLighting(...) {
-    // Use functions from imported modules
-}
-----
-
-=== Step 4: Refactor Resource Bindings
-
-Update resource bindings to use Slang's parameter block system:
-
-Before (HLSL):
-[source,hlsl]
-----
-Texture2D albedoMap : register(t0);
-SamplerState samplerState : register(s0);
-cbuffer MaterialParams : register(b0) {
-    float4 baseColor;
-    float roughness;
-    float metallic;
-};
-----
-
-After (Slang):
-[source,slang]
-----
-struct MaterialResources {
-    Texture2D albedoMap;
-    SamplerState samplerState;
-    struct Params {
-        float4 baseColor;
-        float roughness;
-        float metallic;
-    } constants;
-};
-ParameterBlock<MaterialResources> material;
-// Usage
-float4 albedo = material.albedoMap.Sample(material.samplerState, uv);
-float roughness = material.constants.roughness;
-----
-
-=== Step 5: Introduce Generics and Interfaces
-
-Identify opportunities to use generics and interfaces for more flexible code:
-
-Before (HLSL):
-[source,hlsl]
-----
-float3 evaluateLambert(float3 albedo, float3 normal, float3 lightDir) {
-    return albedo * max(0, dot(normal, lightDir)) / 3.14159;
-}
-float3 evaluateGGX(float3 specColor, float roughness, float3 normal, float3 viewDir, float3 lightDir) {
-    // GGX implementation
-}
-float3 evaluateMaterial(MaterialType type, ...) {
-    switch(type) {
-        case MATERIAL_LAMBERT: return evaluateLambert(...);
-        case MATERIAL_GGX: return evaluateGGX(...);
-        default: return float3(0,0,0);
-    }
-}
-----
-
-After (Slang):
-[source,slang]
-----
-interface IBRDF {
-    float3 evaluate(float3 normal, float3 viewDir, float3 lightDir);
-}
-struct LambertBRDF : IBRDF {
-    float3 albedo;
-    float3 evaluate(float3 normal, float3 viewDir, float3 lightDir) {
-        return albedo * max(0, dot(normal, lightDir)) / 3.14159;
-    }
-}
-struct GGXBRDF : IBRDF {
-    float3 specColor;
-    float roughness;
-    float3 evaluate(float3 normal, float3 viewDir, float3 lightDir) {
-        // GGX implementation
-    }
-}
-float3 evaluateMaterial(IBRDF brdf, float3 normal, float3 viewDir, float3 lightDir) {
-    return brdf.evaluate(normal, viewDir, lightDir);
-}
-----
-
-=== Step 6: Implement Advanced Metaprogramming
-
-Use Slang's metaprogramming capabilities for more powerful shader generation:
-
-[source,slang]
-----
-// Define shader permutations using compile-time parameters
-[shader("vertex")]
-[CompileTimeConstant(name="USE_NORMAL_MAPPING", type="bool")]
-[CompileTimeConstant(name="LIGHT_COUNT", type="int")]
-VSOutput vertexShader(VSInput input) {
-    VSOutput output;
-    // Base implementation
-    #if USE_NORMAL_MAPPING
-    // Normal mapping specific code
-    #endif
-    for (int i = 0; i < LIGHT_COUNT; i++) {
-        // Per-light calculations
-    }
-    return output;
-}
-----
-
-=== Common Migration Challenges
-
-==== Resource Binding Compatibility
-
-**Challenge**: Slang's resource binding model differs from HLSL's register-based approach.
-
-**Solution**:
-
-- Use Slang's `register` compatibility syntax during transition
-- Gradually migrate to parameter blocks
-- Update shader binding code in your application
-
-==== Module Organization
-
-**Challenge**: Deciding how to organize code into modules.
-
-**Solution**:
-- Group related functionality into modules
-- Use hierarchical naming (e.g., `Rendering.Lighting`)
-- Start with coarse-grained modules and refine as needed
-
-==== Interface Performance
-
-**Challenge**: Concerns about runtime performance of interfaces.
-
-**Solution**:
-- Interfaces are often resolved at compile-time
-- Use interfaces for flexibility in high-level code
-- Profile performance-critical paths
-
-==== Compilation Pipeline Integration
-
-**Challenge**: Integrating Slang into existing build systems.
-
-**Solution**:
-- Create wrapper scripts to maintain command-line compatibility
-- Update build tools to support both HLSL and Slang during transition
-- Consider using Slang's API for deeper integration
-
-=== Best Practices for Migration
-
-1. **Incremental Approach**: Migrate one shader or shader module at a time
-2. **Maintain Compatibility**: Use Slang's HLSL compatibility features during transition
-3. **Test Thoroughly**: Verify visual output after each migration step
-4. **Refactor Gradually**: Start with simple syntax changes, then introduce advanced features
-5. **Leverage Modules**: Use the module system to improve code organization
-6. **Document Changes**: Keep track of migration decisions and patterns
-7. **Performance Profiling**: Monitor performance before and after migration
-
-== Migration Guide: from GLSL to Slang
-
-Migrating from GLSL to Slang involves more significant changes than migrating from HLSL, as the languages have different syntax and programming models. However, Slang's powerful features can make the transition worthwhile for many projects.
-
-[TIP]
-====
-For a comprehensive guide on migrating from GLSL to Slang, see the official link:https://docs.shader-slang.org/en/latest/coming-from-glsl.html[Coming from GLSL] documentation.
-====
-
-=== Key Differences to Consider
-
-* *Syntax*: GLSL uses a more procedural style similar to C, while Slang uses an object-oriented style similar to C++
-* *Entry Points*: GLSL uses `void main()`, Slang uses typed functions with explicit inputs/outputs
-* *Resource Binding*: Different approaches to binding resources to shaders
-* *Matrix Layout*: GLSL uses column-major by default, Slang uses row-major by default
-* *Built-ins vs. Semantics*: GLSL uses built-in variables, Slang uses semantics
-
-=== Migration Strategy
-
-1. **Start with a Small Shader**: Begin with a simple shader to understand the migration process
-2. **Understand Semantic Mapping**: Map GLSL built-ins to Slang semantics
-3. **Restructure Resource Bindings**: Convert GLSL uniform blocks to Slang parameter blocks
-4. **Refactor Entry Points**: Convert GLSL's `main()` function to Slang's typed entry points
-5. **Leverage Slang Features**: Gradually introduce Slang-specific features like interfaces and generics
+* link:https://docs.shader-slang.org/en/latest/coming-from-hlsl.html[Coming from HLSL]
+* link:https://docs.shader-slang.org/en/latest/coming-from-glsl.html[Coming from GLSL]
 
 == Slang Compiler
 
@@ -450,31 +194,31 @@ Compiling a Slang shader offline is straightforward:
 
 [source]
 ----
-slangc -profile glsl_spirv -entry main -o output.spv input.slang
+slangc -target spirv -entry main -o output.spv input.slang
 ----
 
 For HLSL compatibility mode:
 
 [source]
 ----
-slangc -profile glsl_spirv -entry main -o output.spv -language hlsl input.hlsl
+slangc -target spirv -lang hlsl -entry main -o output.spv input.hlsl
 ----
 
 For GLSL compatibility mode:
 
 [source]
 ----
-slangc -profile glsl_spirv -entry main -o output.spv -allow-glsl input.glsl
+slangc -target spirv -allow-glsl -entry main -o output.spv input.glsl
 ----
 
 Key command-line options include:
 
-* `-profile`: Specifies the target profile (use `glsl_spirv` for Vulkan)
+* `-target`: Specifies the output format (use `spirv` for Vulkan)
 * `-entry`: Specifies the entry point function
 * `-o`: Specifies the output file
-* `-language`: Specifies the input language (default is Slang)
+* `-lang`: Specifies the input language for the following input files (default is Slang)
 * `-allow-glsl`: Enables GLSL as an input language
-* `-target`: Specifies the target platform (e.g., `vulkan`)
+* `-profile`: Specifies the shader profile for code generation (e.g. `sm_6_0`, `glsl_450`); to set a minimum SPIR-V version use `-capability spirv_1_x` instead
 
 === Runtime compilation using the library
 
@@ -483,64 +227,55 @@ Slang can also be integrated into a Vulkan application for runtime compilation u
 [source, cpp]
 ----
 #include "slang.h"
+#include "slang-com-ptr.h"
 
-// Initialize Slang session
-slang::IGlobalSession* slangSession = nullptr;
-slang::createGlobalSession(&slangSession);
+// Create the global session
+Slang::ComPtr<slang::IGlobalSession> globalSession;
+slang::createGlobalSession(globalSession.writeRef());
 
-// Create a compilation session
+// Create a session targeting SPIR-V
+slang::TargetDesc targetDesc = {};
+targetDesc.format = SLANG_SPIRV;
+targetDesc.profile = globalSession->findProfile("spirv_1_5");
+
 slang::SessionDesc sessionDesc = {};
+sessionDesc.targets = &targetDesc;
 sessionDesc.targetCount = 1;
-sessionDesc.targets = &target;
 
-slang::ISession* session = nullptr;
-slangSession->createSession(sessionDesc, &session);
+Slang::ComPtr<slang::ISession> session;
+globalSession->createSession(sessionDesc, session.writeRef());
 
-// Load and compile shader code
-slang::IBlob* diagnosticsBlob = nullptr;
-slang::IComponentType* program = nullptr;
+// Load a module from source and find its entry point
+Slang::ComPtr<slang::IModule> module(
+    session->loadModuleFromSourceString("shaderModule", "shader.slang", shaderSource.c_str(), nullptr));
 
-SlangCompileRequest* compileRequest = nullptr;
-session->createCompileRequest(&compileRequest);
+Slang::ComPtr<slang::IEntryPoint> entryPoint;
+module->findEntryPointByName("main", entryPoint.writeRef());
 
-// Add source code
-int translationUnitIndex = spAddTranslationUnit(compileRequest, SLANG_SOURCE_LANGUAGE_SLANG, "shaderCode");
-spAddTranslationUnitSourceString(compileRequest, translationUnitIndex, "shaderCode", shaderSource.c_str());
+// Compose and link the program
+std::array<slang::IComponentType*, 2> componentTypes = { module, entryPoint };
+Slang::ComPtr<slang::IComponentType> composedProgram;
+session->createCompositeComponentType(componentTypes.data(), componentTypes.size(), composedProgram.writeRef(), nullptr);
 
-// Set entry point
-spAddEntryPoint(compileRequest, translationUnitIndex, "main", SLANG_STAGE_FRAGMENT);
+Slang::ComPtr<slang::IComponentType> linkedProgram;
+composedProgram->link(linkedProgram.writeRef(), nullptr);
 
-// Compile
-int compileResult = spCompile(compileRequest);
-if (compileResult != 0)
-{
-    const char* diagnostics = spGetDiagnosticOutput(compileRequest);
-    // Handle compilation error
-}
-
-// Get compiled code
-size_t codeSize = 0;
-const void* codeData = spGetEntryPointCode(compileRequest, 0, &codeSize);
+// Get the compiled SPIR-V code
+Slang::ComPtr<slang::IBlob> spirvCode;
+linkedProgram->getEntryPointCode(0, 0, spirvCode.writeRef(), nullptr);
 
 // Create Vulkan shader module
 VkShaderModuleCreateInfo shaderModuleCI{};
 shaderModuleCI.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-shaderModuleCI.codeSize = codeSize;
-shaderModuleCI.pCode = static_cast<const uint32_t*>(codeData);
+shaderModuleCI.codeSize = spirvCode->getBufferSize();
+shaderModuleCI.pCode = static_cast<const uint32_t*>(spirvCode->getBufferPointer());
 VkShaderModule shaderModule;
 vkCreateShaderModule(device, &shaderModuleCI, nullptr, &shaderModule);
 ----
 
-=== Slang-specific features for Vulkan
+=== Working with Shader Parameters
 
-When using Slang with Vulkan, you can take advantage of several Slang-specific features:
-
-* **Cross-compilation**: Slang can target multiple backends from the same source code
-* **Shader parameters**: Slang provides a more structured way to declare shader parameters
-* **Resource binding**: Slang offers more flexible resource binding options
-* **Reflection**: Slang provides rich reflection capabilities for shader introspection
-
-Example of Slang shader parameters:
+Slang provides a structured way to declare shader parameters that maps cleanly onto Vulkan's descriptor model. Parameter blocks can be bound to a specific Vulkan descriptor set and binding using the `vk::binding` attribute:
 
 [source, slang]
 ----
@@ -565,7 +300,6 @@ struct SceneData
 
 * *Use modules*: Organize code into logical modules with clear responsibilities
 * *Leverage imports*: Use imports instead of includes for better dependency management
-* *Separate shader stages*: Keep different shader stages in separate files
 * *Use interfaces*: Define interfaces for common functionality to enable polymorphism
 
 Example of a well-organized Slang shader:
@@ -577,11 +311,13 @@ module Rendering.PBR;
 import Rendering.Common;
 import Rendering.Lighting;
 
-export interface IMaterial {
+// IMaterial and PBRMaterial are reusable across many shaders and would
+// typically live in their own module, imported here alongside fragmentMain
+public interface IMaterial {
     float3 evaluateBRDF(float3 viewDir, float3 lightDir, float3 normal);
 }
 
-export struct PBRMaterial : IMaterial {
+public struct PBRMaterial : IMaterial {
     float3 albedo;
     float roughness;
     float metallic;
@@ -593,14 +329,13 @@ export struct PBRMaterial : IMaterial {
 }
 
 [shader("fragment")]
-export float4 fragmentMain(VSOutput input) {
+public float4 fragmentMain(VSOutput input) {
     // Shader implementation
 }
 ----
 
 === Performance Considerations
 
-* *Use generics judiciously*: While powerful, excessive use of generics can increase compile times
 * *Profile interface dispatch*: Test performance impact of interface-based polymorphism
 * *Leverage compile-time evaluation*: Use Slang's metaprogramming to move work to compile time
 * *Consider specialization*: Generate specialized shader variants for performance-critical paths
@@ -608,18 +343,15 @@ export float4 fragmentMain(VSOutput input) {
 === Vulkan-Specific Best Practices
 
 * *Use parameter blocks*: Organize resources into parameter blocks for better organization
-* *Explicit bindings*: Always specify explicit descriptor set and binding indices
+* *Let Slang assign bindings*: Slang automatically assigns descriptor set and binding indices to parameter blocks, so explicit `vk::binding` attributes are usually unnecessary; add them only when you need to guarantee a stable binding layout across shader edits or match bindings set up elsewhere in your application
 * *Cross-API compatibility*: Use conditional compilation for Vulkan-specific code
 
 Example of Vulkan-specific resource binding:
 
 [source,slang]
 ----
-// Define parameter blocks with explicit bindings
-[[vk::binding(0, 0)]]
+// Parameter blocks are assigned descriptor set and binding indices automatically
 ParameterBlock<GlobalResources> globals;
-
-[[vk::binding(0, 1)]]
 ParameterBlock<MaterialResources> material;
 
 // Access resources through parameter blocks
@@ -634,18 +366,19 @@ float4x4 viewProj = globals.viewProj;
 Slang excels at cross-API compatibility:
 
 * *Multi-target compilation*: Compile the same shader for multiple APIs
-* *Conditional compilation*: Use `#if` directives for API-specific code
+* *Conditional compilation*: Use `#if` directives together with your own preprocessor macros for API-specific code
 * *Parameter blocks*: Use parameter blocks for consistent resource binding across APIs
 
-Example of cross-API shader:
+Slang does not automatically define target-specific preprocessor macros, since preprocessing runs once regardless of how many targets you compile for. Define your own macro on the command line (e.g. `-DTARGET_VULKAN=1`) for each target build:
 
 [source,slang]
 ----
 // Common shader code
 module Shaders.PBR;
 
-// API-specific resource binding
-#if SLANG_VULKAN
+// API-specific resource binding - TARGET_VULKAN is defined on the
+// command line, e.g. `slangc -DTARGET_VULKAN=1 ...`
+#if TARGET_VULKAN
 [[vk::binding(0, 0)]]
 #endif
 ParameterBlock<GlobalResources> globals;
@@ -658,7 +391,7 @@ float4 calculateLighting(float3 position, float3 normal) {
 
 === Shader Composition and Reuse
 
-Slang's module system enables powerful composition patterns:
+Interfaces, generics, and modules are independent Slang features that combine well for building reusable shader code:
 
 * *Interface-based composition*: Define interfaces for pluggable components
 * *Module imports*: Import and reuse code across shaders
@@ -671,7 +404,7 @@ Example of shader composition:
 // In lighting.slang
 module Lighting;
 
-export interface ILight {
+public interface ILight {
     float3 calculateLighting(float3 position, float3 normal, float3 viewDir);
 }
 
@@ -679,7 +412,7 @@ export interface ILight {
 module Lights.Directional;
 import Lighting;
 
-export struct DirectionalLight : ILight {
+public struct DirectionalLight : ILight {
     float3 direction;
     float3 color;
 
@@ -698,32 +431,16 @@ float3 shadeSurface(ILight light, float3 position, float3 normal, float3 viewDir
 }
 ----
 
+[[reflection-and-shader-introspection]]
 === Reflection and Shader Introspection
 
-Slang provides powerful reflection capabilities:
+Slang provides a reflection API for inspecting compiled shader code from host application code:
 
-* *Compile-time reflection*: Inspect types and fields at compile time
-* *Runtime reflection*: Generate reflection data for runtime use
-* *Automatic binding generation*: Use reflection to automate resource binding
+* *Type and field layout*: Query the fields, types, and memory layout of a program
+* *Resource binding layout*: Query the descriptor set and binding assigned to each resource, which can be used to build descriptor set layouts without hardcoding bindings
+* *Entry point parameters*: Query the parameters of a given entry point
 
-Example of compile-time reflection:
-
-[source,slang]
-----
-struct Material {
-    float4 baseColor;
-    float roughness;
-    float metallic;
-    Texture2D albedoMap;
-}
-
-__generic<T>
-void bindResources(ParameterBlock<T> block, T data) {
-    __for(field in getFields(T)) {
-        block.setField(field.name, getField(data, field.name));
-    }
-}
-----
+Reflection data is retrieved after compiling or linking a program, through `slang::ProgramLayout` and related interfaces such as `TypeLayoutReflection` and `VariableLayoutReflection`. See the link:https://shader-slang.org/slang/user-guide/reflection[Slang reflection API documentation] for details and examples.
 
 == Conclusion
 

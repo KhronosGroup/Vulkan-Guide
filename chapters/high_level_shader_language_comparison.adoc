@@ -46,7 +46,7 @@ Types work similarly across GLSL, HLSL, and Slang. GLSL has explicit vector or m
 | ivec__n__ | int__n__ | ivec3 -> int3 |
 | mat__nxm__ or shorthand mat__n__ | float__nxm__ | mat4 -> float4x4 |
 | n/a | n/a | | interface types
-| n/a | limited templates | | full generic<T> support
+| n/a | limited templates | | full generics support
 |====
 
 [NOTE]
@@ -115,14 +115,12 @@ Slang provides full generic support:
 [source,slang]
 ----
 // Generic function
-generic<T>
-T min(T a, T b) {
+T min<T>(T a, T b) {
     return a < b ? a : b;
 }
 
 // Generic struct
-generic<T, let N : int>
-struct Array {
+struct Array<T, let N : int> {
     T data[N];
 
     T getElement(int index) { return data[index]; }
@@ -167,30 +165,23 @@ When using xref:{chapters}hlsl.adoc#DirectXShaderCompiler[DXC] to compile HLSL t
 ConstantBuffer<Node> node : register(b0, space1);
 ----
 
-Slang provides similar conditional compilation capabilities, but with more options for cross-API development:
+Slang provides similar conditional compilation capabilities, but with more options for cross-API development. Slang does not automatically define target-specific preprocessor macros (preprocessing runs once, regardless of how many targets you compile for), so any target macro must be passed on the command line with `-D`:
 
 [source,slang]
 ----
-// Using __spirv__ macro (same as HLSL)
-#ifdef __spirv__
+// TARGET_VULKAN is defined on the command line,
+// e.g. `slangc -target spirv -DTARGET_VULKAN=1 ...`
+#ifdef TARGET_VULKAN
 [[vk::binding(0, 1)]]
 #endif
 ConstantBuffer<Node> node : register(b0, space1);
 
-// Using Slang's target-specific compilation
-#if SLANG_VULKAN
-[[vk::binding(0, 1)]]
-#elif SLANG_D3D12
-// D3D12-specific code
-#endif
-ConstantBuffer<Node> node;
-
-// Using Slang's target-agnostic parameter blocks
-[[vk::binding(0, 1)]]
+// Using Slang's target-agnostic parameter blocks instead avoids
+// the need for conditional compilation altogether
 ParameterBlock<Resources> resources;
 ----
 
-Slang's multi-target compilation system allows you to write shaders that can be compiled for multiple graphics APIs from a single source file, with conditional compilation to handle API-specific differences.
+Slang's multi-target compilation system allows you to write shaders that can be compiled for multiple graphics APIs from a single source file, with conditional compilation to handle API-specific differences where parameter blocks aren't a good fit.
 
 == SPIR-V intrinsics
 
@@ -235,7 +226,7 @@ module Extensions.StencilExport;
 [[vk::ext_extension("SPV_EXT_shader_stencil_export")]]
 vk::ext_execution_mode(/* StencilRefReplacingEXT */ 5027);
 
-export void writeStencil(uint value) {
+public void writeStencil(uint value) {
     // Implementation using stencil export
 }
 
@@ -470,7 +461,8 @@ struct MaterialResources
     } constants;
 };
 
-// Declare a parameter block with explicit binding
+// Declare a parameter block - Slang assigns its descriptor set and
+// binding automatically, no explicit binding is required
 ParameterBlock<MaterialResources> material;
 
 // Usage in shader code
@@ -1450,8 +1442,8 @@ In Slang, you can organize code into modules:
 // File: Lighting.slang
 module Lighting;
 
-// Public functions must be marked with 'export'
-export float3 calculateDirectLighting(float3 normal, float3 lightDir, float3 color)
+// Public functions must be marked with 'public'
+public float3 calculateDirectLighting(float3 normal, float3 lightDir, float3 color)
 {
     float NdotL = max(0, dot(normal, lightDir));
     return color * NdotL;
@@ -1482,8 +1474,8 @@ float4 fragmentMain(float3 normal : NORMAL, float3 worldPos : POSITION) : SV_TAR
     float3 lightDir = normalize(float3(1, 1, 1));
     float3 lightColor = float3(1, 1, 1);
 
-    // Use function from imported module
-    float3 directLighting = Lighting::calculateDirectLighting(normal, lightDir, lightColor);
+    // Use function from imported module - modules don't introduce namespaces
+    float3 directLighting = calculateDirectLighting(normal, lightDir, lightColor);
 
     return float4(directLighting, 1.0);
 }
@@ -1498,8 +1490,8 @@ Slang supports hierarchical module organization:
 // File: Rendering/Materials/PBR.slang
 module Rendering.Materials.PBR;
 
-export interface IMaterial { ... }
-export struct PBRMaterial : IMaterial { ... }
+public interface IMaterial { ... }
+public struct PBRMaterial : IMaterial { ... }
 
 // File: Main.slang
 module Main;
@@ -1556,8 +1548,7 @@ Here's an example of Slang's generic functions:
 [source,slang]
 ----
 // Generic interpolation function
-generic<T>
-T interpolate(T a, T b, float t)
+T interpolate<T>(T a, T b, float t)
 {
     return lerp(a, b, t);
 }
