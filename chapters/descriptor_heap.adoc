@@ -244,11 +244,11 @@ The results are: `x == vec4(3)` and `y == vec4(5)`
 
 The formula is `offset = heapOffset + (indirectIndex * heapIndexStride) + (shaderIndex * heapArrayStride)`
 
-The `pushOffset = 16` sets `indirectAddress` to `0x4000` which must be a valid `VkDeviceAddress` of memory backing some `VkBuffer`. The `addressOffset` of `0x40` is applied to that `indirectAddress` to get `0x4040`. We see at `0x4040` the uint32_t value of `0x20`, which becomes the `indirectIndex`.
+The `pushOffset = 16` sets `indirectAddress` to `0x4000` which must be a valid `VkDeviceAddress` of memory backing some `VkBuffer`. The `addressOffset` of `0x40` is applied to that `indirectAddress` to get `0x4040`. We see at `0x4040` the uint32_t value of `2`, which becomes the `indirectIndex`.
 
 ----
-u_buffers[0] offset = 0x10 + (0x20 * 1) + (0 * 0x20)
-u_buffers[1] offset = 0x10 + (0x20 * 1) + (1 * 0x20)
+u_buffers[0] offset = 0x10 + (2 * 0x10) + (0 * 0x20)
+u_buffers[1] offset = 0x10 + (2 * 0x10) + (1 * 0x20)
 ----
 
 ==== VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT
@@ -264,8 +264,8 @@ Like the previous example, the `pushOffset = 16` sets `indirectAddress` to `0x40
 From `0x4040`, each `shaderIndex` jumps to the next uint32_t and gets the offset from the indirect uniform buffer.
 
 ----
-u_buffers[0] offset = 0x00 + (0x60 * 1)
-u_buffers[1] offset = 0x00 + (0x20 * 1)
+u_buffers[0] offset = 0x00 + (6 * 0x10)
+u_buffers[1] offset = 0x00 + (2 * 0x10)
 ----
 
 === VkDescriptorMappingSourceEXT Inline Access
@@ -573,7 +573,7 @@ you now can pack it into a single 32-bit word.
 ----
 VkDescriptorMappingSourcePushIndexEXT::pushOffset = 0;
 VkDescriptorMappingSourcePushIndexEXT::useCombinedImageSamplerIndex = true;
-VkDescriptorMappingSourcePushIndexEXT::samplerPushOffset = IGNORED; 
+VkDescriptorMappingSourcePushIndexEXT::samplerPushOffset = IGNORED;
 
 uint32_t image_index = 6;
 uint32_t sampler_index = 7;
