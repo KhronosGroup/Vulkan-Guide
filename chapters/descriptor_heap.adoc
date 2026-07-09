@@ -538,6 +538,39 @@ both `0x4000` and `0x4008` are aligned to 8 bytes which is valid. If it was `0x4
 
 The final address (`0x8000` and `0x8040`) need to be aligned to `minUniformBufferOffsetAlignment` as it accesses that memory as an Uniform Buffer Descriptor.
 
+== Null Descriptors
+
+The link:https://docs.vulkan.org/spec/latest/chapters/features.html#features-nullDescriptor[nullDescriptor] feature is a form of xref:{chapters}/robustness.adoc[robustness] that allows descriptors to be both null and valid. If you write a null descriptor the writes are discarded. If you read from a null descriptor it will return a defined value (mainly zero).
+
+[NOTE]
+====
+There is no null descriptor for samplers.
+====
+
+To get a null descriptor simply set `VkResourceDescriptorDataEXT` to null when calling `vkWriteResourceDescriptorsEXT`
+
+[source,c++]
+----
+// Example getting a UBO null descriptor
+uint8_t host_data[256];
+VkHostAddressRangeEXT host_range;
+host_range.address = host_data;
+host_range.size = bufferDescriptorSize; // VkPhysicalDeviceDescriptorHeapPropertiesEXT
+
+VkResourceDescriptorInfoEXT desc_info;
+desc_info.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+desc_info.data.pAddressRange = nullptr;
+
+vkWriteResourceDescriptorsEXT(device, 1, &desc_info, &host_range);
+----
+
+From here you can put the `host_data` instead your descriptor heap.
+
+[NOTE]
+====
+On some hardware, the null descriptor is just all zeros, but this is **not** always true and making such assumption can lead to trouble.
+====
+
 == Combined Image Samplers
 
 The `VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER` is a special descriptor and deserves it's own mention if you are planning to use it with `VK_EXT_descriptor_heap`.
