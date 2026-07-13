@@ -21,10 +21,156 @@ image::{images}what_is_spirv_dxc.png[what_is_spriv_dxc.png]
 
 If you are new to HLSL, a good starting point are the HLSL resources over at link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl[Microsoft Learn]. Another great source is the link:https://microsoft.github.io/DirectX-Specs/[DirectX-Specs document]. It contains valuable information on recent shader features and HLSL's shader models.
 
+== Why Use HLSL for Vulkan?
+
+There are several advantages to using HLSL for Vulkan development:
+
+* *Cross-API compatibility*: Write shaders that can be used with both Vulkan and DirectX with minimal changes
+* *Familiar syntax*: Developers with DirectX experience can leverage their existing knowledge
+* *Industry adoption*: HLSL is widely used in game engines and graphics applications
+* *Tooling support*: Rich ecosystem of tools, debuggers, and IDE integrations
+
 [[applications-pov]]
 == From the application's point-of-view
 
 From the application's point-of-view, using HLSL is exactly the same as using GLSL. As the application always consumes shaders in the SPIR-V format, the only difference is in the tooling to generate the SPIR-V shaders from the desired shading language.
+
+== Best Practices for Writing Shaders in HLSL for Vulkan
+
+=== Code Organization
+
+* *Separate shader stages*: Keep different shader stages (vertex, fragment, compute, etc.) in separate files
+* *Use structures for inputs and outputs*: Define clear structures for shader inputs and outputs
+* *Consistent naming conventions*: Adopt a consistent naming scheme for variables, functions, and types
+* *Modular design*: Break complex shaders into reusable functions and components
+
+Example of a well-organized HLSL shader:
+
+[source,hlsl]
+----
+// Common structures and constants
+struct VSInput {
+    [[vk::location(0)]] float3 Position : POSITION0;
+    [[vk::location(1)]] float3 Normal : NORMAL0;
+    [[vk::location(2)]] float2 TexCoord : TEXCOORD0;
+};
+struct VSOutput {
+    float4 Position : SV_POSITION;
+    [[vk::location(0)]] float3 WorldPos : POSITION0;
+    [[vk::location(1)]] float3 Normal : NORMAL0;
+    [[vk::location(2)]] float2 TexCoord : TEXCOORD0;
+};
+// Uniform buffer with transformation matrices
+struct SceneUBO {
+    float4x4 model;
+    float4x4 view;
+    float4x4 projection;
+};
+[[vk::binding(0, 0)]]
+ConstantBuffer<SceneUBO> ubo : register(0, 0);
+// Vertex shader main function
+VSOutput main(VSInput input) {
+    VSOutput output = (VSOutput)0;
+    // Transform position to clip space
+    float4 worldPos = mul(ubo.model, float4(input.Position, 1.0));
+    output.Position = mul(ubo.projection, mul(ubo.view, worldPos));
+    // Pass through other attributes
+    output.WorldPos = worldPos.xyz;
+    output.Normal = mul((float3x3)ubo.model, input.Normal);
+    output.TexCoord = input.TexCoord;
+    return output;
+}
+----
+
+=== Performance Considerations
+
+* *Minimize divergent control flow*: Avoid complex branching within shader wavefronts
+* *Optimize memory access patterns*: Group related data together to improve cache coherency
+* *Reduce register pressure*: Limit the number of variables in high-register-usage sections
+* *Use appropriate precision*: Use lower precision types (`half`, `min16float`) when full precision isn't needed
+* *Leverage subgroup operations*: Use subgroup/wave intrinsics for efficient parallel operations
+* *Prefer compile-time constants*: Use specialization constants for values known at pipeline creation time
+
+Example of using specialization constants:
+
+[source,hlsl]
+----
+// Define specialization constants
+[[vk::constant_id(0)]] const bool USE_NORMAL_MAPPING = true;
+[[vk::constant_id(1)]] const int LIGHT_COUNT = 4;
+[[vk::constant_id(2)]] const float SPECULAR_POWER = 32.0;
+// Use in conditional code
+float3 CalculateNormal(float3 normal, float3 tangent, float2 texCoord) {
+    if (USE_NORMAL_MAPPING) {
+        // Complex normal mapping calculation
+        return CalculateNormalFromMap(normal, tangent, texCoord);
+    } else {
+        // Simple pass-through
+        return normalize(normal);
+    }
+}
+----
+
+=== Debugging and Validation
+
+* *Add debug markers*: Use comments or debug variables to mark important sections
+* *Validate inputs*: Check for NaN or invalid values in critical calculations
+* *Use validation layers*: Enable Vulkan validation layers during development
+* *Leverage shader debugging tools*: Use tools like RenderDoc or NVIDIA Nsight for shader debugging
+* *Implement fallbacks*: Provide simpler code paths for debugging complex algorithms
+
+=== Vulkan-Specific Best Practices
+
+* *Explicit bindings*: Always specify explicit descriptor set and binding indices
+* *Consistent descriptor layouts*: Maintain consistent descriptor layouts across shader stages
+* *Minimize descriptor set changes*: Group resources to minimize descriptor set changes during rendering
+* *Consider push constants*: Use push constants for frequently changing small data
+* *Be mindful of SPIR-V limitations*: Some HLSL features may not translate directly to SPIR-V
+
+== Migration from GLSL to HLSL
+
+For a detailed, side-by-side comparison of GLSL and HLSL syntax, data types, resource binding, built-ins vs. semantics, and more, see xref:{chapters}high_level_shader_language_comparison.adoc[High Level Shader Language Comparison].
+
+== Vulkan-Specific Semantics, Bindings, and Entry Points
+
+=== Descriptor Binding in HLSL
+
+HLSL offers two approaches for binding resources in Vulkan:
+
+* *HLSL register syntax*:
+[source,hlsl]
+----
+Texture2D albedoMap : register(t0, space1);
+SamplerState samplerState : register(s0, space1);
+----
+
+* *Vulkan-specific attributes*:
+[source,hlsl]
+----
+[[vk::binding(0, 1)]]
+Texture2D albedoMap;
+[[vk::binding(0, 1)]]
+SamplerState samplerState;
+----
+
+You can also combine both approaches for cross-API compatibility:
+[source,hlsl]
+----
+[[vk::binding(0, 1)]]
+Texture2D albedoMap : register(t0, space1);
+----
+
+=== Resource Types and Register Spaces
+
+[options="header"]
+|====
+| Resource Type | HLSL Type | Register Type | Vulkan Equivalent
+| Uniform Buffer | ConstantBuffer<T> | b | VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
+| Storage Buffer | RWStructuredBuffer<T> | u | VK_DESCRIPTOR_TYPE_STORAGE_BUFFER
+| Texture | Texture2D, Texture3D, etc. | t | VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE
+| Storage Image | RWTexture2D, etc. | u | VK_DESCRIPTOR_TYPE_STORAGE_IMAGE
+| Sampler | SamplerState | s | VK_DESCRIPTOR_TYPE_SAMPLER
+|====
 
 [[hlsl-spirv-mapping-manual]]
 == HLSL to SPIR-V feature mapping manual
@@ -342,3 +488,17 @@ DirectX and HLSL use a fixed shader model notion to describe the supported featu
 | VK_KHR_shader_quad_control, VkPhysicalDeviceFeatures::shaderStorageImageMultisample
 
 |===
+
+== Conclusion
+
+HLSL provides a powerful alternative to GLSL for Vulkan shader development. By following the best practices and guidelines in this chapter, you can create efficient, maintainable, and portable shaders that leverage the strengths of HLSL while taking full advantage of Vulkan's abilities.
+
+The migration from GLSL to HLSL may require some effort, but the benefits in terms of code reuse, language features, and cross-API compatibility can be significant for many projects.
+
+== References and Further Reading
+
+* link:https://github.com/microsoft/DirectXShaderCompiler/blob/main/docs/SPIR-V.rst[HLSL to SPIR-V Feature Mapping Manual]
+* link:https://github.com/KhronosGroup/SPIRV-Guide[SPIR-V Guide]
+* link:https://www.khronos.org/blog/hlsl-first-class-vulkan-shading-language[HLSL as a First Class Vulkan Shading Language]
+* link:https://docs.vulkan.org/spec/latest/chapters/interfaces.html[Vulkan Interfaces with SPIR-V]
+* link:https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl[Microsoft HLSL Documentation]
