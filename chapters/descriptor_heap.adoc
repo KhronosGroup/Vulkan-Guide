@@ -168,7 +168,7 @@ The first time you look at `VkDescriptorMappingSourceEXT` and all the options, i
 ** VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_DATA_EXT
 ** VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT
 ** VK_DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT
-* **Shader Record** (Ray Tracing)
+* **Shader Record** (Ray Tracing SBT)
 ** VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_**SHADER_RECORD**_INDEX_EXT
 ** VK_DESCRIPTOR_MAPPING_SOURCE_**SHADER_RECORD**_DATA_EXT
 ** VK_DESCRIPTOR_MAPPING_SOURCE_**SHADER_RECORD**_ADDRESS_EXT
@@ -351,10 +351,14 @@ Only Uniform Buffers, Storage Buffers, and Acceleration Structures are allowed f
 
 === VkDescriptorMappingSourceEXT Shader Record
 
+A `Shader Record`` refers to an entry in the link:https://docs.vulkan.org/spec/latest/chapters/raytracing.html#shader-binding-table[Shader Binding Table (SBT)]
 [NOTE]
-====
-todo - Add Ray Tracing section
-====
+
+The mappings work the exact same, just instead of mapping to a descriptor, such as a buffer/image/accelerationStructure, it maps to a shader record.
+
+- `VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_SHADER_RECORD_INDEX_EXT` works just like `VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_PUSH_INDEX_EXT`
+- `VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_DATA_EXT` works just like `VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT`
+- `VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT` works just like `VK_DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT`
 
 === VkDescriptorMappingSourceEXT bindingCount alias
 
