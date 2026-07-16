@@ -1070,7 +1070,7 @@ vkCmdCopyBufferToImage(
 // If the graphics queue and transfer queue are the same queue
 if (isUnifiedGraphicsAndTransferQueue)
 {
-    // Pipeline barrier before using the vertex data
+    // Pipeline barrier before using the image
     VkImageMemoryBarrier2KHR postCopyMemoryBarrier = {
         ...
         .srcStageMask = VK_PIPELINE_STAGE_2_TRANSFER_BIT_KHR,
@@ -1099,7 +1099,7 @@ if (isUnifiedGraphicsAndTransferQueue)
 }
 else
 {
-    // Pipeline barrier before using the vertex data
+    // Pipeline barrier before using image
     VkImageMemoryBarrier2KHR postCopyTransferMemoryBarrier = {
         ...
         .srcStageMask = VK_PIPELINE_STAGE_2_TRANSFER_BIT_KHR,
@@ -1126,7 +1126,7 @@ else
 
     vkBeginCommandBuffer(...);
 
-    // Pipeline barrier before using the vertex data
+    // Pipeline barrier before using the image
     VkImageMemoryBarrier2KHR postCopyGraphicsMemoryBarrier = {
         ...
         .dstStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR,
