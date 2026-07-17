@@ -404,6 +404,8 @@ The above usage of `VkShaderDescriptorSetAndBindingMappingInfoEXT` was designed 
 
 There is also a new "untyped" way to use `VK_EXT_descriptor_heap`. The word "untyped" refers to using the link:https://github.com/KhronosGroup/SPIRV-Guide/blob/main/chapters/untyped_pointers.md[VK_KHR_shader_untyped_pointers] extension to have "untyped pointers" to the descriptors.
 
+> "Untyped" is not the official spec term. There is a new link:https://github.com/KhronosGroup/SPIRV-Guide/blob/main/chapters/descriptor_heap.md[SPV_EXT_descriptor_heap] extension that provides these heaps in SPIR-V, but to access them, you need to use SPIR-V untyped pointers. You could use `SPV_KHR_untyped_pointers` without `SPV_EXT_descriptor_heap` but it is not very uncommon.
+
 Using this GLSL as an example:
 
 [source,glsl]
