@@ -108,7 +108,7 @@ It is **allowed** to use any other `Component` in a `Location` that is being con
 
 [NOTE]
 ====
-This behavior is guaranteed to work correctly with CTS 1.4.4.0 and higher compliant drivers.
+This behavior is guaranteed to work correctly with CTS 1.4.6.0 and higher compliant drivers.
 ====
 
 [source,glsl]
