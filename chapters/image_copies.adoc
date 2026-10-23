@@ -107,7 +107,7 @@ You can have a copy such as
 
 [source,c++]
 ----
-// Copying image A to B
+// Copying image B to A
 VkImageCopy copy;
 copy.extent = {8, 8, 8};
 
@@ -120,7 +120,7 @@ copy.dstSubresource.baseArrayLayer = 0;
 copy.dstSubresource.layerCount = 8;
 ----
 
-where the `extent.depth` is `8`, which is allowed for a 2D image because it has a `layerCount` of `8` to correspond to it.
+where the `extent.depth` is `8`. The 2D image uses an effective depth of `1`, and the 3D image's depth slices correspond to the 2D image's layers, so `extent.depth` must equal the `layerCount` of the 2D image's subresource
 
 === MipLevel difference
 
@@ -131,15 +131,15 @@ Each miplevel the `x`,`y`, and `z` are halved at each mip level, while the layer
 As an example, let's try to copy `miplevel 1`:
 
 - The 3D extent would be `{4, 4, 4}`
-- The 2D extent would be `{4, 4}`, but it still has all 8 layer counts
+- The 2D extent would be `{4, 4}`, but it still has all `8`` layer counts
 
 This means you have to be careful when copying between the two
 
 [source,c++]
 ----
-// Copying image A to B miplevel 1
+// Copying image B to A miplevel 1
 VkImageCopy copy;
-copy.extent = {8, 8, 8};
+copy.extent = {4, 4, 4}; // size of miplevel 1 of the 3D image
 
 // 3D
 copy.srcSubresource.baseArrayLayer = 0;
@@ -148,8 +148,8 @@ copy.srcSubresource.mipLevel = 1;
 
 // 2D array
 copy.dstSubresource.baseArrayLayer = 0;
-copy.dstSubresource.layerCount = 4; // matches the miplevel
-copy.srcSubresource.mipLevel = 1;
+copy.dstSubresource.layerCount = 4; // must equal extent.depth
+copy.dstSubresource.mipLevel = 1;
 ----
 
 == Compressed Image Copies
@@ -240,7 +240,7 @@ image::{images}image_copies_multi_planar.svg[image_copies_multi_planar.svg]
 
 === Single-Planar YCbCr
 
-There is another edge case to watch out for! Formats such as `VK_FORMAT_G8B8G8R8_422_UNORM` can be tricky as they are not technically compressed, but also not multi-planar (so you copy with `VK_IMAGE_ASPECT_COLOR_BIT`). 
+There is another edge case to watch out for! Formats such as `VK_FORMAT_G8B8G8R8_422_UNORM` can be tricky as they are not technically compressed, but also not multi-planar (so you copy with `VK_IMAGE_ASPECT_COLOR_BIT`).
 
 The spec does give you a hint how to handle them for copies:
 
