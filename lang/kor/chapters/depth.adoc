@@ -150,7 +150,7 @@ image::../../../chapters/images/depth_coordinates_flow.png[depth_coordinates_flo
   * `vec4(1.0, 1.0, 2.0, 2.0)` - not clipped (`Zd` == `1.0`)
   * `vec4(1.0, 1.0, 0.0, 2.0)` - not clipped (`Zd` == `0.0`)
   * `vec4(1.0, 1.0, -1.0, 2.0)` - clipped  (`Zd` == `-0.5`)
-  * `vec4(1.0, 1.0, -1.0, -2.0)` - not clipped (`Zd` == `0.5`)
+  * `vec4(1.0, 1.0, -1.0, -2.0)` - clipped (`Zd` == `0.5`)
 
 [[user-defined-clipping-and-culling]]
 ==== 사용자 정의 클리핑 및 컬링(User defined clipping and culling)
