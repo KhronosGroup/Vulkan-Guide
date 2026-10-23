@@ -357,8 +357,8 @@ A `Shader Record` refers to an entry in the link:https://docs.vulkan.org/spec/la
 The mappings work the exact same, just instead of mapping to a descriptor, such as a buffer/image/accelerationStructure, it maps to a shader record.
 
 - `VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_SHADER_RECORD_INDEX_EXT` works just like `VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_PUSH_INDEX_EXT`
-- `VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_DATA_EXT` works just like `VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT`
-- `VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT` works just like `VK_DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT`
+- `VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_DATA_EXT` works just like `VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_DATA_EXT`
+- `VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT` works just like `VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT`
 
 === VkDescriptorMappingSourceEXT bindingCount alias
 
@@ -603,7 +603,7 @@ VkDescriptorMappingSourcePushIndexEXT::pushOffset = 0;
 VkDescriptorMappingSourcePushIndexEXT::samplerPushOffset = 4;
 
 vkCmdPushDataEXT(offset = 0, size = 4, value = 6); // image offset to 6
-vkCmdPushDataEXT(offset = 0, size = 4, value = 7); // sampler offset to 7
+vkCmdPushDataEXT(offset = 4, size = 4, value = 7); // sampler offset to 7
 ----
 
 you now can pack it into a single 32-bit word.
