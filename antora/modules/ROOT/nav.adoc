@@ -61,6 +61,7 @@
 *** xref:{chapters}ways_to_provide_spirv.adoc[]
 *** xref:{chapters}buffer_array_length.adoc[]
 ** xref:{chapters}robustness.adoc[]
+** xref:{chapters}shader_abort.adoc[]
 ** xref:{chapters}dynamic_state.adoc[]
 *** xref:{chapters}dynamic_state_map.adoc[]
 ** xref:{chapters}compute_shaders.adoc[]

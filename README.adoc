@@ -154,6 +154,10 @@ The Vulkan Guide content is also viewable from https://docs.vulkan.org/guide/lat
 
   * `VK_EXT_image_robustness`, `VK_KHR_robustness2`, `VK_EXT_pipeline_robustness`
 
+== xref:{chapters}shader_abort.adoc[Shader Abort]
+
+  * `VK_KHR_shader_abort`, `VK_KHR_shader_constant_data`, `VK_KHR_device_fault`
+
 == xref:{chapters}dynamic_state.adoc[Dynamic State]
 
   * `VK_EXT_extended_dynamic_state`, `VK_EXT_extended_dynamic_state2`, `VK_EXT_extended_dynamic_state3`, `VK_EXT_vertex_input_dynamic_state`, `VK_EXT_color_write_enable`, `VK_EXT_attachment_feedback_loop_dynamic_state`
