@@ -60,19 +60,22 @@ Slang uses the same basic data types as HLSL (float__n__, int__n__, float__nxm__
 
 The syntax for casting types differs:
 
-GLSL:
+[discrete]
+=== GLSL
 [source,glsl]
 ----
 mat4x3 mat = mat4x3(ubo.view);
 ----
 
-HLSL:
+[discrete]
+=== HLSL
 [source,hlsl]
 ----
 float4x3 mat = (float4x3)(ubo.view);
 ----
 
-Slang:
+[discrete]
+=== Slang
 [source,slang]
 ----
 float4x3 mat = (float4x3)(ubo.view);
@@ -84,7 +87,13 @@ let mat = cast<float4x3>(ubo.view);
 
 It is important to be mindful that matrices in GLSL are column-major, while matrices in HLSL and Slang are row-major by default. This affects things like matrix construction.
 
-image::{images}high_level_shader_language_comparison_matrix.png[high_level_shader_language_comparison_matrix.png]
+[options="header"]
+|====
+| *GLSL* | *HLSL*
+| `M * v` | `mul(v, M)`
+|====
+
+image::{images}high_level_shader_language_comparison_matrix.png["Memory layout of a 4x4 matrix with elements numbered 0 to 15. In column-major order (GLSL) the numbers run down each column: 0 to 3 fill the first column, 4 to 7 the second, and so on, and the matrix is multiplied by a column vector. In row-major order (HLSL) the numbers run across each row: 0 to 3 fill the first row, and a row vector is multiplied by the matrix with mul."]
 
 === Slang-specific Types
 
@@ -188,7 +197,8 @@ Slang's multi-target compilation system allows you to write shaders that can be 
 
 DXC supports link:https://github.com/microsoft/DirectXShaderCompiler/wiki/GL_EXT_spirv_intrinsics-for-SPIR-V-code-gen[SPIR-V intrinsics] with the `GL_EXT_spirv_intrinsics` extension. This adds support for embedding arbitrary SPIR-V in the middle of HLSL for features not available in DirectX. For this new keywords are added to the `vk` namespace that map SPIR-V opcodes, incl. `vk::ext_extension`, `vk::ext_capability`, `vk::ext_builtin_input`, `vk::ext_execution_mode` and `vk::ext_instruction`.
 
-Example for using the stencil export SPIR-V extension in HLSL:
+[discrete]
+=== Example for using the stencil export SPIR-V extension in HLSL
 
 [source,hlsl]
 ----
@@ -197,7 +207,8 @@ Example for using the stencil export SPIR-V extension in HLSL:
 vk::ext_execution_mode(/* StencilRefReplacingEXT */ 5027);
 ----
 
-Example for setting up the built-in to access vertex positions in ray tracing:
+[discrete]
+=== Example for setting up the built-in to access vertex positions in ray tracing
 
 [source,hlsl]
 ----
@@ -304,9 +315,11 @@ This approach allows for more modular and reusable shader code while still lever
 
 === Examples
 
-Writing positions from the vertex shader:
+[discrete]
+==== Writing positions from the vertex shader
 
-GLSL:
+[discrete]
+==== GLSL
 [source,glsl]
 ----
 layout (location = 0) in vec4 inPos;
@@ -317,7 +330,8 @@ void main() {
 }
 ----
 
-HLSL:
+[discrete]
+==== HLSL
 [source,hlsl]
 ----
 struct VSOutput
@@ -334,7 +348,8 @@ VSOutput main(VSInput input)
 }
 ----
 
-Slang:
+[discrete]
+==== Slang
 [source,slang]
 ----
 struct VSOutput
@@ -377,9 +392,11 @@ VSOutput transformedMain(VSInput input, IVertexTransform transform)
 }
 ----
 
-Reading the vertex index:
+[discrete]
+==== Reading the vertex index
 
-GLSL:
+[discrete]
+==== GLSL
 [source,glsl]
 ----
 void main()
@@ -389,7 +406,8 @@ void main()
 }
 ----
 
-HLSL:
+[discrete]
+==== HLSL
 [source,hlsl]
 ----
 struct VSInput
@@ -406,7 +424,8 @@ VSOutput main(VSInput input)
 }
 ----
 
-Slang:
+[discrete]
+==== Slang
 [source,slang]
 ----
 struct VSInput
@@ -562,7 +581,8 @@ ConstantBuffer<Node> node : register(b0, space1);
 layout (set = <set-index>, binding = <binding-index>) uniform <type> <name>
 ----
 
-Examples:
+[discrete]
+===== Examples
 [source,glsl]
 ----
 // Uniform buffer
@@ -588,7 +608,8 @@ or
 <type> <name>
 ----
 
-Examples:
+[discrete]
+===== Examples
 [source,hlsl]
 ----
 // Uniform buffer
@@ -605,7 +626,7 @@ SamplerState samplerColor : register(s1);
 
 If using the HLSL descriptor binding syntax `+<register type>+` can be:
 
-[options="header"]
+[options="header",cols="1h,1,1"]
 |====
 | *Type* | *Register Description* | *Vulkan resource*
 | b | Constant buffer | Uniform buffer
@@ -624,7 +645,8 @@ If using the HLSL descriptor binding syntax `+<register type>+` can be:
 layout (location = <location-index>) in <type> <name>;
 ----
 
-Example:
+[discrete]
+===== Example
 [source,glsl]
 ----
 layout (location = 0) in vec3 inPos;
@@ -640,7 +662,8 @@ layout (location = 3) in vec2 inUV1;
 [[vk::location(<location-index>)]] <type> <name> : <semantic-type>;
 ----
 
-Example:
+[discrete]
+===== Example
 [source,hlsl]
 ----
 struct VSInput
@@ -658,7 +681,7 @@ VSOutput main(VSInput input) {
 // @todo: add general note on input semantics, e.g. for other stuff like compute where you need to use input semantics instead of built-ins
 
 `+<semantic type>+` can be
-[options="header"]
+[options="header",cols="1h,1,1"]
 |====
 | *Semantic* | *Description* | *Type*
 | BINORMAL[n] | Binormal | float4
@@ -688,7 +711,8 @@ E.g. for vertex and tessellation shaders.
 layout (location = <location-index>) out/in <type> <name>;
 ----
 
-Example:
+[discrete]
+====== Example
 [source,glsl]
 ----
 layout (location = 0) out vec3 outNormal;
@@ -709,7 +733,8 @@ void main() {
 [[vk::location(<location-index>)]] <type> <name> : <semantic-type>;
 ----
 
-Example:
+[discrete]
+====== Example
 [source,hlsl]
 ----
 struct VSOutput
@@ -740,7 +765,8 @@ For fragment shaders.
 layout (location = <attachment-index>) out/in <type> <name>;
 ----
 
-Example:
+[discrete]
+====== Example
 [source,glsl]
 ----
 layout (location = 0) out vec4 outPosition;
@@ -761,7 +787,8 @@ void main() {
 <type> <name> : SV_TARGET<attachment-index>;
 ----
 
-Example:
+[discrete]
+====== Example
 [source,hlsl]
 ----
 struct FSOutput
@@ -793,7 +820,8 @@ Push constants must be handled through a root signature in D3D.
 layout (push_constant) uniform <structure-type> { <members> } <name>
 ----
 
-Example:
+[discrete]
+===== Example
 [source,glsl]
 ----
 layout (push_constant) uniform PushConsts {
@@ -830,7 +858,8 @@ Specialization constants are only available in Vulkan, D3D doesn't offer anythin
 layout (constant_id = <specialization-constant-index>) const int <name> = <default-value>;
 ----
 
-Example:
+[discrete]
+===== Example
 [source,glsl]
 ----
 layout (constant_id = 0) const int SPEC_CONST = 0;
@@ -843,7 +872,8 @@ layout (constant_id = 0) const int SPEC_CONST = 0;
 [[vk::constant_id(<specialization-constant-index>)]] const int <name> = <default-value>;
 ----
 
-Example:
+[discrete]
+===== Example
 [source,hlsl]
 ----
 [[vk::constant_id(0)]] const int SPEC_CONST = 0;
@@ -858,7 +888,8 @@ Example:
 layout (input_attachment_index = <input-attachment-index>, binding = <binding-index>) uniform subpassInput <name>;
 ----
 
-Example:
+[discrete]
+===== Example
 [source,glsl]
 ----
 layout (input_attachment_index = 0, binding = 0) uniform subpassInput input0;
@@ -871,7 +902,8 @@ layout (input_attachment_index = 0, binding = 0) uniform subpassInput input0;
 [[vk::input_attachment_index(<input-attachment-index>)]][[vk::binding(<binding-index>)]] SubpassInput <name>;
 ----
 
-Example:
+[discrete]
+===== Example
 [source,hlsl]
 ----
 [[vk::input_attachment_index(0)]][[vk::binding(0)]] SubpassInput input0;
@@ -884,9 +916,11 @@ Example:
 Where GLSL uses global functions to access images, HLSL uses member functions of the texture object.
 ====
 
-Example:
+[discrete]
+==== Example
 
-GLSL:
+[discrete]
+==== GLSL
 [source,glsl]
 ----
 layout (binding = 0, set = 0) uniform sampler2D sampler0;
@@ -896,7 +930,8 @@ void main() {
 }
 ----
 
-HLSL:
+[discrete]
+==== HLSL
 [source,hlsl]
 ----
 Texture2D texture0 : register(t0, space0);
@@ -957,7 +992,8 @@ float4 sampleAlbedo(float2 uv)
 layout (set = <set-index>, binding = <image-binding-index>, <image-format>) uniform <memory-qualifier> <image-type> <name>;
 ----
 
-Example:
+[discrete]
+===== Example
 [source,glsl]
 ----
 layout (set = 0, binding = 0, rgba8) uniform writeonly image2D outputImage;
@@ -971,7 +1007,8 @@ layout (set = 0, binding = 0, rgba8) uniform writeonly image2D outputImage;
 RWTexture2D<image-components> <name> : register(<register-type><binding-index>, space<set-index>);
 ----
 
-Example:
+[discrete]
+===== Example
 [source,hlsl]
 ----
 [[vk::image_format("rgba8")]]
@@ -990,7 +1027,8 @@ Currently, HLSL only supports a link:https://github.com/microsoft/DirectXShaderC
 
 ==== GLSL
 
-Example:
+[discrete]
+===== Example
 [source,glsl]
 ----
 layout(push_constant) uniform PushConstants {
@@ -1006,7 +1044,8 @@ void main() {
 
 ==== HLSL
 
-Example:
+[discrete]
+===== Example
 [source,hlsl]
 ----
 struct PushConstants {
@@ -1025,7 +1064,8 @@ void main() {
 
 While GLSL implicitly detects the shader stage (for raytracing) via file extension (or explicitly via compiler arguments), for HLSL raytracing shaders need to be marked by the `[shader("stage")]` semantic:
 
-Example:
+[discrete]
+===== Example
 [source,hlsl]
 ----
 [shader("closesthit")]
@@ -1039,7 +1079,8 @@ Stage names match GLSL: `raygeneration`, `intersection`, `anyhit`, `closesthit`,
 
 ==== GLSL
 
-Example:
+[discrete]
+===== Example
 [source,glsl]
 ----
 layout(shaderRecordEXT, std430) buffer SBT {
@@ -1049,7 +1090,8 @@ layout(shaderRecordEXT, std430) buffer SBT {
 
 ==== HLSL
 
-Example:
+[discrete]
+===== Example
 [source,hlsl]
 ----
 struct SBT {
@@ -1182,7 +1224,8 @@ struct StandardRayTracer : IRayTracer
 layout (local_size_x = <local-size-x>, local_size_y = <local-size-y>, local_size_z = <local-size-z>) in;
 ----
 
-Example:
+[discrete]
+====== Example
 [source,glsl]
 ----
 layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
@@ -1195,7 +1238,8 @@ layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 [numthreads(<local-size-x>, <local-size-y>, <local-size-z>)]
 ----
 
-Example:
+[discrete]
+====== Example
 [source,hlsl]
 ----
 [numthreads(1, 1, 1)]
@@ -1206,7 +1250,8 @@ void main() {}
 
 ===== GLSL
 
-Example:
+[discrete]
+====== Example
 [source,glsl]
 ----
 shared vec4 sharedData[1024];
@@ -1214,7 +1259,8 @@ shared vec4 sharedData[1024];
 
 ===== HLSL
 
-Example:
+[discrete]
+====== Example
 [source,hlsl]
 ----
 groupshared float4 sharedData[1024];
@@ -1280,9 +1326,11 @@ void main(
 
 ==== Barriers
 
-Example:
+[discrete]
+===== Example
 
-GLSL:
+[discrete]
+===== GLSL
 [source,glsl]
 ----
 barrier();
@@ -1292,7 +1340,8 @@ for (int j = 0; j < 256; j++) {
 barrier();
 ----
 
-HLSL:
+[discrete]
+===== HLSL
 [source,hlsl]
 ----
 GroupMemoryBarrierWithGroupSync();
