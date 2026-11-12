@@ -24,6 +24,20 @@ image::{images}threading_command_buffers.png[threading_command_buffers.png]
 
 Khronos' link:https://github.com/KhronosGroup/Vulkan-Samples/tree/main/samples/performance/command_buffer_usage[sample and tutorial] show in more detail how to record command buffers in parallel.
 
+=== Porting D3D12 command-list reassociation
+
+D3D12 allows link:https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-reset[resetting a command list with a different command allocator].
+A Vulkan command buffer remains associated with the pool it was allocated from.
+To port code that relies on this reassociation:
+
+* Create command pools with link:https://docs.vulkan.org/refpages/latest/refpages/source/VkCommandPoolCreateFlagBits.html[`VK_COMMAND_POOL_CREATE_TRANSIENT_BIT`] to hint that their command buffers will be short-lived. Treat each pool as an externally synchronized command allocator.
+* Instead of preallocating command buffers, allocate a buffer from the chosen pool when recording is needed, then call `vkBeginCommandBuffer`.
+* Once command buffers are no longer needed and all their GPU work has completed, call link:https://docs.vulkan.org/refpages/latest/refpages/source/vkFreeCommandBuffers.html[`vkFreeCommandBuffers`]. Batch buffers from the same pool when possible.
+* Periodically call link:https://docs.vulkan.org/refpages/latest/refpages/source/vkResetCommandPool.html[`vkResetCommandPool`] to recycle memory back to the pool for reuse. All GPU work using buffers from that pool must have completed first; for example, reset a per-frame pool before reusing it for a new frame, after the previous frame's work has completed.
+
+This is a porting pattern, not a general recommendation to allocate and free command buffers every frame.
+The sample above compares recycling strategies, including retaining command buffers and resetting their pool.
+
 == Descriptor Pools
 
 link:https://docs.vulkan.org/spec/latest/chapters/descriptorsets.html#VkDescriptorPool[Descriptor Pools] are used to allocate, free, reset, and update descriptor sets. By creating multiple descriptor pools, each application host thread is able to manage a descriptor set in each descriptor pool at the same time.
