@@ -62,9 +62,6 @@ include::{chapters}vulkan_release_summary.adoc[]
 
 include::{chapters}what_is_spirv.adoc[]
 
-// == Portability Initiative
-
-include::{chapters}portability_initiative.adoc[]
 
 // == Vulkan CTS
 

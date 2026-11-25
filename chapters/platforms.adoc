@@ -28,17 +28,23 @@ Vulkan is supported on many BSD Unix distributions.
 
 Vulkan is supported on the link:https://fuchsia.dev/fuchsia-src/development/graphics/magma/concepts/vulkan[Fuchsia operating system].
 
-== iOS
+== MacOS
 
-Vulkan is not natively supported on iOS, but can still be targeted with xref:{chapters}portability_initiative.adoc#portability-initiative[Vulkan Portability Tools].
+Vulkan is not natively supported on MacOS, but is available through layered implementations on top of Metal.
+
+link:https://gitlab.freedesktop.org/mesa/mesa[KosmicKrisp], a Vulkan 1.4 conformant driver built on Metal 4 and maintained by LunarG, is the recommended option. It only supports Apple silicon (M-series) Macs running macOS 26 or later. Intel-based Macs and older macOS releases need link:https://github.com/KhronosGroup/MoltenVK[MoltenVK], which Khronos has deprecated.
+
+See the Khronos blog post link:https://www.khronos.org/blog/from-portability-to-conformance-a-new-chapter-for-layered-vulkan-on-apple[From Portability to Conformance: A New Chapter for Layered Vulkan on Apple] for details.
+
+=== iOS
+
+Vulkan is not natively supported on iOS.
+
+KosmicKrisp does not yet officially support iOS. It may be possible to get it running, but this is untested and unsupported, so use it at your own risk.
 
 == Linux
 
 Vulkan is supported on many Linux distributions.
-
-== MacOS
-
-Vulkan is not natively supported on MacOS, but can still be targeted with xref:{chapters}portability_initiative.adoc#portability-initiative[Vulkan Portability Tools].
 
 == Nintendo Switch
 

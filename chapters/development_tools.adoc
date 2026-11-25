@@ -37,7 +37,7 @@ Besides the Khronos Layers, the Vulkan SDK includes additional useful platform i
   * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/capture_tools.html[`VK_LAYER_LUNARG_gfxreconstruct`], a layer for capturing frames created with Vulkan.
     This layer is a part of GFXReconstruct, a software for capturing and replaying Vulkan API calls. Full Android support is also available at <https://github.com/LunarG/gfxreconstruct>
 
-  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/device_simulation_layer.html[`VK_LAYER_LUNARG_device_simulation`], a layer to test Vulkan applications portability.
+  * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/device_simulation_layer.html[`VK_LAYER_LUNARG_device_simulation`].
     The device simulation layer can be used to test whether a Vulkan application would run on a Vulkan device with lower capabilities.
 
   * link:https://vulkan.lunarg.com/doc/sdk/latest/windows/screenshot_layer.html[`VK_LAYER_LUNARG_screenshot`], a screenshot layer.

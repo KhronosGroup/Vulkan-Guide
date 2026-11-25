@@ -7,7 +7,7 @@ ifndef::chapters[:chapters: ../]
 [[translation-layer-extensions]]
 = 変換レイヤ拡張機能
 
-xref:{chapters}portability_initiative.adoc#translation-layer[変換レイヤ]を Vulkan に効率的にマッピングするために作成された拡張機能のクラスがあります。
+変換レイヤを Vulkan に効率的にマッピングするために作成された拡張機能のクラスがあります。
 
 この拡張機能には、ドライバが効率的に実装することが困難なレガシーな動作の複製も含まれます。この機能は将来を見据えたもの**ではなく**、KHR 拡張またはコア Vulkan に昇格することは **ありません**。
 

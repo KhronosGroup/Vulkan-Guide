@@ -29,7 +29,7 @@ Vulkan は link:https://fuchsia.dev/fuchsia-src/development/graphics/magma/conce
 
 == iOS
 
-iOS では Vulkan はネイティブにサポートされていませんが、xref:{chapters}portability_initiative.adoc#portability-initiative[Vulkan Portability Tools] を使って対象とすることができます。
+iOS では Vulkan はネイティブにサポートされていません。
 
 == Linux
 
@@ -37,7 +37,7 @@ Vulkan は多くの Linux ディストリビューションでサポートされ
 
 == MacOS
 
-MacOS では Vulkan はネイティブにサポートされていませんが、xref:{chapters}portability_initiative.adoc#portability-initiative[Vulkan Portability Tools] を使って対象とすることができます。
+MacOS では Vulkan はネイティブにサポートされていません。
 
 == Nintendo Switch
 

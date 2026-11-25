@@ -8,7 +8,7 @@ ifndef::images[:images: ../images/]
 [[translation-layer-extensions]]
 = 변환 레이어 확장 기능
 
-xref:{chapters}portability_initiative.adoc#translation-layer[변환 레이어]를 Vulkan에 효율적으로 매핑하는 방법을 제공하기 위해 만들어진 확장 기능 클래스가 있습니다.
+변환 레이어를 Vulkan에 효율적으로 매핑하는 방법을 제공하기 위해 만들어진 확장 기능 클래스가 있습니다.
 
 여기에는 드라이버가 효율적으로 구현하기 어려운 레거시 동작의 복제도 포함됩니다. 이 기능은 미래 지향적인 것으로 **간주되지 않으며**, KHR 확장이나 Vulkan 코어로 승격될거라 예상되지 **않습니다**.
 
