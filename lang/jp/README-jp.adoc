@@ -41,7 +41,6 @@ Vulkan Guide は、開発者が Vulkan の世界へ足を踏み出すための�
 
 == xref:{chapters}what_is_spirv.adoc[SPIR-V とは？]
 
-== xref:{chapters}portability_initiative.adoc[移植性に関わるイニシアチブ]
 
 == xref:{chapters}vulkan_cts.adoc[Vulkan CTS]
 

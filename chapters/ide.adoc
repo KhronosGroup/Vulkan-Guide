@@ -364,7 +364,6 @@ When using Vulkan on macOS through MoltenVK, keep in mind:
 1. Not all Vulkan features are supported by MoltenVK, as it translates Vulkan to Metal
 2. Check the link:https://github.com/KhronosGroup/MoltenVK[MoltenVK documentation] for supported features and limitations
 3. Use the `VK_MVK_moltenvk` extension for MoltenVK-specific functionality
-4. Consider using the Vulkan Portability subset for better cross-platform compatibility
 
 [[android-studio]]
 == Android Studio

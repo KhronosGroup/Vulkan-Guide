@@ -52,7 +52,6 @@ The Vulkan Guide content is also viewable from https://docs.vulkan.org/guide/lat
 
 == xref:{chapters}what_is_spirv.adoc[What is SPIR-V?]
 
-== xref:{chapters}portability_initiative.adoc[Portability Initiative]
 
 == xref:{chapters}vulkan_cts.adoc[Vulkan CTS]
 

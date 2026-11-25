@@ -57,7 +57,6 @@ Vulkan에서 사용하는 특수한 용어에 대한 혼란을 막기 위해 명
 
 == xref:{chapters}what_is_spirv.adoc[SPIR-V 란?]
 
-== xref:{chapters}portability_initiative.adoc[이식성 프로젝트]
 
 == xref:{chapters}vulkan_cts.adoc[Vulkan CTS]
 

@@ -8,7 +8,7 @@ ifndef::images[:images: ../images/]
 [[translation-layer-extensions]]
 = Translation Layer Extensions
 
-There is a class of extensions that were only created to allow efficient ways for xref:{chapters}portability_initiative.adoc#translation-layer[translation layers] to map to Vulkan.
+There is a class of extensions that were only created to allow efficient ways for translation layers to map to Vulkan.
 
 This includes replicating legacy behavior that is challenging for drivers to implement efficiently. This functionality is **not** considered forward looking, and is **not** expected to be promoted to a KHR extension or to core Vulkan.
 
