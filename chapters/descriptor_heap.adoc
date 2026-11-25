@@ -544,6 +544,42 @@ both `0x4000` and `0x4008` are aligned to 8 bytes which is valid. If it was `0x4
 
 The final addresses (`0x8000` and `0x8040`) need to be aligned to `minUniformBufferOffsetAlignment` as it accesses that memory as a Uniform Buffer Descriptor.
 
+== Resource Type
+
+[NOTE]
+====
+tl;dr Just always use `VK_SPIRV_RESOURCE_TYPE_ALL_EXT` unless you have a reason not to, there will be zero performance penalty!
+====
+
+The `VkSpirvResourceTypeFlagBitsEXT` offers the ability to have resource with the same `set`/`binding` to have different mappings
+
+[source,glsl]
+----
+// HLSL
+Texture2D    albedo : register(t0);   // set 0, binding 0, sampled image
+SamplerState samp   : register(s0);   // set 0, binding 0, sampler
+
+float4 main(float2 uv : TEXCOORD) : SV_Target {
+    return albedo.Sample(samp, uv);
+}
+----
+
+The image comes from the resource heap and the sampler from the sampler heap, so they need different mappings:
+
+[source,c++]
+----
+VkDescriptorSetAndBindingMappingEXT mappings[2] = {
+  { .descriptorSet = 0, .firstBinding = 0, .bindingCount = 1,
+    .resourceMask = VK_SPIRV_RESOURCE_TYPE_SAMPLED_IMAGE_BIT_EXT,
+    .source = VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_CONSTANT_OFFSET_EXT
+  },
+  { .descriptorSet = 0, .firstBinding = 0, .bindingCount = 1,
+    .resourceMask = VK_SPIRV_RESOURCE_TYPE_SAMPLER_BIT_EXT,
+    .source = VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_CONSTANT_OFFSET_EXT
+  },
+};
+----
+
 == Null Descriptors
 
 The link:https://docs.vulkan.org/spec/latest/chapters/features.html#features-nullDescriptor[nullDescriptor] feature is a form of xref:{chapters}/robustness.adoc[robustness] that allows descriptors to be both null and valid. If you write a null descriptor the writes are discarded. If you read from a null descriptor it will return a defined value (mainly zero).
